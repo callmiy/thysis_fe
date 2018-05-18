@@ -4,8 +4,15 @@ use std::fs::File;
 use std::io::prelude::*;
 use std::io::BufReader;
 use std::path::PathBuf;
+use std::thread::{spawn, JoinHandle};
+
+mod error;
+
+use error::ExpReadingsToEnglishError;
 
 static ROOT_STR: &'static str = "F:\\google_drive\\master-thesis-gasification\\Experiments";
+
+type NullResult = Result<(), Box<Error>>;
 
 pub struct Config {
     pub exp_path_string: String,
@@ -44,7 +51,7 @@ impl Config {
     }
 }
 
-fn commas_to_dots(exp_path_string: &str, filename: &str) -> Result<(), Box<Error>> {
+fn commas_to_dots(exp_path_string: &str, filename: &str) -> NullResult {
     let file_path_buf: PathBuf = [exp_path_string, filename].iter().collect();
     let mut contents = String::new();
     let source_file = File::open(&file_path_buf)?;
@@ -61,19 +68,41 @@ fn commas_to_dots(exp_path_string: &str, filename: &str) -> Result<(), Box<Error
     Ok(())
 }
 
-pub fn exp_readings_to_english(exp_path_string: &str) -> Result<(), Box<Error>> {
+pub fn exp_readings_to_english(exp_path_string: String) -> Result<(), ExpReadingsToEnglishError> {
+    let mut handles: Vec<JoinHandle<Result<(), String>>> = Vec::with_capacity(3);
+
     for name in [
         "EndressHauserLOG4.TXT",
         "Gewichtslog4.TXT",
         "SynthesegasLOG4.TXT",
     ].iter()
     {
-        if let Err(e) = commas_to_dots(exp_path_string, name) {
-            return Err(e);
+        let exp_path_string_ = String::from(&exp_path_string[..]);
+        let handle = spawn(move || match commas_to_dots(&exp_path_string_, &name) {
+            Ok(_) => Ok(()),
+            Err(e) => {
+                let error_description = e.description();
+                Err(String::from(error_description))
+            }
+        });
+
+        handles.push(handle);
+    }
+
+    let mut errors: Vec<String> = Vec::new();
+
+    for handle in handles {
+        match handle.join() {
+            Ok(Err(e)) => errors.push(e),
+            Ok(_) => (),
+            Err(_e) => errors.push(String::from("Thread error")),
         }
     }
 
-    Ok(())
+    match errors.len() {
+        0 => Ok(()),
+        _ => Err(ExpReadingsToEnglishError::new(errors)),
+    }
 }
 
 #[cfg(test)]
