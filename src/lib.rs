@@ -54,10 +54,10 @@ fn commas_to_dots(exp_path_string: &str, filename: &str) -> IdentityResult {
     buf_reader.read_to_string(&mut contents)?;
 
     let mut dest_path: PathBuf = [exp_path_string, filename].iter().collect();
-    dest_path.set_extension("txt1");
+    dest_path.set_extension("csv");
 
     let mut dest_file = File::create(&dest_path)?;
-    let contents = contents.replace(",", ".");
+    let contents = contents.replace(",", ".").replace(";", ",");
     dest_file.write_all(contents.as_bytes())?;
 
     Ok(())
