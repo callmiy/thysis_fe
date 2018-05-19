@@ -1,7 +1,9 @@
 #![feature(use_extern_macros)]
 extern crate failure;
 
-use std::env::Args;
+#[macro_use]
+extern crate structopt;
+
 use std::fs::File;
 use std::io::prelude::*;
 use std::io::BufReader;
@@ -9,65 +11,9 @@ use std::path::PathBuf;
 use std::sync::Arc;
 use std::thread::{spawn, JoinHandle};
 
-static ROOT_STR: &'static str = "F:\\google_drive\\master-thesis-gasification\\Experiments";
+pub mod config_args;
 
 type IdentityResult = Result<(), failure::Error>;
-
-pub struct Config {
-    pub exp_path_string: Arc<String>,
-}
-
-impl Config {
-    pub fn new(args: Args) -> Result<Config, String> {
-        let mut args = args.into_iter();
-        args.next();
-
-        let exp_path = match args.next() {
-            Some(arg) => {
-                let path: PathBuf = [ROOT_STR, &arg].iter().collect();
-
-                if !path.exists() {
-                    return Err(format!(
-                        "Experiment directory does not exist: {}",
-                        path.display()
-                    ));
-                };
-
-                match path.into_os_string().into_string() {
-                    Ok(val) => val,
-                    Err(e) => {
-                        return Err(format!("Invalid experiment directory: {:?}", e));
-                    }
-                }
-            }
-
-            _ => {
-                return Err("Experiment directory not specified!".to_string());
-            }
-        };
-
-        Ok(Config {
-            exp_path_string: Arc::new(exp_path),
-        })
-    }
-}
-
-fn commas_to_dots(exp_path_string: &str, filename: &str) -> IdentityResult {
-    let file_path_buf: PathBuf = [exp_path_string, filename].iter().collect();
-    let mut contents = String::new();
-    let source_file = File::open(&file_path_buf)?;
-    let mut buf_reader = BufReader::new(source_file);
-    buf_reader.read_to_string(&mut contents)?;
-
-    let mut dest_path: PathBuf = [exp_path_string, filename].iter().collect();
-    dest_path.set_extension("txt1");
-
-    let mut dest_file = File::create(&dest_path)?;
-    let contents = contents.replace(",", ".");
-    dest_file.write_all(contents.as_bytes())?;
-
-    Ok(())
-}
 
 pub fn exp_readings_to_english(exp_path_string: Arc<String>) -> IdentityResult {
     let mut handles: Vec<JoinHandle<IdentityResult>> = Vec::with_capacity(3);
@@ -98,6 +44,23 @@ pub fn exp_readings_to_english(exp_path_string: Arc<String>) -> IdentityResult {
         0 => Ok(()),
         _ => Err(failure::format_err!("{:?}", errors)),
     }
+}
+
+fn commas_to_dots(exp_path_string: &str, filename: &str) -> IdentityResult {
+    let file_path_buf: PathBuf = [exp_path_string, filename].iter().collect();
+    let mut contents = String::new();
+    let source_file = File::open(&file_path_buf)?;
+    let mut buf_reader = BufReader::new(source_file);
+    buf_reader.read_to_string(&mut contents)?;
+
+    let mut dest_path: PathBuf = [exp_path_string, filename].iter().collect();
+    dest_path.set_extension("txt1");
+
+    let mut dest_file = File::create(&dest_path)?;
+    let contents = contents.replace(",", ".");
+    dest_file.write_all(contents.as_bytes())?;
+
+    Ok(())
 }
 
 #[cfg(test)]
