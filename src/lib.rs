@@ -4,6 +4,7 @@ use std::fs::File;
 use std::io::prelude::*;
 use std::io::BufReader;
 use std::path::PathBuf;
+use std::sync::Arc;
 use std::thread::{spawn, JoinHandle};
 
 mod error;
@@ -15,7 +16,7 @@ static ROOT_STR: &'static str = "F:\\google_drive\\master-thesis-gasification\\E
 type NullResult = Result<(), Box<Error>>;
 
 pub struct Config {
-    pub exp_path_string: String,
+    pub exp_path_string: Arc<String>,
 }
 
 impl Config {
@@ -23,7 +24,7 @@ impl Config {
         let mut args = args.into_iter();
         args.next();
 
-        let exp_path_string = match args.next() {
+        let exp_path = match args.next() {
             Some(arg) => {
                 let path: PathBuf = [ROOT_STR, &arg].iter().collect();
 
@@ -47,7 +48,9 @@ impl Config {
             }
         };
 
-        Ok(Config { exp_path_string })
+        Ok(Config {
+            exp_path_string: Arc::new(exp_path),
+        })
     }
 }
 
@@ -68,7 +71,9 @@ fn commas_to_dots(exp_path_string: &str, filename: &str) -> NullResult {
     Ok(())
 }
 
-pub fn exp_readings_to_english(exp_path_string: String) -> Result<(), ExpReadingsToEnglishError> {
+pub fn exp_readings_to_english(
+    exp_path_string: Arc<String>,
+) -> Result<(), ExpReadingsToEnglishError> {
     let mut handles: Vec<JoinHandle<Result<(), String>>> = Vec::with_capacity(3);
 
     for name in [
@@ -77,7 +82,7 @@ pub fn exp_readings_to_english(exp_path_string: String) -> Result<(), ExpReading
         "SynthesegasLOG4.TXT",
     ].iter()
     {
-        let exp_path_string_ = String::from(&exp_path_string[..]);
+        let exp_path_string_ = Arc::clone(&exp_path_string);
         let handle = spawn(move || match commas_to_dots(&exp_path_string_, &name) {
             Ok(_) => Ok(()),
             Err(e) => {
