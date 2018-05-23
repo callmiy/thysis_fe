@@ -1,8 +1,23 @@
 {
-	"folders": [
-		{
-			"path": "."
-		}
-	],
-	"settings": {}
+  "folders": [
+    {
+      "name": "server",
+      "path": "server"
+    },
+    {
+      "name": "client",
+      "path": "client"
+    },
+    {
+      "path": "rust",
+      "name": "rust"
+    }
+  ],
+  "settings": {
+    "editor.formatOnSave": true,
+    "elixirLS.dialyzerEnabled": true,
+    "[elixir]": {
+      "editor.quickSuggestions": true
+    }
+  }
 }

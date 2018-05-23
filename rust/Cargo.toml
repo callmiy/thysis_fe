@@ -1,0 +1,8 @@
+[package]
+name = "gasification"
+version = "0.1.0"
+authors = ["maneptha"]
+
+[dependencies]
+failure = "0.1.1"
+structopt = "0.2.8"

@@ -1,0 +1,112 @@
+{
+  "version": "2.0.0",
+  "presentation": {
+    "reveal": "always",
+    "panel": "new"
+  },
+  "tasks": [
+    {
+      "label": "start backend win",
+      "type": "shell",
+      "command": "iex --werl -S mix phx.server",
+      "options": {
+        "env": {
+          "GAS_PHOENIX_PORT": "4016"
+        }
+      },
+      "problemMatcher": ["$mixCompileError", "$mixCompileWarning"],
+      "group": "build"
+    },
+    {
+      "label": "start backend deb",
+      "type": "shell",
+      "command": "pg_ctl start && iex -S mix phx.server",
+      "options": {
+        "env": {
+          "GAS_PHOENIX_PORT": "4016",
+          "GCP_JSON_CREDENTIALS": ""
+        }
+      },
+      "problemMatcher": ["$mixCompileError", "$mixCompileWarning"],
+      "group": "build"
+    },
+    {
+      "label": "mix test file unit",
+      "type": "shell",
+      "command": "mix test ${file}",
+      "problemMatcher": ["$mixCompileError", "$mixCompileWarning"],
+      "group": "test"
+    },
+    {
+      "label": "mix test file unit trace",
+      "type": "shell",
+      "command": "mix test ${file} --trace",
+      "problemMatcher": ["$mixCompileError", "$mixCompileWarning"],
+      "group": "test"
+    },
+    {
+      "label": "mix test unit deb",
+      "type": "shell",
+      "command": "mix test",
+      "problemMatcher": ["$mixCompileError", "$mixCompileWarning"],
+      "group": {
+        "kind": "test",
+        "isDefault": true
+      }
+    },
+    {
+      "label": "mix test unit win",
+      "type": "shell",
+      "command": "dev.bat && mix test",
+      "problemMatcher": ["$mixCompileError", "$mixCompileWarning"],
+      "group": {
+        "kind": "test",
+        "isDefault": true
+      }
+    },
+    {
+      "label": "mix get compile win",
+      "type": "shell",
+      "command": "dev.bat && mix do deps.get, compile",
+      "problemMatcher": [],
+      "group": "build"
+    },
+    {
+      "label": "mix get compile deb",
+      "type": "shell",
+      "command": "mix do deps.get, compile",
+      "problemMatcher": ["$mixCompileError", "$mixCompileWarning"],
+      "group": "build"
+    },
+    {
+      "label": "mix compile win",
+      "type": "shell",
+      "command": "dev.bat && mix compile",
+      "problemMatcher": ["$mixCompileError", "$mixCompileWarning"],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    },
+    {
+      "label": "mix compile deb",
+      "type": "shell",
+      "command": " mix compile",
+      "problemMatcher": ["$mixCompileError", "$mixCompileWarning"],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    },
+    {
+      "label": "deploy to heroku",
+      "type": "shell",
+      "command":
+        "git subtree push --prefix=server heroku master && heroku run \"POOL_SIZE=2 mix ecto.migrate\"",
+      "options": {
+        "cwd": ".."
+      },
+      "problemMatcher": []
+    }
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  // See https://go.microsoft.com/fwlink/?LinkId=733558
+  // for the documentation about the tasks.json format
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "start front end js only",
+      "type": "shell",
+      "command": "yarn start",
+      "options": {
+        "env": {
+          "PORT": "3016",
+          // "BROWSER": "none",
+          "REACT_APP_API_URL": "http://localhost:4016/__/api"
+        }
+      },
+      "group": "build",
+      "problemMatcher": []
+    },
+
+    {
+      "label": "build front end dev",
+      "type": "shell",
+      "command": "yarn deploy",
+      "options": {
+        "env": {
+          "REACT_APP_API_URL": "http://localhost:4016/__/api"
+        }
+      },
+      "group": "build",
+      "problemMatcher": []
+    },
+
+    {
+      "label": "build front end prod",
+      "type": "shell",
+      "command": "yarn deploy",
+      "options": {},
+      "group": "build",
+      "problemMatcher": []
+    }
+  ]
+}
