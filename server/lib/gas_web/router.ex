@@ -1,5 +1,6 @@
 defmodule GasWeb.Router do
   use GasWeb, :router
+  use ExAdmin.Router
 
   pipeline :browser do
     plug(:accepts, ["html"])
@@ -13,11 +14,8 @@ defmodule GasWeb.Router do
     plug(:accepts, ["json"])
   end
 
-  scope "/__api", GasWeb do
-    pipe_through(:api)
-
-    resources("/source_types", SourceTypeController, except: [:new, :edit])
-    resources("/sources", SourceController, except: [:new, :edit])
-    resources("/quotes", QuoteController, except: [:new, :edit])
+  scope "/__admin", ExAdmin do
+    pipe_through(:browser)
+    admin_routes()
   end
 end
