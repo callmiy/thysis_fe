@@ -38,12 +38,16 @@ defmodule Gas.Mixfile do
       {:phoenix_ecto, "~> 3.2"},
       {:postgrex, ">= 0.0.0"},
       {:phoenix_html, "~> 2.10"},
-      {:gettext, "~> 0.11"},
+      {:gettext, "~> 0.13.1"},
       {:cowboy, "~> 1.0"},
       {:absinthe, "~> 1.4"},
       {:absinthe_ecto, "~> 0.1.3"},
-      {:ex_machina, "~> 2.2"},
-      {:ex_admin, github: "smpallen99/ex_admin"}
+      {:ex_machina, "~> 2.2", only: [:dev, :test]},
+      {:ex_admin, github: "smpallen99/ex_admin"},
+      {:timex, "~> 3.3"},
+      {:timex_ecto, "~> 3.3"},
+      {:absinthe_plug, "~> 1.4"},
+      {:faker, "~> 0.10.0", only: [:dev, :test]}
     ]
   end
 

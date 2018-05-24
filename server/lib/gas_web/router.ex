@@ -13,15 +13,11 @@ defmodule GasWeb.Router do
     plug(:accepts, ["json"])
   end
 
-  scope "/__", GasWeb do
-    # Use the default browser stack
-    pipe_through(:browser)
+  scope "/__api", GasWeb do
+    pipe_through(:api)
 
-    get("/", PageController, :index)
+    resources("/source_types", SourceTypeController, except: [:new, :edit])
+    resources("/sources", SourceController, except: [:new, :edit])
+    resources("/quotes", QuoteController, except: [:new, :edit])
   end
-
-  # Other scopes may use custom stacks.
-  # scope "/api", GasWeb do
-  #   pipe_through :api
-  # end
 end

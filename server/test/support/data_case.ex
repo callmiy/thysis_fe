@@ -21,6 +21,7 @@ defmodule Gas.DataCase do
       import Ecto
       import Ecto.Changeset
       import Ecto.Query
+      import Gas.Factory
       import Gas.DataCase
     end
   end
