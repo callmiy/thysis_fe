@@ -20,8 +20,11 @@ config :gas, GasWeb.Endpoint,
     host: "gasification.herokuapp.com",
     port: 443
   ],
-  force_ssl: [hsts: true],
-  secret_key_base: System.get_env("SECRET_KEY_BASE")
+  force_ssl: [rewrite_on: [:x_forwarded_proto]],
+  secret_key_base: System.get_env("SECRET_KEY_BASE"),
+  check_origin: [
+    "https://gasification.herokuapp.com"
+  ]
 
 config :gas, Gas.Repo,
   adapter: Ecto.Adapters.Postgres,
