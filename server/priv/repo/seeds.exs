@@ -19,9 +19,14 @@ alias Gas.Quote
 alias Gas.Tag
 alias Gas.QuoteTag
 
-for module <- [QuoteTag, SourceType, Source, Quote, Tag] do
-  Repo.delete_all(module)
-end
+[
+  QuoteTag,
+  SourceType,
+  Source,
+  Quote,
+  Tag
+]
+|> Enum.each(&Repo.delete_all(&1))
 
 Repo.transaction(fn ->
   tags = insert_list(50, :tag)

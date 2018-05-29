@@ -11,8 +11,10 @@ defmodule Gas.Source do
   ]
 
   schema "sources" do
-    field(:citation, :string)
-    field(:year, :integer)
+    field(:author, :string)
+    field(:topic, :string)
+    field(:publication, :string)
+    field(:url, :string)
     belongs_to(:source_type, SourceType)
     has_many(:quotes, Quote)
 
@@ -22,8 +24,7 @@ defmodule Gas.Source do
   @doc false
   def changeset(source, attrs \\ %{}) do
     source
-    |> cast(attrs, [:year, :citation, :source_type_id])
-    |> validate_required([:year, :citation, :source_type_id])
-    |> validate_format(:citation, ~r/\d{4}/)
+    |> cast(attrs, [:author, :topic, :publication, :url, :source_type_id])
+    |> validate_required([:author, :topic, :source_type_id])
   end
 end

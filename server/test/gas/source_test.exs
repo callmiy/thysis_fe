@@ -4,6 +4,14 @@ defmodule Gas.SourcesTest do
   alias Gas.Source
   alias Gas.SourceApi, as: Api
 
+  defp make_source(attrs \\ %{}) do
+    {:ok, source} =
+      params_with_assocs(:source, attrs)
+      |> Api.create_()
+
+    source
+  end
+
   test "list/0 returns all sources" do
     source = make_source()
     assert Api.list() == [source]
@@ -16,17 +24,17 @@ defmodule Gas.SourcesTest do
 
   test "create_/1 with valid data creates a source" do
     %{
-      citation: citation,
-      year: year
-    } = valid_attrs = make_source(:attrs)
+      author: author,
+      topic: topic
+    } = valid_attrs = params_with_assocs(:source)
 
     assert {:ok, %Source{} = source} = Api.create_(valid_attrs)
-    assert source.citation == citation
-    assert source.year == year
+    assert source.author == author
+    assert source.topic == topic
   end
 
   test "create_/1 with invalid data returns error changeset" do
-    invalid_attrs = make_source(:attrs, %{citation: nil})
+    invalid_attrs = params_with_assocs(:source, author: nil)
     assert {:error, %Ecto.Changeset{}} = Api.create_(invalid_attrs)
   end
 
@@ -35,15 +43,15 @@ defmodule Gas.SourcesTest do
 
     assert {:ok, %Source{} = source} =
              source
-             |> Api.update_(%{citation: "yeah2011", year: 2011})
+             |> Api.update_(%{author: "yeah", topic: "sss73bsbddj"})
 
-    assert source.citation == "yeah2011"
-    assert source.year == 2011
+    assert source.author == "yeah"
+    assert source.topic == "sss73bsbddj"
   end
 
   test "update_/2 with invalid data returns error changeset" do
     source = make_source()
-    assert {:error, %Ecto.Changeset{}} = Api.update_(source, %{citation: "yea"})
+    assert {:error, %Ecto.Changeset{}} = Api.update_(source, %{author: nil})
     assert source == Api.get!(source.id)
   end
 
@@ -56,15 +64,5 @@ defmodule Gas.SourcesTest do
   test "change_/1 returns a source changeset" do
     source = make_source()
     assert %Ecto.Changeset{} = Api.change_(source)
-  end
-
-  defp make_source(:attrs, attrs \\ %{}) do
-    type = insert(:source_type)
-    build(:source, Map.put(attrs, :source_type_id, type.id)) |> map()
-  end
-
-  defp make_source do
-    {:ok, source} = make_source(:attrs) |> Api.create_()
-    source
   end
 end

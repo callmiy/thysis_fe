@@ -17,19 +17,11 @@ defmodule Gas.Factory do
   end
 
   def source_factory do
-    year = random_date().year
-
-    citation =
-      [
-        Faker.String.base64(),
-        year,
-        Faker.String.base64(3)
-      ]
-      |> Enum.join()
-
     %Source{
-      citation: citation,
-      year: year,
+      author: Faker.Name.name(),
+      topic: Faker.String.base64(),
+      publication: Enum.random([Faker.String.base64(), nil]),
+      url: Enum.random([Faker.Internet.url(), nil]),
       source_type: build(:source_type)
     }
   end
