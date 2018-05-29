@@ -3,6 +3,15 @@ defmodule Gas.QuotesTest do
 
   alias Gas.Quote
   alias Gas.QuoteApi, as: Api
+  alias Gas.QuoteTagApi, as: TagApi
+
+  defp make_quote(attrs \\ %{}) do
+    {:ok, quote_} =
+      params_with_assocs(:quote, attrs)
+      |> Api.create_()
+
+    quote_
+  end
 
   test "list/0 returns all quotes" do
     quote_ = make_quote()
@@ -18,19 +27,18 @@ defmodule Gas.QuotesTest do
     %{
       date: date,
       page_start: start,
-      page_end: end_,
       text: text
-    } = valid_attrs = make_quote(:attrs)
+    } = valid_attrs = params_with_assocs(:quote)
 
     assert {:ok, %Quote{} = quote_} = Api.create_(valid_attrs)
     assert quote_.date == date
-    assert quote_.page_end == end_
+    assert quote_.page_end == valid_attrs[:page_end]
     assert quote_.page_start == start
     assert quote_.text == text
   end
 
   test "create_/1 with invalid data returns error changeset" do
-    invalid_attrs = make_quote(:attrs, %{page_start: nil})
+    invalid_attrs = params_with_assocs(:quote, page_start: nil)
     assert {:error, %Ecto.Changeset{}} = Api.create_(invalid_attrs)
   end
 
@@ -40,13 +48,11 @@ defmodule Gas.QuotesTest do
     %{
       date: date,
       page_start: start,
-      page_end: end_,
       text: text
-    } = update_attrs = make_quote(:attrs)
+    } = update_attrs = params_for(:quote)
 
     assert {:ok, %Quote{} = quote_} = Api.update_(quote_, update_attrs)
     assert quote_.date == date
-    assert quote_.page_end == end_
     assert quote_.page_start == start
     assert quote_.text == text
   end
@@ -67,13 +73,35 @@ defmodule Gas.QuotesTest do
     assert %Ecto.Changeset{} = make_quote() |> Api.change_()
   end
 
-  defp make_quote(:attrs, attrs \\ %{}) do
-    source = insert(:source)
-    build(:quote, Map.put(attrs, :source_id, source.id)) |> map()
+  test "has many tags" do
+    %Quote{id: quote_id} = quote_ = make_quote()
+
+    insert_list(5, :tag)
+    |> Enum.each(&TagApi.create_(%{quote_id: quote_id, tag_id: &1.id}))
+
+    assert %Quote{tags: tags} = Repo.preload(quote_, [:tags])
+    assert length(tags) == 5
   end
 
-  defp make_quote do
-    {:ok, quote_} = make_quote(:attrs) |> Api.create_()
-    quote_
+  test "can not insert one tag multiple times in same quote" do
+    qt = insert(:quote_tag)
+    quote_tag_attrs = %{tag_id: qt.tag_id, quote_id: qt.quote_id}
+
+    assert {:error, %Ecto.Changeset{}} = TagApi.create_(quote_tag_attrs)
+    assert %Quote{tags: tags} = Repo.preload(qt.quote, [:tags])
+    assert length(tags) == 1
+  end
+
+  test "can insert one tag into multiple quotes" do
+    qt = insert(:quote_tag)
+
+    assert %Quote{tags: tags} = Repo.preload(qt.quote, [:tags])
+    assert length(tags) == 1
+
+    q = insert(:quote)
+    insert(:quote_tag, tag: qt.tag, quote: q)
+
+    assert %Quote{tags: tags} = Repo.preload(q, [:tags])
+    assert length(tags) == 1
   end
 end

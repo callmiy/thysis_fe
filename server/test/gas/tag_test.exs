@@ -3,6 +3,16 @@ defmodule Gas.TagsTest do
 
   alias Gas.Tag
   alias Gas.TagApi, as: Api
+  alias Gas.QuoteTagApi, as: TagApi
+
+  defp make_tag(attrs \\ %{}) do
+    {:ok, tag} =
+      :tag
+      |> params_for(attrs)
+      |> Api.create_()
+
+    tag
+  end
 
   test "list/0 returns all tags" do
     tag = make_tag()
@@ -52,12 +62,22 @@ defmodule Gas.TagsTest do
     assert %Ecto.Changeset{} = Api.change_(tag)
   end
 
-  defp make_tag(attrs \\ %{}) do
-    {:ok, tag} =
-      :tag
-      |> params_for(attrs)
-      |> Api.create_()
+  test "has many quotes" do
+    %Tag{id: tag_id} = tag = make_tag()
 
-    tag
+    insert_list(5, :quote)
+    |> Enum.each(&TagApi.create_(%{quote_id: &1.id, tag_id: tag_id}))
+
+    assert %Tag{quotes: quotes} = Repo.preload(tag, [:quotes])
+    assert length(quotes) == 5
+  end
+
+  test "can not be binded to one quote multiple times" do
+    qt = insert(:quote_tag)
+    quote_tag_attrs = %{tag_id: qt.tag_id, quote_id: qt.quote_id}
+
+    assert {:error, %Ecto.Changeset{}} = TagApi.create_(quote_tag_attrs)
+    assert(%Tag{quotes: quotes} = Repo.preload(qt.tag, [:quotes]))
+    assert length(quotes) == 1
   end
 end

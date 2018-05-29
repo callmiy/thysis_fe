@@ -2,8 +2,11 @@ defmodule Gas.Tag do
   use Ecto.Schema
   import Ecto.Changeset
 
+  alias Gas.Quote
+
   schema "tags" do
     field(:text, :string)
+    many_to_many(:quotes, Quote, join_through: "quote_tags")
 
     timestamps()
   end

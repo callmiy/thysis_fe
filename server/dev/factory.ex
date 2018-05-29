@@ -5,6 +5,7 @@ defmodule Gas.Factory do
   alias Gas.Source
   alias Gas.Quote
   alias Gas.Tag
+  alias Gas.QuoteTag
 
   @start_date ~D[1998-01-01]
   @end_date ~D[2018-12-31]
@@ -54,6 +55,13 @@ defmodule Gas.Factory do
   def tag_factory do
     %Tag{
       text: Faker.String.base64(Faker.random_between(5, 15))
+    }
+  end
+
+  def quote_tag_factory do
+    %QuoteTag{
+      quote: build(:quote),
+      tag: build(:tag)
     }
   end
 

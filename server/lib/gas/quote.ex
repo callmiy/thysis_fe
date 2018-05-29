@@ -3,6 +3,7 @@ defmodule Gas.Quote do
   import Ecto.Changeset
 
   alias Gas.Source
+  alias Gas.Tag
 
   @timestamps_opts [
     type: Timex.Ecto.DateTime,
@@ -15,6 +16,7 @@ defmodule Gas.Quote do
     field(:page_end, :integer)
     field(:text, :string)
     belongs_to(:source, Source)
+    many_to_many(:tags, Tag, join_through: "quote_tags")
 
     timestamps()
   end

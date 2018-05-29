@@ -8,3 +8,7 @@ alias Gas.SourceApi
 alias Gas.SourceTypeApi
 alias Gas.SourceType
 alias Gas.Factory
+alias Gas.Tag
+alias Gas.TagApi
+alias Gas.QuoteTag
+alias Gas.QuoteTagApi
