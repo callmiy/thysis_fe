@@ -4,6 +4,7 @@ defmodule Gas.Factory do
   alias Gas.SourceType
   alias Gas.Source
   alias Gas.Quote
+  alias Gas.Tag
 
   @start_date ~D[1998-01-01]
   @end_date ~D[2018-12-31]
@@ -47,6 +48,12 @@ defmodule Gas.Factory do
       page_end: page_end,
       text: Faker.String.base64(Faker.random_between(50, 200)),
       source: build(:source)
+    }
+  end
+
+  def tag_factory do
+    %Tag{
+      text: Faker.String.base64(Faker.random_between(5, 15))
     }
   end
 

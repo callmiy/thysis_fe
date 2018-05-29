@@ -27,7 +27,8 @@ config :ex_admin,
     GasWeb.ExAdmin.Dashboard,
     GasWeb.ExAdmin.SourceType,
     GasWeb.ExAdmin.Source,
-    GasWeb.ExAdmin.Quote
+    GasWeb.ExAdmin.Quote,
+    GasWeb.ExAdmin.Tag
   ]
 
 # Import environment specific config. This must remain at the bottom
