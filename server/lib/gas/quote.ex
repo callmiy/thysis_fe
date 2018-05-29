@@ -11,10 +11,10 @@ defmodule Gas.Quote do
   ]
 
   schema "quotes" do
+    field(:text, :string)
     field(:date, :date)
     field(:page_start, :integer)
     field(:page_end, :integer)
-    field(:text, :string)
     belongs_to(:source, Source)
     many_to_many(:tags, Tag, join_through: "quote_tags")
 
