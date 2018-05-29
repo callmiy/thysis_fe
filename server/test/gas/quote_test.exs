@@ -26,19 +26,16 @@ defmodule Gas.QuotesTest do
   test "create_/1 with valid data creates a quote" do
     %{
       date: date,
-      page_start: start,
       text: text
     } = valid_attrs = params_with_assocs(:quote)
 
     assert {:ok, %Quote{} = quote_} = Api.create_(valid_attrs)
     assert quote_.date == date
-    assert quote_.page_end == valid_attrs[:page_end]
-    assert quote_.page_start == start
     assert quote_.text == text
   end
 
   test "create_/1 with invalid data returns error changeset" do
-    invalid_attrs = params_with_assocs(:quote, page_start: nil)
+    invalid_attrs = params_with_assocs(:quote, text: nil)
     assert {:error, %Ecto.Changeset{}} = Api.create_(invalid_attrs)
   end
 
@@ -47,19 +44,17 @@ defmodule Gas.QuotesTest do
 
     %{
       date: date,
-      page_start: start,
       text: text
     } = update_attrs = params_for(:quote)
 
     assert {:ok, %Quote{} = quote_} = Api.update_(quote_, update_attrs)
     assert quote_.date == date
-    assert quote_.page_start == start
     assert quote_.text == text
   end
 
   test "update_/2 with invalid data returns error changeset" do
     quote_ = make_quote()
-    assert {:error, %Ecto.Changeset{}} = Api.update_(quote_, %{date: nil})
+    assert {:error, %Ecto.Changeset{}} = Api.update_(quote_, %{text: nil})
     assert quote_ == Api.get!(quote_.id)
   end
 

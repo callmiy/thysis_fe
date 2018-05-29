@@ -27,19 +27,30 @@ defmodule Gas.Factory do
   end
 
   def quote_factory do
-    page_start = Faker.random_between(1, 100)
-
-    page_end =
+    page_start =
       Enum.random([
-        page_start + Faker.random_between(2, 100),
+        Faker.random_between(1, 100),
         nil
       ])
+
+    page_end =
+      if page_start do
+        Enum.random([
+          page_start + Faker.random_between(2, 100),
+          nil
+        ])
+      else
+        nil
+      end
 
     %Quote{
       date: random_date(),
       page_start: page_start,
       page_end: page_end,
       text: Faker.String.base64(Faker.random_between(50, 200)),
+      volume: Enum.random([get_random_string_integer(), nil]),
+      issue: Enum.random([get_random_string_integer(), nil]),
+      extras: Enum.random([Faker.String.base64(), nil]),
       source: build(:source)
     }
   end
@@ -60,4 +71,6 @@ defmodule Gas.Factory do
   def map(built), do: Map.from_struct(built)
 
   defp random_date, do: Faker.Date.between(@start_date, @end_date)
+
+  defp get_random_string_integer, do: Integer.to_string(Faker.random_between(2, 100))
 end

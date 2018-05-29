@@ -10,11 +10,25 @@ defmodule Gas.Quote do
     autogenerate: {Timex.Ecto.DateTime, :autogenerate, []}
   ]
 
+  @cast_attrs [
+    :date,
+    :page_start,
+    :page_end,
+    :text,
+    :source_id,
+    :volume,
+    :issue,
+    :extras
+  ]
+
   schema "quotes" do
     field(:text, :string)
     field(:date, :date)
     field(:page_start, :integer)
     field(:page_end, :integer)
+    field(:volume, :string)
+    field(:issue, :string)
+    field(:extras, :string)
     belongs_to(:source, Source)
     many_to_many(:tags, Tag, join_through: "quote_tags")
 
@@ -24,7 +38,7 @@ defmodule Gas.Quote do
   @doc false
   def changeset(quote, attrs \\ %{}) do
     quote
-    |> cast(attrs, [:date, :page_start, :page_end, :text, :source_id])
-    |> validate_required([:date, :page_start, :text, :source_id])
+    |> cast(attrs, @cast_attrs)
+    |> validate_required([:text, :source_id])
   end
 end
