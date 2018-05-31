@@ -101,4 +101,33 @@ defmodule Gas.SourceTypeApi do
   def change_(%SourceType{} = source_type) do
     SourceType.changeset(source_type, %{})
   end
+
+  @doc """
+  Gets a single source_type by id or name.
+
+  Returns `nil` if the SourceType does not exist.
+
+  ## Examples
+
+      iex> get_source_type_by(%{id: 123})
+      %SourceType{}
+
+      iex> get_source_type_by(%{name: "some source type name"})
+      %SourceType{}
+
+      iex> get_source_type_by(%{id: 123, name: "some source type name"})
+      %SourceType{}
+
+      iex> get_source_type_by(456)
+      nil
+
+  """
+  @spec get_source_type_by(
+          %{id: String.t() | integer}
+          | %{name: String.t()}
+          | %{id: String.t() | integer, name: String.t()}
+        ) :: %SourceType{} | nil
+  def get_source_type_by(params) do
+    Repo.get_by(SourceType, params)
+  end
 end
