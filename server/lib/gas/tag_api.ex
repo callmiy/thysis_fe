@@ -101,4 +101,33 @@ defmodule Gas.TagApi do
   def change_(%Tag{} = tag) do
     Tag.changeset(tag, %{})
   end
+
+  @doc """
+  Gets a single tag by id or text.
+
+  Returns `nil` if the Tag does not exist.
+
+  ## Examples
+
+      iex> get_tag_by(%{id: 123})
+      %Tag{}
+
+      iex> get_tag_by(%{text: "some tag text"})
+      %Tag{}
+
+      iex> get_tag_by(%{id: 123, text: "some tag text"})
+      %Tag{}
+
+      iex> get_tag_by(456)
+      nil
+
+  """
+  @spec get_tag_by(
+          %{id: String.t() | integer}
+          | %{text: String.t()}
+          | %{id: String.t() | integer, text: String.t()}
+        ) :: %Tag{} | nil
+  def get_tag_by(params) do
+    Repo.get_by(Tag, params)
+  end
 end

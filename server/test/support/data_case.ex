@@ -13,6 +13,8 @@ defmodule Gas.DataCase do
   """
 
   use ExUnit.CaseTemplate
+  alias Gas.TagApi
+  alias Gas.Factory
 
   using do
     quote do
@@ -50,5 +52,14 @@ defmodule Gas.DataCase do
         String.replace(acc, "%{#{key}}", to_string(value))
       end)
     end)
+  end
+
+  def make_tag(attrs \\ %{}) do
+    {:ok, tag} =
+      :tag
+      |> Factory.params_for(attrs)
+      |> TagApi.create_()
+
+    tag
   end
 end

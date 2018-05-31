@@ -18,4 +18,24 @@ defmodule GasWeb.Router do
     pipe_through(:browser)
     admin_routes()
   end
+
+  scope "/" do
+    pipe_through(:api)
+
+    forward(
+      "/__api",
+      Absinthe.Plug,
+      schema: GasWeb.Schema,
+      context: %{pubsub: GasWeb.Endpoint}
+    )
+
+    if Mix.env() == :dev do
+      forward(
+        "/__graphiql",
+        Absinthe.Plug.GraphiQL,
+        schema: GasWeb.Schema,
+        context: %{pubsub: GasWeb.Endpoint}
+      )
+    end
+  end
 end

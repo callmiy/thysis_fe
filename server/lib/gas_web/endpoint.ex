@@ -41,7 +41,12 @@ defmodule GasWeb.Endpoint do
 
   plug(
     Plug.Parsers,
-    parsers: [:urlencoded, :multipart, :json],
+    parsers: [
+      :urlencoded,
+      :multipart,
+      :json,
+      Absinthe.Plug.Parser
+    ],
     pass: ["*/*"],
     json_decoder: Poison
   )

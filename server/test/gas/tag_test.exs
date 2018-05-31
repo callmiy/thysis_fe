@@ -5,15 +5,6 @@ defmodule Gas.TagsTest do
   alias Gas.TagApi, as: Api
   alias Gas.QuoteTagApi, as: TagApi
 
-  defp make_tag(attrs \\ %{}) do
-    {:ok, tag} =
-      :tag
-      |> params_for(attrs)
-      |> Api.create_()
-
-    tag
-  end
-
   test "list/0 returns all tags" do
     tag = make_tag()
     assert Api.list() == [tag]
@@ -79,5 +70,23 @@ defmodule Gas.TagsTest do
     assert {:error, %Ecto.Changeset{}} = TagApi.create_(quote_tag_attrs)
     assert(%Tag{quotes: quotes} = Repo.preload(qt.tag, [:quotes]))
     assert length(quotes) == 1
+  end
+
+  test "gets tag by id and text returns Tag" do
+    %Tag{id: tag_id, text: text} = make_tag()
+
+    assert %Tag{} = Api.get_tag_by(%{id: tag_id, text: text})
+  end
+
+  test "gets tag by id and text returns nil for wrong text" do
+    %Tag{id: tag_id} = make_tag(%{text: "lovely text"})
+
+    assert nil == Api.get_tag_by(%{id: tag_id, text: "lovely text1"})
+  end
+
+  test "gets tag by id and text returns nil for id" do
+    %Tag{id: tag_id, text: text} = make_tag()
+
+    assert nil == Api.get_tag_by(%{id: tag_id + 1, text: text})
   end
 end
