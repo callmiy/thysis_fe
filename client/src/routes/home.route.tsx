@@ -3,145 +3,111 @@ import jss from "jss";
 import preset from "jss-preset-default";
 import { RouteComponentProps } from "react-router-dom";
 
-import { POSITION_RELATIVE, POSITION_ABSOLUTE } from "../constants";
-import { Loading } from "../App";
+import Header from "../components/header.component";
+import Tags from "../components/tags.component";
+import NewQuote from "../components/new-quote.component";
+import { SimpleCss } from "../constants";
 import { TagFragmentFragment } from "../graphql/gen.types";
-import { TagsMinimalRunQuery } from "../graphql/ops.types";
-import TAGS_QUERY from "../graphql/tags-minimal.query";
 
 jss.setup(preset());
 
 const styles = {
-  link: {
-    textDecoration: "none"
+  root: {
+    height: "100%"
   },
 
-  tagsContainer: {
-    boxShadow: `
-    0px 1px 5px 0px rgba(0, 0, 0, 0.2),
-    0px 2px 2px 0px rgba(0, 0, 0, 0.14),
-    0px 3px 1px -2px rgba(0, 0, 0, 0.12)`,
-    background: "#fff"
+  container: {
+    display: "flex"
   },
 
-  tagItemContainer: {
-    display: "flex",
-    padding: 5,
-    "&:hover": {
-      background: "#e8e2e2"
-    },
-    margin: 5,
-    cursor: "pointer"
-  },
-
-  tagItem: {
+  main: {
     flex: 1,
-    margin: "5px 0 0 10px",
-    borderBottom: "1px solid #dccfcf",
-    position: POSITION_RELATIVE
+    marginRight: "5px"
   },
 
-  tagItemLast: {
-    borderBottom: "none"
-  },
-
-  tagItemMenuIcon: {
-    position: POSITION_ABSOLUTE,
-    right: -15,
-    top: -15
+  tags: {
+    overflowY: "scroll",
+    height: "600px"
   }
-};
+} as SimpleCss;
 
 const { classes } = jss.createStyleSheet(styles).attach();
 
-// A SINGLE TAG
+export type AddTagContext = (tag: TagFragmentFragment) => void;
+export type RemoveTagContext = (id: string) => void;
 
-type ATag = TagFragmentFragment;
-
-interface TagComponentProps {
-  tag: ATag;
-  index: number;
-  isLast: boolean;
+export interface TagContextValue {
+  tags: TagFragmentFragment[];
+  addTag: AddTagContext;
+  removeTag: RemoveTagContext;
 }
 
-class TagComponent extends React.PureComponent<TagComponentProps> {
-  render() {
-    const { id, text } = this.props.tag;
-    // const className = `${classes.tagItem} ${
-    //   this.props.isLast ? classes.tagItemLast : ""
-    // } `;
+const TagContext = React.createContext<TagContextValue>({} as TagContextValue);
 
-    return (
-      <div key={id} className={`${classes.tagItemContainer}`}>
-        {text}
-      </div>
-    );
-  }
-}
-
-// A LIST OF TAGS
-interface TagsListProps {
-  tags: ATag[];
-}
-
-// tslint:disable-next-line:max-classes-per-file
-class TagsList extends React.PureComponent<TagsListProps> {
-  tagsLen: number;
-
-  constructor(props: TagsListProps) {
-    super(props);
-    this.renderTag = this.renderTag.bind(this);
-
-    this.tagsLen = props.tags.length;
-  }
-
-  render() {
-    return (
-      <div className={`${classes.tagsContainer}`}>
-        {this.props.tags.map(this.renderTag)}
-      </div>
-    );
-  }
-
-  renderTag(tag: ATag, index: number) {
-    return (
-      <TagComponent
-        key={tag.id + index}
-        tag={tag}
-        index={index}
-        isLast={this.tagsLen - 1 === index}
-      />
-    );
-  }
-}
+export const TagContextConsumer = TagContext.Consumer;
 
 // HOME ROUTE COMPONENT
 
 type HomeProps = RouteComponentProps<{}>;
 
+interface HomeState {
+  selectedTags: TagFragmentFragment[];
+}
+
 // tslint:disable-next-line:max-classes-per-file
-export default class Home extends React.Component<HomeProps, {}> {
+export default class Home extends React.Component<HomeProps, HomeState> {
+  state: HomeState = {
+    selectedTags: []
+  };
+
   constructor(props: HomeProps) {
     super(props);
+    this.addTag = this.addTag.bind(this);
+    this.removeTag = this.removeTag.bind(this);
   }
 
   render() {
     return (
-      <TagsMinimalRunQuery query={TAGS_QUERY}>
-        {({ loading, error, data }) => {
-          if (loading || !data) {
-            return <Loading />;
-          }
+      <div className={`${classes.root}`}>
+        <Header title="Home" />
 
-          const tags = data.tags as ATag[];
-
-          return (
-            <div className={``}>
-              <TagsList tags={tags} />
+        <TagContext.Provider
+          value={{
+            tags: this.state.selectedTags,
+            addTag: this.addTag,
+            removeTag: this.removeTag
+          }}
+        >
+          <div className={`${classes.container}`}>
+            <div className={`${classes.main}`}>
+              <NewQuote />
             </div>
-          );
-        }}
-      </TagsMinimalRunQuery>
+            <Tags className={`${classes.tags}`} />
+          </div>
+        </TagContext.Provider>
+      </div>
     );
   }
+
+  addTag = (tag: TagFragmentFragment) => {
+    const selectedTags = this.state.selectedTags;
+
+    if (selectedTags.find(aTag => aTag === tag)) {
+      return;
+    }
+
+    this.setState(prevState => ({
+      ...prevState,
+      selectedTags: [...selectedTags, tag]
+    }));
+  };
+
+  removeTag = (id: string) => {
+    const selectedTags = this.state.selectedTags.filter(tag => tag.id !== id);
+
+    this.setState(prevState => ({
+      ...prevState,
+      selectedTags
+    }));
+  };
 }
