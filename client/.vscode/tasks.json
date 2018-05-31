@@ -4,39 +4,53 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "start front end js only",
+      "label": "start front end",
       "type": "shell",
       "command": "yarn start",
       "options": {
         "env": {
           "PORT": "3016",
           // "BROWSER": "none",
-          "REACT_APP_API_URL": "http://localhost:4016/__/api"
+          "REACT_APP_API_URL": "http://localhost:4016/__api"
         }
       },
       "group": "build",
       "problemMatcher": []
     },
-
     {
       "label": "build front end dev",
       "type": "shell",
       "command": "yarn deploy",
       "options": {
         "env": {
-          "REACT_APP_API_URL": "http://localhost:4016/__/api"
+          "REACT_APP_API_URL": "http://localhost:4016/__api"
         }
       },
       "group": "build",
       "problemMatcher": []
     },
-
     {
       "label": "build front end prod",
       "type": "shell",
       "command": "yarn deploy",
-      "options": {},
+      "options": {
+        "env": {
+          "REACT_APP_API_URL": "https://gasification.herokuapp.com/__api"
+        }
+      },
       "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "label": "Apollo code gen",
+      "type": "shell",
+      "command": "apollo-codegen generate src/graphql/*.ts --schema schema.json --target typescript --output src/graphql/gen.types.ts",
+      "problemMatcher": []
+    },
+    {
+      "label": "introspect-schema",
+      "type": "shell",
+      "command": "apollo-codegen introspect-schema http://localhost:4016/__api --output schema.json",
       "problemMatcher": []
     }
   ]

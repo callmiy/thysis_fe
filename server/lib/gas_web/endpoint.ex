@@ -64,6 +64,12 @@ defmodule GasWeb.Endpoint do
     signing_salt: "eyu4EJuz"
   )
 
+  plug(
+    Corsica,
+    origins: "*",
+    allow_headers: ~w(Accept Content-Type Authorization Origin)
+  )
+
   plug(GasWeb.Router)
 
   @doc """
