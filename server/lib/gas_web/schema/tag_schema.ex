@@ -11,7 +11,7 @@ defmodule GasWeb.TagSchema do
   @desc "A Tag"
   object :tag do
     field(:id, non_null(:id))
-    field(:text, :string)
+    field(:text, non_null(:string))
     field(:inserted_at, non_null(:iso_datetime))
     field(:updated_at, non_null(:iso_datetime))
   end
