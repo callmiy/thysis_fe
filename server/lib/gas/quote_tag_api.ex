@@ -9,7 +9,7 @@ defmodule Gas.QuoteTagApi do
   alias Gas.QuoteTag
 
   @doc """
-  Returns the list of source_tags.
+  Returns the list of quote_tags.
 
   ## Examples
 
@@ -22,7 +22,7 @@ defmodule Gas.QuoteTagApi do
   end
 
   @doc """
-  Gets a single source_tag.
+  Gets a single quote_tag.
 
   Raises `Ecto.NoResultsError` if the Source tag does not exist.
 
@@ -38,7 +38,7 @@ defmodule Gas.QuoteTagApi do
   def get!(id), do: Repo.get!(QuoteTag, id)
 
   @doc """
-  Creates a source_tag.
+  Creates a quote_tag.
 
   ## Examples
 
@@ -56,19 +56,19 @@ defmodule Gas.QuoteTagApi do
   end
 
   @doc """
-  Updates a source_tag.
+  Updates a quote_tag.
 
   ## Examples
 
-      iex> update_(source_tag, %{field: new_value})
+      iex> update_(quote_tag, %{field: new_value})
       {:ok, %QuoteTag{}}
 
-      iex> update_(source_tag, %{field: bad_value})
+      iex> update_(quote_tag, %{field: bad_value})
       {:error, %Ecto.Changeset{}}
 
   """
-  def update_(%QuoteTag{} = source_tag, attrs) do
-    source_tag
+  def update_(%QuoteTag{} = quote_tag, attrs) do
+    quote_tag
     |> QuoteTag.changeset(attrs)
     |> Repo.update()
   end
@@ -78,27 +78,27 @@ defmodule Gas.QuoteTagApi do
 
   ## Examples
 
-      iex> delete_(source_tag)
+      iex> delete_(quote_tag)
       {:ok, %QuoteTag{}}
 
-      iex> delete_(source_tag)
+      iex> delete_(quote_tag)
       {:error, %Ecto.Changeset{}}
 
   """
-  def delete_(%QuoteTag{} = source_tag) do
-    Repo.delete(source_tag)
+  def delete_(%QuoteTag{} = quote_tag) do
+    Repo.delete(quote_tag)
   end
 
   @doc """
-  Returns an `%Ecto.Changeset{}` for tracking source_tag changes.
+  Returns an `%Ecto.Changeset{}` for tracking quote_tag changes.
 
   ## Examples
 
-      iex> change_(source_tag)
+      iex> change_(quote_tag)
       %Ecto.Changeset{source: %QuoteTag{}}
 
   """
-  def change_(%QuoteTag{} = source_tag) do
-    QuoteTag.changeset(source_tag, %{})
+  def change_(%QuoteTag{} = quote_tag, attrs \\ %{}) do
+    QuoteTag.changeset(quote_tag, attrs)
   end
 end

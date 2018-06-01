@@ -6,6 +6,7 @@ defmodule GasWeb.Schema do
   import_types(GasWeb.TagSchema)
   import_types(GasWeb.SourceTypeSchema)
   import_types(GasWeb.SourceSchema)
+  import_types(GasWeb.QuoteSchema)
 
   query do
     import_fields(:tag_query)
@@ -13,7 +14,7 @@ defmodule GasWeb.Schema do
     import_fields(:source_query)
   end
 
-  # mutation do
-  #   import_fields(:tag_mutation)
-  # end
+  mutation do
+    import_fields(:quote_mutation)
+  end
 end

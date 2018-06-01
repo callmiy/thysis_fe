@@ -4,9 +4,11 @@ defmodule Gas.QuoteApi do
   """
 
   import Ecto.Query, warn: false
-  alias Gas.Repo
 
+  alias Ecto.Multi
+  alias Gas.Repo
   alias Gas.Quote
+  alias Gas.QuoteTag
 
   @doc """
   Returns the list of quotes.
@@ -56,6 +58,59 @@ defmodule Gas.QuoteApi do
   end
 
   @doc """
+  Creates a quote with one or more tags in a single transaction
+
+  ## Examples
+
+      iex> create_with_tags(%{
+                tags: ["1", 2, "3"],
+                text: "cool quote",
+                source_id: "1"
+            })
+      {:ok, %{quote: %Quote{}, quote_tags: 3}}
+
+      iex> create_with_tags(%{
+                tags: ["1", 2, "3"],
+                text: "cool quote",
+                source_id: "1"
+            })
+      {:error, field_operations_names, changeset, successful_operations}
+  """
+
+  @spec create_with_tags(%{
+          tags: [String.t() | Integer.t()],
+          text: String.t(),
+          source_id: String.t() | Integer.t()
+        }) ::
+          {:ok, %{quote: %Quote{}, quote_tags: Integer.t()}}
+          | {:error, Multi.name(), any(), %{optional(Multi.name()) => any()}}
+  def create_with_tags(%{tags: tags} = inputs) do
+    Multi.new()
+    |> Multi.insert(
+      :quote,
+      change_(%Quote{}, Map.delete(inputs, :tags))
+    )
+    |> Multi.merge(fn %{quote: %Quote{id: id}} ->
+      now = Timex.now()
+
+      quote_tags =
+        Enum.map(
+          tags,
+          &[
+            tag_id: String.to_integer("#{&1}"),
+            quote_id: id,
+            inserted_at: now,
+            updated_at: now
+          ]
+        )
+
+      Multi.new()
+      |> Multi.insert_all(:quote_tags, QuoteTag, quote_tags)
+    end)
+    |> Repo.transaction()
+  end
+
+  @doc """
   Updates a quote.
 
   ## Examples
@@ -98,7 +153,7 @@ defmodule Gas.QuoteApi do
       %Ecto.Changeset{source: %Quote{}}
 
   """
-  def change_(%Quote{} = quote) do
-    Quote.changeset(quote, %{})
+  def change_(%Quote{} = quote, attrs \\ %{}) do
+    Quote.changeset(quote, attrs)
   end
 end

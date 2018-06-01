@@ -56,10 +56,14 @@ defmodule Gas.MapHelpers do
   def stringify_keys(nil), do: nil
   def stringify_keys(schema = %{__meta__: _}), do: schema
   def stringify_keys(struct = %{struct: _}), do: struct
+  def stringify_keys(%Date{} = date), do: Date.to_iso8601(date)
+  def stringify_keys(not_a_map) when not is_map(not_a_map), do: not_a_map
 
   def stringify_keys(map = %{}) do
     map
-    |> Enum.map(fn {k, v} -> {Atom.to_string(k), stringify_keys(v)} end)
+    |> Enum.map(fn {k, v} ->
+      {Atom.to_string(k), stringify_keys(v)}
+    end)
     |> Enum.into(%{})
   end
 
@@ -67,10 +71,6 @@ defmodule Gas.MapHelpers do
   # of any map members
   def stringify_keys([head | rest]) do
     [stringify_keys(head) | stringify_keys(rest)]
-  end
-
-  def stringify_keys(not_a_map) do
-    not_a_map
   end
 
   @doc """
