@@ -8,6 +8,7 @@
     "formik": "^0.11.11",
     "graphql": "^0.13.2",
     "graphql-tag": "^2.9.2",
+    "immutability-helper": "^2.7.0",
     "jss": "^9.8.1",
     "jss-preset-default": "^4.5.0",
     "lodash-es": "^4.17.10",
