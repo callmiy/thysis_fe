@@ -19,7 +19,7 @@ defmodule GasWeb.SourceResolver do
   The fields that are important are joined together with "|". Fields that are
   `nil` are ignored
   """
-  @spec display(%Source{}, any, any) :: String.t()
+  @spec display(%Source{}, any, any) :: {:ok, String.t()} | {:error, String.t()}
   def display(%Source{} = source, _, _) do
     text =
       source
