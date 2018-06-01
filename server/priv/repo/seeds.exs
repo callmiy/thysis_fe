@@ -31,7 +31,7 @@ alias Gas.QuoteTag
 Repo.transaction(fn ->
   tags = insert_list(50, :tag)
 
-  insert_list(10, :source_type)
+  [insert(:source_type, name: "Journal") | insert_list(9, :source_type)]
   |> Enum.flat_map(&insert_list(random_between(5, 10), :source, source_type: &1))
   |> Enum.flat_map(&insert_list(random_between(5, 10), :quote, source: &1))
   |> Enum.each(fn q ->
