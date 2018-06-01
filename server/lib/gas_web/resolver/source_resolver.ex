@@ -28,7 +28,8 @@ defmodule GasWeb.SourceResolver do
         {_, nil}, acc -> acc
         {_, v}, acc -> [v | acc]
       end)
-      |> Enum.join("|")
+      |> Enum.reverse()
+      |> Enum.join(" | ")
 
     {:ok, text}
   end

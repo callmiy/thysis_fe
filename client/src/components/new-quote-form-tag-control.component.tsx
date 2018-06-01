@@ -2,9 +2,9 @@ import Select from "react-select";
 import * as React from "react";
 
 import { FormValuesProps } from "./new-quote.component";
-import { TagFragmentFragment } from "../graphql/gen.types";
+import { TagFragFragment } from "../graphql/gen.types";
 
-type Tags = TagFragmentFragment[];
+type Tags = TagFragFragment[];
 
 type TagControlProps = {
   tags: Tags;

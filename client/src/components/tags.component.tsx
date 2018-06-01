@@ -2,9 +2,9 @@ import * as React from "react";
 import jss from "jss";
 import preset from "jss-preset-default";
 
-import { TagFragmentFragment } from "../graphql/gen.types";
+import { TagFragFragment } from "../graphql/gen.types";
 import { TagsMinimalRunQuery } from "../graphql/ops.types";
-import TAGS_QUERY from "../graphql/tags-minimal.query";
+import TAGS_QUERY from "../graphql/tags-mini.query";
 import { Loading } from "../App";
 import { SimpleCss } from "../constants";
 
@@ -51,7 +51,7 @@ const { classes } = jss.createStyleSheet(styles).attach();
 // A SINGLE TAG
 
 interface TagComponentProps {
-  tag: TagFragmentFragment;
+  tag: TagFragFragment;
   index: number;
   isLast: boolean;
 }
@@ -85,7 +85,7 @@ export default class TagsList extends React.PureComponent<TagsListProps> {
             return <Loading />;
           }
 
-          const tags = data.tags as TagFragmentFragment[];
+          const tags = data.tags as TagFragFragment[];
 
           return (
             <div className={`${classes.container} ${this.props.className}`}>
@@ -97,7 +97,7 @@ export default class TagsList extends React.PureComponent<TagsListProps> {
     );
   }
 
-  renderTag(tag: TagFragmentFragment, index: number) {
+  renderTag(tag: TagFragFragment, index: number) {
     return (
       <div key={tag.id} className={`${classes.tag}`}>
         <span className={`${classes.tagIndex}`}>{index + 1}</span>

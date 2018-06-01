@@ -1,10 +1,10 @@
 import gql from "graphql-tag";
 
-export const sourceTypeFragment = gql`
-  fragment SourceTypeFragment on SourceType {
+export const sourceTypeFrag = gql`
+  fragment SourceTypeFrag on SourceType {
     id
     name
   }
 `;
 
-export default sourceTypeFragment;
+export default sourceTypeFrag;

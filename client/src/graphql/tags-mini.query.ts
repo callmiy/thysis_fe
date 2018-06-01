@@ -1,15 +1,15 @@
 import gql from "graphql-tag";
 
-import tagFragment from "./tag.fragment";
+import tagFrag from "./tag-mini.fragment";
 
 export const tagMinimalQuery = gql`
   query TagsMinimal {
     tags {
-      ...TagFragment
+      ...TagFrag
     }
   }
 
-  ${tagFragment}
+  ${tagFrag}
 `;
 
 export default tagMinimalQuery;

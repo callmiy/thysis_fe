@@ -7,7 +7,7 @@ import Header from "../components/header.component";
 import Tags from "../components/tags.component";
 import NewQuote from "../components/new-quote.component";
 import { SimpleCss } from "../constants";
-import { TagFragmentFragment } from "../graphql/gen.types";
+import { TagFragFragment } from "../graphql/gen.types";
 
 jss.setup(preset());
 
@@ -36,7 +36,7 @@ const { classes } = jss.createStyleSheet(styles).attach();
 export type RemoveTagContext = (id: string) => void;
 
 export interface TagContextValue {
-  tags: TagFragmentFragment[];
+  tags: TagFragFragment[];
   removeTag: RemoveTagContext;
 }
 
@@ -49,7 +49,7 @@ export const TagContextConsumer = TagContext.Consumer;
 type HomeProps = RouteComponentProps<{}>;
 
 interface HomeState {
-  selectedTags: TagFragmentFragment[];
+  selectedTags: TagFragFragment[];
 }
 
 // tslint:disable-next-line:max-classes-per-file

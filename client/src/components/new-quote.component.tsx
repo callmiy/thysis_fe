@@ -11,21 +11,21 @@ import {
 } from "formik";
 import { GraphqlQueryControls } from "react-apollo";
 import { graphql, compose } from "react-apollo";
-import Select from "react-select";
 import "react-select/dist/react-select.css";
 import isEmpty from "lodash/isEmpty";
 import update from "immutability-helper";
 
 import {
-  TagFragmentFragment,
-  SourceTypeFragmentFragment,
+  TagFragFragment,
   SourceTypesQuery,
-  TagsMinimalQuery
+  TagsMinimalQuery,
+  SourceMiniFragFragment
 } from "../graphql/gen.types";
 import SOURCE_TYPES_QUERY from "../graphql/source-types.query";
-import TAGS_QUERY from "../graphql/tags-minimal.query";
+import TAGS_QUERY from "../graphql/tags-mini.query";
 import TagControl from "./new-quote-form-tag-control.component";
 import { SimpleCss } from "../constants";
+import SourceControl from "./new-quote-form-source-control.component";
 
 jss.setup(preset());
 
@@ -53,8 +53,8 @@ const { classes } = jss.createStyleSheet(styles).attach();
 
 interface FormValues {
   tags: string[];
-  sourceType: SourceTypeFragmentFragment | null;
   quote: string;
+  source: SourceMiniFragFragment | null;
 }
 
 export type FormValuesProps = FieldProps<FormValues>;
@@ -90,8 +90,8 @@ const NewQuoteForm = compose(sourceTypesGraphQl, tagsGraphQl)(
     state: NewQuoteFormState = {
       initialFormValues: {
         tags: [],
-        sourceType: null,
-        quote: ""
+        quote: "",
+        source: null
       }
     };
 
@@ -100,26 +100,8 @@ const NewQuoteForm = compose(sourceTypesGraphQl, tagsGraphQl)(
       this.renderForm = this.renderForm.bind(this);
       this.renderTagControl = this.renderTagControl.bind(this);
       this.renderQuoteControl = this.renderQuoteControl.bind(this);
-      this.renderSourceTypeControl = this.renderSourceTypeControl.bind(this);
-      this.handleSourceTypeSelected = this.handleSourceTypeSelected.bind(this);
+      this.renderSourceControl = this.renderSourceControl.bind(this);
       this.validate = this.validate.bind(this);
-    }
-
-    componentWillReceiveProps(
-      current: NewQuoteFormProps,
-      prev: NewQuoteFormProps
-    ) {
-      if (current.sourceTypes && current.sourceTypes !== prev.sourceTypes) {
-        const sourceType = current.sourceTypes.find(
-          s => (s ? s.name === "Journal" : false)
-        ) as SourceTypeFragmentFragment;
-
-        this.setState(state =>
-          update(state, {
-            initialFormValues: { sourceType: { $set: sourceType } }
-          })
-        );
-      }
     }
 
     render() {
@@ -144,8 +126,8 @@ const NewQuoteForm = compose(sourceTypesGraphQl, tagsGraphQl)(
         errors.tags = "Select at least one tag";
       } else if (!values.quote) {
         errors.quote = "Enter a quote";
-      } else if (!values.sourceType) {
-        errors.sourceType = "Select a source type";
+      } else if (!values.source) {
+        errors.source = "Select a source";
       }
 
       return errors;
@@ -164,7 +146,7 @@ const NewQuoteForm = compose(sourceTypesGraphQl, tagsGraphQl)(
         <Form>
           <Field name="tags" render={this.renderTagControl} />
           <Field name="quote" render={this.renderQuoteControl} />
-          <Field name="sourceType" render={this.renderSourceTypeControl} />
+          <Field name="source" render={this.renderSourceControl} />
 
           <div className={`${classes.submitReset}`}>
             <button
@@ -202,7 +184,7 @@ const NewQuoteForm = compose(sourceTypesGraphQl, tagsGraphQl)(
 
       this.setState(state =>
         update(state, {
-          initialFormValues: { sourceType: { $set: values.sourceType } }
+          initialFormValues: { source: { $set: values.source } }
         })
       );
 
@@ -210,7 +192,7 @@ const NewQuoteForm = compose(sourceTypesGraphQl, tagsGraphQl)(
     };
 
     renderTagControl = (formProps: FieldProps<FormValues>) => {
-      const tags = this.props.tags as TagFragmentFragment[];
+      const tags = this.props.tags as TagFragFragment[];
 
       return <TagControl {...formProps} tags={tags || []} />;
     };
@@ -231,40 +213,8 @@ const NewQuoteForm = compose(sourceTypesGraphQl, tagsGraphQl)(
       );
     };
 
-    renderSourceTypeControl = ({ field, form }: FieldProps<FormValues>) => {
-      const sourceTypes = this.props
-        .sourceTypes as SourceTypeFragmentFragment[];
-      const { name } = field;
-      const sourceType = form.values.sourceType as SourceTypeFragmentFragment;
-
-      return (
-        <div>
-          <Select
-            {...field}
-            value={sourceType}
-            onChange={this.handleSourceTypeSelected({ form, field })}
-            labelKey="name"
-            valueKey="id"
-            onBlur={this.handleSourceTypeBlurred({ form, field })}
-            options={sourceTypes || []}
-          />
-
-          {form.touched[name] && form.errors[name] && form.errors[name]}
-        </div>
-      );
-    };
-
-    handleSourceTypeSelected = ({ form, field }: FieldProps<FormValues>) => (
-      selectedSourceType: SourceTypeFragmentFragment
-    ) => {
-      form.setFieldValue(field.name, selectedSourceType);
-    };
-
-    handleSourceTypeBlurred = ({
-      form,
-      field
-    }: FieldProps<FormValues>) => () => {
-      form.setFieldTouched(field.name, true);
+    renderSourceControl = (formProps: FieldProps<FormValues>) => {
+      return <SourceControl {...formProps} />;
     };
   }
 );
