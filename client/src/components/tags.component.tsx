@@ -7,11 +7,6 @@ import { TagsMinimalRunQuery } from "../graphql/ops.types";
 import TAGS_QUERY from "../graphql/tags-minimal.query";
 import { Loading } from "../App";
 import { SimpleCss } from "../constants";
-import {
-  TagContextValue,
-  TagContextConsumer,
-  AddTagContext
-} from "../routes/home.route";
 
 jss.setup(preset());
 
@@ -102,28 +97,16 @@ export default class TagsList extends React.PureComponent<TagsListProps> {
     );
   }
 
-  onTagDoubleClicked = (
-    tag: TagFragmentFragment,
-    addTag: AddTagContext
-  ) => () => addTag(tag);
-
   renderTag(tag: TagFragmentFragment, index: number) {
     return (
-      <TagContextConsumer key={tag.id + index}>
-        {({ addTag }: TagContextValue) => (
-          <div
-            className={`${classes.tag}`}
-            onDoubleClick={this.onTagDoubleClicked(tag, addTag)}
-          >
-            <span className={`${classes.tagIndex}`}>{index + 1}</span>
-            <TagComponent
-              tag={tag}
-              index={index}
-              isLast={this.tagsLen - 1 === index}
-            />
-          </div>
-        )}
-      </TagContextConsumer>
+      <div key={tag.id} className={`${classes.tag}`}>
+        <span className={`${classes.tagIndex}`}>{index + 1}</span>
+        <TagComponent
+          tag={tag}
+          index={index}
+          isLast={this.tagsLen - 1 === index}
+        />
+      </div>
     );
   }
 }

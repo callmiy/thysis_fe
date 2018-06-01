@@ -33,12 +33,10 @@ const styles = {
 
 const { classes } = jss.createStyleSheet(styles).attach();
 
-export type AddTagContext = (tag: TagFragmentFragment) => void;
 export type RemoveTagContext = (id: string) => void;
 
 export interface TagContextValue {
   tags: TagFragmentFragment[];
-  addTag: AddTagContext;
   removeTag: RemoveTagContext;
 }
 
@@ -62,7 +60,6 @@ export default class Home extends React.Component<HomeProps, HomeState> {
 
   constructor(props: HomeProps) {
     super(props);
-    this.addTag = this.addTag.bind(this);
     this.removeTag = this.removeTag.bind(this);
   }
 
@@ -74,7 +71,6 @@ export default class Home extends React.Component<HomeProps, HomeState> {
         <TagContext.Provider
           value={{
             tags: this.state.selectedTags,
-            addTag: this.addTag,
             removeTag: this.removeTag
           }}
         >
@@ -88,19 +84,6 @@ export default class Home extends React.Component<HomeProps, HomeState> {
       </div>
     );
   }
-
-  addTag = (tag: TagFragmentFragment) => {
-    const selectedTags = this.state.selectedTags;
-
-    if (selectedTags.find(aTag => aTag === tag)) {
-      return;
-    }
-
-    this.setState(prevState => ({
-      ...prevState,
-      selectedTags: [...selectedTags, tag]
-    }));
-  };
 
   removeTag = (id: string) => {
     const selectedTags = this.state.selectedTags.filter(tag => tag.id !== id);

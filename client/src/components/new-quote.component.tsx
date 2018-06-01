@@ -1,131 +1,239 @@
 import * as React from "react";
 import jss from "jss";
 import preset from "jss-preset-default";
-import { Formik, FormikProps, Form, Field, FieldProps } from "formik";
-import Paper from "@material-ui/core/Paper";
-import Chip from "@material-ui/core/Chip";
-import { withStyles, Theme, WithStyles } from "@material-ui/core/styles";
+import {
+  Formik,
+  FormikProps,
+  Form,
+  Field,
+  FieldProps,
+  FormikErrors
+} from "formik";
+import { GraphqlQueryControls } from "react-apollo";
+import { graphql, compose } from "react-apollo";
+import Select from "react-select";
+import "react-select/dist/react-select.css";
 
-import { TagContextValue, TagContextConsumer } from "../routes/home.route";
-import { TagFragmentFragment } from "../graphql/gen.types";
-import { FLEX_WRAP_WRAP } from "../constants";
+import {
+  TagFragmentFragment,
+  SourceTypeFragmentFragment,
+  SourceTypesQuery,
+  TagsMinimalQuery
+} from "../graphql/gen.types";
+import SOURCE_TYPES_QUERY from "../graphql/source-types.query";
+import TAGS_QUERY from "../graphql/tags-minimal.query";
+import TagControl from "./new-quote-form-tag-control.component";
+import { SimpleCss } from "../constants";
 
 jss.setup(preset());
 
-const styles = ({ palette, spacing }: Theme) => ({
-  root: {
-    display: "flex",
-    flexWrap: FLEX_WRAP_WRAP,
-    padding: spacing.unit / 2,
-    minHeight: "50px"
-  },
-
-  chip: {
-    margin: spacing.unit / 2
-  },
-
-  quoteText: {
-    minHeight: "150px",
+const styles = {
+  quoteTextControl: {
     width: "100%",
-    margin: "10px 5px"
-  }
-});
+    margin: "10px 0",
+    minHeight: "150px"
+  },
 
-type PropsWithStyles = WithStyles<keyof ReturnType<typeof styles>>;
+  submitReset: {
+    margin: "20px 0",
+    display: "flex",
+    justifyContent: "center"
+  },
+
+  submit: {},
+
+  reset: {
+    marginRight: "50px"
+  }
+} as SimpleCss;
+
+const { classes } = jss.createStyleSheet(styles).attach();
 
 interface FormValues {
   tags: string[];
+  sourceType: SourceTypeFragmentFragment | null;
+  quote: string;
 }
 
-interface NewQuoteFormState {
-  tagContext: TagContextValue | null;
-}
+export type FormValuesProps = FieldProps<FormValues>;
 
-const NewQuoteForm = withStyles(styles)<{}>(
-  class extends React.PureComponent<PropsWithStyles, NewQuoteFormState> {
-    state: NewQuoteFormState = {
-      tagContext: null
-    };
+const initialFormValues: FormValues = {
+  tags: [],
+  sourceType: null,
+  quote: ""
+};
 
-    constructor(props: PropsWithStyles) {
+type NewQuoteFormProps = {} & SourceTypesQuery &
+  TagsMinimalQuery &
+  GraphqlQueryControls;
+
+const sourceTypesGraphQl = graphql<{}, SourceTypesQuery, {}, NewQuoteFormProps>(
+  SOURCE_TYPES_QUERY,
+  {
+    props: (props, ownProps: NewQuoteFormProps) => {
+      return { ...ownProps, ...props.data };
+    }
+  }
+);
+
+const tagsGraphQl = graphql<{}, TagsMinimalQuery, {}, NewQuoteFormProps>(
+  TAGS_QUERY,
+  {
+    props: (props, ownProps: NewQuoteFormProps) => {
+      return { ...ownProps, ...props.data };
+    }
+  }
+);
+
+const NewQuoteForm = compose(sourceTypesGraphQl, tagsGraphQl)(
+  class extends React.PureComponent<NewQuoteFormProps> {
+    constructor(props: NewQuoteFormProps) {
       super(props);
       this.renderForm = this.renderForm.bind(this);
       this.renderTagControl = this.renderTagControl.bind(this);
-      this.renderChip = this.renderChip.bind(this);
-      this.removeTag = this.removeTag.bind(this);
       this.renderQuoteControl = this.renderQuoteControl.bind(this);
+      this.renderSourceTypeControl = this.renderSourceTypeControl.bind(this);
+      this.handleSourceTypeSelected = this.handleSourceTypeSelected.bind(this);
+      this.validate = this.validate.bind(this);
     }
 
     render() {
       return (
-        <TagContextConsumer>
-          {(value: TagContextValue) => {
-            this.setState({ tagContext: value });
-
-            return (
-              <div>
-                <h1>New Quote</h1>
-                <Formik
-                  initialValues={{ tags: [] }}
-                  onSubmit={this.submit}
-                  render={this.renderForm}
-                />
-              </div>
-            );
-          }}
-        </TagContextConsumer>
+        <div>
+          <h1>New Quote</h1>
+          <Formik
+            initialValues={initialFormValues}
+            onSubmit={this.submit}
+            render={this.renderForm}
+            validate={this.validate}
+          />
+        </div>
       );
     }
 
-    submit = (values: FormValues) => alert(JSON.stringify(values));
+    validate = (values: FormValues) => {
+      const errors: FormikErrors<FormValues> = {};
 
-    renderTagControl = ({ field, form }: FieldProps<FormValues>) => {
-      const tags = this.state.tagContext ? this.state.tagContext.tags : [];
+      if (!values.tags.length) {
+        errors.tags = "Select at least one tag";
+      } else if (!values.quote) {
+        errors.quote = "Enter a quote";
+      } else if (!values.sourceType) {
+        errors.sourceType = "Select a source type";
+      }
 
+      return errors;
+    };
+
+    renderForm = ({
+      handleReset,
+      dirty,
+      isSubmitting
+    }: FormikProps<FormValues>) => {
       return (
-        <div>
-          <Paper className={this.props.classes.root}>
-            {tags.map(this.renderChip)}
-          </Paper>
-          {form.touched.tags && form.errors.tags && form.errors.tags}
-        </div>
+        <Form>
+          <Field name="tags" render={this.renderTagControl} />
+          <Field name="quote" render={this.renderQuoteControl} />
+          <Field name="sourceType" render={this.renderSourceTypeControl} />
+
+          <div className={`${classes.submitReset}`}>
+            <button
+              type="button"
+              className={`${classes.reset}`}
+              onClick={handleReset}
+              disabled={!dirty || isSubmitting}
+            >
+              Reset
+            </button>
+
+            <button type="submit" disabled={!dirty || isSubmitting}>
+              Submit
+            </button>
+          </div>
+        </Form>
       );
+    };
+
+    submit = (values: FormValues) => {
+      // tslint:disable-next-line:no-console
+      console.log(
+        `
+
+
+
+        values`,
+        values,
+        `
+
+
+
+        `
+      );
+    };
+
+    renderTagControl = (formProps: FieldProps<FormValues>) => {
+      const tags = this.props.tags as TagFragmentFragment[];
+
+      return <TagControl {...formProps} tags={tags || []} />;
     };
 
     renderQuoteControl = ({ field, form }: FieldProps<FormValues>) => {
+      const { name } = field;
+
       return (
         <div>
           <textarea
-            className={this.props.classes.quoteText}
+            className={`${classes.quoteTextControl}`}
             {...field}
             placeholder="Quote text"
           />
-          {form.touched.tags && form.errors.tags && form.errors.tags}
+
+          {form.touched[name] && form.errors[name] && form.errors[name]}
         </div>
       );
     };
 
-    renderChip = ({ id, text }: TagFragmentFragment) => (
-      <Chip
-        key={id}
-        label={text}
-        onDelete={this.removeTag(id)}
-        className={this.props.classes.chip}
-      />
-    );
+    renderSourceTypeControl = ({ field, form }: FieldProps<FormValues>) => {
+      const { loading } = this.props;
+      const sourceTypes = this.props
+        .sourceTypes as SourceTypeFragmentFragment[];
 
-    removeTag = (id: string) => () => {
-      if (this.state.tagContext) {
-        this.state.tagContext.removeTag(id);
+      if (loading || !sourceTypes) {
+        return <div>loading..</div>;
       }
+
+      const { name } = field;
+      const sourceType = form.values.sourceType as SourceTypeFragmentFragment;
+
+      return (
+        <div>
+          <Select
+            {...field}
+            value={sourceType}
+            onChange={this.handleSourceTypeSelected({ form, field })}
+            labelKey="name"
+            valueKey="id"
+            onBlur={this.handleSourceTypeBlurred({ form, field })}
+            options={sourceTypes}
+          />
+
+          {form.touched[name] && form.errors[name] && form.errors[name]}
+        </div>
+      );
     };
 
-    renderForm = (formikBag: FormikProps<FormValues>) => (
-      <Form>
-        <Field name="tags" render={this.renderTagControl} />
-        <Field name="quote" render={this.renderQuoteControl} />
-      </Form>
-    );
+    handleSourceTypeSelected = ({ form, field }: FieldProps<FormValues>) => (
+      selectedSourceType: SourceTypeFragmentFragment
+    ) => {
+      form.setFieldValue(field.name, selectedSourceType);
+    };
+
+    handleSourceTypeBlurred = ({
+      form,
+      field
+    }: FieldProps<FormValues>) => () => {
+      form.setFieldTouched(field.name, true);
+    };
   }
 );
 
