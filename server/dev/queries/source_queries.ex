@@ -14,6 +14,7 @@ defmodule GasWeb.SourceQueries do
         url
         insertedAt
         updatedAt
+        display
       }
     }
     """

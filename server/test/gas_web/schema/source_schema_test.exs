@@ -31,10 +31,13 @@ defmodule GasWeb.SourceSchemaTest do
       assert %{
                "id" => ^id,
                "author" => ^author,
+               "display" => display,
                "sourceType" => %{
                  "id" => ^source_type_id
                }
              } = List.last(sources)
+
+      assert String.contains?(display, author)
     end
   end
 end

@@ -20,6 +20,10 @@ defmodule GasWeb.SourceSchema do
     field(:url, :string)
     field(:inserted_at, non_null(:iso_datetime))
     field(:updated_at, non_null(:iso_datetime))
+
+    field :display, :string do
+      resolve(&SourceResolver.display/3)
+    end
   end
 
   @desc "Get source input"
