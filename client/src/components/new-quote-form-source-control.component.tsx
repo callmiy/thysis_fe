@@ -8,8 +8,10 @@ import SOURCE_MINI_QUERY from "../graphql/source-mini.query";
 
 type Sources = SourceMiniFragFragment[];
 
-export default class SourceControl extends React.Component<FormValuesProps> {
-  constructor(props: FormValuesProps) {
+type SourceControlProps = FormValuesProps & { selectError: boolean };
+
+export default class SourceControl extends React.Component<SourceControlProps> {
+  constructor(props: SourceControlProps) {
     super(props);
     this.handleChange = this.handleChange.bind(this);
     this.handleBlur = this.handleBlur.bind(this);
@@ -19,39 +21,29 @@ export default class SourceControl extends React.Component<FormValuesProps> {
   render() {
     const {
       field: { name, value },
-      form
+      selectError
     } = this.props;
-    const error = form.errors[name];
-    const touched = form.touched[name];
-
     return (
-      <div>
-        <label htmlFor={name}>Source</label>
+      <SourceMiniRunQuery query={SOURCE_MINI_QUERY}>
+        {({ data }) => {
+          const sources = this.reShapeSources(data) as Sources;
 
-        <SourceMiniRunQuery query={SOURCE_MINI_QUERY}>
-          {({ data }) => {
-            const sources = this.reShapeSources(data) as Sources;
-
-            return (
-              <Select
-                id={name}
-                name={name}
-                options={sources}
-                onChange={this.handleChange}
-                onBlur={this.handleBlur}
-                value={value}
-                labelKey="display"
-                valueKey="id"
-              />
-            );
-          }}
-        </SourceMiniRunQuery>
-
-        {!!error &&
-          touched && (
-            <div style={{ color: "red", marginTop: ".5rem" }}>{error}</div>
-          )}
-      </div>
+          return (
+            <Select
+              className={`${selectError ? "error" : ""}`}
+              id={name}
+              name={name}
+              placeholder="Select source"
+              options={sources}
+              onChange={this.handleChange}
+              onBlur={this.handleBlur}
+              value={value}
+              labelKey="display"
+              valueKey="id"
+            />
+          );
+        }}
+      </SourceMiniRunQuery>
     );
   }
 

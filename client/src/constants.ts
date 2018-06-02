@@ -14,3 +14,5 @@ export const ROOT_CONTAINER_STYLE = {
   display: "flex",
   flexDirection: "column"
 };
+
+export const ERROR_COLOR = "#9f3a38";

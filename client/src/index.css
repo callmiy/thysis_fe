@@ -9,3 +9,23 @@ body,
   margin: 0;
   padding: 0;
 }
+
+#root .Select-input > input {
+  width: 100%;
+  background: none #0000;
+  border: 0 none;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  cursor: default;
+  display: inline-block;
+  font-family: inherit;
+  font-size: inherit;
+  margin: 0;
+  outline: none;
+  line-height: 17px;
+  padding: 8px 0 12px;
+}
+
+.Select.error > .Select-control {
+  border-color: #9f3a38;
+}

@@ -8,37 +8,29 @@ type Tags = TagFragFragment[];
 
 type TagControlProps = {
   tags: Tags;
-} & FormValuesProps;
+} & FormValuesProps & { selectError: boolean };
 
 export default class TagControl extends React.Component<TagControlProps> {
   render() {
     const {
       field: { name, value },
-      form
+      selectError
     } = this.props;
-    const error = form.errors[name];
-    const touched = form.touched[name];
 
     return (
-      <div>
-        <label htmlFor={name}>Tags (select at least one)</label>
-        <Select
-          id={name}
-          name={name}
-          options={this.props.tags}
-          multi={true}
-          onChange={this.handleChange}
-          onBlur={this.handleBlur}
-          value={value}
-          labelKey="text"
-          valueKey="id"
-        />
-
-        {!!error &&
-          touched && (
-            <div style={{ color: "red", marginTop: ".5rem" }}>{error}</div>
-          )}
-      </div>
+      <Select
+        className={`${selectError ? "error" : ""}`}
+        id={name}
+        name={name}
+        placeholder="Select tags"
+        options={this.props.tags}
+        multi={true}
+        onChange={this.handleChange}
+        onBlur={this.handleBlur}
+        value={value}
+        labelKey="text"
+        valueKey="id"
+      />
     );
   }
 

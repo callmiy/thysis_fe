@@ -4,7 +4,6 @@ import preset from "jss-preset-default";
 import { RouteComponentProps } from "react-router-dom";
 
 import Header from "../components/header.component";
-import Tags from "../components/tags.component";
 import NewQuote from "../components/new-quote.component";
 import { SimpleCss, ROOT_CONTAINER_STYLE } from "../constants";
 import { TagFragFragment } from "../graphql/gen.types";
@@ -15,15 +14,9 @@ const styles = {
   homeRoot: ROOT_CONTAINER_STYLE,
 
   homeMain: {
-    ...ROOT_CONTAINER_STYLE,
-    flex: 1,
-    flexDirection: "row",
-    margin: "0 15px"
-  },
-
-  main: {
-    flex: 1,
-    marginRight: "5px"
+    flexGrow: 1,
+    overflowX: "hidden",
+    overflowY: "auto"
   },
 
   tags: {
@@ -49,19 +42,9 @@ export const TagContextConsumer = TagContext.Consumer;
 
 type HomeProps = RouteComponentProps<{}>;
 
-interface HomeState {
-  selectedTags: TagFragFragment[];
-}
-
-// tslint:disable-next-line:max-classes-per-file
-export default class Home extends React.Component<HomeProps, HomeState> {
-  state: HomeState = {
-    selectedTags: []
-  };
-
+export default class Home extends React.Component<HomeProps> {
   constructor(props: HomeProps) {
     super(props);
-    this.removeTag = this.removeTag.bind(this);
   }
 
   render() {
@@ -69,29 +52,10 @@ export default class Home extends React.Component<HomeProps, HomeState> {
       <div className={classes.homeRoot}>
         <Header title="Home" />
 
-        <TagContext.Provider
-          value={{
-            tags: this.state.selectedTags,
-            removeTag: this.removeTag
-          }}
-        >
-          <div className={classes.homeMain}>
-            <div className={classes.main}>
-              <NewQuote />
-            </div>
-            <Tags className={classes.tags} />
-          </div>
-        </TagContext.Provider>
+        <div className={classes.homeMain}>
+          <NewQuote />
+        </div>
       </div>
     );
   }
-
-  removeTag = (id: string) => {
-    const selectedTags = this.state.selectedTags.filter(tag => tag.id !== id);
-
-    this.setState(prevState => ({
-      ...prevState,
-      selectedTags
-    }));
-  };
 }
