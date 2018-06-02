@@ -19,7 +19,8 @@ import TagControl from "./new-quote-form-tag-control.component";
 import SourceControl from "./new-quote-form-source-control.component";
 import Date, { DateType } from "./date.component";
 import { ERROR_COLOR } from "../constants";
-import Page, { PageType } from "./page-start-end.component";
+import Page, { PageType } from "./quote-page-start-end.component";
+import VolumeIssue, { VolumeIssueType } from "./quote-volume-issue.component";
 
 jss.setup(preset());
 
@@ -52,6 +53,8 @@ interface FormValues {
   quote: string;
   date: DateType | null;
   page: PageType | null;
+  volumeIssue: VolumeIssueType | null;
+  extras: string;
 }
 
 interface FormOutputs {
@@ -61,6 +64,9 @@ interface FormOutputs {
   date?: string;
   pageStart?: number;
   pageEnd?: number;
+  volume?: string;
+  issue?: string;
+  extras?: string;
 }
 
 export type FormValuesProps = FieldProps<FormValues>;
@@ -89,7 +95,9 @@ const NewQuoteForm = tagsGraphQl(
         source: null,
         quote: "",
         date: null,
-        page: null
+        page: null,
+        volumeIssue: null,
+        extras: ""
       },
       formOutputs: {}
     };
@@ -109,7 +117,15 @@ const NewQuoteForm = tagsGraphQl(
         "validatesource",
         "validatequote",
         "validatepage",
-        "renderPageControl"
+        "renderPageControl",
+        "renderVolumeIssueControl",
+        "handleDateChange",
+        "handlePageChange",
+        "handleVolumeIssueChange",
+        "handleDateBlur",
+        "handlePageBlur",
+        "handleVolumeIssueBlur",
+        "renderExtrasControl"
       ].forEach(fn => (this[fn] = this[fn].bind(this)));
     }
 
@@ -156,6 +172,24 @@ const NewQuoteForm = tagsGraphQl(
           formOutputs: {
             quote: {
               $set: quote
+            }
+          }
+        })
+      );
+
+      return "";
+    };
+
+    validateextras = (extras: string | null) => {
+      if (!extras) {
+        return "";
+      }
+
+      this.setState(prev =>
+        update(prev, {
+          formOutputs: {
+            extras: {
+              $set: extras
             }
           }
         })
@@ -275,6 +309,30 @@ const NewQuoteForm = tagsGraphQl(
       return "";
     };
 
+    validatevolumeIssue = (volumeIssue: VolumeIssueType | null) => {
+      if (!volumeIssue) {
+        return "";
+      }
+
+      const { volume, issue } = volumeIssue;
+
+      this.setState(prev =>
+        update(prev, {
+          formOutputs: {
+            volume: {
+              $set: volume
+            },
+
+            issue: {
+              $set: issue
+            }
+          }
+        })
+      );
+
+      return "";
+    };
+
     renderForm = ({
       handleReset,
       dirty,
@@ -295,6 +353,8 @@ const NewQuoteForm = tagsGraphQl(
 
           <Field name="date" render={this.renderDateControl} />
           <Field name="page" render={this.renderPageControl} />
+          <Field name="volumeIssue" render={this.renderVolumeIssueControl} />
+          <Field name="extras" render={this.renderExtrasControl} />
 
           <Form.Group inline={true} className={`${classes.submitReset}`}>
             <Form.Field
@@ -378,46 +438,99 @@ const NewQuoteForm = tagsGraphQl(
       );
     };
 
-    renderDateControl = ({ field, form }: FieldProps<FormValues>) => {
+    renderExtrasControl = (formProps: FieldProps<FormValues>) => {
+      const { field, form } = formProps;
+      const { name } = field;
+      const error = form.errors[name];
+      const booleanError = !!error;
+      // const touched = form.touched[name];
+      const label = "Extras";
+
+      return (
+        <Form.Field
+          control={TextArea}
+          placeholder={label}
+          label={label}
+          id={name}
+          error={booleanError}
+          {...field}
+        />
+      );
+    };
+
+    renderDateControl = (formik: FieldProps<FormValues>) => {
+      const { field, form } = formik;
       const { name } = field;
       const error = form.errors[name];
       const booleanError = !!error;
       // const touched = form.touched[name];
 
-      const handleDateChange = (date: DateType) =>
-        form.setFieldValue(name, date);
-
-      const handleDateBlur = () => form.setFieldTouched(name, true);
-
       return (
         <Date
           className={`${booleanError ? classes.errorBorder : ""}`}
-          onChange={handleDateChange}
-          onBlur={handleDateBlur}
+          onChange={this.handleDateChange(name, formik)}
+          onBlur={this.handleDateBlur(name, formik)}
           value={field.value}
         />
       );
     };
 
-    renderPageControl = ({ field, form }: FieldProps<FormValues>) => {
+    handleDateChange = (name: string, { form }: FieldProps<FormValues>) => (
+      date: DateType
+    ) => form.setFieldValue(name, date);
+
+    handleDateBlur = (name: string, { form }: FieldProps<FormValues>) => () =>
+      form.setFieldTouched(name, true);
+
+    renderPageControl = (formik: FieldProps<FormValues>) => {
+      const { field, form } = formik;
       const { name } = field;
       const error = form.errors[name];
       const booleanError = !!error;
 
-      const handleDateChange = (page: PageType) =>
-        form.setFieldValue(name, page);
-
-      const handleDateBlur = () => form.setFieldTouched(name, true);
-
       return (
         <Page
           className={`${booleanError ? classes.errorBorder : ""}`}
-          onChange={handleDateChange}
-          onBlur={handleDateBlur}
+          onChange={this.handlePageChange(name, formik)}
+          onBlur={this.handlePageBlur(name, formik)}
           value={field.value}
         />
       );
     };
+
+    handlePageChange = (name: string, { form }: FieldProps<FormValues>) => (
+      page: PageType
+    ) => form.setFieldValue(name, page);
+
+    handlePageBlur = (name: string, { form }: FieldProps<FormValues>) => () =>
+      form.setFieldTouched(name, true);
+
+    renderVolumeIssueControl = (formik: FieldProps<FormValues>) => {
+      const { field, form } = formik;
+      const { name } = field;
+      const error = form.errors[name];
+      const booleanError = !!error;
+
+      return (
+        <VolumeIssue
+          className={`${booleanError ? classes.errorBorder : ""}`}
+          onChange={this.handleVolumeIssueChange(name, formik)}
+          onBlur={this.handleVolumeIssueBlur(name, formik)}
+          value={field.value}
+        />
+      );
+    };
+
+    handleVolumeIssueChange = (
+      name: string,
+      { form }: FieldProps<FormValues>
+    ) => (volumeIssue: VolumeIssueType) =>
+      form.setFieldValue(name, volumeIssue);
+
+    handleVolumeIssueBlur = (
+      name: string,
+      { form }: FieldProps<FormValues>
+    ) => () => form.setFieldTouched(name, true);
 
     renderSourceControl = (formProps: FieldProps<FormValues>) => {
       const {
