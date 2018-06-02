@@ -1,32 +1,28 @@
-import React from "react";
-import { withStyles } from "@material-ui/core/styles";
-import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
-import Typography from "@material-ui/core/Typography";
+import * as React from "react";
+import { Menu } from "semantic-ui-react";
+import jss from "jss";
+import preset from "jss-preset-default";
 
-const decorate = withStyles(({ palette, spacing }) => ({
-  root: {
-    padding: spacing.unit,
-    backgroundColor: palette.background.default,
-    color: palette.primary.main,
-    flexGrow: 1
+jss.setup(preset());
+
+const styles = {
+  header: {
+    flexShrink: 0, // don't allow flexbox to shrink it
+    borderRadius: 0, // clear semantic-ui style
+    margin: "0 0 10px 0" // clear semantic-ui style
   }
-}));
+};
 
 interface Props {
   title: string;
 }
 
-export default decorate<Props>(({ classes, title }) => {
+export default ({ title }: Props) => {
   return (
-    <div className={classes.root}>
-      <AppBar position="static" color="default">
-        <Toolbar>
-          <Typography variant="title" color="inherit">
-            {title}
-          </Typography>
-        </Toolbar>
-      </AppBar>
-    </div>
+    <Menu style={styles.header} inverted={true} color="green" borderless={true}>
+      <Menu.Item as="h2" header={true}>
+        {title}
+      </Menu.Item>
+    </Menu>
   );
-});
+};

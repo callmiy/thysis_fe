@@ -8,3 +8,9 @@ export const FLEX_WRAP_WRAP = "wrap" as "wrap";
 export const BORDER_COLLAPSE_SEPARATE = "separate" as "separate";
 
 export type SimpleCss = Record<string, SimpleStyle>;
+
+export const ROOT_CONTAINER_STYLE = {
+  height: "100%",
+  display: "flex",
+  flexDirection: "column"
+};

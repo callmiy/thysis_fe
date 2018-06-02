@@ -21,6 +21,8 @@
     "react-router-dom": "^4.2.2",
     "react-scripts-ts": "2.16.0",
     "react-select": "^1.2.1",
+    "semantic-ui-css": "^2.3.1",
+    "semantic-ui-react": "^0.80.2",
     "tslib": "^1.9.1"
   },
   "scripts": {

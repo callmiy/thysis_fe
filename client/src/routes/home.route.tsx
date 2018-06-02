@@ -6,18 +6,19 @@ import { RouteComponentProps } from "react-router-dom";
 import Header from "../components/header.component";
 import Tags from "../components/tags.component";
 import NewQuote from "../components/new-quote.component";
-import { SimpleCss } from "../constants";
+import { SimpleCss, ROOT_CONTAINER_STYLE } from "../constants";
 import { TagFragFragment } from "../graphql/gen.types";
 
 jss.setup(preset());
 
 const styles = {
-  root: {
-    height: "100%"
-  },
+  homeRoot: ROOT_CONTAINER_STYLE,
 
-  container: {
-    display: "flex"
+  homeMain: {
+    ...ROOT_CONTAINER_STYLE,
+    flex: 1,
+    flexDirection: "row",
+    margin: "0 15px"
   },
 
   main: {
@@ -65,7 +66,7 @@ export default class Home extends React.Component<HomeProps, HomeState> {
 
   render() {
     return (
-      <div className={`${classes.root}`}>
+      <div className={classes.homeRoot}>
         <Header title="Home" />
 
         <TagContext.Provider
@@ -74,11 +75,11 @@ export default class Home extends React.Component<HomeProps, HomeState> {
             removeTag: this.removeTag
           }}
         >
-          <div className={`${classes.container}`}>
-            <div className={`${classes.main}`}>
+          <div className={classes.homeMain}>
+            <div className={classes.main}>
               <NewQuote />
             </div>
-            <Tags className={`${classes.tags}`} />
+            <Tags className={classes.tags} />
           </div>
         </TagContext.Provider>
       </div>

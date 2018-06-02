@@ -1,6 +1,48 @@
 /* tslint:disable */
 //  This file was automatically generated and should not be edited.
 
+export interface CreateQuoteInput {
+  // The quote date
+  date: string,
+  // Optional miscellaneous information with regards to the quote
+  extras?: string | null,
+  // Optional (journal, textbook, magazine etc.) issue number
+  issue?: string | null,
+  // Optional end of page where quote is located
+  pageEnd?: number | null,
+  // Optional start of page where quote is located
+  pageStart?: number | null,
+  // The source id
+  sourceId: string,
+  // The tags i.e subject matters of the quote
+  tags: Array< string | null >,
+  // The quote text
+  text: string,
+  // Optional (journal, textbook, magazine etc.) volume number
+  volume?: string | null,
+};
+
+export interface createQuoteMutationVariables {
+  quote: CreateQuoteInput,
+};
+
+export interface createQuoteMutation {
+  // Create a quote
+  createQuote:  {
+    id: string,
+    text: string,
+    date: string,
+    source:  {
+      id: string,
+      display: string | null,
+      sourceType:  {
+        id: string,
+        name: string | null,
+      },
+    } | null,
+  } | null,
+};
+
 export interface SourceMiniQuery {
   sources:  Array< {
     id: string,
@@ -24,6 +66,12 @@ export interface TagsMinimalQuery {
     id: string,
     text: string,
   } | null > | null,
+};
+
+export interface QuoteFragFragment {
+  id: string,
+  text: string,
+  date: string,
 };
 
 export interface SourceMiniFragFragment {

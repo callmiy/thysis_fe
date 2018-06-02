@@ -4,14 +4,12 @@ import * as React from "react";
 import Loadable from "react-loadable";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 
-import { ROOT_URL } from "./constants";
+import { ROOT_URL, SimpleCss, ROOT_CONTAINER_STYLE } from "./constants";
 
 jss.setup(preset());
 
 const styles = {
-  app: {
-    height: "100%"
-  },
+  app: ROOT_CONTAINER_STYLE,
 
   loadingIndicator: {
     display: "flex",
@@ -23,7 +21,7 @@ const styles = {
     "font-size": "1.5rem",
     height: "100%"
   }
-};
+} as SimpleCss;
 
 const { classes } = jss.createStyleSheet(styles).attach();
 

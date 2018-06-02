@@ -10,19 +10,20 @@ import {
   FormikErrors
 } from "formik";
 import { GraphqlQueryControls } from "react-apollo";
-import { graphql, compose } from "react-apollo";
+import { graphql } from "react-apollo";
 import "react-select/dist/react-select.css";
 import isEmpty from "lodash/isEmpty";
 import update from "immutability-helper";
 
 import {
   TagFragFragment,
-  SourceTypesQuery,
   TagsMinimalQuery,
   SourceMiniFragFragment
+  // createQuoteMutation,
+  // createQuoteMutationVariables
 } from "../graphql/gen.types";
-import SOURCE_TYPES_QUERY from "../graphql/source-types.query";
 import TAGS_QUERY from "../graphql/tags-mini.query";
+// import QUOTE_MUTATION from "../graphql/quote.mutation";
 import TagControl from "./new-quote-form-tag-control.component";
 import { SimpleCss } from "../constants";
 import SourceControl from "./new-quote-form-source-control.component";
@@ -30,9 +31,17 @@ import SourceControl from "./new-quote-form-source-control.component";
 jss.setup(preset());
 
 const styles = {
+  quoteContainer: {
+    display: "flex"
+  },
+
+  quoteTextControlContainer: {
+    width: "30%"
+  },
+
   quoteTextControl: {
     width: "100%",
-    margin: "10px 0",
+    margin: "20px 0",
     minHeight: "150px"
   },
 
@@ -59,18 +68,7 @@ interface FormValues {
 
 export type FormValuesProps = FieldProps<FormValues>;
 
-type NewQuoteFormProps = {} & SourceTypesQuery &
-  TagsMinimalQuery &
-  GraphqlQueryControls;
-
-const sourceTypesGraphQl = graphql<{}, SourceTypesQuery, {}, NewQuoteFormProps>(
-  SOURCE_TYPES_QUERY,
-  {
-    props: (props, ownProps: NewQuoteFormProps) => {
-      return { ...ownProps, ...props.data };
-    }
-  }
-);
+type NewQuoteFormProps = {} & TagsMinimalQuery & GraphqlQueryControls;
 
 const tagsGraphQl = graphql<{}, TagsMinimalQuery, {}, NewQuoteFormProps>(
   TAGS_QUERY,
@@ -85,7 +83,7 @@ interface NewQuoteFormState {
   initialFormValues: FormValues;
 }
 
-const NewQuoteForm = compose(sourceTypesGraphQl, tagsGraphQl)(
+const NewQuoteForm = tagsGraphQl(
   class extends React.PureComponent<NewQuoteFormProps, NewQuoteFormState> {
     state: NewQuoteFormState = {
       initialFormValues: {
@@ -145,7 +143,11 @@ const NewQuoteForm = compose(sourceTypesGraphQl, tagsGraphQl)(
       return (
         <Form>
           <Field name="tags" render={this.renderTagControl} />
-          <Field name="quote" render={this.renderQuoteControl} />
+
+          <div className={`${classes.quoteContainer}`}>
+            <Field name="quote" render={this.renderQuoteControl} />
+          </div>
+
           <Field name="source" render={this.renderSourceControl} />
 
           <div className={`${classes.submitReset}`}>
@@ -201,7 +203,7 @@ const NewQuoteForm = compose(sourceTypesGraphQl, tagsGraphQl)(
       const { name } = field;
 
       return (
-        <div>
+        <div className={`${classes.quoteTextControlContainer}`}>
           <textarea
             className={`${classes.quoteTextControl}`}
             {...field}
