@@ -19,6 +19,7 @@ import TagControl from "./new-quote-form-tag-control.component";
 import SourceControl from "./new-quote-form-source-control.component";
 import Date, { DateType } from "./date.component";
 import { ERROR_COLOR } from "../constants";
+import Page, { PageType } from "./page-start-end.component";
 
 jss.setup(preset());
 
@@ -50,6 +51,7 @@ interface FormValues {
   source: SourceMiniFragFragment | null;
   quote: string;
   date: DateType | null;
+  page: PageType | null;
 }
 
 interface FormOutputs {
@@ -57,6 +59,8 @@ interface FormOutputs {
   quote?: string;
   source?: string[];
   date?: string;
+  pageStart?: number;
+  pageEnd?: number;
 }
 
 export type FormValuesProps = FieldProps<FormValues>;
@@ -84,7 +88,8 @@ const NewQuoteForm = tagsGraphQl(
         tags: null,
         source: null,
         quote: "",
-        date: null
+        date: null,
+        page: null
       },
       formOutputs: {}
     };
@@ -102,7 +107,9 @@ const NewQuoteForm = tagsGraphQl(
         "validatedate",
         "validatetags",
         "validatesource",
-        "validatequote"
+        "validatequote",
+        "validatepage",
+        "renderPageControl"
       ].forEach(fn => (this[fn] = this[fn].bind(this)));
     }
 
@@ -244,6 +251,30 @@ const NewQuoteForm = tagsGraphQl(
       return isValid ? "" : error;
     };
 
+    validatepage = (page: PageType | null) => {
+      if (!page) {
+        return "";
+      }
+
+      const { start, end } = page;
+
+      this.setState(prev =>
+        update(prev, {
+          formOutputs: {
+            pageStart: {
+              $set: start
+            },
+
+            pageEnd: {
+              $set: end
+            }
+          }
+        })
+      );
+
+      return "";
+    };
+
     renderForm = ({
       handleReset,
       dirty,
@@ -263,6 +294,7 @@ const NewQuoteForm = tagsGraphQl(
           <Field name="quote" render={this.renderQuoteControl} />
 
           <Field name="date" render={this.renderDateControl} />
+          <Field name="page" render={this.renderPageControl} />
 
           <Form.Group inline={true} className={`${classes.submitReset}`}>
             <Form.Field
@@ -359,6 +391,26 @@ const NewQuoteForm = tagsGraphQl(
 
       return (
         <Date
+          className={`${booleanError ? classes.errorBorder : ""}`}
+          onChange={handleDateChange}
+          onBlur={handleDateBlur}
+          value={field.value}
+        />
+      );
+    };
+
+    renderPageControl = ({ field, form }: FieldProps<FormValues>) => {
+      const { name } = field;
+      const error = form.errors[name];
+      const booleanError = !!error;
+
+      const handleDateChange = (page: PageType) =>
+        form.setFieldValue(name, page);
+
+      const handleDateBlur = () => form.setFieldTouched(name, true);
+
+      return (
+        <Page
           className={`${booleanError ? classes.errorBorder : ""}`}
           onChange={handleDateChange}
           onBlur={handleDateBlur}

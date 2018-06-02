@@ -54,7 +54,7 @@ interface DateProps {
 export default class Date extends React.PureComponent<DateProps, State> {
   state: State = { date: {}, errors: {} };
 
-  constructor(props: {}) {
+  constructor(props: DateProps) {
     super(props);
 
     ["handleChange", "handleKeyPress", "getError"].forEach(
