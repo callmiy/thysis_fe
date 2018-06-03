@@ -26,6 +26,10 @@ import SourceTypeControl from "./select-source-type-control.component";
 jss.setup(preset());
 
 const styles = {
+  modal: {
+    marginTop: 0
+  },
+
   formButtonsContainer: {
     display: "flex"
   },
@@ -41,14 +45,16 @@ interface FormValues {
   sourceType: SourceTypeFragFragment | null;
   author: string;
   topic: string;
-  publication?: string | null;
-  url?: string | null;
+  publication: string;
+  url: string;
 }
 
 const initialFormValues: FormValues = {
   sourceType: null,
   author: "",
-  topic: ""
+  topic: "",
+  publication: "",
+  url: ""
 };
 
 export type FormValuesProps = FieldProps<FormValues>;
@@ -81,13 +87,14 @@ export default class NewSourceModal extends React.Component<
       "renderForm",
       "validate",
       "renderSourceTypeControl",
-      "renderAuthorControl",
+      "renderTextControlFormik",
       "validatesourceType",
       "validateauthor",
       "validatetopic",
       "validatepublication",
       "validateurl",
-      "resetModal"
+      "resetModal",
+      "renderTextControl"
     ].forEach(fn => (this[fn] = this[fn].bind(this)));
   }
 
@@ -95,7 +102,12 @@ export default class NewSourceModal extends React.Component<
     const { open, style } = this.props;
 
     return (
-      <Modal style={{ ...(style || {}) }} basic={true} size="small" open={open}>
+      <Modal
+        style={{ ...(style || {}), ...styles.modal }}
+        basic={true}
+        size="small"
+        open={open}
+      >
         <Header icon="user" content="Create quote source" />
 
         <Modal.Content>
@@ -120,10 +132,20 @@ export default class NewSourceModal extends React.Component<
     );
   }
 
-  submit = (createSource: CreateSourceFn) => (
+  submit = (createSource: CreateSourceFn) => async (
     values: FormValues,
     formikBag: FormikProps<FormValues>
-  ) => 1;
+  ) => {
+    formikBag.setSubmitting(true);
+
+    try {
+      await createSource();
+      formikBag.resetForm();
+      setTimeout(this.resetModal, 2300);
+    } catch (error) {
+      formikBag.setSubmitting(false);
+    }
+  };
 
   validate = (values: FormValues) => {
     const errors: FormikErrors<FormValues> = {};
@@ -151,9 +173,15 @@ export default class NewSourceModal extends React.Component<
     const disableSubmit = dirtyOrSubmitting || !isEmpty(errors);
 
     return (
-      <Form onSubmit={handleSubmit}>
-        <Field name="sourceTypes" render={this.renderSourceTypeControl} />
-        <Field name="author" render={this.renderAuthorControl} />
+      <Form onSubmit={handleSubmit} inverted={true}>
+        <Field name="sourceType" render={this.renderSourceTypeControl} />
+
+        {[
+          { name: "author", label: "Author name(s)" },
+          { name: "topic" },
+          { name: "publication" },
+          { name: "url" }
+        ].map(this.renderTextControl)}
 
         <div className={classes.formButtonsContainer}>
           <Button
@@ -217,13 +245,25 @@ export default class NewSourceModal extends React.Component<
     );
   };
 
-  renderAuthorControl = (formProps: FieldProps<FormValues>) => {
+  renderTextControl = ({ name, label }: { name: string; label?: string }) => {
+    label = label ? label : name.charAt(0).toUpperCase() + name.slice(1);
+
+    return (
+      <Field
+        key={name}
+        name={name}
+        render={this.renderTextControlFormik(label)}
+      />
+    );
+  };
+
+  renderTextControlFormik = (label: string) => (
+    formProps: FieldProps<FormValues>
+  ) => {
     const { field, form } = formProps;
     const { name } = field;
     const error = form.errors[name];
     const booleanError = !!error;
-    // const touched = form.touched[name];
-    const label = "Author name(s)";
 
     return (
       <Form.Field
@@ -239,14 +279,14 @@ export default class NewSourceModal extends React.Component<
 
   validatesourceType = (sourceType: SourceTypeFragFragment | null) => {
     if (!sourceType) {
-      return "";
+      return "Select a source type";
     }
 
     this.setState(prev =>
       update(prev, {
         output: {
-          sourceType: {
-            $set: sourceType
+          sourceTypeId: {
+            $set: sourceType.id
           }
         }
       })
