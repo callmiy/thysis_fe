@@ -12,8 +12,11 @@ defmodule Gas.QuoteSchemaTest do
         author: author
       } = source = insert(:source)
 
-      source_id = inspect(source_id)
-      tags = insert_list(2, :tag) |> Enum.map(&inspect(&1.id))
+      source_id = Integer.to_string(source_id)
+
+      tags =
+        insert_list(2, :tag)
+        |> Enum.map(&Integer.to_string(&1.id))
 
       quote_ =
         params_for(:quote, source: source)

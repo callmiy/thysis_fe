@@ -4,7 +4,7 @@ defmodule GasWeb.SourceResolver do
   """
   alias Gas.Source
   alias Gas.SourceApi, as: Api
-  # alias GasWeb.ResolversUtil
+  alias GasWeb.ResolversUtil
 
   @doc """
   Get all sources.
@@ -32,5 +32,20 @@ defmodule GasWeb.SourceResolver do
       |> Enum.join(" | ")
 
     {:ok, text}
+  end
+
+  @doc """
+  Create a source
+  """
+  @spec create_source(any, %{source: %{author: String.t(), topic: String.t()}}, any) ::
+          {:ok, %Source{}} | {:error, String.t()}
+  def create_source(_root, %{source: inputs} = _args, _info) do
+    case Api.create_(inputs) do
+      {:ok, source} ->
+        {:ok, source}
+
+      {:error, changeset} ->
+        {:error, ResolversUtil.changeset_errors_to_string(changeset)}
+    end
   end
 end

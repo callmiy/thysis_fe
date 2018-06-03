@@ -1,8 +1,9 @@
 defmodule GasWeb.SourceSchemaTest do
   use Gas.DataCase
   alias GasWeb.Schema
-  alias GasWeb.SourceQueries
+  alias GasWeb.SourceQueries, as: Queries
   alias Gas.Source
+  alias Gas.MapHelpers
 
   describe "query" do
     test "get all sources succeeds" do
@@ -24,7 +25,7 @@ defmodule GasWeb.SourceSchemaTest do
                 data: %{
                   "sources" => sources
                 }
-              }} = Absinthe.run(SourceQueries.query(:sources), Schema)
+              }} = Absinthe.run(Queries.query(:sources), Schema)
 
       assert length(sources) == 2
 
@@ -38,6 +39,40 @@ defmodule GasWeb.SourceSchemaTest do
              } = List.last(sources)
 
       assert String.contains?(display, author)
+    end
+  end
+
+  describe "mutatation" do
+    test "create source" do
+      %{id: source_type_id, name: name} = source_type = insert(:source_type)
+      %{author: author} = source = params_for(:source, source_type: source_type)
+      source_type_id = Integer.to_string(source_type_id)
+
+      source =
+        source
+        |> MapHelpers.stringify_keys()
+        |> Map.merge(%{"sourceTypeId" => source_type_id})
+
+      assert {:ok,
+              %{
+                data: %{
+                  "createSource" => %{
+                    "id" => _,
+                    "author" => ^author,
+                    "sourceType" => %{
+                      "id" => ^source_type_id,
+                      "name" => ^name
+                    }
+                  }
+                }
+              }} =
+               Absinthe.run(
+                 Queries.mutation(:source),
+                 Schema,
+                 variables: %{
+                   "source" => source
+                 }
+               )
     end
   end
 end
