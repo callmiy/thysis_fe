@@ -5,7 +5,9 @@ import { Mutation } from "react-apollo";
 import update from "immutability-helper";
 
 import TAG_MUTATION from "../graphql/tag.mutation";
-import { CreateTagFn } from "../graphql/ops.types";
+import { CreateTagFn, CreateTagUpdateFn } from "../graphql/ops.types";
+import { TagsMinimalQuery, TagFragFragment } from "../graphql/gen.types";
+import TAG_QUERY from "../graphql/tags-mini.query";
 
 interface NewTagModalFormProps {
   open: boolean;
@@ -36,7 +38,7 @@ export default class NewTagModalForm extends React.PureComponent<
   constructor(props: NewTagModalFormProps) {
     super(props);
 
-    ["handleChange", "handleSubmit", "handleFocus"].forEach(
+    ["handleChange", "handleSubmit", "handleFocus", "writeTagsToCache"].forEach(
       fn => (this[fn] = this[fn].bind(this))
     );
   }
@@ -81,7 +83,11 @@ export default class NewTagModalForm extends React.PureComponent<
             <Icon name="remove" /> Dismiss
           </Button>
 
-          <Mutation mutation={TAG_MUTATION} variables={{ tag: { text } }}>
+          <Mutation
+            mutation={TAG_MUTATION}
+            variables={{ tag: { text } }}
+            update={this.writeTagsToCache}
+          >
             {createTag => {
               return (
                 <Button
@@ -164,5 +170,24 @@ export default class NewTagModalForm extends React.PureComponent<
         })
       );
     }
+  };
+
+  writeTagsToCache: CreateTagUpdateFn = (cache, { data: createTag }) => {
+    if (!createTag) {
+      return;
+    }
+
+    const tagsQuery = cache.readQuery({
+      query: TAG_QUERY
+    }) as TagsMinimalQuery;
+
+    const tags = tagsQuery.tags as TagFragFragment[];
+
+    cache.writeQuery({
+      query: TAG_QUERY,
+      data: {
+        tags: [createTag.createTag, ...tags]
+      }
+    });
   };
 }

@@ -27,6 +27,8 @@ export type CreateTagFn = MutationFn<
   CreateTagMutationVariables
 >;
 
+export type CreateTagUpdateFn = MutationUpdaterFn<CreateTagMutation>;
+
 export type CreateSourceFn = MutationFn<
   CreateSourceMutation,
   CreateSourceMutationVariables
