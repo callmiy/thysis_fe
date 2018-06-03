@@ -7,6 +7,7 @@ import Header from "../components/header.component";
 import NewQuote from "../components/new-quote.component";
 import { SimpleCss, ROOT_CONTAINER_STYLE } from "../constants";
 import { TagFragFragment } from "../graphql/gen.types";
+import HomeMobileBottomMenu from "../components/home-route-mobile-bottom-menu.component";
 
 jss.setup(preset());
 
@@ -55,6 +56,8 @@ export default class Home extends React.Component<HomeProps> {
         <div className={classes.homeMain}>
           <NewQuote />
         </div>
+
+        <HomeMobileBottomMenu />
       </div>
     );
   }
