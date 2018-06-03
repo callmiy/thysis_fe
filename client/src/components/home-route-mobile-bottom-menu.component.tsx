@@ -1,17 +1,7 @@
 import React from "react";
-import {
-  Menu,
-  Icon,
-  Button,
-  Modal,
-  Form,
-  Input,
-  Header
-} from "semantic-ui-react";
-import { Mutation } from "react-apollo";
+import { Menu, Icon } from "semantic-ui-react";
 
-import TAG_MUTATION from "../graphql/tag.mutation";
-import { CreateTagFn } from "../graphql/ops.types";
+import NewTagModalForm from "./new-tag-modal-form.component";
 
 // import { SimpleCss } from "../constants";
 
@@ -26,115 +16,6 @@ const styles = {
     marginTop: "50%"
   }
 }; // as SimpleCss;
-
-interface NewTagModalFormProps {
-  open: boolean;
-  dismissModal: () => void;
-}
-
-interface NewTagModalFormState {
-  text: string;
-}
-
-const initalStateNewTagModalFormState: NewTagModalFormState = {
-  text: ""
-};
-
-class NewTagModalForm extends React.PureComponent<
-  NewTagModalFormProps,
-  NewTagModalFormState
-> {
-  state = initalStateNewTagModalFormState;
-
-  constructor(props: NewTagModalFormProps) {
-    super(props);
-
-    ["handleChange", "handleSubmit"].forEach(
-      fn => (this[fn] = this[fn].bind(this))
-    );
-  }
-
-  render() {
-    const { open } = this.props;
-    const { text } = this.state;
-
-    return (
-      <Modal
-        style={styles.newTagModalForm}
-        basic={true}
-        size="small"
-        open={open}
-      >
-        <Header icon="quote left" content="Subject matter of quote" />
-
-        <Modal.Content>
-          <Form.Field
-            control={Input}
-            placeholder="Tag text"
-            fluid={true}
-            onChange={this.handleChange}
-          />
-        </Modal.Content>
-
-        <Modal.Actions>
-          <Button basic={true} color="red" inverted={true} onClick={this.reset}>
-            <Icon name="remove" /> Dismiss
-          </Button>
-
-          <Mutation mutation={TAG_MUTATION} variables={{ tag: { text } }}>
-            {createTag => {
-              return (
-                <Button
-                  color="green"
-                  inverted={true}
-                  disabled={text.length < 2}
-                  onClick={this.handleSubmit(createTag)}
-                >
-                  <Icon name="checkmark" /> Ok
-                </Button>
-              );
-            }}
-          </Mutation>
-        </Modal.Actions>
-      </Modal>
-    );
-  }
-
-  reset = () => {
-    this.props.dismissModal();
-    this.setState(initalStateNewTagModalFormState);
-  };
-
-  handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { target } = e;
-    this.setState(s => ({ ...s, text: target.value }));
-  };
-
-  handleSubmit = (createTag: CreateTagFn) => async () => {
-    try {
-      await createTag();
-      this.setState(s => ({ ...s, text: "" }));
-    } catch (error) {
-      // tslint:disable-next-line:no-console
-      console.log(
-        `
-
-
-      logging starts
-
-
-      error`,
-        error,
-        `
-
-      logging ends
-
-
-      `
-      );
-    }
-  };
-}
 
 interface NewQuoteMobileBottomMenuState {
   newTagOpened: boolean;
