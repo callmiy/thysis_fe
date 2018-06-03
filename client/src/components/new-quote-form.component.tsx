@@ -164,7 +164,9 @@ class NewQuoteForm extends React.Component<
       "handleDateBlur",
       "handlePageBlur",
       "handleVolumeIssueBlur",
-      "renderExtrasControl"
+      "renderExtrasControl",
+      "scrollToTopOfForm",
+      "onResetClicked"
     ].forEach(fn => (this[fn] = this[fn].bind(this)));
   }
 
@@ -235,7 +237,7 @@ class NewQuoteForm extends React.Component<
           <Button
             basic={true}
             color="red"
-            onClick={handleReset}
+            onClick={this.onResetClicked(handleReset)}
             disabled={dirtyOrSubmitting}
           >
             <Icon name="remove" /> Reset
@@ -264,10 +266,7 @@ class NewQuoteForm extends React.Component<
     try {
       await createQuote();
       formikBag.resetForm();
-
-      if (this.selfRef.current) {
-        this.selfRef.current.scrollTop = 0;
-      }
+      this.scrollToTopOfForm();
     } catch (error) {
       formikBag.setSubmitting(false);
     }
@@ -605,6 +604,17 @@ class NewQuoteForm extends React.Component<
     );
 
     return "";
+  };
+
+  scrollToTopOfForm = () => {
+    if (this.selfRef.current) {
+      this.selfRef.current.scrollTop = 0;
+    }
+  };
+
+  onResetClicked = (reset: () => void) => () => {
+    reset();
+    this.scrollToTopOfForm();
   };
 }
 
