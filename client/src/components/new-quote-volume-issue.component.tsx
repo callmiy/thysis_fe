@@ -49,6 +49,15 @@ export default class VolumeIssue extends React.PureComponent<
   VolumeIssueProps,
   State
 > {
+  static getDerivedStateFromProps(next: VolumeIssueProps, currentState: State) {
+    // The value was reset by user of component so we sync the state
+    if (!next.value) {
+      return { volumeIssue: {} };
+    }
+
+    return null;
+  }
+
   state: State = {
     volumeIssue: {}
   };
@@ -57,13 +66,6 @@ export default class VolumeIssue extends React.PureComponent<
     super(props);
 
     ["handleChange"].forEach(fn => (this[fn] = this[fn].bind(this)));
-  }
-
-  componentWillReceiveProps(next: VolumeIssueProps) {
-    // The value was reset by user of component so we sync the state
-    if (!next.value && this.props.value) {
-      this.setState({ volumeIssue: {} });
-    }
   }
 
   render() {

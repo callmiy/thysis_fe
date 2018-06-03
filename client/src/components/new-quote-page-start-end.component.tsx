@@ -47,6 +47,15 @@ interface PageProps {
 }
 
 export default class Page extends React.PureComponent<PageProps, State> {
+  static getDerivedStateFromProps(next: PageProps, currentState: State) {
+    // The value was reset by user of component so we sync the state
+    if (!next.value) {
+      return { page: {}, errors: {} };
+    }
+
+    return null;
+  }
+
   state: State = {
     page: {},
     errors: {}
@@ -58,13 +67,6 @@ export default class Page extends React.PureComponent<PageProps, State> {
     ["handleChange", "handleKeyPress", "getError"].forEach(
       fn => (this[fn] = this[fn].bind(this))
     );
-  }
-
-  componentWillReceiveProps(next: PageProps) {
-    // The value was reset by user of component so we sync the state
-    if (!next.value && this.props.value) {
-      this.setState({ page: {}, errors: {} });
-    }
   }
 
   render() {

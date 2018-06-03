@@ -52,6 +52,15 @@ interface DateProps {
 }
 
 export default class Date extends React.PureComponent<DateProps, State> {
+  static getDerivedStateFromProps(nextProps: DateProps, nextState: State) {
+    // The value was reset by user of component so we sync the state
+    if (!nextProps.value) {
+      return { date: {}, errors: {} };
+    }
+
+    return null;
+  }
+
   state: State = { date: {}, errors: {} };
 
   constructor(props: DateProps) {
@@ -60,13 +69,6 @@ export default class Date extends React.PureComponent<DateProps, State> {
     ["handleChange", "handleKeyPress", "getError"].forEach(
       fn => (this[fn] = this[fn].bind(this))
     );
-  }
-
-  componentWillReceiveProps(next: DateProps) {
-    // The value was reset by user of component so we sync the state
-    if (!next.value && this.props.value) {
-      this.setState({ date: {}, errors: {} });
-    }
   }
 
   render() {

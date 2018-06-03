@@ -19,10 +19,12 @@ import {
 import TAGS_QUERY from "../graphql/tags-mini.query";
 import TagControl from "./new-quote-form-tag-control.component";
 import SourceControl from "./new-quote-form-source-control.component";
-import Date, { DateType } from "./date.component";
+import Date, { DateType } from "./new-quote-date.component";
 import { ERROR_COLOR } from "../constants";
-import Page, { PageType } from "./quote-page-start-end.component";
-import VolumeIssue, { VolumeIssueType } from "./quote-volume-issue.component";
+import Page, { PageType } from "./new-quote-page-start-end.component";
+import VolumeIssue, {
+  VolumeIssueType
+} from "./new-quote-volume-issue.component";
 import QUOTE_MUTATION from "../graphql/quote.mutation";
 import { CreateQueryFn } from "../graphql/ops.types";
 
