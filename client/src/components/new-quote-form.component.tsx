@@ -85,8 +85,29 @@ const tagsGraphQl = graphql<{}, TagsMinimalQuery, {}, NewQuoteFormProps>(
 const sourcesGraphQl = graphql<{}, SourceMiniQuery, {}, NewQuoteFormProps>(
   SOURCE_MINI_QUERY,
   {
-    props: (props, ownProps: NewQuoteFormProps) => {
-      return { ...ownProps, ...props.data };
+    props: ({ data }, ownProps: NewQuoteFormProps) => {
+      if (!data) {
+        return ownProps;
+      }
+
+      let sources = data.sources;
+
+      if (sources) {
+        sources = sources.map(s => {
+          if (!s) {
+            return {} as SourceMiniFragFragment;
+          }
+
+          return {
+            ...s,
+            display: `${s.display} | ${s.sourceType.name}`
+          } as SourceMiniFragFragment;
+        });
+      } else {
+        sources = [] as SourceMiniFragFragment[];
+      }
+
+      return { ...ownProps, ...data, sources };
     }
   }
 );
@@ -143,8 +164,7 @@ class NewQuoteForm extends React.Component<
       "handleDateBlur",
       "handlePageBlur",
       "handleVolumeIssueBlur",
-      "renderExtrasControl",
-      "reShapeSources"
+      "renderExtrasControl"
     ].forEach(fn => (this[fn] = this[fn].bind(this)));
   }
 
@@ -398,8 +418,7 @@ class NewQuoteForm extends React.Component<
     const error = form.errors[name];
     const booleanError = !!error;
     const touched = form.touched[name];
-    let sources = this.props.sources as SourceMiniFragFragment[];
-    sources = this.reShapeSources(sources);
+    const sources = this.props.sources as SourceMiniFragFragment[];
 
     return (
       <Form.Field
@@ -413,21 +432,6 @@ class NewQuoteForm extends React.Component<
         {booleanError && touched && <Message error={true} header={error} />}
       </Form.Field>
     );
-  };
-
-  reShapeSources = (
-    sources: null | SourceMiniFragFragment[]
-  ): SourceMiniFragFragment[] => {
-    if (!sources) {
-      return [];
-    }
-
-    return sources.map(s => {
-      return {
-        ...s,
-        display: `${s.display} | ${s.sourceType.name}`
-      };
-    });
   };
 
   validatequote = (quote: string | null) => {
