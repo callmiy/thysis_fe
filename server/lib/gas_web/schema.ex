@@ -16,5 +16,6 @@ defmodule GasWeb.Schema do
 
   mutation do
     import_fields(:quote_mutation)
+    import_fields(:tag_mutation)
   end
 end

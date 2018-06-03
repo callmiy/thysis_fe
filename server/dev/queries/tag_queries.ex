@@ -22,4 +22,19 @@ defmodule GasWeb.TagQueries do
     }
     """
   end
+
+  def mutation(:tag) do
+    """
+    mutation CreateTag($tag: CreateTagInput!) {
+      createTag(tag: $tag) {
+        id
+        text
+        quotes {
+          id
+          text
+        }
+      }
+    }
+    """
+  end
 end

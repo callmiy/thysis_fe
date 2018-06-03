@@ -16,5 +16,6 @@ defmodule Gas.Tag do
     tag
     |> cast(attrs, [:text])
     |> validate_required([:text])
+    |> unique_constraint(:text, name: :tags_text)
   end
 end

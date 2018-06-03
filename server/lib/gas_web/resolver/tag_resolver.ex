@@ -4,7 +4,7 @@ defmodule GasWeb.TagResolver do
   """
   alias Gas.Tag
   alias Gas.TagApi, as: Api
-  # alias GasWeb.ResolversUtil
+  alias GasWeb.ResolversUtil
 
   @doc """
   Get a single tag either by tag text or id or both.
@@ -24,5 +24,19 @@ defmodule GasWeb.TagResolver do
   @spec tags(any, any, any) :: {:ok, [%Tag{}]}
   def tags(_root, _args, _info) do
     {:ok, Api.list()}
+  end
+
+  @doc """
+  Create a tag
+  """
+  @spec create_tag(any, %{tag: %{text: String.t()}}, any) :: {:ok, %Tag{}} | {:error, String.t()}
+  def create_tag(_root, %{tag: input} = _args, _info) do
+    case Api.create_(input) do
+      {:ok, tag} ->
+        {:ok, tag}
+
+      {:error, changeset} ->
+        {:error, ResolversUtil.changeset_errors_to_string(changeset)}
+    end
   end
 end

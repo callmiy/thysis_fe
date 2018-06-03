@@ -1,7 +1,7 @@
 defmodule GasWeb.TagSchemaTest do
   use Gas.DataCase
   alias GasWeb.Schema
-  alias GasWeb.TagQueries
+  alias GasWeb.TagQueries, as: Queries
   alias Gas.Tag
   # alias Gas.MapHelpers
 
@@ -22,7 +22,7 @@ defmodule GasWeb.TagSchemaTest do
                 }
               }} =
                Absinthe.run(
-                 TagQueries.query(:tag),
+                 Queries.query(:tag),
                  Schema,
                  variables: %{
                    "tag" => %{
@@ -47,7 +47,7 @@ defmodule GasWeb.TagSchemaTest do
                 }
               }} =
                Absinthe.run(
-                 TagQueries.query(:tag),
+                 Queries.query(:tag),
                  Schema,
                  variables: %{
                    "tag" => %{
@@ -73,7 +73,7 @@ defmodule GasWeb.TagSchemaTest do
                 }
               }} =
                Absinthe.run(
-                 TagQueries.query(:tag),
+                 Queries.query(:tag),
                  Schema,
                  variables: %{
                    "tag" => %{
@@ -97,10 +97,35 @@ defmodule GasWeb.TagSchemaTest do
                 data: %{
                   "tags" => tags
                 }
-              }} = Absinthe.run(TagQueries.query(:tags), Schema)
+              }} = Absinthe.run(Queries.query(:tags), Schema)
 
       assert length(tags) == 2
       assert %{"id" => ^id, "text" => ^text} = List.last(tags)
+    end
+  end
+
+  describe "mutation" do
+    test "create tag succeeds" do
+      text = "Awesome tag"
+
+      assert {:ok,
+              %{
+                data: %{
+                  "createTag" => %{
+                    "id" => _,
+                    "text" => ^text
+                  }
+                }
+              }} =
+               Absinthe.run(
+                 Queries.mutation(:tag),
+                 Schema,
+                 variables: %{
+                   "tag" => %{
+                     "text" => text
+                   }
+                 }
+               )
     end
   end
 end

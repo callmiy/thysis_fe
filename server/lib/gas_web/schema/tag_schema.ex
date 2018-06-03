@@ -14,6 +14,7 @@ defmodule GasWeb.TagSchema do
     field(:text, non_null(:string))
     field(:inserted_at, non_null(:iso_datetime))
     field(:updated_at, non_null(:iso_datetime))
+    field(:quotes, list_of(:quote), resolve: assoc(:quotes))
   end
 
   @desc "Get tag input"
@@ -22,9 +23,9 @@ defmodule GasWeb.TagSchema do
     field(:text, :string)
   end
 
-  @desc "List of tags, may be paginated"
-  object :tags do
-    field(:tags, list_of(:tag))
+  @desc "Input for creating a tag"
+  input_object :create_tag_input do
+    field(:text, non_null(:string))
   end
 
   @desc "Queries allowed on the Tag object"
@@ -38,6 +39,16 @@ defmodule GasWeb.TagSchema do
 
     field :tags, type: list_of(:tag) do
       resolve(&TagResolver.tags/3)
+    end
+  end
+
+  @desc "The mutations allowed on the Tag object"
+  object :tag_mutation do
+    @desc "Create a tag"
+    field :create_tag, type: :tag do
+      arg(:tag, non_null(:create_tag_input))
+
+      resolve(&TagResolver.create_tag/3)
     end
   end
 end

@@ -89,4 +89,14 @@ defmodule Gas.TagsTest do
 
     assert nil == Api.get_tag_by(%{id: tag_id + 1, text: text})
   end
+
+  test "tag text must be unique - case insensitive" do
+    text = "lowerlettertext"
+    insert(:tag, text: text)
+
+    assert {:error, %Ecto.Changeset{}} =
+             Api.create_(%{
+               text: String.upcase(text)
+             })
+  end
 end
