@@ -15,9 +15,11 @@ const styles = {
   homeRoot: ROOT_CONTAINER_STYLE,
 
   homeMain: {
-    flexGrow: 1,
+    flex: 1,
     overflowX: "hidden",
-    overflowY: "auto"
+    overflowY: "auto",
+    display: "flex",
+    flexDirection: "column"
   },
 
   tags: {

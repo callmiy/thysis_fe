@@ -5,7 +5,7 @@ import { Formik, FormikProps, Field, FieldProps, FormikErrors } from "formik";
 import { GraphqlQueryControls } from "react-apollo";
 import { graphql, compose } from "react-apollo";
 import isEmpty from "lodash/isEmpty";
-import { Button, Form, TextArea, Message } from "semantic-ui-react";
+import { Button, Form, TextArea, Message, Icon } from "semantic-ui-react";
 import moment from "moment";
 import update from "immutability-helper";
 import { Mutation } from "react-apollo";
@@ -34,7 +34,9 @@ jss.setup(preset());
 
 const styles = {
   newQuoteRoot: {
-    margin: "0 10px"
+    flex: 1,
+    overflowY: "auto",
+    padding: "0 5px"
   },
 
   errorBorder: {
@@ -42,13 +44,13 @@ const styles = {
   },
 
   submitReset: {
-    margin: "30px 0",
+    margin: "25px 0 40px 0",
     display: "flex",
     justifyContent: "center"
   },
 
-  reset: {
-    marginRight: "50px"
+  submitButton: {
+    marginLeft: ["20px", "!important"]
   }
   // tslint:disable-next-line:no-any
 } as any;
@@ -116,6 +118,8 @@ class NewQuoteForm extends React.Component<
     }
   };
 
+  selfRef = React.createRef<HTMLDivElement>();
+
   constructor(props: NewQuoteFormProps) {
     super(props);
 
@@ -146,7 +150,7 @@ class NewQuoteForm extends React.Component<
 
   render() {
     return (
-      <div className={classes.newQuoteRoot}>
+      <div className={classes.newQuoteRoot} ref={this.selfRef}>
         <h2>New Quote</h2>
 
         <Mutation
@@ -184,179 +188,6 @@ class NewQuoteForm extends React.Component<
     return errors;
   };
 
-  validatequote = (quote: string | null) => {
-    const error = "Enter a quote";
-
-    if (!quote) {
-      return error;
-    }
-
-    this.setState(prev =>
-      update(prev, {
-        formOutputs: {
-          text: {
-            $set: quote
-          }
-        }
-      })
-    );
-
-    return "";
-  };
-
-  validateextras = (extras: string | null) => {
-    if (!extras) {
-      return "";
-    }
-
-    this.setState(prev =>
-      update(prev, {
-        formOutputs: {
-          extras: {
-            $set: extras
-          }
-        }
-      })
-    );
-
-    return "";
-  };
-
-  validatesource = (source: SourceMiniFragFragment | null) => {
-    const error = "Select a source";
-
-    if (!source) {
-      return error;
-    }
-
-    this.setState(prev =>
-      update(prev, {
-        formOutputs: {
-          sourceId: {
-            $set: source.id
-          }
-        }
-      })
-    );
-
-    return "";
-  };
-
-  validatetags = (tags: TagFragFragment[] | null) => {
-    const error = "Select at least one tag";
-
-    if (!tags || !tags.length) {
-      return error;
-    }
-
-    this.setState(prev =>
-      update(prev, {
-        formOutputs: {
-          tags: {
-            $set: tags.map(t => t.id)
-          }
-        }
-      })
-    );
-
-    return "";
-  };
-
-  validatedate = (date: DateType | null) => {
-    const error = "Enter a valid date";
-
-    if (!date) {
-      return error;
-    }
-
-    const keys = Object.keys(date);
-
-    if (keys.length !== 3) {
-      return error;
-    }
-
-    const year = date.year as number;
-
-    if (!year) {
-      return error;
-    }
-
-    const month = date.month as number;
-
-    if (!month) {
-      return error;
-    }
-
-    const day = date.day as number;
-
-    if (!day) {
-      return error;
-    }
-
-    const datec = moment({ year, month: month - 1, day });
-    const isValid = datec.isValid();
-
-    this.setState(prev =>
-      update(prev, {
-        formOutputs: {
-          date: {
-            $set: isValid ? datec.format("YYYY-MM-D") : undefined
-          }
-        }
-      })
-    );
-
-    return isValid ? "" : error;
-  };
-
-  validatepage = (page: PageType | null) => {
-    if (!page) {
-      return "";
-    }
-
-    const { start, end } = page;
-
-    this.setState(prev =>
-      update(prev, {
-        formOutputs: {
-          pageStart: {
-            $set: start
-          },
-
-          pageEnd: {
-            $set: end
-          }
-        }
-      })
-    );
-
-    return "";
-  };
-
-  validatevolumeIssue = (volumeIssue: VolumeIssueType | null) => {
-    if (!volumeIssue) {
-      return "";
-    }
-
-    const { volume, issue } = volumeIssue;
-
-    this.setState(prev =>
-      update(prev, {
-        formOutputs: {
-          volume: {
-            $set: volume
-          },
-
-          issue: {
-            $set: issue
-          }
-        }
-      })
-    );
-
-    return "";
-  };
-
   renderForm = ({
     handleReset,
     dirty,
@@ -380,21 +211,26 @@ class NewQuoteForm extends React.Component<
         <Field name="volumeIssue" render={this.renderVolumeIssueControl} />
         <Field name="extras" render={this.renderExtrasControl} />
 
-        <Form.Group inline={true} className={`${classes.submitReset}`}>
-          <Form.Field
-            control={Button}
-            type="button"
-            className={`${classes.reset}`}
+        <div className={`${classes.submitReset}`}>
+          <Button
+            basic={true}
+            color="red"
             onClick={handleReset}
             disabled={dirtyOrSubmitting}
           >
-            Reset
-          </Form.Field>
+            <Icon name="remove" /> Reset
+          </Button>
 
-          <Form.Field control={Button} type="submit" disabled={disableSubmit}>
-            Submit
-          </Form.Field>
-        </Form.Group>
+          <Button
+            className={`${classes.submitButton}`}
+            type="submit"
+            color="green"
+            disabled={disableSubmit}
+            loading={isSubmitting}
+          >
+            <Icon name="checkmark" /> Ok
+          </Button>
+        </div>
       </Form>
     );
   };
@@ -408,6 +244,10 @@ class NewQuoteForm extends React.Component<
     try {
       await createQuote();
       formikBag.resetForm();
+
+      if (this.selfRef.current) {
+        this.selfRef.current.scrollTop = 0;
+      }
     } catch (error) {
       formikBag.setSubmitting(false);
     }
@@ -588,6 +428,179 @@ class NewQuoteForm extends React.Component<
         display: `${s.display} | ${s.sourceType.name}`
       };
     });
+  };
+
+  validatequote = (quote: string | null) => {
+    const error = "Enter a quote";
+
+    if (!quote) {
+      return error;
+    }
+
+    this.setState(prev =>
+      update(prev, {
+        formOutputs: {
+          text: {
+            $set: quote
+          }
+        }
+      })
+    );
+
+    return "";
+  };
+
+  validateextras = (extras: string | null) => {
+    if (!extras) {
+      return "";
+    }
+
+    this.setState(prev =>
+      update(prev, {
+        formOutputs: {
+          extras: {
+            $set: extras
+          }
+        }
+      })
+    );
+
+    return "";
+  };
+
+  validatesource = (source: SourceMiniFragFragment | null) => {
+    const error = "Select a source";
+
+    if (!source) {
+      return error;
+    }
+
+    this.setState(prev =>
+      update(prev, {
+        formOutputs: {
+          sourceId: {
+            $set: source.id
+          }
+        }
+      })
+    );
+
+    return "";
+  };
+
+  validatetags = (tags: TagFragFragment[] | null) => {
+    const error = "Select at least one tag";
+
+    if (!tags || !tags.length) {
+      return error;
+    }
+
+    this.setState(prev =>
+      update(prev, {
+        formOutputs: {
+          tags: {
+            $set: tags.map(t => t.id)
+          }
+        }
+      })
+    );
+
+    return "";
+  };
+
+  validatedate = (date: DateType | null) => {
+    const error = "Enter a valid date";
+
+    if (!date) {
+      return error;
+    }
+
+    const keys = Object.keys(date);
+
+    if (keys.length !== 3) {
+      return error;
+    }
+
+    const year = date.year as number;
+
+    if (!year) {
+      return error;
+    }
+
+    const month = date.month as number;
+
+    if (!month) {
+      return error;
+    }
+
+    const day = date.day as number;
+
+    if (!day) {
+      return error;
+    }
+
+    const datec = moment({ year, month: month - 1, day });
+    const isValid = datec.isValid();
+
+    this.setState(prev =>
+      update(prev, {
+        formOutputs: {
+          date: {
+            $set: isValid ? datec.format("YYYY-MM-D") : undefined
+          }
+        }
+      })
+    );
+
+    return isValid ? "" : error;
+  };
+
+  validatepage = (page: PageType | null) => {
+    if (!page) {
+      return "";
+    }
+
+    const { start, end } = page;
+
+    this.setState(prev =>
+      update(prev, {
+        formOutputs: {
+          pageStart: {
+            $set: start
+          },
+
+          pageEnd: {
+            $set: end
+          }
+        }
+      })
+    );
+
+    return "";
+  };
+
+  validatevolumeIssue = (volumeIssue: VolumeIssueType | null) => {
+    if (!volumeIssue) {
+      return "";
+    }
+
+    const { volume, issue } = volumeIssue;
+
+    this.setState(prev =>
+      update(prev, {
+        formOutputs: {
+          volume: {
+            $set: volume
+          },
+
+          issue: {
+            $set: issue
+          }
+        }
+      })
+    );
+
+    return "";
   };
 }
 
