@@ -29,13 +29,14 @@ alias Gas.QuoteTag
 |> Enum.each(&Repo.delete_all(&1))
 
 Repo.transaction(fn ->
-  tags = insert_list(50, :tag)
+  tags = insert_list(8, :tag)
 
-  [insert(:source_type, name: "Journal") | insert_list(9, :source_type)]
-  |> Enum.flat_map(&insert_list(random_between(5, 10), :source, source_type: &1))
-  |> Enum.flat_map(&insert_list(random_between(5, 10), :quote, source: &1))
+  ["Journal", "Book", "Oral discussion"]
+  |> Enum.map(&insert(:source_type, name: &1))
+  |> Enum.flat_map(&insert_list(random_between(2, 3), :source, source_type: &1))
+  |> Enum.flat_map(&insert_list(random_between(2, 5), :quote, source: &1))
   |> Enum.each(fn q ->
-    1..random_between(1, 20)
+    1..random_between(1, 8)
     |> Enum.map(fn _ -> Enum.random(tags) end)
     |> Enum.uniq()
     |> Enum.each(&insert(:quote_tag, quote: q, tag: &1))
