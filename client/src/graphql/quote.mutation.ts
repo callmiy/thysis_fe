@@ -10,8 +10,8 @@ export const quoteFrag = gql`
   }
 `;
 
-export const createQuoteMutation = gql`
-  mutation createQuote($quote: CreateQuoteInput!) {
+export const quoteMut = gql`
+  mutation CreateQuote($quote: CreateQuoteInput!) {
     createQuote(quote: $quote) {
       id
       text
@@ -26,4 +26,4 @@ export const createQuoteMutation = gql`
   ${sourceMiniFrag}
 `;
 
-export default createQuoteMutation;
+export default quoteMut;

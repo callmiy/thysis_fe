@@ -8,6 +8,10 @@ import {
   Input,
   Header
 } from "semantic-ui-react";
+import { Mutation } from "react-apollo";
+
+import TAG_MUTATION from "../graphql/tag.mutation";
+import { CreateTagFn } from "../graphql/ops.types";
 
 // import { SimpleCss } from "../constants";
 
@@ -45,11 +49,14 @@ class NewTagModalForm extends React.PureComponent<
   constructor(props: NewTagModalFormProps) {
     super(props);
 
-    ["handleChange"].forEach(fn => (this[fn] = this[fn].bind(this)));
+    ["handleChange", "handleSubmit"].forEach(
+      fn => (this[fn] = this[fn].bind(this))
+    );
   }
 
   render() {
     const { open } = this.props;
+    const { text } = this.state;
 
     return (
       <Modal
@@ -73,9 +80,21 @@ class NewTagModalForm extends React.PureComponent<
           <Button basic={true} color="red" inverted={true} onClick={this.reset}>
             <Icon name="remove" /> Dismiss
           </Button>
-          <Button color="green" inverted={true} disabled={!!!this.state.text}>
-            <Icon name="checkmark" /> Ok
-          </Button>
+
+          <Mutation mutation={TAG_MUTATION} variables={{ tag: { text } }}>
+            {createTag => {
+              return (
+                <Button
+                  color="green"
+                  inverted={true}
+                  disabled={text.length < 2}
+                  onClick={this.handleSubmit(createTag)}
+                >
+                  <Icon name="checkmark" /> Ok
+                </Button>
+              );
+            }}
+          </Mutation>
         </Modal.Actions>
       </Modal>
     );
@@ -89,6 +108,31 @@ class NewTagModalForm extends React.PureComponent<
   handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { target } = e;
     this.setState(s => ({ ...s, text: target.value }));
+  };
+
+  handleSubmit = (createTag: CreateTagFn) => async () => {
+    try {
+      await createTag();
+      this.setState(s => ({ ...s, text: "" }));
+    } catch (error) {
+      // tslint:disable-next-line:no-console
+      console.log(
+        `
+
+
+      logging starts
+
+
+      error`,
+        error,
+        `
+
+      logging ends
+
+
+      `
+      );
+    }
   };
 }
 

@@ -22,11 +22,15 @@ export interface CreateQuoteInput {
   volume?: string | null,
 };
 
-export interface createQuoteMutationVariables {
+export interface CreateTagInput {
+  text: string,
+};
+
+export interface CreateQuoteMutationVariables {
   quote: CreateQuoteInput,
 };
 
-export interface createQuoteMutation {
+export interface CreateQuoteMutation {
   // Create a quote
   createQuote:  {
     id: string,
@@ -59,6 +63,18 @@ export interface SourceTypesQuery {
     id: string,
     name: string | null,
   } | null > | null,
+};
+
+export interface CreateTagMutationVariables {
+  tag: CreateTagInput,
+};
+
+export interface CreateTagMutation {
+  // Create a tag
+  createTag:  {
+    id: string,
+    text: string,
+  } | null,
 };
 
 export interface TagsMinimalQuery {

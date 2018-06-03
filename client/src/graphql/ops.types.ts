@@ -1,11 +1,12 @@
-// import { ApolloQueryResult } from "apollo-client-preset";
-import { Query, MutationFn, MutationResult } from "react-apollo";
+import { Query, MutationFn } from "react-apollo";
 
 import {
   TagsMinimalQuery,
   SourceMiniQuery,
-  createQuoteMutation,
-  createQuoteMutationVariables
+  CreateQuoteMutation,
+  CreateQuoteMutationVariables,
+  CreateTagMutation,
+  CreateTagMutationVariables
 } from "./gen.types";
 
 export class TagsMinimalRunQuery extends Query<TagsMinimalQuery, {}> {}
@@ -14,8 +15,11 @@ export class TagsMinimalRunQuery extends Query<TagsMinimalQuery, {}> {}
 export class SourceMiniRunQuery extends Query<SourceMiniQuery, {}> {}
 
 export type CreateQueryFn = MutationFn<
-  createQuoteMutation,
-  createQuoteMutationVariables
+  CreateQuoteMutation,
+  CreateQuoteMutationVariables
 >;
 
-export type CreateQueryResult = MutationResult<createQuoteMutation>;
+export type CreateTagFn = MutationFn<
+  CreateTagMutation,
+  CreateTagMutationVariables
+>;
