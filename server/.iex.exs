@@ -12,3 +12,4 @@ alias Gas.Tag
 alias Gas.TagApi
 alias Gas.QuoteTag
 alias Gas.QuoteTagApi
+alias GasWeb.Schema

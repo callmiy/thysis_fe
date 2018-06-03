@@ -8,11 +8,13 @@ import isEmpty from "lodash/isEmpty";
 import { Button, Form, TextArea, Message } from "semantic-ui-react";
 import moment from "moment";
 import update from "immutability-helper";
+import { Mutation } from "react-apollo";
 
 import {
   TagFragFragment,
   TagsMinimalQuery,
-  SourceMiniFragFragment
+  SourceMiniFragFragment,
+  CreateQuoteInput
 } from "../graphql/gen.types";
 import TAGS_QUERY from "../graphql/tags-mini.query";
 import TagControl from "./new-quote-form-tag-control.component";
@@ -21,6 +23,8 @@ import Date, { DateType } from "./date.component";
 import { ERROR_COLOR } from "../constants";
 import Page, { PageType } from "./quote-page-start-end.component";
 import VolumeIssue, { VolumeIssueType } from "./quote-volume-issue.component";
+import QUOTE_MUTATION from "../graphql/quote.mutation";
+import { CreateQueryFn } from "../graphql/ops.types";
 
 jss.setup(preset());
 
@@ -57,18 +61,6 @@ interface FormValues {
   extras: string;
 }
 
-interface FormOutputs {
-  tags?: string[];
-  quote?: string;
-  source?: string[];
-  date?: string;
-  pageStart?: number;
-  pageEnd?: number;
-  volume?: string;
-  issue?: string;
-  extras?: string;
-}
-
 export type FormValuesProps = FieldProps<FormValues>;
 
 type NewQuoteFormProps = {} & TagsMinimalQuery & GraphqlQueryControls;
@@ -84,7 +76,7 @@ const tagsGraphQl = graphql<{}, TagsMinimalQuery, {}, NewQuoteFormProps>(
 
 interface NewQuoteFormState {
   initialFormValues: FormValues;
-  formOutputs: FormOutputs;
+  formOutputs: CreateQuoteInput;
 }
 
 const NewQuoteForm = tagsGraphQl(
@@ -99,7 +91,12 @@ const NewQuoteForm = tagsGraphQl(
         volumeIssue: null,
         extras: ""
       },
-      formOutputs: {}
+      formOutputs: {
+        date: "",
+        sourceId: "",
+        tags: [],
+        text: ""
+      }
     };
 
     constructor(props: NewQuoteFormProps) {
@@ -134,13 +131,22 @@ const NewQuoteForm = tagsGraphQl(
         <div className={classes.newQuoteRoot}>
           <h2>New Quote</h2>
 
-          <Formik
-            initialValues={this.state.initialFormValues}
-            enableReinitialize={true}
-            onSubmit={this.submit}
-            render={this.renderForm}
-            validate={this.validate}
-          />
+          <Mutation
+            mutation={QUOTE_MUTATION}
+            variables={{ quote: this.state.formOutputs }}
+          >
+            {createQuote => {
+              return (
+                <Formik
+                  initialValues={this.state.initialFormValues}
+                  enableReinitialize={true}
+                  onSubmit={this.submit(createQuote)}
+                  render={this.renderForm}
+                  validate={this.validate}
+                />
+              );
+            }}
+          </Mutation>
         </div>
       );
     }
@@ -170,7 +176,7 @@ const NewQuoteForm = tagsGraphQl(
       this.setState(prev =>
         update(prev, {
           formOutputs: {
-            quote: {
+            text: {
               $set: quote
             }
           }
@@ -208,7 +214,7 @@ const NewQuoteForm = tagsGraphQl(
       this.setState(prev =>
         update(prev, {
           formOutputs: {
-            source: {
+            sourceId: {
               $set: source.id
             }
           }
@@ -375,23 +381,18 @@ const NewQuoteForm = tagsGraphQl(
       );
     };
 
-    submit = (values: FormValues, formikBag: FormikProps<FormValues>) => {
-      // tslint:disable-next-line:no-console
-      console.log(
-        `
+    submit = (createQuote: CreateQueryFn) => async (
+      values: FormValues,
+      formikBag: FormikProps<FormValues>
+    ) => {
+      formikBag.setSubmitting(true);
 
-
-
-        values`,
-        values,
-        `
-
-
-
-        `
-      );
-
-      formikBag.resetForm();
+      try {
+        await createQuote();
+        formikBag.resetForm();
+      } catch (error) {
+        formikBag.setSubmitting(false);
+      }
     };
 
     renderTagControl = (formProps: FieldProps<FormValues>) => {
