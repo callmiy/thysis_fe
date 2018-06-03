@@ -1,5 +1,5 @@
 import React from "react";
-import { Modal, List, Segment, ModalProps } from "semantic-ui-react";
+import { Modal, List, Segment } from "semantic-ui-react";
 
 import jss from "jss";
 import preset from "jss-preset-default";
@@ -47,16 +47,11 @@ interface TagListModalProps {
 export default class TagListModal extends React.PureComponent<
   TagListModalProps
 > {
-  selfRef = React.createRef<
-    React.Component<ModalProps, React.ComponentState, {}>
-  >();
-
   render() {
     const { open } = this.props;
 
     return (
       <Modal
-        ref={this.selfRef}
         className={`aja`}
         style={styles.modal}
         basic={true}

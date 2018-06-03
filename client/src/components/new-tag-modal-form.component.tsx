@@ -48,7 +48,13 @@ export default class NewTagModalForm extends React.PureComponent<
     const { text, formError, submitting, submitSuccess } = this.state;
 
     return (
-      <Modal style={{ ...(style || {}) }} basic={true} size="small" open={open}>
+      <Modal
+        style={{ ...(style || {}) }}
+        basic={true}
+        size="small"
+        open={open}
+        onClose={this.reset}
+      >
         <Header icon="quote left" content="Subject matter of quote" />
 
         <Modal.Content>

@@ -111,6 +111,7 @@ export default class NewSourceModal extends React.Component<
         basic={true}
         size="small"
         open={open}
+        onClose={this.resetModal}
       >
         <Header icon="user" content="Create quote source" />
 
