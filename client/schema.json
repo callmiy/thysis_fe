@@ -135,6 +135,79 @@
         },
         {
           "possibleTypes": null,
+          "name": "CreateSourceInput",
+          "kind": "INPUT_OBJECT",
+          "interfaces": null,
+          "inputFields": [
+            {
+              "type": {
+                "ofType": {
+                  "ofType": null,
+                  "name": "String",
+                  "kind": "SCALAR"
+                },
+                "name": null,
+                "kind": "NON_NULL"
+              },
+              "name": "author",
+              "description": "The original owner of the work - mandatory",
+              "defaultValue": null
+            },
+            {
+              "type": {
+                "ofType": null,
+                "name": "String",
+                "kind": "SCALAR"
+              },
+              "name": "publication",
+              "description": "For which conference was this work published - optional",
+              "defaultValue": null
+            },
+            {
+              "type": {
+                "ofType": {
+                  "ofType": null,
+                  "name": "ID",
+                  "kind": "SCALAR"
+                },
+                "name": null,
+                "kind": "NON_NULL"
+              },
+              "name": "sourceTypeId",
+              "description": "The source type i.e. book, journal etc. - mandatory",
+              "defaultValue": null
+            },
+            {
+              "type": {
+                "ofType": {
+                  "ofType": null,
+                  "name": "String",
+                  "kind": "SCALAR"
+                },
+                "name": null,
+                "kind": "NON_NULL"
+              },
+              "name": "topic",
+              "description": "The topic of the work, as given by authour - manadatory",
+              "defaultValue": null
+            },
+            {
+              "type": {
+                "ofType": null,
+                "name": "String",
+                "kind": "SCALAR"
+              },
+              "name": "url",
+              "description": "The URI where author's original work can be accessed - optional",
+              "defaultValue": null
+            }
+          ],
+          "fields": null,
+          "enumValues": null,
+          "description": "Inputs for creating a source"
+        },
+        {
+          "possibleTypes": null,
           "name": "CreateTagInput",
           "kind": "INPUT_OBJECT",
           "interfaces": null,
@@ -289,6 +362,33 @@
                     "kind": "NON_NULL"
                   },
                   "name": "quote",
+                  "description": null,
+                  "defaultValue": null
+                }
+              ]
+            },
+            {
+              "type": {
+                "ofType": null,
+                "name": "Source",
+                "kind": "OBJECT"
+              },
+              "name": "createSource",
+              "isDeprecated": false,
+              "description": null,
+              "deprecationReason": null,
+              "args": [
+                {
+                  "type": {
+                    "ofType": {
+                      "ofType": null,
+                      "name": "CreateSourceInput",
+                      "kind": "INPUT_OBJECT"
+                    },
+                    "name": null,
+                    "kind": "NON_NULL"
+                  },
+                  "name": "source",
                   "description": null,
                   "defaultValue": null
                 }
@@ -691,6 +791,22 @@
                 "kind": "SCALAR"
               },
               "name": "publication",
+              "isDeprecated": false,
+              "description": null,
+              "deprecationReason": null,
+              "args": []
+            },
+            {
+              "type": {
+                "ofType": {
+                  "ofType": null,
+                  "name": "Quote",
+                  "kind": "OBJECT"
+                },
+                "name": null,
+                "kind": "LIST"
+              },
+              "name": "quotes",
               "isDeprecated": false,
               "description": null,
               "deprecationReason": null,

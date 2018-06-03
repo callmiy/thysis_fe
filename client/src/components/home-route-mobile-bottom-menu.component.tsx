@@ -1,7 +1,9 @@
 import React from "react";
 import { Menu, Icon } from "semantic-ui-react";
+import update from "immutability-helper";
 
 import NewTagModalForm from "./new-tag-modal-form.component";
+import NewSourceModal from "./new-source-modal.component";
 
 // import { SimpleCss } from "../constants";
 
@@ -12,14 +14,22 @@ const styles = {
     margin: 0 // clear semantic-ui style
   },
 
-  newTagModalForm: {
-    marginTop: "50%"
+  modal: {
+    marginTop: "20%"
   }
 }; // as SimpleCss;
 
 interface NewQuoteMobileBottomMenuState {
-  newTagOpened: boolean;
+  modalOpened: {
+    newTag: boolean;
+    newSource: boolean;
+  };
 }
+
+const initialModalOpened = {
+  newTag: false,
+  newSource: false
+};
 
 // tslint:disable-next-line:max-classes-per-file
 export default class NewQuoteMobileBottomMenu extends React.Component<
@@ -27,22 +37,30 @@ export default class NewQuoteMobileBottomMenu extends React.Component<
   NewQuoteMobileBottomMenuState
 > {
   state: NewQuoteMobileBottomMenuState = {
-    newTagOpened: false
+    modalOpened: initialModalOpened
   };
 
   constructor(props: {}) {
     super(props);
 
-    ["toggleNewTagModal"].forEach(fn => (this[fn] = this[fn].bind(this)));
+    ["toggleModalOpen"].forEach(fn => (this[fn] = this[fn].bind(this)));
   }
 
   render() {
     return (
       <div style={styles.container}>
         <NewTagModalForm
-          open={this.state.newTagOpened}
-          dismissModal={this.toggleNewTagModal(false)}
+          style={styles.modal}
+          open={this.state.modalOpened.newTag}
+          dismissModal={this.toggleModalOpen("newTag", false)}
         />
+
+        <NewSourceModal
+          style={styles.modal}
+          open={this.state.modalOpened.newSource}
+          dismissModal={this.toggleModalOpen("newSource", false)}
+        />
+
         <Menu
           pointing={true}
           icon="labeled"
@@ -50,12 +68,12 @@ export default class NewQuoteMobileBottomMenu extends React.Component<
           widths={3}
           style={styles.container}
         >
-          <Menu.Item onClick={this.toggleNewTagModal(true)}>
+          <Menu.Item onClick={this.toggleModalOpen("newTag", true)}>
             <Icon name="tag" />
             New Tag
           </Menu.Item>
 
-          <Menu.Item>
+          <Menu.Item onClick={this.toggleModalOpen("newSource", true)}>
             <Icon name="user" />
             New Source
           </Menu.Item>
@@ -69,6 +87,23 @@ export default class NewQuoteMobileBottomMenu extends React.Component<
     );
   }
 
-  toggleNewTagModal = (value: boolean) => () =>
-    this.setState(s => ({ ...s, newTagOpened: value }));
+  toggleModalOpen = (name: string, open: boolean) => () => {
+    this.setState(s =>
+      update(s, {
+        modalOpened: {
+          $set: initialModalOpened
+        }
+      })
+    );
+
+    this.setState(s =>
+      update(s, {
+        modalOpened: {
+          [name]: {
+            $set: open
+          }
+        }
+      })
+    );
+  };
 }

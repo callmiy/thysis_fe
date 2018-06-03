@@ -6,7 +6,10 @@ import {
   CreateQuoteMutation,
   CreateQuoteMutationVariables,
   CreateTagMutation,
-  CreateTagMutationVariables
+  CreateTagMutationVariables,
+  CreateSourceMutation,
+  CreateSourceMutationVariables,
+  SourceTypesQuery
 } from "./gen.types";
 
 export class TagsMinimalRunQuery extends Query<TagsMinimalQuery, {}> {}
@@ -23,3 +26,11 @@ export type CreateTagFn = MutationFn<
   CreateTagMutation,
   CreateTagMutationVariables
 >;
+
+export type CreateSourceFn = MutationFn<
+  CreateSourceMutation,
+  CreateSourceMutationVariables
+>;
+
+// tslint:disable-next-line:max-classes-per-file
+export class SourceTypeRunQuery extends Query<SourceTypesQuery, {}> {}

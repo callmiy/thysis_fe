@@ -22,6 +22,19 @@ export interface CreateQuoteInput {
   volume?: string | null,
 };
 
+export interface CreateSourceInput {
+  // The original owner of the work - mandatory
+  author: string,
+  // For which conference was this work published - optional
+  publication?: string | null,
+  // The source type i.e. book, journal etc. - mandatory
+  sourceTypeId: string,
+  // The topic of the work, as given by authour - manadatory
+  topic: string,
+  // The URI where author's original work can be accessed - optional
+  url?: string | null,
+};
+
 export interface CreateTagInput {
   text: string,
 };
@@ -63,6 +76,21 @@ export interface SourceTypesQuery {
     id: string,
     name: string | null,
   } | null > | null,
+};
+
+export interface CreateSourceMutationVariables {
+  source: CreateSourceInput,
+};
+
+export interface CreateSourceMutation {
+  createSource:  {
+    id: string,
+    display: string | null,
+    sourceType:  {
+      id: string,
+      name: string | null,
+    },
+  } | null,
 };
 
 export interface CreateTagMutationVariables {

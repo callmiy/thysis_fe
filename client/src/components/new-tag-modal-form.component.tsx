@@ -7,15 +7,10 @@ import update from "immutability-helper";
 import TAG_MUTATION from "../graphql/tag.mutation";
 import { CreateTagFn } from "../graphql/ops.types";
 
-const styles = {
-  newTagModalForm: {
-    marginTop: "50%"
-  }
-};
-
 interface NewTagModalFormProps {
   open: boolean;
   dismissModal: () => void;
+  style: React.CSSProperties;
 }
 
 interface NewTagModalFormState {
@@ -47,16 +42,11 @@ export default class NewTagModalForm extends React.PureComponent<
   }
 
   render() {
-    const { open } = this.props;
+    const { open, style } = this.props;
     const { text, formError, submitting, submitSuccess } = this.state;
 
     return (
-      <Modal
-        style={styles.newTagModalForm}
-        basic={true}
-        size="small"
-        open={open}
-      >
+      <Modal style={{ ...(style || {}) }} basic={true} size="small" open={open}>
         <Header icon="quote left" content="Subject matter of quote" />
 
         <Modal.Content>
