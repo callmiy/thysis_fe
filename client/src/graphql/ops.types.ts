@@ -1,4 +1,4 @@
-import { Query, MutationFn } from "react-apollo";
+import { Query, MutationFn, MutationUpdaterFn } from "react-apollo";
 
 import {
   TagsMinimalQuery,
@@ -31,6 +31,8 @@ export type CreateSourceFn = MutationFn<
   CreateSourceMutation,
   CreateSourceMutationVariables
 >;
+
+export type CreateSourceUpdateFn = MutationUpdaterFn<CreateSourceMutation>;
 
 // tslint:disable-next-line:max-classes-per-file
 export class SourceTypeRunQuery extends Query<SourceTypesQuery, {}> {}

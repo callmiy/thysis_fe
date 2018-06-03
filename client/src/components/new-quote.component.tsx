@@ -3,7 +3,7 @@ import jss from "jss";
 import preset from "jss-preset-default";
 import { Formik, FormikProps, Field, FieldProps, FormikErrors } from "formik";
 import { GraphqlQueryControls } from "react-apollo";
-import { graphql } from "react-apollo";
+import { graphql, compose } from "react-apollo";
 import isEmpty from "lodash/isEmpty";
 import { Button, Form, TextArea, Message } from "semantic-ui-react";
 import moment from "moment";
@@ -14,7 +14,8 @@ import {
   TagFragFragment,
   TagsMinimalQuery,
   SourceMiniFragFragment,
-  CreateQuoteInput
+  CreateQuoteInput,
+  SourceMiniQuery
 } from "../graphql/gen.types";
 import TAGS_QUERY from "../graphql/tags-mini.query";
 import TagControl from "./new-quote-form-tag-control.component";
@@ -27,6 +28,7 @@ import VolumeIssue, {
 } from "./new-quote-volume-issue.component";
 import QUOTE_MUTATION from "../graphql/quote.mutation";
 import { CreateQueryFn } from "../graphql/ops.types";
+import SOURCE_MINI_QUERY from "../graphql/source-mini.query";
 
 jss.setup(preset());
 
@@ -65,10 +67,21 @@ interface FormValues {
 
 export type FormValuesProps = FieldProps<FormValues>;
 
-type NewQuoteFormProps = {} & TagsMinimalQuery & GraphqlQueryControls;
+type NewQuoteFormProps = {} & TagsMinimalQuery &
+  SourceMiniQuery &
+  GraphqlQueryControls;
 
 const tagsGraphQl = graphql<{}, TagsMinimalQuery, {}, NewQuoteFormProps>(
   TAGS_QUERY,
+  {
+    props: (props, ownProps: NewQuoteFormProps) => {
+      return { ...ownProps, ...props.data };
+    }
+  }
+);
+
+const sourcesGraphQl = graphql<{}, SourceMiniQuery, {}, NewQuoteFormProps>(
+  SOURCE_MINI_QUERY,
   {
     props: (props, ownProps: NewQuoteFormProps) => {
       return { ...ownProps, ...props.data };
@@ -81,8 +94,8 @@ interface NewQuoteFormState {
   formOutputs: CreateQuoteInput;
 }
 
-const NewQuoteForm = tagsGraphQl(
-  class extends React.PureComponent<NewQuoteFormProps, NewQuoteFormState> {
+const NewQuoteForm = compose(tagsGraphQl, sourcesGraphQl)(
+  class extends React.Component<NewQuoteFormProps, NewQuoteFormState> {
     state: NewQuoteFormState = {
       initialFormValues: {
         tags: null,
@@ -124,7 +137,8 @@ const NewQuoteForm = tagsGraphQl(
         "handleDateBlur",
         "handlePageBlur",
         "handleVolumeIssueBlur",
-        "renderExtrasControl"
+        "renderExtrasControl",
+        "reShapeSources"
       ].forEach(fn => (this[fn] = this[fn].bind(this)));
     }
 
@@ -543,6 +557,8 @@ const NewQuoteForm = tagsGraphQl(
       const error = form.errors[name];
       const booleanError = !!error;
       const touched = form.touched[name];
+      let sources = this.props.sources as SourceMiniFragFragment[];
+      sources = this.reShapeSources(sources);
 
       return (
         <Form.Field
@@ -550,11 +566,27 @@ const NewQuoteForm = tagsGraphQl(
           label="Select source"
           error={booleanError}
           selectError={booleanError}
+          sources={sources}
           {...formProps}
         >
           {booleanError && touched && <Message error={true} header={error} />}
         </Form.Field>
       );
+    };
+
+    reShapeSources = (
+      sources: null | SourceMiniFragFragment[]
+    ): SourceMiniFragFragment[] => {
+      if (!sources) {
+        return [];
+      }
+
+      return sources.map(s => {
+        return {
+          ...s,
+          display: `${s.display} | ${s.sourceType.name}`
+        };
+      });
     };
   }
 );

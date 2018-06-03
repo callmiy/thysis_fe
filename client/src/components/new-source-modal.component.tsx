@@ -16,10 +16,13 @@ import { Mutation } from "react-apollo";
 import isEmpty from "lodash/isEmpty";
 
 import SOURCE_MUTATION from "../graphql/source.mutation";
-import { CreateSourceFn } from "../graphql/ops.types";
+import SOURCE_QUERY from "../graphql/source-mini.query";
+import { CreateSourceFn, CreateSourceUpdateFn } from "../graphql/ops.types";
 import {
   CreateSourceInput,
-  SourceTypeFragFragment
+  SourceTypeFragFragment,
+  SourceMiniQuery,
+  SourceMiniFragFragment
 } from "../graphql/gen.types";
 import SourceTypeControl from "./select-source-type-control.component";
 
@@ -94,7 +97,8 @@ export default class NewSourceModal extends React.Component<
       "validatepublication",
       "validateurl",
       "resetModal",
-      "renderTextControl"
+      "renderTextControl",
+      "writeSourcesToCache"
     ].forEach(fn => (this[fn] = this[fn].bind(this)));
   }
 
@@ -114,6 +118,7 @@ export default class NewSourceModal extends React.Component<
           <Mutation
             mutation={SOURCE_MUTATION}
             variables={{ source: this.state.output }}
+            update={this.writeSourcesToCache}
           >
             {createSource => {
               return (
@@ -275,6 +280,28 @@ export default class NewSourceModal extends React.Component<
         {...field}
       />
     );
+  };
+
+  writeSourcesToCache: CreateSourceUpdateFn = (
+    cache,
+    { data: createSource }
+  ) => {
+    if (!createSource) {
+      return;
+    }
+
+    const sourcesQuery = cache.readQuery({
+      query: SOURCE_QUERY
+    }) as SourceMiniQuery;
+
+    const sources = sourcesQuery.sources as SourceMiniFragFragment[];
+
+    cache.writeQuery({
+      query: SOURCE_QUERY,
+      data: {
+        sources: [createSource.createSource, ...sources]
+      }
+    });
   };
 
   validatesourceType = (sourceType: SourceTypeFragFragment | null) => {

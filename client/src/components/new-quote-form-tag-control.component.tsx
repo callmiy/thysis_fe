@@ -6,9 +6,10 @@ import { TagFragFragment } from "../graphql/gen.types";
 
 type Tags = TagFragFragment[];
 
-type TagControlProps = {
+interface TagControlProps extends FormValuesProps {
   tags: Tags;
-} & FormValuesProps & { selectError: boolean };
+  selectError: boolean;
+}
 
 export default class TagControl extends React.Component<TagControlProps> {
   render() {
