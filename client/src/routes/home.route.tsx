@@ -52,7 +52,7 @@ export default class Home extends React.Component<HomeProps> {
 
   render() {
     return (
-      <div className={classes.homeRoot}>
+      <div className={`${classes.homeRoot}`}>
         <Header title="Home" />
 
         <div className={classes.homeMain}>

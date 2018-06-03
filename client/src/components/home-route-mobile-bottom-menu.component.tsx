@@ -4,6 +4,7 @@ import update from "immutability-helper";
 
 import NewTagModalForm from "./new-tag-modal-form.component";
 import NewSourceModal from "./new-source-modal.component";
+import TagListModal from "./tag-list-modal.component";
 
 // import { SimpleCss } from "../constants";
 
@@ -23,12 +24,14 @@ interface NewQuoteMobileBottomMenuState {
   modalOpened: {
     newTag: boolean;
     newSource: boolean;
+    tagList: boolean;
   };
 }
 
 const initialModalOpened = {
   newTag: false,
-  newSource: false
+  newSource: false,
+  tagList: false
 };
 
 // tslint:disable-next-line:max-classes-per-file
@@ -61,6 +64,11 @@ export default class NewQuoteMobileBottomMenu extends React.Component<
           dismissModal={this.toggleModalOpen("newSource", false)}
         />
 
+        <TagListModal
+          open={this.state.modalOpened.tagList}
+          dismissModal={this.toggleModalOpen("tagList", false)}
+        />
+
         <Menu
           pointing={true}
           icon="labeled"
@@ -78,7 +86,7 @@ export default class NewQuoteMobileBottomMenu extends React.Component<
             New Source
           </Menu.Item>
 
-          <Menu.Item>
+          <Menu.Item onClick={this.toggleModalOpen("tagList", true)}>
             <Icon name="numbered list" />
             Tags
           </Menu.Item>

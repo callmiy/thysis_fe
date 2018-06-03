@@ -6,6 +6,9 @@ export const POSITION_RELATIVE = "relative" as "relative";
 export const POSITION_ABSOLUTE = "absolute" as "absolute";
 export const FLEX_WRAP_WRAP = "wrap" as "wrap";
 export const BORDER_COLLAPSE_SEPARATE = "separate" as "separate";
+export const FLEX_DIRECTION_COLUMN = "column" as "column";
+export const OVERFLOW_X_HIDDEN = "hidden" as "hidden";
+export const OVERFLOW_Y_AUTO = "auto" as "auto";
 
 export type SimpleCss = Record<string, SimpleStyle>;
 
