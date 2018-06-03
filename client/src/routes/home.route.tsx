@@ -4,7 +4,7 @@ import preset from "jss-preset-default";
 import { RouteComponentProps } from "react-router-dom";
 
 import Header from "../components/header.component";
-import NewQuote from "../components/new-quote.component";
+import NewQuoteForm from "../components/new-quote-form.component";
 import { SimpleCss, ROOT_CONTAINER_STYLE } from "../constants";
 import { TagFragFragment } from "../graphql/gen.types";
 import HomeMobileBottomMenu from "../components/home-route-mobile-bottom-menu.component";
@@ -54,7 +54,7 @@ export default class Home extends React.Component<HomeProps> {
         <Header title="Home" />
 
         <div className={classes.homeMain}>
-          <NewQuote />
+          <NewQuoteForm />
         </div>
 
         <HomeMobileBottomMenu />

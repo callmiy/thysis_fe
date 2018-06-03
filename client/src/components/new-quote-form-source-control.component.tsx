@@ -1,7 +1,7 @@
 import Select from "react-select";
 import * as React from "react";
 
-import { FormValuesProps } from "./new-quote.component";
+import { FormValuesProps } from "./new-quote-form.component";
 import { SourceMiniFragFragment, SourceMiniQuery } from "../graphql/gen.types";
 
 type Sources = SourceMiniFragFragment[];
