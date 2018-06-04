@@ -7,7 +7,9 @@ import Header from "../components/header.component";
 import NewQuoteForm from "../components/new-quote-form.component";
 import { SimpleCss, ROOT_CONTAINER_STYLE } from "../constants";
 import { TagFragFragment } from "../graphql/gen.types";
-import HomeMobileBottomMenu from "../components/home-route-mobile-bottom-menu.component";
+import MobileBottomMenu, {
+  MenuItem
+} from "../components/mobile-bottom-menu.component";
 
 jss.setup(preset());
 
@@ -54,7 +56,9 @@ export default class Home extends React.Component<HomeProps> {
           <NewQuoteForm />
         </div>
 
-        <HomeMobileBottomMenu />
+        <MobileBottomMenu
+          items={[MenuItem.NEW_TAG, MenuItem.NEW_SOURCE, MenuItem.TAG_LIST]}
+        />
       </div>
     );
   }

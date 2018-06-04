@@ -1,9 +1,8 @@
 import React from "react";
 import { Modal, List, Segment } from "semantic-ui-react";
-import { NavLink } from "react-router-dom";
-
 import jss from "jss";
 import preset from "jss-preset-default";
+import { withRouter, RouteComponentProps } from "react-router-dom";
 
 import { TagsMinimalRunQuery } from "../graphql/ops.types";
 import { TagFragFragment } from "../graphql/gen.types";
@@ -40,15 +39,21 @@ const styles = {
   }
 };
 
-interface TagListModalProps {
+interface TagListModalProps extends RouteComponentProps<{}> {
   open: boolean;
   dismissModal: () => void;
   style?: React.CSSProperties;
 }
 
-export default class TagListModal extends React.PureComponent<
-  TagListModalProps
-> {
+class TagListModal extends React.PureComponent<TagListModalProps> {
+  constructor(props: TagListModalProps) {
+    super(props);
+
+    ["navigateTo", "renderTag", "resetModal"].forEach(
+      fn => (this[fn] = this[fn].bind(this))
+    );
+  }
+
   render() {
     const { open } = this.props;
 
@@ -84,7 +89,7 @@ export default class TagListModal extends React.PureComponent<
 
   renderTag = ({ id, text }: TagFragFragment) => {
     return (
-      <List.Item key={id} as={NavLink} to={makeTagDetailURL(id)}>
+      <List.Item key={id} onClick={this.navigateTo(id)}>
         <List.Content>{text}</List.Content>
       </List.Item>
     );
@@ -93,4 +98,11 @@ export default class TagListModal extends React.PureComponent<
   resetModal = () => {
     this.props.dismissModal();
   };
+
+  navigateTo = (id: string) => () => {
+    this.resetModal();
+    this.props.history.push(makeTagDetailURL(id));
+  };
 }
+
+export default withRouter<TagListModalProps>(TagListModal);

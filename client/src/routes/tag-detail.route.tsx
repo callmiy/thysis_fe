@@ -9,6 +9,9 @@ import { ROOT_CONTAINER_STYLE, SimpleCss } from "../constants";
 import { TagQuoteRunQuery } from "../graphql/ops.types";
 import TAG_QUOTE_QUERY from "../graphql/tag-with-quotes.query";
 import { TagQuoteQuery, QuoteFromtagFragFragment } from "../graphql/gen.types";
+import MobileBottomMenu, {
+  MenuItem
+} from "../components/mobile-bottom-menu.component";
 
 jss.setup(preset());
 
@@ -69,6 +72,7 @@ export default class TagDetail extends React.Component<TagDetailProps> {
     return (
       <div className={`${classes.tagDetailRoot}`}>
         <RootHeader title="Tag Detail" />
+
         <TagQuoteRunQuery query={TAG_QUOTE_QUERY} variables={{ tag: { id } }}>
           {({ data, loading }) => {
             return (
@@ -88,6 +92,10 @@ export default class TagDetail extends React.Component<TagDetailProps> {
             );
           }}
         </TagQuoteRunQuery>
+
+        <MobileBottomMenu
+          items={[MenuItem.HOME, MenuItem.NEW_TAG, MenuItem.TAG_LIST]}
+        />
       </div>
     );
   }
