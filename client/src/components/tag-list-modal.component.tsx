@@ -1,5 +1,6 @@
 import React from "react";
 import { Modal, List, Segment } from "semantic-ui-react";
+import { NavLink } from "react-router-dom";
 
 import jss from "jss";
 import preset from "jss-preset-default";
@@ -10,7 +11,8 @@ import TAGS_QUERY from "../graphql/tags-mini.query";
 import {
   FLEX_DIRECTION_COLUMN,
   OVERFLOW_X_HIDDEN,
-  OVERFLOW_Y_AUTO
+  OVERFLOW_Y_AUTO,
+  makeTagDetailURL
 } from "../constants";
 
 jss.setup(preset());
@@ -80,10 +82,10 @@ export default class TagListModal extends React.PureComponent<
     );
   }
 
-  renderTag = (tag: TagFragFragment) => {
+  renderTag = ({ id, text }: TagFragFragment) => {
     return (
-      <List.Item key={tag.id}>
-        <List.Content>{tag.text}</List.Content>
+      <List.Item key={id} as={NavLink} to={makeTagDetailURL(id)}>
+        <List.Content>{text}</List.Content>
       </List.Item>
     );
   };

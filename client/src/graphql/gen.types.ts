@@ -35,6 +35,11 @@ export interface CreateSourceInput {
   url?: string | null,
 };
 
+export interface GetTagInput {
+  id?: string | null,
+  text?: string | null,
+};
+
 export interface CreateTagInput {
   text: string,
 };
@@ -93,6 +98,26 @@ export interface CreateSourceMutation {
   } | null,
 };
 
+export interface TagQuoteQueryVariables {
+  tag: GetTagInput,
+};
+
+export interface TagQuoteQuery {
+  // Get a single tag
+  tag:  {
+    id: string,
+    text: string,
+    quotes:  Array< {
+      id: string,
+      text: string,
+      date: string,
+      source:  {
+        display: string | null,
+      } | null,
+    } | null > | null,
+  } | null,
+};
+
 export interface CreateTagMutationVariables {
   tag: CreateTagInput,
 };
@@ -110,6 +135,15 @@ export interface TagsMinimalQuery {
     id: string,
     text: string,
   } | null > | null,
+};
+
+export interface QuoteFromtagFragFragment {
+  id: string,
+  text: string,
+  date: string,
+  source:  {
+    display: string | null,
+  } | null,
 };
 
 export interface QuoteFragFragment {
@@ -135,4 +169,17 @@ export interface SourceTypeFragFragment {
 export interface TagFragFragment {
   id: string,
   text: string,
+};
+
+export interface TagQuotesFragFragment {
+  id: string,
+  text: string,
+  quotes:  Array< {
+    id: string,
+    text: string,
+    date: string,
+    source:  {
+      display: string | null,
+    } | null,
+  } | null > | null,
 };

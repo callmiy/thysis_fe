@@ -20,11 +20,6 @@ const styles = {
     overflowY: "auto",
     display: "flex",
     flexDirection: "column"
-  },
-
-  tags: {
-    overflowY: "scroll",
-    height: "600px"
   }
 } as SimpleCss;
 

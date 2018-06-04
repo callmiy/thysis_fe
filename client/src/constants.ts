@@ -1,6 +1,10 @@
 import { SimpleStyle } from "jss/css";
 
 export const ROOT_URL = "/";
+export const TAG_DETAIL_URL = "/app/:id";
+export const makeTagDetailURL = (id: string) => {
+  return TAG_DETAIL_URL.replace(":id", id);
+};
 
 export const POSITION_RELATIVE = "relative" as "relative";
 export const POSITION_ABSOLUTE = "absolute" as "absolute";
@@ -15,7 +19,8 @@ export type SimpleCss = Record<string, SimpleStyle>;
 export const ROOT_CONTAINER_STYLE = {
   height: "100%",
   display: "flex",
-  flexDirection: "column"
+  flexDirection: "column",
+  flex: 1
 };
 
 export const ERROR_COLOR = "#9f3a38";

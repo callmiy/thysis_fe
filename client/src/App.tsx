@@ -4,7 +4,12 @@ import * as React from "react";
 import Loadable from "react-loadable";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 
-import { ROOT_URL, SimpleCss, ROOT_CONTAINER_STYLE } from "./constants";
+import {
+  ROOT_URL,
+  SimpleCss,
+  ROOT_CONTAINER_STYLE,
+  TAG_DETAIL_URL
+} from "./constants";
 
 jss.setup(preset());
 
@@ -36,6 +41,11 @@ const Home = Loadable({
   loader: () => import("./routes/home.route")
 });
 
+const TagDetail = Loadable({
+  loading: Loading,
+  loader: () => import("./routes/tag-detail.route")
+});
+
 // tslint:disable-next-line:max-classes-per-file
 class App extends React.Component {
   render() {
@@ -43,6 +53,7 @@ class App extends React.Component {
       <div className={`${classes.app}`}>
         <BrowserRouter>
           <Switch>
+            <Route exact={true} path={TAG_DETAIL_URL} component={TagDetail} />
             <Route exact={true} path={ROOT_URL} component={Home} />
           </Switch>
         </BrowserRouter>
