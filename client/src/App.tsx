@@ -8,7 +8,8 @@ import {
   ROOT_URL,
   SimpleCss,
   ROOT_CONTAINER_STYLE,
-  TAG_DETAIL_URL
+  TAG_DETAIL_URL,
+  ROOT_URL_APP
 } from "./constants";
 
 jss.setup(preset());
@@ -54,6 +55,7 @@ class App extends React.Component {
         <BrowserRouter>
           <Switch>
             <Route exact={true} path={TAG_DETAIL_URL} component={TagDetail} />
+            <Route exact={true} path={ROOT_URL_APP} component={Home} />
             <Route exact={true} path={ROOT_URL} component={Home} />
           </Switch>
         </BrowserRouter>

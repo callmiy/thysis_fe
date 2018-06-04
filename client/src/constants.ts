@@ -1,7 +1,8 @@
 import { SimpleStyle } from "jss/css";
 
 export const ROOT_URL = "/";
-export const TAG_DETAIL_URL = "/app/:id";
+export const ROOT_URL_APP = "/app";
+export const TAG_DETAIL_URL = ROOT_URL_APP + "/:id";
 export const makeTagDetailURL = (id: string) => {
   return TAG_DETAIL_URL.replace(":id", id);
 };
