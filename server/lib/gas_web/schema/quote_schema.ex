@@ -12,7 +12,7 @@ defmodule GasWeb.QuoteSchema do
   object :quote do
     field(:id, non_null(:id))
     field(:text, non_null(:string))
-    field(:date, non_null(:date))
+    field(:date, :date)
     field(:page_start, :integer)
     field(:page_end, :integer)
     field(:volume, :string)
@@ -34,7 +34,7 @@ defmodule GasWeb.QuoteSchema do
     field(:source_id, non_null(:id))
 
     @desc "The quote date"
-    field(:date, non_null(:date))
+    field(:date, :date)
 
     @desc "The tags i.e subject matters of the quote"
     field(:tags, non_null(list_of(:id)))
@@ -53,6 +53,20 @@ defmodule GasWeb.QuoteSchema do
 
     @desc "Optional miscellaneous information with regards to the quote"
     field(:extras, :string)
+  end
+
+  @desc "Inputs for finding a quote"
+  input_object :find_quote_input do
+    field(:text, non_null(:string))
+  end
+
+  @desc "Queries allowed on Quote object"
+  object :quote_query do
+    @desc "Find quote by quote text, author, tag"
+    field :find_quote, type: :quote do
+      arg(:quote, non_null(:find_quote_input))
+      resolve(&QuoteResolver.find_quote/3)
+    end
   end
 
   @desc "The mutations allowed on the Quote object"

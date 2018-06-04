@@ -3,7 +3,7 @@
 
 export interface CreateQuoteInput {
   // The quote date
-  date: string,
+  date?: string | null,
   // Optional miscellaneous information with regards to the quote
   extras?: string | null,
   // Optional (journal, textbook, magazine etc.) issue number
@@ -53,7 +53,7 @@ export interface CreateQuoteMutation {
   createQuote:  {
     id: string,
     text: string,
-    date: string,
+    date: string | null,
     source:  {
       id: string,
       display: string | null,
@@ -110,7 +110,7 @@ export interface TagQuoteQuery {
     quotes:  Array< {
       id: string,
       text: string,
-      date: string,
+      date: string | null,
       source:  {
         display: string | null,
       } | null,
@@ -140,7 +140,7 @@ export interface TagsMinimalQuery {
 export interface QuoteFromtagFragFragment {
   id: string,
   text: string,
-  date: string,
+  date: string | null,
   source:  {
     display: string | null,
   } | null,
@@ -149,7 +149,7 @@ export interface QuoteFromtagFragFragment {
 export interface QuoteFragFragment {
   id: string,
   text: string,
-  date: string,
+  date: string | null,
 };
 
 export interface SourceMiniFragFragment {
@@ -177,7 +177,7 @@ export interface TagQuotesFragFragment {
   quotes:  Array< {
     id: string,
     text: string,
-    date: string,
+    date: string | null,
     source:  {
       display: string | null,
     } | null,

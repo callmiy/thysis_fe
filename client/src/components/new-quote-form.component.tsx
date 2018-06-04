@@ -515,7 +515,17 @@ class NewQuoteForm extends React.Component<
     const error = "Enter a valid date";
 
     if (!date) {
-      return error;
+      this.setState(prev =>
+        update(prev, {
+          formOutputs: {
+            date: {
+              $set: undefined
+            }
+          }
+        })
+      );
+
+      return "";
     }
 
     const keys = Object.keys(date);
@@ -549,7 +559,7 @@ class NewQuoteForm extends React.Component<
       update(prev, {
         formOutputs: {
           date: {
-            $set: isValid ? datec.format("YYYY-MM-D") : undefined
+            $set: isValid ? datec.format("YYYY-MM-DD") : undefined
           }
         }
       })
