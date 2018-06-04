@@ -93,9 +93,7 @@ export default class TagDetail extends React.Component<TagDetailProps> {
           }}
         </TagQuoteRunQuery>
 
-        <MobileBottomMenu
-          items={[MenuItem.HOME, MenuItem.NEW_TAG, MenuItem.TAG_LIST]}
-        />
+        <MobileBottomMenu items={[MenuItem.HOME, MenuItem.TAG_LIST]} />
       </div>
     );
   }
