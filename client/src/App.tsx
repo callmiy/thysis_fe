@@ -9,7 +9,6 @@ import {
   SimpleCss,
   ROOT_CONTAINER_STYLE,
   TAG_URL,
-  ROOT_URL_APP,
   SOURCE_URL
 } from "./constants";
 
@@ -62,7 +61,6 @@ class App extends React.Component {
           <Switch>
             <Route exact={true} path={SOURCE_URL} component={Source} />
             <Route exact={true} path={TAG_URL} component={TagDetail} />
-            <Route exact={true} path={ROOT_URL_APP} component={Home} />
             <Route exact={true} path={ROOT_URL} component={Home} />
           </Switch>
         </BrowserRouter>
