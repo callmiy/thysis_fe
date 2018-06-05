@@ -156,4 +156,35 @@ defmodule Gas.QuoteApi do
   def change_(%Quote{} = quote, attrs \\ %{}) do
     Quote.changeset(quote, attrs)
   end
+
+  @doc """
+  Do a full text search on Query. Given a text, search the quote.text, source.author, tag.text, source.topic, quote.page_start, quote.page_end,
+  quote.issue, quote.extras, source.source_type.name, source.publication,
+  source.url
+  """
+  @spec full_text_search(String.t()) :: %{}
+  def full_text_search(text) when is_binary(text) do
+    params = ["%#{text}%"]
+
+    sql =
+      %{
+        "quotes" => ["text", "volume", "issue", "extras"],
+        "sources" => ["author", "topic", "publication", "url"],
+        "tags" => ["text"],
+        "source_types" => ["name"]
+      }
+      |> Enum.flat_map(fn {source, data} ->
+        Enum.map(
+          data,
+          &"""
+          select id, #{&1}, '#{source}' as source from #{source}
+          where #{&1} ilike $1
+          """
+        )
+      end)
+      |> Enum.join(" union ")
+
+    Repo.execute_and_load(sql, params)
+    |> Enum.group_by(& &1["source"])
+  end
 end
