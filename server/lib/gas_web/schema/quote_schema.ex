@@ -25,6 +25,7 @@ defmodule GasWeb.QuoteSchema do
     field(:tag, list_of(:tag), resolve: assoc(:tag))
   end
 
+  # MUTATION INPUTS
   @desc "Inputs for creating a Quote object"
   input_object :create_quote_input do
     @desc "The quote text"
@@ -55,17 +56,18 @@ defmodule GasWeb.QuoteSchema do
     field(:extras, :string)
   end
 
-  @desc "Inputs for finding a quote"
-  input_object :find_quote_input do
-    field(:text, non_null(:string))
+  # QUERY INPUTS
+  @desc "Inputs for querying list of quotes"
+  input_object :get_quotes do
+    field(:source, :id)
   end
 
   @desc "Queries allowed on Quote object"
   object :quote_query do
-    @desc "Find quote by quote text, author, tag"
-    field :find_quote, type: :quote do
-      arg(:quote, non_null(:find_quote_input))
-      resolve(&QuoteResolver.find_quote/3)
+    @desc "Query list of quotes - everything, or filter by source"
+    field :quotes, type: list_of(:quote) do
+      arg(:quote, :get_quotes)
+      resolve(&QuoteResolver.quotes/3)
     end
   end
 

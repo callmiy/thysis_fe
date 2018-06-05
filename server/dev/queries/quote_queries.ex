@@ -63,6 +63,21 @@ defmodule GasWeb.QuoteQueries do
     """
   end
 
+  def query(:quotes) do
+    """
+    query GetQuotesQuery($quote: GetQuotes) {
+      quotes(quote: $quote) {
+        id
+        text
+        source {
+          id
+          author
+        }
+      }
+    }
+    """
+  end
+
   def variables do
     %{
       "quote" => %{

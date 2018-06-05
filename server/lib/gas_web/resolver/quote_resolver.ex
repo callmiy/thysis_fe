@@ -10,7 +10,6 @@ defmodule GasWeb.QuoteResolver do
   @doc """
   Create a quote
   """
-
   @spec create_quote(any, %{quote: Map.t()}, any) :: {:ok, %Quote{}} | {:error, String.t()}
   def create_quote(_root, %{quote: inputs}, _info) do
     case Api.create_with_tags(inputs) do
@@ -25,5 +24,10 @@ defmodule GasWeb.QuoteResolver do
           message: "{name: #{failed_operation}, error: #{changeset_string}}"
         }
     end
+  end
+
+  @spec quotes(any, %{}, any) :: {:ok, [%Quote{}]} | {:error, String.t()}
+  def quotes(_root, args, _info) do
+    {:ok, Api.get_quotes_by(Map.get(args, :quote))}
   end
 end

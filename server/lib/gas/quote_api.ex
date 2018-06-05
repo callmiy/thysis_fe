@@ -187,4 +187,23 @@ defmodule Gas.QuoteApi do
     Repo.execute_and_load(sql, params)
     |> Enum.group_by(& &1["source"])
   end
+
+  def get_quotes_by(nil), do: Repo.all(Quote)
+
+  @spec get_quotes_by(Map.t()) :: [%Quote{}]
+  def get_quotes_by(inputs) do
+    query = Quote
+
+    {query, _got_source} =
+      case Map.get(inputs, :source) do
+        nil -> {query, false}
+        source_id -> get_quotes_by(:source, query, source_id)
+      end
+
+    Repo.all(query)
+  end
+
+  @spec get_quotes_by(atom, any, String.t()) :: {%Ecto.Query{}, true}
+  def get_quotes_by(:source, query, id),
+    do: {join(query, :inner, [q], s in assoc(q, :source), s.id == ^id), true}
 end
