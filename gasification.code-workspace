@@ -18,6 +18,13 @@
     "elixirLS.dialyzerEnabled": true,
     "[elixir]": {
       "editor.quickSuggestions": true
+    },
+    "search.exclude": {
+      "**/node_modules": true,
+      "**/bower_components": true,
+      "**/tags": true,
+      "**/server/**/web-client/**": true,
+      "**/client/**/build/**": true
     }
   }
 }

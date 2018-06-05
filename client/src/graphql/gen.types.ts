@@ -22,6 +22,11 @@ export interface CreateQuoteInput {
   volume?: string | null,
 };
 
+export interface GetSourceInput {
+  // ID of source
+  id: string,
+};
+
 export interface CreateSourceInput {
   // The original owner of the work - mandatory
   author: string,
@@ -65,15 +70,15 @@ export interface CreateQuoteMutation {
   } | null,
 };
 
-export interface SourceMiniQuery {
-  sources:  Array< {
+export interface Source1QueryVariables {
+  source: GetSourceInput,
+};
+
+export interface Source1Query {
+  source:  {
     id: string,
     display: string | null,
-    sourceType:  {
-      id: string,
-      name: string | null,
-    },
-  } | null > | null,
+  } | null,
 };
 
 export interface SourceTypesQuery {
@@ -96,6 +101,18 @@ export interface CreateSourceMutation {
       name: string | null,
     },
   } | null,
+};
+
+export interface Sources1Query {
+  // Query for all sources
+  sources:  Array< {
+    id: string,
+    display: string | null,
+    sourceType:  {
+      id: string,
+      name: string | null,
+    },
+  } | null > | null,
 };
 
 export interface TagQuoteQueryVariables {
@@ -152,13 +169,18 @@ export interface QuoteFragFragment {
   date: string | null,
 };
 
-export interface SourceMiniFragFragment {
+export interface SourceFragFragment {
   id: string,
   display: string | null,
   sourceType:  {
     id: string,
     name: string | null,
   },
+};
+
+export interface Source2FragFragment {
+  id: string,
+  display: string | null,
 };
 
 export interface SourceTypeFragFragment {

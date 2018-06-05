@@ -16,13 +16,13 @@ import { Mutation } from "react-apollo";
 import isEmpty from "lodash/isEmpty";
 
 import SOURCE_MUTATION from "../graphql/source.mutation";
-import SOURCE_QUERY from "../graphql/source-mini.query";
+import SOURCE_QUERY from "../graphql/sources-1.query";
 import { CreateSourceFn, CreateSourceUpdateFn } from "../graphql/ops.types";
 import {
   CreateSourceInput,
   SourceTypeFragFragment,
-  SourceMiniQuery,
-  SourceMiniFragFragment
+  Sources1Query,
+  SourceFragFragment
 } from "../graphql/gen.types";
 import SourceTypeControl from "./select-source-type-control.component";
 
@@ -293,9 +293,9 @@ export default class NewSourceModal extends React.Component<
 
     const sourcesQuery = cache.readQuery({
       query: SOURCE_QUERY
-    }) as SourceMiniQuery;
+    }) as Sources1Query;
 
-    const sources = sourcesQuery.sources as SourceMiniFragFragment[];
+    const sources = sourcesQuery.sources as SourceFragFragment[];
 
     cache.writeQuery({
       query: SOURCE_QUERY,

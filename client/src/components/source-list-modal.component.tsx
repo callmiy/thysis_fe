@@ -3,16 +3,17 @@ import { Modal, List, Segment } from "semantic-ui-react";
 import jss from "jss";
 import preset from "jss-preset-default";
 import { withRouter, RouteComponentProps } from "react-router-dom";
+import { GraphqlQueryControls, graphql } from "react-apollo";
 
-import { TagsMinimalRunQuery } from "../graphql/ops.types";
-import { TagFragFragment } from "../graphql/gen.types";
-import TAGS_QUERY from "../graphql/tags-mini.query";
+import { SourceFragFragment, Sources1Query } from "../graphql/gen.types";
+import SOURCES_QUERY from "../graphql/sources-1.query";
 import {
   FLEX_DIRECTION_COLUMN,
   OVERFLOW_X_HIDDEN,
   OVERFLOW_Y_AUTO,
-  makeTagURL
+  makeSourceURL
 } from "../constants";
+import { reshapeSources } from "./new-quote-form.component";
 
 jss.setup(preset());
 
@@ -20,7 +21,6 @@ const styles = {
   modal: {
     marginTop: "10%",
     overflowX: OVERFLOW_X_HIDDEN,
-    // overflowY: OVERFLOW_Y_AUTO,
     display: "flex",
     flexDirection: FLEX_DIRECTION_COLUMN,
     flex: 1,
@@ -43,23 +43,26 @@ const styles = {
   }
 };
 
-interface TagListModalProps extends RouteComponentProps<{}> {
+interface SourceListModalProps
+  extends RouteComponentProps<{}>,
+    GraphqlQueryControls,
+    Sources1Query {
   open: boolean;
   dismissModal: () => void;
   style?: React.CSSProperties;
 }
 
-class TagListModal extends React.PureComponent<TagListModalProps> {
-  constructor(props: TagListModalProps) {
+class SourceListModal extends React.PureComponent<SourceListModalProps> {
+  constructor(props: SourceListModalProps) {
     super(props);
 
-    ["navigateTo", "renderTag", "resetModal"].forEach(
+    ["navigateTo", "renderSource", "resetModal"].forEach(
       fn => (this[fn] = this[fn].bind(this))
     );
   }
 
   render() {
-    const { open } = this.props;
+    const { open, sources } = this.props;
 
     return (
       <Modal
@@ -73,28 +76,20 @@ class TagListModal extends React.PureComponent<TagListModalProps> {
         dimmer="blurring"
       >
         <Modal.Content style={styles.modalContent} scrolling={true}>
-          <TagsMinimalRunQuery query={TAGS_QUERY}>
-            {({ data }) => {
-              const tags = data ? data.tags : ([] as TagFragFragment[]);
-
-              return (
-                <Segment style={styles.segment} inverted={true}>
-                  <List divided={true} inverted={true} relaxed={true}>
-                    {(tags || []).map(this.renderTag)}
-                  </List>
-                </Segment>
-              );
-            }}
-          </TagsMinimalRunQuery>
+          <Segment style={styles.segment} inverted={true}>
+            <List divided={true} inverted={true} relaxed={true}>
+              {(sources || []).map(this.renderSource)}
+            </List>
+          </Segment>
         </Modal.Content>
       </Modal>
     );
   }
 
-  renderTag = ({ id, text }: TagFragFragment) => {
+  renderSource = ({ id, display }: SourceFragFragment) => {
     return (
       <List.Item key={id} style={styles.listItem} onClick={this.navigateTo(id)}>
-        <List.Content>{text}</List.Content>
+        <List.Content>{display}</List.Content>
       </List.Item>
     );
   };
@@ -105,8 +100,26 @@ class TagListModal extends React.PureComponent<TagListModalProps> {
 
   navigateTo = (id: string) => () => {
     this.resetModal();
-    this.props.history.push(makeTagURL(id));
+    this.props.history.push(makeSourceURL(id));
   };
 }
 
-export default withRouter<TagListModalProps>(TagListModal);
+const sourcesGraphQl = graphql<
+  SourceListModalProps,
+  Sources1Query,
+  {},
+  SourceListModalProps
+>(SOURCES_QUERY, {
+  props: ({ data }, ownProps: SourceListModalProps) => {
+    if (!data) {
+      return ownProps;
+    }
+
+    const sources = data.sources as SourceFragFragment[];
+    return { ...ownProps, ...data, sources: reshapeSources(sources) };
+  }
+});
+
+export default withRouter<SourceListModalProps>(
+  sourcesGraphQl(SourceListModal)
+);

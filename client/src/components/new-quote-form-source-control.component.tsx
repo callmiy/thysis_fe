@@ -2,9 +2,9 @@ import Select from "react-select";
 import * as React from "react";
 
 import { FormValuesProps } from "./new-quote-form.component";
-import { SourceMiniFragFragment, SourceMiniQuery } from "../graphql/gen.types";
+import { SourceFragFragment, Sources1Query } from "../graphql/gen.types";
 
-type Sources = SourceMiniFragFragment[];
+type Sources = SourceFragFragment[];
 
 interface SourceControlProps extends FormValuesProps {
   selectError: boolean;
@@ -41,7 +41,7 @@ export default class SourceControl extends React.Component<SourceControlProps> {
     );
   }
 
-  reShapeSources = (data: SourceMiniQuery | undefined) => {
+  reShapeSources = (data: Sources1Query | undefined) => {
     if (!data || !data.sources) {
       return [];
     }

@@ -13,9 +13,9 @@ import { Mutation } from "react-apollo";
 import {
   TagFragFragment,
   TagsMinimalQuery,
-  SourceMiniFragFragment,
+  SourceFragFragment,
   CreateQuoteInput,
-  SourceMiniQuery
+  Sources1Query
 } from "../graphql/gen.types";
 import TAGS_QUERY from "../graphql/tags-mini.query";
 import TagControl from "./new-quote-form-tag-control.component";
@@ -28,9 +28,28 @@ import VolumeIssue, {
 } from "./new-quote-volume-issue.component";
 import QUOTE_MUTATION from "../graphql/quote.mutation";
 import { CreateQueryFn } from "../graphql/ops.types";
-import SOURCE_MINI_QUERY from "../graphql/source-mini.query";
+import SOURCE_MINI_QUERY from "../graphql/sources-1.query";
 
 jss.setup(preset());
+
+export const reshapeSources = (
+  sources: SourceFragFragment[] | null
+): SourceFragFragment[] => {
+  if (!sources) {
+    return [] as SourceFragFragment[];
+  }
+
+  return sources.map(s => {
+    if (!s) {
+      return {} as SourceFragFragment;
+    }
+
+    return {
+      ...s,
+      display: `${s.display} | ${s.sourceType.name}`
+    } as SourceFragFragment;
+  });
+};
 
 const styles = {
   newQuoteRoot: {
@@ -59,7 +78,7 @@ const { classes } = jss.createStyleSheet(styles).attach();
 
 interface FormValues {
   tags: TagFragFragment[] | null;
-  source: SourceMiniFragFragment | null;
+  source: SourceFragFragment | null;
   quote: string;
   date: DateType | null;
   page: PageType | null;
@@ -70,7 +89,7 @@ interface FormValues {
 export type FormValuesProps = FieldProps<FormValues>;
 
 type NewQuoteFormProps = {} & TagsMinimalQuery &
-  SourceMiniQuery &
+  Sources1Query &
   GraphqlQueryControls;
 
 const tagsGraphQl = graphql<{}, TagsMinimalQuery, {}, NewQuoteFormProps>(
@@ -82,7 +101,7 @@ const tagsGraphQl = graphql<{}, TagsMinimalQuery, {}, NewQuoteFormProps>(
   }
 );
 
-const sourcesGraphQl = graphql<{}, SourceMiniQuery, {}, NewQuoteFormProps>(
+const sourcesGraphQl = graphql<{}, Sources1Query, {}, NewQuoteFormProps>(
   SOURCE_MINI_QUERY,
   {
     props: ({ data }, ownProps: NewQuoteFormProps) => {
@@ -90,24 +109,8 @@ const sourcesGraphQl = graphql<{}, SourceMiniQuery, {}, NewQuoteFormProps>(
         return ownProps;
       }
 
-      let sources = data.sources;
-
-      if (sources) {
-        sources = sources.map(s => {
-          if (!s) {
-            return {} as SourceMiniFragFragment;
-          }
-
-          return {
-            ...s,
-            display: `${s.display} | ${s.sourceType.name}`
-          } as SourceMiniFragFragment;
-        });
-      } else {
-        sources = [] as SourceMiniFragFragment[];
-      }
-
-      return { ...ownProps, ...data, sources };
+      const sources = data.sources as SourceFragFragment[];
+      return { ...ownProps, ...data, sources: reshapeSources(sources) };
     }
   }
 );
@@ -417,7 +420,7 @@ class NewQuoteForm extends React.Component<
     const error = form.errors[name];
     const booleanError = !!error;
     const touched = form.touched[name];
-    const sources = this.props.sources as SourceMiniFragFragment[];
+    const sources = this.props.sources as SourceFragFragment[];
 
     return (
       <Form.Field
@@ -471,7 +474,7 @@ class NewQuoteForm extends React.Component<
     return "";
   };
 
-  validatesource = (source: SourceMiniFragFragment | null) => {
+  validatesource = (source: SourceFragFragment | null) => {
     const error = "Select a source";
 
     if (!source) {
@@ -628,4 +631,7 @@ class NewQuoteForm extends React.Component<
   };
 }
 
-export default compose(tagsGraphQl, sourcesGraphQl)(NewQuoteForm);
+export default compose(
+  tagsGraphQl,
+  sourcesGraphQl
+)(NewQuoteForm);

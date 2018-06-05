@@ -2,9 +2,15 @@ import { SimpleStyle } from "jss/css";
 
 export const ROOT_URL = "/";
 export const ROOT_URL_APP = "/app";
-export const TAG_DETAIL_URL = ROOT_URL_APP + "/:id";
-export const makeTagDetailURL = (id: string) => {
-  return TAG_DETAIL_URL.replace(":id", id);
+
+export const TAG_URL = ROOT_URL_APP + "/tags/:id";
+export const makeTagURL = (id: string) => {
+  return TAG_URL.replace(":id", id);
+};
+
+export const SOURCE_URL = ROOT_URL_APP + "/sources/:id";
+export const makeSourceURL = (id: string) => {
+  return SOURCE_URL.replace(":id", id);
 };
 
 export const POSITION_RELATIVE = "relative" as "relative";

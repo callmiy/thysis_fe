@@ -7,6 +7,7 @@ import { withRouter, RouteComponentProps } from "react-router-dom";
 import NewTagModalForm from "./new-tag-modal-form.component";
 import NewSourceModal from "./new-source-modal.component";
 import TagListModal from "./tag-list-modal.component";
+import SourceListModal from "./source-list-modal.component";
 
 // import { SimpleCss } from "../constants";
 
@@ -26,7 +27,8 @@ export enum MenuItem {
   HOME = "home",
   NEW_TAG = "newTag",
   NEW_SOURCE = "newSource",
-  TAG_LIST = "tagList"
+  TAG_LIST = "tagList",
+  SOURCE_LIST = "sourceList"
 }
 
 enum MenuAction {
@@ -70,6 +72,13 @@ const menus: Menus = {
     icon: "home",
     label: "Home",
     action: MenuAction.NAVIGATE
+  },
+
+  [MenuItem.SOURCE_LIST]: {
+    component: SourceListModal,
+    icon: "numbered list",
+    label: "Sources",
+    action: MenuAction.MODAL
   }
 };
 

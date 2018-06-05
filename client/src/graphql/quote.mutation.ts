@@ -1,6 +1,6 @@
 import gql from "graphql-tag";
 
-import { sourceMiniFrag } from "./source-mini.fragment";
+import { source1Frag } from "./source-1.fragment";
 
 export const quoteFrag = gql`
   fragment QuoteFrag on Quote {
@@ -18,12 +18,12 @@ export const quoteMut = gql`
       date
 
       source {
-        ...SourceMiniFrag
+        ...SourceFrag
       }
     }
   }
 
-  ${sourceMiniFrag}
+  ${source1Frag}
 `;
 
 export default quoteMut;

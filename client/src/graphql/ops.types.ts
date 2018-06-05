@@ -2,7 +2,7 @@ import { Query, MutationFn, MutationUpdaterFn } from "react-apollo";
 
 import {
   TagsMinimalQuery,
-  SourceMiniQuery,
+  Sources1Query,
   CreateQuoteMutation,
   CreateQuoteMutationVariables,
   CreateTagMutation,
@@ -17,7 +17,7 @@ import {
 export class TagsMinimalRunQuery extends Query<TagsMinimalQuery, {}> {}
 
 // tslint:disable-next-line:max-classes-per-file
-export class SourceMiniRunQuery extends Query<SourceMiniQuery, {}> {}
+export class Sources1RunQuery extends Query<Sources1Query, {}> {}
 
 export type CreateQueryFn = MutationFn<
   CreateQuoteMutation,

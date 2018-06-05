@@ -8,8 +8,9 @@ import {
   ROOT_URL,
   SimpleCss,
   ROOT_CONTAINER_STYLE,
-  TAG_DETAIL_URL,
-  ROOT_URL_APP
+  TAG_URL,
+  ROOT_URL_APP,
+  SOURCE_URL
 } from "./constants";
 
 jss.setup(preset());
@@ -47,6 +48,11 @@ const TagDetail = Loadable({
   loader: () => import("./routes/tag-detail.route")
 });
 
+const Source = Loadable({
+  loading: Loading,
+  loader: () => import("./routes/source.route")
+});
+
 // tslint:disable-next-line:max-classes-per-file
 class App extends React.Component {
   render() {
@@ -54,7 +60,8 @@ class App extends React.Component {
       <div className={`${classes.app}`}>
         <BrowserRouter>
           <Switch>
-            <Route exact={true} path={TAG_DETAIL_URL} component={TagDetail} />
+            <Route exact={true} path={SOURCE_URL} component={Source} />
+            <Route exact={true} path={TAG_URL} component={TagDetail} />
             <Route exact={true} path={ROOT_URL_APP} component={Home} />
             <Route exact={true} path={ROOT_URL} component={Home} />
           </Switch>

@@ -2,8 +2,8 @@ import gql from "graphql-tag";
 
 import sourceTypeFrag from "./source-type.fragment";
 
-export const sourceMiniFrag = gql`
-  fragment SourceMiniFrag on Source {
+export const source1Frag = gql`
+  fragment SourceFrag on Source {
     id
     display
     sourceType {
@@ -14,4 +14,4 @@ export const sourceMiniFrag = gql`
   ${sourceTypeFrag}
 `;
 
-export default sourceMiniFrag;
+export default source1Frag;

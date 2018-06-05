@@ -1,14 +1,14 @@
 import gql from "graphql-tag";
 
-import { sourceMiniFrag } from "./source-mini.fragment";
+import { source1Frag } from "./source-1.fragment";
 
 export const sourceMut = gql`
   mutation CreateSource($source: CreateSourceInput!) {
     createSource(source: $source) {
-      ...SourceMiniFrag
+      ...SourceFrag
     }
   }
-  ${sourceMiniFrag}
+  ${source1Frag}
 `;
 
 export default sourceMut;

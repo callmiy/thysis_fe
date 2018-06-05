@@ -40,6 +40,42 @@ defmodule GasWeb.SourceSchemaTest do
 
       assert String.contains?(display, author)
     end
+
+    test "get one source succeeds" do
+      %Source{
+        author: author,
+        id: id,
+        source_type_id: source_type_id
+      } = insert(:source)
+
+      id = Integer.to_string(id)
+      source_type_id = inspect(source_type_id)
+
+      assert {:ok,
+              %{
+                data: %{
+                  "source" => %{
+                    "id" => ^id,
+                    "author" => ^author,
+                    "display" => display,
+                    "sourceType" => %{
+                      "id" => ^source_type_id
+                    }
+                  }
+                }
+              }} =
+               Absinthe.run(
+                 Queries.query(:source),
+                 Schema,
+                 variables: %{
+                   "source" => %{
+                     "id" => id
+                   }
+                 }
+               )
+
+      assert String.contains?(display, author)
+    end
   end
 
   describe "mutatation" do

@@ -57,7 +57,12 @@ export default class Home extends React.Component<HomeProps> {
         </div>
 
         <MobileBottomMenu
-          items={[MenuItem.NEW_TAG, MenuItem.NEW_SOURCE, MenuItem.TAG_LIST]}
+          items={[
+            MenuItem.NEW_TAG,
+            MenuItem.NEW_SOURCE,
+            MenuItem.TAG_LIST,
+            MenuItem.SOURCE_LIST
+          ]}
         />
       </div>
     );
