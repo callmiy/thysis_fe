@@ -26,11 +26,7 @@ defmodule GasWeb.SourceSchema do
     end
   end
 
-  @desc "Get source input"
-  input_object :get_source_input do
-    field(:id, :id)
-  end
-
+  # MUTATION INPUTS
   @desc "Inputs for creating a source"
   input_object :create_source_input do
     @desc "The original owner of the work - mandatory"
@@ -49,13 +45,29 @@ defmodule GasWeb.SourceSchema do
     field(:url, :string)
   end
 
+  # QUERY INPUTS
+  @desc "Input for getting a source"
+  input_object :get_source_input do
+    @desc "ID of source"
+    field(:id, non_null(:id))
+  end
+
+  # QUERIES
   @desc "Queries allowed on the source object"
   object :source_query do
+    @desc "Query for all sources"
     field :sources, type: list_of(:source) do
       resolve(&SourceResolver.sources/3)
     end
+
+    @dec "Query for a source"
+    field :source, type: :source do
+      arg(:source, non_null(:get_source_input))
+      resolve(&SourceResolver.source/3)
+    end
   end
 
+  # MUTATIONS
   @desc "Mutations that may be performed on source object"
   object :source_mutation do
     field :create_source, type: :source do

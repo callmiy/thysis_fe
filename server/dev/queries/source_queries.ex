@@ -20,6 +20,32 @@ defmodule GasWeb.SourceQueries do
     """
   end
 
+  def query(:source) do
+    """
+    query GetSource($source: GetSourceInput!) {
+      source(source: $source) {
+        id
+        author
+        topic
+        publication
+        url
+        insertedAt
+        updatedAt
+        display
+        sourceType {
+          id
+          name
+        }
+        quotes {
+          id
+          text
+          date
+        }
+      }
+    }
+    """
+  end
+
   def mutation(:source) do
     """
     mutation CreateSource($source: CreateSourceInput!) {

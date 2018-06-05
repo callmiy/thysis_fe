@@ -36,6 +36,7 @@ defmodule Gas.SourceApi do
 
   """
   def get!(id), do: Repo.get!(Source, id)
+  def get(id), do: Repo.get(Source, id)
 
   @doc """
   Creates a source.

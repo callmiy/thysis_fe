@@ -15,6 +15,17 @@ defmodule GasWeb.SourceResolver do
   end
 
   @doc """
+  Get one source.
+  """
+  @spec source(any, %{source: %{id: String.t()}}, any) :: {:ok, %Source{}} | {:error, String.t()}
+  def source(_root, %{source: %{id: id}} = _args, _info) do
+    case Api.get(id) do
+      %Source{} = source_ -> {:ok, source_}
+      nil -> {:error, "No source with id: #{id}"}
+    end
+  end
+
+  @doc """
   Returns a string that can be used to display the source (sort of to_string).
   The fields that are important are joined together with "|". Fields that are
   `nil` are ignored
