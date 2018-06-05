@@ -8,10 +8,11 @@ import RootHeader from "../components/header.component";
 import { ROOT_CONTAINER_STYLE, SimpleCss } from "../constants";
 import { TagQuoteRunQuery } from "../graphql/ops.types";
 import TAG_QUOTE_QUERY from "../graphql/tag-with-quotes.query";
-import { TagQuoteQuery, QuoteFromtagFragFragment } from "../graphql/gen.types";
+import { TagQuoteQuery } from "../graphql/gen.types";
 import MobileBottomMenu, {
   MenuItem
 } from "../components/mobile-bottom-menu.component";
+import renderQuote from "../components/quote-item.component";
 
 jss.setup(preset());
 
@@ -30,28 +31,6 @@ const styles = {
   tagText: {
     padding: "3px 5px 10px 5px",
     marginBottom: 0
-  },
-
-  quoteItem: {
-    wordBreak: "break-all",
-    "&:first-of-type": {
-      marginTop: "10px"
-    }
-  },
-
-  quoteText: {
-    cursor: "pointer"
-  },
-
-  quoteDate: {
-    display: "flex",
-    flexDirection: "row-reverse"
-  },
-
-  sourceDisplay: {
-    fontStyle: "italic",
-    fontSize: "0.9em",
-    marginTop: "10px"
   }
 } as SimpleCss;
 
@@ -113,26 +92,10 @@ export default class TagDetail extends React.Component<TagDetailProps> {
 
         <div className={`${classes.tagDetailMain}`}>
           <List divided={true} relaxed={true}>
-            {tag.quotes && tag.quotes.map(this.renderQuote)}
+            {tag.quotes && tag.quotes.map(renderQuote)}
           </List>
         </div>
       </div>
-    );
-  };
-
-  renderQuote = ({ id, text, date, source }: QuoteFromtagFragFragment) => {
-    return (
-      <List.Item key={id} className={`${classes.quoteItem}`}>
-        <List.Content>
-          <List.Header className={`${classes.quoteText}`}>{text}</List.Header>
-
-          {source && (
-            <div className={`${classes.sourceDisplay}`}>{source.display}</div>
-          )}
-
-          <List.Description style={styles.quoteDate}>{date}</List.Description>
-        </List.Content>
-      </List.Item>
     );
   };
 }

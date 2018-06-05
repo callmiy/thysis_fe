@@ -2,7 +2,7 @@ import * as React from "react";
 import jss from "jss";
 import preset from "jss-preset-default";
 import { RouteComponentProps } from "react-router-dom";
-import { Header, Dimmer, Loader, List } from "semantic-ui-react";
+import { Header, Dimmer, Loader, List, Menu, Icon } from "semantic-ui-react";
 import { GraphqlQueryControls, graphql } from "react-apollo";
 
 import RootHeader from "../components/header.component";
@@ -12,6 +12,9 @@ import SOURCE_QUERY from "../graphql/source-1.query";
 import MobileBottomMenu, {
   MenuItem
 } from "../components/mobile-bottom-menu.component";
+import QUOTES_QUERY from "../graphql/quotes-1.query";
+import { Quotes1QueryComponent } from "../graphql/ops.types";
+import renderQuote from "../components/quote-item.component";
 
 jss.setup(preset());
 
@@ -27,31 +30,32 @@ const styles = {
     padding: "0 5px 15px 10px"
   },
 
-  tagText: {
-    padding: "3px 5px 10px 5px",
-    marginBottom: 0
+  mainContent: {
+    position: "relative"
   },
 
-  quoteItem: {
-    wordBreak: "break-all",
-    "&:first-of-type": {
-      marginTop: "10px"
-    }
+  quotesContainer: {
+    position: "absolute",
+    left: 0,
+    top: 0,
+    padding: "10px",
+    overflowX: "hidden",
+    overflowY: "auto",
+    opacity: 1,
+    margin: "10px",
+    border: "1px solid #dcd6d6",
+    borderRadius: "3px",
+    boxShadow: "5px 5px 2px -2px #757575"
   },
 
-  quoteText: {
+  quotesCloseButton: {
+    position: "absolute",
+    right: "-3px",
+    top: "-7px",
+    fontSize: "2em",
+    fontWeight: 900,
+    padding: "10px 10px 10px 30px",
     cursor: "pointer"
-  },
-
-  quoteDate: {
-    display: "flex",
-    flexDirection: "row-reverse"
-  },
-
-  sourceDisplay: {
-    fontStyle: "italic",
-    fontSize: "0.9em",
-    marginTop: "10px"
   }
 } as SimpleCss;
 
@@ -60,6 +64,119 @@ const { classes } = jss.createStyleSheet(styles).attach();
 type OwnProps = RouteComponentProps<{ id: string }> & Source1Query;
 
 type SourceProps = OwnProps & GraphqlQueryControls<Source1QueryVariables>;
+
+interface SourceState {
+  showingQuotes: boolean;
+}
+
+class Source extends React.Component<SourceProps, SourceState> {
+  state: SourceState = {
+    showingQuotes: false
+  };
+
+  constructor(props: SourceProps) {
+    super(props);
+
+    ["quotesMenuClicked"].forEach(fn => (this[fn] = this[fn].bind(this)));
+  }
+
+  render() {
+    const { loading, source } = this.props;
+
+    if (loading || !source) {
+      return (
+        <Dimmer className={`${classes.SourceRoot}`} active={true}>
+          <Loader size="medium">Loading</Loader>
+        </Dimmer>
+      );
+    }
+
+    const { showingQuotes } = this.state;
+
+    return (
+      <div className={`${classes.SourceRoot}`}>
+        <RootHeader title="Source" />
+
+        <div className={`${classes.SourceRoot}`}>
+          <div className={`${classes.SourceRoot}`}>
+            <Header style={styles.tagText} as="h3" dividing={true}>
+              {source.display}
+            </Header>
+
+            <div className={`${classes.mainContent}`}>
+              <Menu
+                style={{ ...(showingQuotes ? { opacity: 0 } : {}) }}
+                className="yadayada"
+                pointing={true}
+                compact={true}
+                icon="labeled"
+                widths={2}
+                fluid={true}
+              >
+                <Menu.Item onClick={this.quotesMenuClicked}>
+                  <Icon name="quote right" />
+                  New Quote
+                </Menu.Item>
+
+                <Menu.Item onClick={this.quotesMenuClicked}>
+                  <Icon name="numbered list" />
+                  List Quotes
+                </Menu.Item>
+              </Menu>
+
+              {showingQuotes && (
+                <Quotes1QueryComponent
+                  query={QUOTES_QUERY}
+                  variables={{
+                    quote: {
+                      source: source.id
+                    }
+                  }}
+                >
+                  {({ data, loading: isLoading }) => {
+                    if (isLoading || !data || !data.quotes) {
+                      return (
+                        <Dimmer
+                          className={`${classes.SourceRoot}`}
+                          active={true}
+                        >
+                          <Loader inverted={true} size="medium">
+                            Loading
+                          </Loader>
+                        </Dimmer>
+                      );
+                    }
+
+                    return (
+                      <div className={`${classes.quotesContainer}`}>
+                        <span
+                          className={`${classes.quotesCloseButton}`}
+                          onClick={this.quotesMenuCloseClicked}
+                        >
+                          {" "}
+                          &times;{" "}
+                        </span>
+                        <List divided={true} relaxed={true}>
+                          {data.quotes.map(renderQuote)}
+                        </List>
+                      </div>
+                    );
+                  }}
+                </Quotes1QueryComponent>
+              )}
+            </div>
+          </div>
+        </div>
+
+        <MobileBottomMenu items={[MenuItem.HOME, MenuItem.TAG_LIST]} />
+      </div>
+    );
+  }
+
+  quotesMenuClicked = () => this.setState(s => ({ ...s, showingQuotes: true }));
+  quotesMenuCloseClicked = () =>
+    this.setState(s => ({ ...s, showingQuotes: false }));
+}
 
 const sourceGraphQl = graphql<
   OwnProps,
@@ -81,67 +198,5 @@ const sourceGraphQl = graphql<
     };
   }
 });
-
-class Source extends React.Component<SourceProps> {
-  constructor(props: SourceProps) {
-    super(props);
-
-    // ["renderMain"].forEach(fn => (this[fn] = this[fn].bind(this)));
-  }
-
-  render() {
-    const { loading, source } = this.props;
-
-    if (loading || !source) {
-      return (
-        <Dimmer
-          className={`${classes.SourceRoot}`}
-          active={true}
-          inverted={true}
-        >
-          <Loader size="mini">Loading</Loader>
-        </Dimmer>
-      );
-    }
-
-    return (
-      <div className={`${classes.SourceRoot}`}>
-        <RootHeader title="Tag Detail" />
-
-        <div className={`${classes.SourceRoot}`}>
-          <div className={`${classes.SourceRoot}`}>
-            <Header style={styles.tagText} as="h3" dividing={true}>
-              {source.display}
-            </Header>
-
-            <div className={`${classes.SourceMain}`}>
-              <List divided={true} relaxed={true}>
-                {source.display}
-              </List>
-            </div>
-          </div>
-        </div>
-
-        <MobileBottomMenu items={[MenuItem.HOME, MenuItem.TAG_LIST]} />
-      </div>
-    );
-  }
-
-  // renderQuote = ({ id, text, date, source }: Source2FragFragment) => {
-  //   return (
-  //     <List.Item key={id} className={`${classes.quoteItem}`}>
-  //       <List.Content>
-  //         <List.Header className={`${classes.quoteText}`}>{text}</List.Header>
-
-  //         {source && (
-  //           <div className={`${classes.sourceDisplay}`}>{source.display}</div>
-  //         )}
-
-  //         <List.Description style={styles.quoteDate}>{date}</List.Description>
-  //       </List.Content>
-  //     </List.Item>
-  //   );
-  // };
-}
 
 export default sourceGraphQl(Source);

@@ -22,6 +22,10 @@ export interface CreateQuoteInput {
   volume?: string | null,
 };
 
+export interface GetQuotes {
+  source?: string | null,
+};
+
 export interface GetSourceInput {
   // ID of source
   id: string,
@@ -68,6 +72,19 @@ export interface CreateQuoteMutation {
       },
     } | null,
   } | null,
+};
+
+export interface Quotes1QueryVariables {
+  quote?: GetQuotes | null,
+};
+
+export interface Quotes1Query {
+  // Query list of quotes - everything, or filter by source
+  quotes:  Array< {
+    id: string,
+    text: string,
+    date: string | null,
+  } | null > | null,
 };
 
 export interface Source1QueryVariables {
@@ -152,6 +169,12 @@ export interface TagsMinimalQuery {
     id: string,
     text: string,
   } | null > | null,
+};
+
+export interface Quote1FragFragment {
+  id: string,
+  text: string,
+  date: string | null,
 };
 
 export interface QuoteFromtagFragFragment {

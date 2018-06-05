@@ -11,7 +11,9 @@ import {
   CreateSourceMutationVariables,
   SourceTypesQuery,
   TagQuoteQuery,
-  TagQuoteQueryVariables
+  TagQuoteQueryVariables,
+  Quotes1Query,
+  Quotes1QueryVariables
 } from "./gen.types";
 
 export class TagsMinimalRunQuery extends Query<TagsMinimalQuery, {}> {}
@@ -45,4 +47,10 @@ export class SourceTypeRunQuery extends Query<SourceTypesQuery, {}> {}
 export class TagQuoteRunQuery extends Query<
   TagQuoteQuery,
   TagQuoteQueryVariables
+> {}
+
+// tslint:disable-next-line:max-classes-per-file
+export class Quotes1QueryComponent extends Query<
+  Quotes1Query,
+  Quotes1QueryVariables
 > {}

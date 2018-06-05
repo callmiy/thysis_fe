@@ -239,6 +239,27 @@
         },
         {
           "possibleTypes": null,
+          "name": "GetQuotes",
+          "kind": "INPUT_OBJECT",
+          "interfaces": null,
+          "inputFields": [
+            {
+              "type": {
+                "ofType": null,
+                "name": "ID",
+                "kind": "SCALAR"
+              },
+              "name": "source",
+              "description": null,
+              "defaultValue": null
+            }
+          ],
+          "fields": null,
+          "enumValues": null,
+          "description": "Inputs for querying list of quotes"
+        },
+        {
+          "possibleTypes": null,
           "name": "GetSourceInput",
           "kind": "INPUT_OBJECT",
           "interfaces": null,
@@ -453,6 +474,33 @@
           "interfaces": [],
           "inputFields": null,
           "fields": [
+            {
+              "type": {
+                "ofType": {
+                  "ofType": null,
+                  "name": "Quote",
+                  "kind": "OBJECT"
+                },
+                "name": null,
+                "kind": "LIST"
+              },
+              "name": "quotes",
+              "isDeprecated": false,
+              "description": "Query list of quotes - everything, or filter by source",
+              "deprecationReason": null,
+              "args": [
+                {
+                  "type": {
+                    "ofType": null,
+                    "name": "GetQuotes",
+                    "kind": "INPUT_OBJECT"
+                  },
+                  "name": "quote",
+                  "description": null,
+                  "defaultValue": null
+                }
+              ]
+            },
             {
               "type": {
                 "ofType": null,
