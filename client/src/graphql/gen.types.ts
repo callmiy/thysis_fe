@@ -95,6 +95,10 @@ export interface Source1Query {
   source:  {
     id: string,
     display: string | null,
+    sourceType:  {
+      id: string,
+      name: string | null,
+    },
   } | null,
 };
 
@@ -199,11 +203,6 @@ export interface SourceFragFragment {
     id: string,
     name: string | null,
   },
-};
-
-export interface Source2FragFragment {
-  id: string,
-  display: string | null,
 };
 
 export interface SourceTypeFragFragment {

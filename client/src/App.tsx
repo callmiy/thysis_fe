@@ -9,7 +9,8 @@ import {
   SimpleCss,
   ROOT_CONTAINER_STYLE,
   TAG_URL,
-  SOURCE_URL
+  SOURCE_URL,
+  NEW_QUOTE_URL
 } from "./constants";
 
 jss.setup(preset());
@@ -52,6 +53,11 @@ const Source = Loadable({
   loader: () => import("./routes/source.route")
 });
 
+const NewQuote = Loadable({
+  loading: Loading,
+  loader: () => import("./routes/new-quote.route")
+});
+
 // tslint:disable-next-line:max-classes-per-file
 class App extends React.Component {
   render() {
@@ -61,6 +67,7 @@ class App extends React.Component {
           <Switch>
             <Route exact={true} path={SOURCE_URL} component={Source} />
             <Route exact={true} path={TAG_URL} component={TagDetail} />
+            <Route exact={true} path={NEW_QUOTE_URL} component={NewQuote} />
             <Route exact={true} path={ROOT_URL} component={Home} />
           </Switch>
         </BrowserRouter>

@@ -12,6 +12,11 @@ export const makeSourceURL = (id: string) => {
   return SOURCE_URL.replace(":id", id);
 };
 
+export const NEW_QUOTE_URL = "/quote/:sourceId?";
+export const makeNewQuoteURL = (id: string) => {
+  return NEW_QUOTE_URL.replace(":sourceId?", id);
+};
+
 export const POSITION_RELATIVE = "relative" as "relative";
 export const POSITION_ABSOLUTE = "absolute" as "absolute";
 export const FLEX_WRAP_WRAP = "wrap" as "wrap";

@@ -2,33 +2,43 @@ import * as React from "react";
 import jss from "jss";
 import preset from "jss-preset-default";
 import { Formik, FormikProps, Field, FieldProps, FormikErrors } from "formik";
-import { GraphqlQueryControls } from "react-apollo";
-import { graphql, compose } from "react-apollo";
+import {
+  graphql,
+  GraphqlQueryControls,
+  withApollo,
+  WithApolloClient
+} from "react-apollo";
+import { ApolloQueryResult } from "apollo-client";
 import isEmpty from "lodash/isEmpty";
 import { Button, Form, TextArea, Message, Icon } from "semantic-ui-react";
 import moment from "moment";
 import update from "immutability-helper";
 import { Mutation } from "react-apollo";
+import { RouteComponentProps } from "react-router-dom";
 
 import {
   TagFragFragment,
   TagsMinimalQuery,
   SourceFragFragment,
   CreateQuoteInput,
-  Sources1Query
+  Sources1Query,
+  Source1Query
 } from "../graphql/gen.types";
 import TAGS_QUERY from "../graphql/tags-mini.query";
-import TagControl from "./new-quote-form-tag-control.component";
-import SourceControl from "./new-quote-form-source-control.component";
-import Date, { DateType } from "./new-quote-date.component";
+import TagControl from "../components/new-quote-form-tag-control.component";
+import SourceControl from "../components/new-quote-form-source-control.component";
+import Date, { DateType } from "../components/new-quote-date.component";
 import { ERROR_COLOR } from "../constants";
-import Page, { PageType } from "./new-quote-page-start-end.component";
+import Page, {
+  PageType
+} from "../components/new-quote-page-start-end.component";
 import VolumeIssue, {
   VolumeIssueType
-} from "./new-quote-volume-issue.component";
+} from "../components/new-quote-volume-issue.component";
 import QUOTE_MUTATION from "../graphql/quote.mutation";
 import { CreateQueryFn } from "../graphql/ops.types";
-import SOURCE_MINI_QUERY from "../graphql/sources-1.query";
+import SOURCES_QUERY from "../graphql/sources-1.query";
+import SOURCE_QUERY from "../graphql/source-1.query";
 
 jss.setup(preset());
 
@@ -91,28 +101,19 @@ interface FormValues {
 export type FormValuesProps = FieldProps<FormValues>;
 
 type OwnProps = {
-  source?: SourceFragFragment;
+  sourceId?: string;
 } & TagsMinimalQuery &
-  Sources1Query;
+  RouteComponentProps<{ sourceId?: string }>;
 
-type NewQuoteFormProps = OwnProps & GraphqlQueryControls;
+type NewQuoteFormProps = OwnProps &
+  GraphqlQueryControls &
+  WithApolloClient<OwnProps>;
 
-const tagsGraphQl = graphql<OwnProps, TagsMinimalQuery, {}, {}>(TAGS_QUERY, {
-  props: ({ data }) => {
-    return { ...data };
-  }
-});
-
-const sourcesGraphQl = graphql<{}, Sources1Query, {}, NewQuoteFormProps>(
-  SOURCE_MINI_QUERY,
+const tagsGraphQl = graphql<NewQuoteFormProps, TagsMinimalQuery, {}, {}>(
+  TAGS_QUERY,
   {
-    props: ({ data }, ownProps: NewQuoteFormProps) => {
-      if (!data) {
-        return ownProps;
-      }
-
-      const sources = data.sources as SourceFragFragment[];
-      return { ...ownProps, ...data, sources: reshapeSources(sources) };
+    props: ({ data }) => {
+      return { ...data };
     }
   }
 );
@@ -120,6 +121,8 @@ const sourcesGraphQl = graphql<{}, Sources1Query, {}, NewQuoteFormProps>(
 interface NewQuoteFormState {
   initialFormValues: FormValues;
   formOutputs: CreateQuoteInput;
+  sourceId?: string;
+  queryResult?: ApolloQueryResult<Sources1Query & Source1Query>;
 }
 
 class NewQuoteForm extends React.Component<
@@ -130,17 +133,11 @@ class NewQuoteForm extends React.Component<
     nextProps: NewQuoteFormProps,
     currentState: NewQuoteFormState
   ) {
-    if (nextProps.source) {
-      return update(currentState, {
-        initialFormValues: {
-          source: {
-            $set: nextProps.source
-          }
-        }
-      });
-    }
-
-    return null;
+    return update(currentState, {
+      sourceId: {
+        $set: nextProps.match.params.sourceId
+      }
+    });
   }
 
   state: NewQuoteFormState = {
@@ -192,6 +189,99 @@ class NewQuoteForm extends React.Component<
     ].forEach(fn => (this[fn] = this[fn].bind(this)));
   }
 
+  componentDidUpdate() {
+    this.fetchSource();
+  }
+
+  fetchSource = async () => {
+    try {
+      let query;
+      if (this.state.sourceId) {
+        query = this.props.client.query({
+          query: SOURCE_QUERY,
+          variables: {
+            source: {
+              id: this.state.sourceId
+            }
+          }
+        });
+      } else {
+        query = this.props.client.query({
+          query: SOURCES_QUERY
+        });
+      }
+
+      if (!query) {
+        return;
+      }
+
+      const result = (await query) as ApolloQueryResult<
+        Sources1Query & Source1Query
+      >;
+
+      if (!result || !result.data) {
+        return;
+      }
+
+      const { queryResult } = this.state;
+
+      if (!queryResult) {
+        const doState = {
+          queryResult: {
+            $set: result
+          }
+          // tslint:disable-next-line:no-any
+        } as any;
+
+        if (result.data.source) {
+          doState.initialFormValues = {
+            source: {
+              $set: result.data.source
+            }
+          };
+        }
+
+        this.setState(s => update(s, doState));
+      }
+
+      // tslint:disable-next-line:no-console
+      console.log(
+        `
+
+
+      logging starts
+
+
+      result`,
+        result,
+        `
+
+      logging ends
+
+
+      `
+      );
+    } catch (error) {
+      // tslint:disable-next-line:no-console
+      console.log(
+        `
+
+
+      logging starts
+
+
+      error`,
+        error,
+        `
+
+      logging ends
+
+
+      `
+      );
+    }
+  };
+
   render() {
     return (
       <div className={classes.newQuoteRoot} ref={this.selfRef}>
@@ -241,12 +331,17 @@ class NewQuoteForm extends React.Component<
   }: FormikProps<FormValues>) => {
     const dirtyOrSubmitting = !dirty || isSubmitting;
     const disableSubmit = dirtyOrSubmitting || !isEmpty(errors);
+    const { sourceId } = this.state;
 
     return (
       <Form onSubmit={handleSubmit}>
+        {sourceId && (
+          <Field name="source" render={this.renderSourceControlDisabled} />
+        )}
+
         <Field name="tags" render={this.renderTagControl} />
 
-        <Field name="source" render={this.renderSourceControl} />
+        {!sourceId && <Field name="source" render={this.renderSourceControl} />}
 
         <Field name="quote" render={this.renderQuoteControl} />
 
@@ -431,6 +526,23 @@ class NewQuoteForm extends React.Component<
     { form }: FieldProps<FormValues>
   ) => () => form.setFieldTouched(name, true);
 
+  renderSourceControlDisabled = () => {
+    let value = "";
+    const { source } = this.state.initialFormValues;
+    if (source && source.display) {
+      value = source.display;
+    }
+    return (
+      <Form.Field
+        control={TextArea}
+        label="Source for quote"
+        id="source"
+        value={value}
+        disabled={true}
+      />
+    );
+  };
+
   renderSourceControl = (formProps: FieldProps<FormValues>) => {
     const {
       field: { name },
@@ -439,7 +551,6 @@ class NewQuoteForm extends React.Component<
     const error = form.errors[name];
     const booleanError = !!error;
     const touched = form.touched[name];
-    const sources = this.props.sources as SourceFragFragment[];
 
     return (
       <Form.Field
@@ -447,12 +558,31 @@ class NewQuoteForm extends React.Component<
         label="Select source"
         error={booleanError}
         selectError={booleanError}
-        sources={sources}
+        sources={this.getSources()}
         {...formProps}
       >
         {booleanError && touched && <Message error={true} header={error} />}
       </Form.Field>
     );
+  };
+
+  getSources = () => {
+    const { queryResult } = this.state;
+    if (!queryResult) {
+      return [] as SourceFragFragment[];
+    }
+
+    const { data } = queryResult;
+
+    if (!data) {
+      return [] as SourceFragFragment[];
+    }
+
+    if (data.source) {
+      return [data.source];
+    }
+
+    return data.sources;
   };
 
   validatequote = (quote: string | null) => {
@@ -650,7 +780,4 @@ class NewQuoteForm extends React.Component<
   };
 }
 
-export default compose(
-  tagsGraphQl,
-  sourcesGraphQl
-)(NewQuoteForm);
+export default withApollo(tagsGraphQl(NewQuoteForm));

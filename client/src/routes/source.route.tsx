@@ -6,7 +6,7 @@ import { Header, Dimmer, Loader, List, Menu, Icon } from "semantic-ui-react";
 import { GraphqlQueryControls, graphql } from "react-apollo";
 
 import RootHeader from "../components/header.component";
-import { ROOT_CONTAINER_STYLE, SimpleCss } from "../constants";
+import { ROOT_CONTAINER_STYLE, SimpleCss, makeNewQuoteURL } from "../constants";
 import { Source1Query, Source1QueryVariables } from "../graphql/gen.types";
 import SOURCE_QUERY from "../graphql/source-1.query";
 import MobileBottomMenu, {
@@ -113,7 +113,7 @@ class Source extends React.Component<SourceProps, SourceState> {
                 widths={2}
                 fluid={true}
               >
-                <Menu.Item onClick={this.quotesMenuClicked}>
+                <Menu.Item onClick={this.newQuoteClicked}>
                   <Icon name="quote right" />
                   New Quote
                 </Menu.Item>
@@ -174,8 +174,17 @@ class Source extends React.Component<SourceProps, SourceState> {
   }
 
   quotesMenuClicked = () => this.setState(s => ({ ...s, showingQuotes: true }));
+
   quotesMenuCloseClicked = () =>
     this.setState(s => ({ ...s, showingQuotes: false }));
+
+  newQuoteClicked = () => {
+    const source = this.props.source;
+
+    if (source) {
+      this.props.history.push(makeNewQuoteURL(source.id));
+    }
+  };
 }
 
 const sourceGraphQl = graphql<
