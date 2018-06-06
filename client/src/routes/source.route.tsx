@@ -2,18 +2,31 @@ import * as React from "react";
 import jss from "jss";
 import preset from "jss-preset-default";
 import { RouteComponentProps } from "react-router-dom";
-import { Header, Dimmer, Loader, List, Menu, Icon } from "semantic-ui-react";
-import { GraphqlQueryControls, graphql } from "react-apollo";
+import { Header, Dimmer, Loader, Menu, Icon, Message } from "semantic-ui-react";
+import { List } from "semantic-ui-react";
+import {
+  GraphqlQueryControls,
+  graphql,
+  withApollo,
+  WithApolloClient
+} from "react-apollo";
+import update from "immutability-helper";
+import { ApolloQueryResult } from "apollo-client";
+import { GraphQLError } from "graphql/error/GraphQLError";
 
 import RootHeader from "../components/header.component";
 import { ROOT_CONTAINER_STYLE, SimpleCss, makeNewQuoteURL } from "../constants";
-import { Source1Query, Source1QueryVariables } from "../graphql/gen.types";
+import {
+  Source1Query,
+  Source1QueryVariables,
+  Quotes1Query,
+  Quote1FragFragment
+} from "../graphql/gen.types";
 import SOURCE_QUERY from "../graphql/source-1.query";
 import MobileBottomMenu, {
   MenuItem
 } from "../components/mobile-bottom-menu.component";
 import QUOTES_QUERY from "../graphql/quotes-1.query";
-import { Quotes1QueryComponent } from "../graphql/ops.types";
 import renderQuote from "../components/quote-item.component";
 import centeredMenuStyles from "../utils/centered-menu-styles.util";
 
@@ -55,7 +68,8 @@ const styles = {
     border: "1px solid #dcd6d6",
     borderRadius: "3px",
     boxShadow: "5px 5px 2px -2px #757575",
-    maxHeight: "70vh"
+    maxHeight: "70vh",
+    maxWidth: "100%"
   },
 
   quotesCloseButton: {
@@ -66,6 +80,11 @@ const styles = {
     fontWeight: 900,
     padding: "10px 10px 10px 30px",
     cursor: "pointer"
+  },
+
+  header: {
+    maxHeight: "15vh",
+    overflow: "hidden"
   }
 } as SimpleCss;
 
@@ -73,14 +92,20 @@ const { classes } = jss.createStyleSheet(styles).attach();
 
 type OwnProps = RouteComponentProps<{ id: string }> & Source1Query;
 
-type SourceProps = OwnProps & GraphqlQueryControls<Source1QueryVariables>;
+type SourceProps = OwnProps &
+  GraphqlQueryControls<Source1QueryVariables> &
+  WithApolloClient<OwnProps>;
 
 interface SourceState {
+  loadingQuotes: boolean;
   showingQuotes: boolean;
+  quotes?: Quote1FragFragment[];
+  fetchQuotesError?: GraphQLError[];
 }
 
 class Source extends React.Component<SourceProps, SourceState> {
   state: SourceState = {
+    loadingQuotes: false,
     showingQuotes: false
   };
 
@@ -101,7 +126,12 @@ class Source extends React.Component<SourceProps, SourceState> {
       );
     }
 
-    const { showingQuotes } = this.state;
+    const {
+      showingQuotes,
+      loadingQuotes,
+      quotes,
+      fetchQuotesError
+    } = this.state;
 
     return (
       <div className={`${classes.SourceRoot}`}>
@@ -109,7 +139,7 @@ class Source extends React.Component<SourceProps, SourceState> {
 
         <div className={`${classes.SourceRoot}`}>
           <div className={`${classes.SourceRoot}`}>
-            <Header style={styles.tagText} as="h3" dividing={true}>
+            <Header style={styles.header} as="h3" dividing={true}>
               {source.display}
             </Header>
 
@@ -133,51 +163,52 @@ class Source extends React.Component<SourceProps, SourceState> {
 
                 <Menu.Item
                   className={classes.menuAnchor}
-                  onClick={this.quotesMenuClicked}
+                  onClick={this.quotesMenuClicked(source.id)}
                 >
                   <Icon name="numbered list" />
                   List Quotes
                 </Menu.Item>
               </Menu>
 
-              {showingQuotes && (
-                <Quotes1QueryComponent
-                  query={QUOTES_QUERY}
-                  variables={{
-                    quote: {
-                      source: source.id
-                    }
-                  }}
-                >
-                  {({ data, loading: isLoading }) => {
-                    if (isLoading || !data || !data.quotes) {
-                      return (
-                        <Dimmer
-                          className={`${classes.SourceRoot}`}
-                          active={true}
-                        >
-                          <Loader inverted={true} size="medium">
-                            Loading
-                          </Loader>
-                        </Dimmer>
-                      );
-                    }
+              {loadingQuotes && (
+                <Dimmer className={`${classes.SourceRoot}`} active={true}>
+                  <Loader inverted={true} size="medium">
+                    Loading
+                  </Loader>
+                </Dimmer>
+              )}
 
-                    return (
-                      <div className={`${classes.quotesContainer}`}>
-                        <span
-                          className={`${classes.quotesCloseButton}`}
-                          onClick={this.quotesMenuCloseClicked}
-                        >
-                          &times;
-                        </span>
-                        <List divided={true} relaxed={true}>
-                          {data.quotes.map(renderQuote)}
-                        </List>
-                      </div>
-                    );
-                  }}
-                </Quotes1QueryComponent>
+              {showingQuotes && (
+                <div className={`${classes.quotesContainer}`}>
+                  <span
+                    className={`${classes.quotesCloseButton}`}
+                    onClick={this.quotesMenuCloseClicked}
+                  >
+                    &times;
+                  </span>
+
+                  {fetchQuotesError && (
+                    <Message error={true}>
+                      <Message.Header>Error fetching quotes</Message.Header>
+                      <pre>{JSON.stringify(fetchQuotesError, null, 2)}</pre>
+                    </Message>
+                  )}
+
+                  {!fetchQuotesError &&
+                    !(quotes && quotes.length) && (
+                      <Message info={true}>
+                        <Message.Header>No quote for source</Message.Header>
+                        <p>Click New Quote to add quote</p>
+                      </Message>
+                    )}
+
+                  {quotes &&
+                    quotes.length && (
+                      <List divided={true} relaxed={true}>
+                        {quotes.map(renderQuote)}
+                      </List>
+                    )}
+                </div>
               )}
             </div>
           </div>
@@ -195,10 +226,67 @@ class Source extends React.Component<SourceProps, SourceState> {
     );
   }
 
-  quotesMenuClicked = () => this.setState(s => ({ ...s, showingQuotes: true }));
+  quotesMenuClicked = (id: string) => async () => {
+    try {
+      this.setState(s =>
+        update(s, {
+          loadingQuotes: {
+            $set: true
+          },
+
+          showingQuotes: {
+            $set: true
+          }
+        })
+      );
+
+      const result = (await this.props.client.query({
+        query: QUOTES_QUERY,
+        variables: {
+          quote: {
+            source: id
+          }
+        }
+      })) as ApolloQueryResult<Quotes1Query>;
+
+      this.setState(s =>
+        update(s, {
+          quotes: {
+            $set: result.data.quotes
+          },
+
+          loadingQuotes: {
+            $set: false
+          }
+        })
+      );
+    } catch (error) {
+      this.setState(s =>
+        update(s, {
+          loadingQuotes: {
+            $set: false
+          },
+
+          fetchQuotesError: {
+            $set: error
+          }
+        })
+      );
+    }
+  };
 
   quotesMenuCloseClicked = () =>
-    this.setState(s => ({ ...s, showingQuotes: false }));
+    this.setState(s =>
+      update(s, {
+        loadingQuotes: {
+          $set: false
+        },
+
+        showingQuotes: {
+          $set: false
+        }
+      })
+    );
 
   newQuoteClicked = () => {
     const source = this.props.source;
@@ -210,7 +298,7 @@ class Source extends React.Component<SourceProps, SourceState> {
 }
 
 const sourceGraphQl = graphql<
-  OwnProps,
+  SourceProps,
   Source1Query,
   Source1QueryVariables,
   {}
@@ -230,4 +318,4 @@ const sourceGraphQl = graphql<
   }
 });
 
-export default sourceGraphQl(Source);
+export default withApollo(sourceGraphQl(Source));

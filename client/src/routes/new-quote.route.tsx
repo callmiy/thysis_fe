@@ -283,10 +283,6 @@ class NewQuoteForm extends React.Component<
         Sources1Query & Source1Query
       >;
 
-      if (!result || !result.data) {
-        return;
-      }
-
       this.setState(s =>
         update(s, {
           queryResult: {
