@@ -190,12 +190,6 @@ export interface QuoteFromtagFragFragment {
   } | null,
 };
 
-export interface QuoteFragFragment {
-  id: string,
-  text: string,
-  date: string | null,
-};
-
 export interface SourceFragFragment {
   id: string,
   display: string | null,

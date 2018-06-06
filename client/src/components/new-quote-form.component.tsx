@@ -27,7 +27,7 @@ import VolumeIssue, {
   VolumeIssueType
 } from "./new-quote-volume-issue.component";
 import QUOTE_MUTATION from "../graphql/quote.mutation";
-import { CreateQueryFn } from "../graphql/ops.types";
+import { CreateQuoteFn } from "../graphql/ops.types";
 import SOURCE_MINI_QUERY from "../graphql/sources-1.query";
 
 jss.setup(preset());
@@ -279,7 +279,7 @@ class NewQuoteForm extends React.Component<
     );
   };
 
-  submit = (createQuote: CreateQueryFn) => async (
+  submit = (createQuote: CreateQuoteFn) => async (
     values: FormValues,
     formikBag: FormikProps<FormValues>
   ) => {

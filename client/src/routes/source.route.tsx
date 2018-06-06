@@ -45,7 +45,8 @@ const styles = {
     margin: "10px",
     border: "1px solid #dcd6d6",
     borderRadius: "3px",
-    boxShadow: "5px 5px 2px -2px #757575"
+    boxShadow: "5px 5px 2px -2px #757575",
+    maxHeight: "70vh"
   },
 
   quotesCloseButton: {

@@ -21,10 +21,12 @@ export class TagsMinimalRunQuery extends Query<TagsMinimalQuery, {}> {}
 // tslint:disable-next-line:max-classes-per-file
 export class Sources1RunQuery extends Query<Sources1Query, {}> {}
 
-export type CreateQueryFn = MutationFn<
+export type CreateQuoteFn = MutationFn<
   CreateQuoteMutation,
   CreateQuoteMutationVariables
 >;
+
+export type CreateQuoteUpdateFn = MutationUpdaterFn<CreateQuoteMutation>;
 
 export type CreateTagFn = MutationFn<
   CreateTagMutation,

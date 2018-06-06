@@ -10,7 +10,14 @@ import {
 } from "react-apollo";
 import { ApolloQueryResult } from "apollo-client";
 import isEmpty from "lodash/isEmpty";
-import { Button, Form, TextArea, Message, Icon } from "semantic-ui-react";
+import {
+  Button,
+  Form,
+  TextArea,
+  Message,
+  Icon,
+  Header
+} from "semantic-ui-react";
 import moment from "moment";
 import update from "immutability-helper";
 import { Mutation } from "react-apollo";
@@ -22,13 +29,15 @@ import {
   SourceFragFragment,
   CreateQuoteInput,
   Sources1Query,
-  Source1Query
+  Source1Query,
+  Quotes1Query,
+  Quote1FragFragment
 } from "../graphql/gen.types";
 import TAGS_QUERY from "../graphql/tags-mini.query";
 import TagControl from "../components/new-quote-form-tag-control.component";
 import SourceControl from "../components/new-quote-form-source-control.component";
 import Date, { DateType } from "../components/new-quote-date.component";
-import { ERROR_COLOR } from "../constants";
+import { ERROR_COLOR, ROOT_CONTAINER_STYLE } from "../constants";
 import Page, {
   PageType
 } from "../components/new-quote-page-start-end.component";
@@ -36,9 +45,14 @@ import VolumeIssue, {
   VolumeIssueType
 } from "../components/new-quote-volume-issue.component";
 import QUOTE_MUTATION from "../graphql/quote.mutation";
-import { CreateQueryFn } from "../graphql/ops.types";
+import { CreateQuoteFn, CreateQuoteUpdateFn } from "../graphql/ops.types";
 import SOURCES_QUERY from "../graphql/sources-1.query";
 import SOURCE_QUERY from "../graphql/source-1.query";
+import MobileBottomMenu, {
+  MenuItem
+} from "../components/mobile-bottom-menu.component";
+import RootHeader from "../components/header.component";
+import QUOTES_QUERY from "../graphql/quotes-1.query";
 
 jss.setup(preset());
 
@@ -65,13 +79,41 @@ export const reshapeSources = (
 
 const styles = {
   newQuoteRoot: {
+    ...ROOT_CONTAINER_STYLE
+  },
+
+  mainContent: {
     flex: 1,
+    overflowX: "hidden",
     overflowY: "auto",
     padding: "0 5px"
   },
 
+  quoteSourceDisplayContainer: {
+    textAlign: "center",
+    padding: "5px",
+    margin: "0"
+  },
+
+  quoteSourceDisplay: {
+    margin: "0",
+    padding: "0"
+  },
+
+  quoteSourceLabel: {
+    textAlign: "center",
+    marginBottom: "5px",
+    fontWeight: "100",
+    fontSize: "1.1rem",
+    fontStyle: "italic"
+  },
+
   errorBorder: {
     borderColor: ERROR_COLOR
+  },
+
+  tagsField: {
+    marginTop: "15px"
   },
 
   submitReset: {
@@ -112,7 +154,8 @@ type NewQuoteFormProps = OwnProps &
 const tagsGraphQl = graphql<NewQuoteFormProps, TagsMinimalQuery, {}, {}>(
   TAGS_QUERY,
   {
-    props: ({ data }) => {
+    props: ({ data, ownProps }, graphqlDataProps) => {
+      // data === graphqlDataProps
       return { ...data };
     }
   }
@@ -133,11 +176,20 @@ class NewQuoteForm extends React.Component<
     nextProps: NewQuoteFormProps,
     currentState: NewQuoteFormState
   ) {
-    return update(currentState, {
-      sourceId: {
-        $set: nextProps.match.params.sourceId
-      }
-    });
+    const { sourceId } = nextProps.match.params;
+
+    if (sourceId !== currentState.sourceId) {
+      return update(currentState, {
+        sourceId: {
+          $set: sourceId
+        },
+        queryResult: {
+          $set: undefined
+        }
+      });
+    }
+
+    return null;
   }
 
   state: NewQuoteFormState = {
@@ -158,7 +210,7 @@ class NewQuoteForm extends React.Component<
     }
   };
 
-  selfRef = React.createRef<HTMLDivElement>();
+  formContainerRef = React.createRef<HTMLDivElement>();
 
   constructor(props: NewQuoteFormProps) {
     super(props);
@@ -189,8 +241,14 @@ class NewQuoteForm extends React.Component<
     ].forEach(fn => (this[fn] = this[fn].bind(this)));
   }
 
-  componentDidUpdate() {
+  componentDidMount() {
     this.fetchSource();
+  }
+
+  componentDidUpdate() {
+    if (!this.state.queryResult) {
+      this.fetchSource();
+    }
   }
 
   fetchSource = async () => {
@@ -223,43 +281,18 @@ class NewQuoteForm extends React.Component<
         return;
       }
 
-      const { queryResult } = this.state;
-
-      if (!queryResult) {
-        const doState = {
+      this.setState(s =>
+        update(s, {
           queryResult: {
             $set: result
-          }
-          // tslint:disable-next-line:no-any
-        } as any;
+          },
 
-        if (result.data.source) {
-          doState.initialFormValues = {
+          initialFormValues: {
             source: {
               $set: result.data.source
             }
-          };
-        }
-
-        this.setState(s => update(s, doState));
-      }
-
-      // tslint:disable-next-line:no-console
-      console.log(
-        `
-
-
-      logging starts
-
-
-      result`,
-        result,
-        `
-
-      logging ends
-
-
-      `
+          }
+        })
       );
     } catch (error) {
       // tslint:disable-next-line:no-console
@@ -283,29 +316,88 @@ class NewQuoteForm extends React.Component<
   };
 
   render() {
-    return (
-      <div className={classes.newQuoteRoot} ref={this.selfRef}>
-        <h2>New Quote</h2>
+    const { sourceId } = this.state;
 
-        <Mutation
-          mutation={QUOTE_MUTATION}
-          variables={{ quote: this.state.formOutputs }}
-        >
-          {createQuote => {
-            return (
-              <Formik
-                initialValues={this.state.initialFormValues}
-                enableReinitialize={true}
-                onSubmit={this.submit(createQuote)}
-                render={this.renderForm}
-                validate={this.validate}
-              />
-            );
-          }}
-        </Mutation>
+    return (
+      <div className={classes.newQuoteRoot}>
+        <RootHeader styles={{ margin: 0 }} title="New Quote" />
+
+        {sourceId && this.renderSourceQuoteHeader()}
+
+        <div className={`${classes.mainContent}`} ref={this.formContainerRef}>
+          <Mutation
+            mutation={QUOTE_MUTATION}
+            variables={{ quote: this.state.formOutputs }}
+            update={this.writeQuoteToCache}
+          >
+            {createQuote => {
+              return (
+                <Formik
+                  initialValues={this.state.initialFormValues}
+                  enableReinitialize={true}
+                  onSubmit={this.submit(createQuote)}
+                  render={this.renderForm}
+                  validate={this.validate}
+                />
+              );
+            }}
+          </Mutation>
+        </div>
+
+        <MobileBottomMenu items={[MenuItem.HOME, MenuItem.SOURCE_LIST]} />
       </div>
     );
   }
+
+  renderSourceQuoteHeader = () => {
+    const { source } = this.state.initialFormValues;
+
+    return (
+      <Header dividing={true} style={styles.quoteSourceDisplayContainer}>
+        <div style={styles.quoteSourceLabel}>Quote source</div>
+
+        {source && (
+          <div className={`${classes.quoteSourceDisplay}`}>
+            {source.display}
+          </div>
+        )}
+      </Header>
+    );
+  };
+
+  writeQuoteToCache: CreateQuoteUpdateFn = (cache, { data: createQuote }) => {
+    if (!createQuote) {
+      return;
+    }
+
+    // tslint:disable-next-line:no-any
+    const cacheWithData = cache as any;
+    const rootQuery = cacheWithData.data.data.ROOT_QUERY;
+
+    // no component has already fetched quotes so we do not have any in the
+    // cache
+    if (!rootQuery || !rootQuery.quotes) {
+      return;
+    }
+
+    const quotesQuery = cache.readQuery({
+      query: QUOTES_QUERY,
+      variables: {
+        quote: {
+          source: this.state.formOutputs.sourceId
+        }
+      }
+    }) as Quotes1Query;
+
+    const quotes = quotesQuery.quotes as Quote1FragFragment[];
+
+    cache.writeQuery({
+      query: QUOTES_QUERY,
+      data: {
+        quotes: [createQuote.createQuote, ...quotes]
+      }
+    });
+  };
 
   validate = (values: FormValues) => {
     const errors: FormikErrors<FormValues> = {};
@@ -335,10 +427,6 @@ class NewQuoteForm extends React.Component<
 
     return (
       <Form onSubmit={handleSubmit}>
-        {sourceId && (
-          <Field name="source" render={this.renderSourceControlDisabled} />
-        )}
-
         <Field name="tags" render={this.renderTagControl} />
 
         {!sourceId && <Field name="source" render={this.renderSourceControl} />}
@@ -374,7 +462,7 @@ class NewQuoteForm extends React.Component<
     );
   };
 
-  submit = (createQuote: CreateQueryFn) => async (
+  submit = (createQuote: CreateQuoteFn) => async (
     values: FormValues,
     formikBag: FormikProps<FormValues>
   ) => {
@@ -400,16 +488,18 @@ class NewQuoteForm extends React.Component<
     const tags = this.props.tags as TagFragFragment[];
 
     return (
-      <Form.Field
-        control={TagControl}
-        label="Select at least one tag"
-        error={booleanError}
-        selectError={booleanError}
-        tags={tags || []}
-        {...formProps}
-      >
-        {booleanError && touched && <Message error={true} header={error} />}
-      </Form.Field>
+      <div className={classes.tagsField}>
+        <Form.Field
+          control={TagControl}
+          label="Select at least one tag"
+          error={booleanError}
+          selectError={booleanError}
+          tags={tags || []}
+          {...formProps}
+        >
+          {booleanError && touched && <Message error={true} header={error} />}
+        </Form.Field>
+      </div>
     );
   };
 
@@ -525,23 +615,6 @@ class NewQuoteForm extends React.Component<
     name: string,
     { form }: FieldProps<FormValues>
   ) => () => form.setFieldTouched(name, true);
-
-  renderSourceControlDisabled = () => {
-    let value = "";
-    const { source } = this.state.initialFormValues;
-    if (source && source.display) {
-      value = source.display;
-    }
-    return (
-      <Form.Field
-        control={TextArea}
-        label="Source for quote"
-        id="source"
-        value={value}
-        disabled={true}
-      />
-    );
-  };
 
   renderSourceControl = (formProps: FieldProps<FormValues>) => {
     const {
@@ -769,8 +842,8 @@ class NewQuoteForm extends React.Component<
   };
 
   scrollToTopOfForm = () => {
-    if (this.selfRef.current) {
-      this.selfRef.current.scrollTop = 0;
+    if (this.formContainerRef.current) {
+      this.formContainerRef.current.scrollTop = 0;
     }
   };
 

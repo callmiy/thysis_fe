@@ -12,7 +12,7 @@ export const makeSourceURL = (id: string) => {
   return SOURCE_URL.replace(":id", id);
 };
 
-export const NEW_QUOTE_URL = "/quote/:sourceId?";
+export const NEW_QUOTE_URL = "/new-quote/:sourceId?";
 export const makeNewQuoteURL = (id: string) => {
   return NEW_QUOTE_URL.replace(":sourceId?", id);
 };

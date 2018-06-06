@@ -1,21 +1,12 @@
 import gql from "graphql-tag";
 
 import { source1Frag } from "./source-1.fragment";
-
-export const quoteFrag = gql`
-  fragment QuoteFrag on Quote {
-    id
-    text
-    date
-  }
-`;
+import { quote1Frag } from "./quote-1.fragment";
 
 export const quoteMut = gql`
   mutation CreateQuote($quote: CreateQuoteInput!) {
     createQuote(quote: $quote) {
-      id
-      text
-      date
+      ...Quote1Frag
 
       source {
         ...SourceFrag
@@ -23,6 +14,7 @@ export const quoteMut = gql`
     }
   }
 
+  ${quote1Frag}
   ${source1Frag}
 `;
 
