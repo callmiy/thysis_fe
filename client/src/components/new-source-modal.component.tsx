@@ -14,7 +14,7 @@ import preset from "jss-preset-default";
 import update from "immutability-helper";
 import { Mutation } from "react-apollo";
 import isEmpty from "lodash/isEmpty";
-import { NavLink } from "react-router-dom";
+import { withRouter, RouteComponentProps } from "react-router-dom";
 
 import SOURCE_MUTATION from "../graphql/source.mutation";
 import SOURCE_QUERY from "../graphql/sources-1.query";
@@ -73,13 +73,13 @@ const initialState: NewSourceModalState = {
   output: {}
 };
 
-interface NewSourceModalProps {
+interface NewSourceModalProps extends RouteComponentProps<{}> {
   open: boolean;
   dismissModal: () => void;
   style?: React.CSSProperties;
 }
 
-export default class NewSourceModal extends React.Component<
+class NewSourceModal extends React.Component<
   NewSourceModalProps,
   NewSourceModalState
 > {
@@ -118,7 +118,7 @@ export default class NewSourceModal extends React.Component<
         onClose={this.resetModal}
       >
         {source && (
-          <NavLink to={makeSourceURL(source.id)}>
+          <div onClick={this.goToSource(source.id)}>
             <Message
               style={{ padding: "2px" }}
               compact={true}
@@ -128,10 +128,19 @@ export default class NewSourceModal extends React.Component<
               <Icon name="circle notched" loading={true} />
               <Message.Content>
                 <Message.Header>Go to source</Message.Header>
-                {source.display}
+                <span
+                  style={{
+                    display: "inline-block",
+                    width: "200px",
+                    overflow: "hidden",
+                    maxHeight: "60px"
+                  }}
+                >
+                  {source.display}
+                </span>
               </Message.Content>
             </Message>
-          </NavLink>
+          </div>
         )}
 
         <Header icon="user" content="Create quote source" />
@@ -330,7 +339,7 @@ export default class NewSourceModal extends React.Component<
     // tslint:disable-next-line:no-any
     const cacheWithData = cache as any;
     const rootQuery = cacheWithData.data.data.ROOT_QUERY;
-    // Return if we have to previously fetched sources else apollo errors
+    // Return if we have not previously fetched sources else apollo errors
     if (!rootQuery || !rootQuery.quotes) {
       return;
     }
@@ -347,6 +356,11 @@ export default class NewSourceModal extends React.Component<
         sources: [createSource.createSource, ...sources]
       }
     });
+  };
+
+  goToSource = (id: string) => async () => {
+    await this.setState(initialState);
+    this.props.history.push(makeSourceURL(id));
   };
 
   validatesourceType = (sourceType: SourceTypeFragFragment | null) => {
@@ -439,3 +453,5 @@ export default class NewSourceModal extends React.Component<
     return "";
   };
 }
+
+export default withRouter(NewSourceModal);
