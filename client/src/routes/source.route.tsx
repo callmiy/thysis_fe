@@ -119,7 +119,6 @@ class Source extends React.Component<SourceProps, SourceState> {
                   ...(showingQuotes ? { opacity: 0 } : {}),
                   ...styles.menu
                 }}
-                className="yadayada"
                 pointing={true}
                 compact={true}
                 icon="labeled"
@@ -170,8 +169,7 @@ class Source extends React.Component<SourceProps, SourceState> {
                           className={`${classes.quotesCloseButton}`}
                           onClick={this.quotesMenuCloseClicked}
                         >
-                          {" "}
-                          &times;{" "}
+                          &times;
                         </span>
                         <List divided={true} relaxed={true}>
                           {data.quotes.map(renderQuote)}

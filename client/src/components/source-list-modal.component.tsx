@@ -43,14 +43,13 @@ const styles = {
   }
 };
 
-interface SourceListModalProps
-  extends RouteComponentProps<{}>,
-    GraphqlQueryControls,
-    Sources1Query {
-  open: boolean;
-  dismissModal: () => void;
-  style?: React.CSSProperties;
-}
+type SourceListModalProps = RouteComponentProps<{}> &
+  GraphqlQueryControls &
+  Sources1Query & {
+    open: boolean;
+    dismissModal: () => void;
+    style?: React.CSSProperties;
+  };
 
 class SourceListModal extends React.PureComponent<SourceListModalProps> {
   constructor(props: SourceListModalProps) {

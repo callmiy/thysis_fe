@@ -13,8 +13,8 @@ export const makeSourceURL = (id: string) => {
 };
 
 export const NEW_QUOTE_URL = "/new-quote/:sourceId?";
-export const makeNewQuoteURL = (id: string) => {
-  return NEW_QUOTE_URL.replace(":sourceId?", id);
+export const makeNewQuoteURL = (id?: string) => {
+  return NEW_QUOTE_URL.replace(":sourceId?", id || "");
 };
 
 export const POSITION_RELATIVE = "relative" as "relative";
