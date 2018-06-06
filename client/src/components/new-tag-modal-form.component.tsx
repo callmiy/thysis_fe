@@ -113,9 +113,9 @@ export default class NewTagModalForm extends React.PureComponent<
     );
   }
 
-  reset = () => {
+  reset = async () => {
+    await this.setState(initalStateNewTagModalFormState);
     this.props.dismissModal();
-    this.setState(initalStateNewTagModalFormState);
   };
 
   handleFocus = () =>
@@ -180,6 +180,16 @@ export default class NewTagModalForm extends React.PureComponent<
 
   writeTagsToCache: CreateTagUpdateFn = (cache, { data: createTag }) => {
     if (!createTag) {
+      return;
+    }
+
+    // tslint:disable-next-line:no-any
+    const cacheWithData = cache as any;
+    const rootQuery = cacheWithData.data.data.ROOT_QUERY;
+
+    // no component has already fetched tags so we do not have any in the
+    // cache
+    if (!rootQuery || !rootQuery.quotes) {
       return;
     }
 

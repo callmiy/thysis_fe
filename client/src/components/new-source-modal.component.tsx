@@ -224,9 +224,9 @@ export default class NewSourceModal extends React.Component<
     );
   };
 
-  resetModal = () => {
+  resetModal = async () => {
+    await this.setState(initialState);
     this.props.dismissModal();
-    this.setState(initialState);
   };
 
   renderSourceTypeControl = (formProps: FieldProps<FormValues>) => {

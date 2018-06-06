@@ -10,12 +10,16 @@ import { SimpleCss, ROOT_CONTAINER_STYLE, makeNewQuoteURL } from "../constants";
 import centeredMenuStyles from "../utils/centered-menu-styles.util";
 import TagListModal from "../components/tag-list-modal.component";
 import SourceListModal from "../components/source-list-modal.component";
+import NewTagModalForm from "../components/new-tag-modal-form.component";
+import NewSourceModal from "../components/new-source-modal.component";
 
 jss.setup(preset());
 
 enum HomeEnum {
   TAG_LIST = "tagList",
-  SOURCE_LIST = "sourceList"
+  SOURCE_LIST = "sourceList",
+  NEW_TAG = "newTag",
+  NEW_SOURCE = "newSource"
 }
 
 const styles = {
@@ -78,6 +82,10 @@ export default class Home extends React.Component<HomeProps, HomeState> {
   render() {
     // tslint:disable-next-line:no-any
     const ASourceListModal = SourceListModal as any;
+    // tslint:disable-next-line:no-any
+    const ANewTagModalForm = NewTagModalForm as any;
+    // tslint:disable-next-line:no-any
+    const ANewSourceModal = NewSourceModal as any;
 
     return (
       <div className={`${classes.homeRoot}`}>
@@ -114,6 +122,22 @@ export default class Home extends React.Component<HomeProps, HomeState> {
               <Icon name="numbered list" />
               List Sources
             </Menu.Item>
+
+            <Menu.Item
+              className={classes.menuAnchor}
+              onClick={this.toggleModalOpen(HomeEnum.NEW_TAG, true)}
+            >
+              <Icon name="tag" />
+              New Tag
+            </Menu.Item>
+
+            <Menu.Item
+              className={classes.menuAnchor}
+              onClick={this.toggleModalOpen(HomeEnum.NEW_SOURCE, true)}
+            >
+              <Icon name="user" />
+              New Source
+            </Menu.Item>
           </Menu>
         </div>
 
@@ -128,6 +152,22 @@ export default class Home extends React.Component<HomeProps, HomeState> {
           <ASourceListModal
             open={this.state.modalOpened[HomeEnum.SOURCE_LIST]}
             dismissModal={this.toggleModalOpen(HomeEnum.SOURCE_LIST, false)}
+          />
+        )}
+
+        {this.state.modalOpened[HomeEnum.NEW_TAG] && (
+          <ANewTagModalForm
+            open={this.state.modalOpened[HomeEnum.NEW_TAG]}
+            dismissModal={this.toggleModalOpen(HomeEnum.NEW_TAG, false)}
+            style={{ marginTop: 0 }}
+          />
+        )}
+
+        {this.state.modalOpened[HomeEnum.NEW_SOURCE] && (
+          <ANewSourceModal
+            open={this.state.modalOpened[HomeEnum.NEW_SOURCE]}
+            dismissModal={this.toggleModalOpen(HomeEnum.NEW_SOURCE, false)}
+            style={{ marginTop: 0 }}
           />
         )}
       </div>

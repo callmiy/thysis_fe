@@ -183,7 +183,14 @@ class Source extends React.Component<SourceProps, SourceState> {
           </div>
         </div>
 
-        <MobileBottomMenu items={[MenuItem.HOME, MenuItem.TAG_LIST]} />
+        <MobileBottomMenu
+          items={[
+            MenuItem.HOME,
+            MenuItem.NEW_SOURCE,
+            MenuItem.TAG_LIST,
+            MenuItem.NEW_TAG
+          ]}
+        />
       </div>
     );
   }
