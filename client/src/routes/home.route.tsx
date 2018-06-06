@@ -80,13 +80,6 @@ export default class Home extends React.Component<HomeProps, HomeState> {
   }
 
   render() {
-    // tslint:disable-next-line:no-any
-    const ASourceListModal = SourceListModal as any;
-    // tslint:disable-next-line:no-any
-    const ANewTagModalForm = NewTagModalForm as any;
-    // tslint:disable-next-line:no-any
-    const ANewSourceModal = NewSourceModal as any;
-
     return (
       <div className={`${classes.homeRoot}`}>
         <Header title="Home" />
@@ -149,14 +142,14 @@ export default class Home extends React.Component<HomeProps, HomeState> {
         )}
 
         {this.state.modalOpened[HomeEnum.SOURCE_LIST] && (
-          <ASourceListModal
+          <SourceListModal
             open={this.state.modalOpened[HomeEnum.SOURCE_LIST]}
             dismissModal={this.toggleModalOpen(HomeEnum.SOURCE_LIST, false)}
           />
         )}
 
         {this.state.modalOpened[HomeEnum.NEW_TAG] && (
-          <ANewTagModalForm
+          <NewTagModalForm
             open={this.state.modalOpened[HomeEnum.NEW_TAG]}
             dismissModal={this.toggleModalOpen(HomeEnum.NEW_TAG, false)}
             style={{ marginTop: 0 }}
@@ -164,7 +157,7 @@ export default class Home extends React.Component<HomeProps, HomeState> {
         )}
 
         {this.state.modalOpened[HomeEnum.NEW_SOURCE] && (
-          <ANewSourceModal
+          <NewSourceModal
             open={this.state.modalOpened[HomeEnum.NEW_SOURCE]}
             dismissModal={this.toggleModalOpen(HomeEnum.NEW_SOURCE, false)}
             style={{ marginTop: 0 }}

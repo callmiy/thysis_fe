@@ -43,13 +43,15 @@ const styles = {
   }
 };
 
-type SourceListModalProps = RouteComponentProps<{}> &
-  GraphqlQueryControls &
-  Sources1Query & {
-    open: boolean;
-    dismissModal: () => void;
-    style?: React.CSSProperties;
-  };
+type OwnProps = RouteComponentProps<{}> & {
+  open: boolean;
+  dismissModal: () => void;
+  style?: React.CSSProperties;
+};
+
+type ComponentDataProps = GraphqlQueryControls & Sources1Query;
+
+type SourceListModalProps = OwnProps & ComponentDataProps;
 
 class SourceListModal extends React.PureComponent<SourceListModalProps> {
   constructor(props: SourceListModalProps) {
@@ -103,22 +105,21 @@ class SourceListModal extends React.PureComponent<SourceListModalProps> {
   };
 }
 
-const sourcesGraphQl = graphql<
-  SourceListModalProps,
-  Sources1Query,
-  {},
-  SourceListModalProps
->(SOURCES_QUERY, {
-  props: ({ data }, ownProps: SourceListModalProps) => {
-    if (!data) {
-      return ownProps;
+const sourcesGraphQl = graphql<OwnProps, Sources1Query, {}, ComponentDataProps>(
+  SOURCES_QUERY,
+  {
+    props: ({ data }) => {
+      if (!data || !data.sources) {
+        return data as ComponentDataProps;
+      }
+
+      const sources = data.sources as SourceFragFragment[];
+      return {
+        ...data,
+        sources: reshapeSources(sources)
+      } as ComponentDataProps;
     }
-
-    const sources = data.sources as SourceFragFragment[];
-    return { ...ownProps, ...data, sources: reshapeSources(sources) };
   }
-});
-
-export default withRouter<SourceListModalProps>(
-  sourcesGraphQl(SourceListModal)
 );
+
+export default withRouter(sourcesGraphQl(SourceListModal));

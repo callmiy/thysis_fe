@@ -35,3 +35,11 @@ export const ROOT_CONTAINER_STYLE = {
 };
 
 export const ERROR_COLOR = "#9f3a38";
+
+export enum MenuItemNames {
+  HOME = "home",
+  NEW_TAG = "newTag",
+  NEW_SOURCE = "newSource",
+  TAG_LIST = "tagList",
+  SOURCE_LIST = "sourceList"
+}

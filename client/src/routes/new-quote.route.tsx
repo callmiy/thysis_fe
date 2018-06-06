@@ -48,11 +48,9 @@ import QUOTE_MUTATION from "../graphql/quote.mutation";
 import { CreateQuoteFn, CreateQuoteUpdateFn } from "../graphql/ops.types";
 import SOURCES_QUERY from "../graphql/sources-1.query";
 import SOURCE_QUERY from "../graphql/source-1.query";
-import MobileBottomMenu, {
-  MenuItem
-} from "../components/mobile-bottom-menu.component";
 import RootHeader from "../components/header.component";
 import QUOTES_QUERY from "../graphql/quotes-1.query";
+import NewQuoteMenu from "../components/new-quote-route-bottom-menu.component";
 
 jss.setup(preset());
 
@@ -139,7 +137,7 @@ const styles = {
 const { classes } = jss.createStyleSheet(styles).attach();
 
 interface FormValues {
-  tags: TagFragFragment[] | null;
+  tags: TagFragFragment[];
   source: SourceFragFragment | null;
   quote: string;
   date: DateType | null;
@@ -176,7 +174,7 @@ interface NewQuoteFormState {
   queryResult?: ApolloQueryResult<Sources1Query & Source1Query>;
 }
 
-class NewQuoteForm extends React.Component<
+class NewQuoteRoute extends React.Component<
   NewQuoteFormProps,
   NewQuoteFormState
 > {
@@ -202,7 +200,7 @@ class NewQuoteForm extends React.Component<
 
   state: NewQuoteFormState = {
     initialFormValues: {
-      tags: null,
+      tags: [],
       source: null,
       quote: "",
       date: null,
@@ -348,14 +346,7 @@ class NewQuoteForm extends React.Component<
           </Mutation>
         </div>
 
-        <MobileBottomMenu
-          items={[
-            MenuItem.HOME,
-            MenuItem.NEW_SOURCE,
-            MenuItem.NEW_TAG,
-            MenuItem.SOURCE_LIST
-          ]}
-        />
+        <NewQuoteMenu onTagCreated={this.onTagCreated} />
       </div>
     );
   }
@@ -488,6 +479,18 @@ class NewQuoteForm extends React.Component<
     } catch (error) {
       formikBag.setSubmitting(false);
     }
+  };
+
+  onTagCreated = (tag: TagFragFragment) => {
+    this.setState(s =>
+      update(s, {
+        initialFormValues: {
+          tags: {
+            $unshift: [tag]
+          }
+        }
+      })
+    );
   };
 
   renderTagControl = (formProps: FieldProps<FormValues>) => {
@@ -866,4 +869,4 @@ class NewQuoteForm extends React.Component<
   };
 }
 
-export default withApollo(tagsGraphQl(NewQuoteForm));
+export default withApollo(tagsGraphQl(NewQuoteRoute));

@@ -9,10 +9,13 @@ import { CreateTagFn, CreateTagUpdateFn } from "../graphql/ops.types";
 import { TagsMinimalQuery, TagFragFragment } from "../graphql/gen.types";
 import TAG_QUERY from "../graphql/tags-mini.query";
 
+export type TagModalCreatedCb = (tag: TagFragFragment) => void;
+
 interface NewTagModalFormProps {
   open: boolean;
   dismissModal: () => void;
   style: React.CSSProperties;
+  onTagCreated?: TagModalCreatedCb;
 }
 
 interface NewTagModalFormState {
@@ -114,7 +117,8 @@ export default class NewTagModalForm extends React.PureComponent<
   }
 
   reset = async () => {
-    await this.setState(initalStateNewTagModalFormState);
+    // React complained I'm calling set state on an unmounted componnent?
+    // await this.setState(initalStateNewTagModalFormState);
     this.props.dismissModal();
   };
 
@@ -183,13 +187,19 @@ export default class NewTagModalForm extends React.PureComponent<
       return;
     }
 
+    const tag = createTag.createTag as TagFragFragment;
+
+    if (this.props.onTagCreated) {
+      this.props.onTagCreated(tag);
+    }
+
     // tslint:disable-next-line:no-any
     const cacheWithData = cache as any;
     const rootQuery = cacheWithData.data.data.ROOT_QUERY;
 
     // no component has already fetched tags so we do not have any in the
     // cache
-    if (!rootQuery || !rootQuery.quotes) {
+    if (!rootQuery || !rootQuery.tags) {
       return;
     }
 
@@ -202,7 +212,7 @@ export default class NewTagModalForm extends React.PureComponent<
     cache.writeQuery({
       query: TAG_QUERY,
       data: {
-        tags: [createTag.createTag, ...tags]
+        tags: [tag, ...tags]
       }
     });
   };
