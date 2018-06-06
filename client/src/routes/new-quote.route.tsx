@@ -97,7 +97,9 @@ const styles = {
 
   quoteSourceDisplay: {
     margin: "0",
-    padding: "0"
+    padding: "0",
+    overflow: "hidden",
+    maxHeight: "10vh"
   },
 
   quoteSourceLabel: {
