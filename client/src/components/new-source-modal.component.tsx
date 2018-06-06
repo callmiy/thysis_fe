@@ -14,6 +14,7 @@ import preset from "jss-preset-default";
 import update from "immutability-helper";
 import { Mutation } from "react-apollo";
 import isEmpty from "lodash/isEmpty";
+import { NavLink } from "react-router-dom";
 
 import SOURCE_MUTATION from "../graphql/source.mutation";
 import SOURCE_QUERY from "../graphql/sources-1.query";
@@ -25,6 +26,7 @@ import {
   SourceFragFragment
 } from "../graphql/gen.types";
 import SourceTypeControl from "./select-source-type-control.component";
+import { makeSourceURL } from "../constants";
 
 jss.setup(preset());
 
@@ -64,6 +66,7 @@ export type FormValuesProps = FieldProps<FormValues>;
 
 interface NewSourceModalState {
   output: Partial<CreateSourceInput>;
+  source?: SourceFragFragment;
 }
 
 const initialState: NewSourceModalState = {
@@ -104,6 +107,7 @@ export default class NewSourceModal extends React.Component<
 
   render() {
     const { open, style } = this.props;
+    const { source } = this.state;
 
     return (
       <Modal
@@ -113,6 +117,23 @@ export default class NewSourceModal extends React.Component<
         open={open}
         onClose={this.resetModal}
       >
+        {source && (
+          <NavLink to={makeSourceURL(source.id)}>
+            <Message
+              style={{ padding: "2px" }}
+              compact={true}
+              success={true}
+              icon={true}
+            >
+              <Icon name="circle notched" loading={true} />
+              <Message.Content>
+                <Message.Header>Go to source</Message.Header>
+                {source.display}
+              </Message.Content>
+            </Message>
+          </NavLink>
+        )}
+
         <Header icon="user" content="Create quote source" />
 
         <Modal.Content>
@@ -145,9 +166,24 @@ export default class NewSourceModal extends React.Component<
     formikBag.setSubmitting(true);
 
     try {
-      await createSource();
+      const { data } = (await createSource()) as {
+        data?: {
+          createSource: SourceFragFragment;
+        };
+      };
+
+      if (data) {
+        this.setState(s =>
+          update(s, {
+            source: {
+              $set: data.createSource
+            }
+          })
+        );
+      }
+
       formikBag.resetForm();
-      setTimeout(this.resetModal, 2300);
+      formikBag.setSubmitting(false);
     } catch (error) {
       formikBag.setSubmitting(false);
     }
@@ -288,6 +324,14 @@ export default class NewSourceModal extends React.Component<
     { data: createSource }
   ) => {
     if (!createSource) {
+      return;
+    }
+
+    // tslint:disable-next-line:no-any
+    const cacheWithData = cache as any;
+    const rootQuery = cacheWithData.data.data.ROOT_QUERY;
+    // Return if we have to previously fetched sources else apollo errors
+    if (!rootQuery || !rootQuery.quotes) {
       return;
     }
 

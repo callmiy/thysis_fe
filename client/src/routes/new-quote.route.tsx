@@ -21,7 +21,7 @@ import {
 import moment from "moment";
 import update from "immutability-helper";
 import { Mutation } from "react-apollo";
-import { RouteComponentProps } from "react-router-dom";
+import { RouteComponentProps, NavLink } from "react-router-dom";
 
 import {
   TagFragFragment,
@@ -37,7 +37,7 @@ import TAGS_QUERY from "../graphql/tags-mini.query";
 import TagControl from "../components/new-quote-form-tag-control.component";
 import SourceControl from "../components/new-quote-form-source-control.component";
 import Date, { DateType } from "../components/new-quote-date.component";
-import { ERROR_COLOR, ROOT_CONTAINER_STYLE } from "../constants";
+import { ERROR_COLOR, ROOT_CONTAINER_STYLE, makeSourceURL } from "../constants";
 import Page, {
   PageType
 } from "../components/new-quote-page-start-end.component";
@@ -106,6 +106,12 @@ const styles = {
     fontWeight: "100",
     fontSize: "1.1rem",
     fontStyle: "italic"
+  },
+
+  quoteLink: {
+    textDecoration: "none",
+    color: "initial",
+    cursor: "pointer"
   },
 
   errorBorder: {
@@ -344,7 +350,14 @@ class NewQuoteForm extends React.Component<
           </Mutation>
         </div>
 
-        <MobileBottomMenu items={[MenuItem.HOME, MenuItem.SOURCE_LIST]} />
+        <MobileBottomMenu
+          items={[
+            MenuItem.HOME,
+            MenuItem.NEW_SOURCE,
+            MenuItem.NEW_TAG,
+            MenuItem.SOURCE_LIST
+          ]}
+        />
       </div>
     );
   }
@@ -354,12 +367,14 @@ class NewQuoteForm extends React.Component<
 
     return (
       <Header dividing={true} style={styles.quoteSourceDisplayContainer}>
-        <div style={styles.quoteSourceLabel}>Quote source</div>
+        <div style={styles.quoteSourceLabel}>Click to go to source</div>
 
         {source && (
-          <div className={`${classes.quoteSourceDisplay}`}>
-            {source.display}
-          </div>
+          <NavLink className={classes.quoteLink} to={makeSourceURL(source.id)}>
+            <div className={`${classes.quoteSourceDisplay}`}>
+              {source.display}
+            </div>
+          </NavLink>
         )}
       </Header>
     );
