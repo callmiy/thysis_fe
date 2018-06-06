@@ -320,7 +320,7 @@ class NewQuoteForm extends React.Component<
 
     return (
       <div className={classes.newQuoteRoot}>
-        <RootHeader styles={{ margin: 0 }} title="New Quote" />
+        <RootHeader style={{ margin: 0 }} title="New Quote" />
 
         {sourceId && this.renderSourceQuoteHeader()}
 

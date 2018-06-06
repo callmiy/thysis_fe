@@ -5,7 +5,7 @@ import preset from "jss-preset-default";
 
 jss.setup(preset());
 
-const headerStyles = {
+const styles = {
   header: {
     flexShrink: 0, // don't allow flexbox to shrink it
     borderRadius: 0, // clear semantic-ui style
@@ -15,13 +15,13 @@ const headerStyles = {
 
 interface Props {
   title: string;
-  styles?: React.CSSProperties;
+  style?: React.CSSProperties;
 }
 
-export default ({ title, styles = {} }: Props) => {
+export default ({ title, style = {} }: Props) => {
   return (
     <Menu
-      style={{ ...headerStyles.header, ...styles }}
+      style={{ ...styles.header, ...style }}
       inverted={true}
       color="green"
       borderless={true}

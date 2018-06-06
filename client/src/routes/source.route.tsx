@@ -15,6 +15,7 @@ import MobileBottomMenu, {
 import QUOTES_QUERY from "../graphql/quotes-1.query";
 import { Quotes1QueryComponent } from "../graphql/ops.types";
 import renderQuote from "../components/quote-item.component";
+import centeredMenuStyles from "../utils/centered-menu-styles.util";
 
 jss.setup(preset());
 
@@ -31,7 +32,15 @@ const styles = {
   },
 
   mainContent: {
-    position: "relative"
+    ...centeredMenuStyles.mainParentContainer
+  },
+
+  menu: {
+    ...centeredMenuStyles.menu
+  },
+
+  menuAnchor: {
+    ...centeredMenuStyles.menuAnchor
   },
 
   quotesContainer: {
@@ -106,20 +115,27 @@ class Source extends React.Component<SourceProps, SourceState> {
 
             <div className={`${classes.mainContent}`}>
               <Menu
-                style={{ ...(showingQuotes ? { opacity: 0 } : {}) }}
+                style={{
+                  ...(showingQuotes ? { opacity: 0 } : {}),
+                  ...styles.menu
+                }}
                 className="yadayada"
                 pointing={true}
                 compact={true}
                 icon="labeled"
-                widths={2}
-                fluid={true}
               >
-                <Menu.Item onClick={this.newQuoteClicked}>
+                <Menu.Item
+                  className={classes.menuAnchor}
+                  onClick={this.newQuoteClicked}
+                >
                   <Icon name="quote right" />
                   New Quote
                 </Menu.Item>
 
-                <Menu.Item onClick={this.quotesMenuClicked}>
+                <Menu.Item
+                  className={classes.menuAnchor}
+                  onClick={this.quotesMenuClicked}
+                >
                   <Icon name="numbered list" />
                   List Quotes
                 </Menu.Item>
