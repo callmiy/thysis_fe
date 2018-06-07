@@ -55,6 +55,7 @@ import QUOTES_QUERY from "../graphql/quotes-1.query";
 import NewQuoteMenu from "../components/new-quote-route-bottom-menu.component";
 import mainContentStyle from "../utils/main-content-centered-style.util";
 import { NewQuoteRouteErrorModal } from "../components/new-quote-route-error-modal.component";
+import { NewQuoteRouteSuccessModal } from "../components/new-quote-route-success-modal.component";
 
 jss.setup(preset());
 
@@ -78,6 +79,11 @@ export const reshapeSources = (
 
   return sources.map(reshapeSource);
 };
+
+export enum ShouldReUseSource {
+  RE_USE_SOURCE = "re-use source",
+  DO_NOT_RE_USE_SOURCE = "do not re-use source"
+}
 
 const styles = {
   newQuoteRoot: {
@@ -164,6 +170,7 @@ interface NewQuoteFormState {
   sourceId?: string;
   queryResult?: ApolloQueryResult<Sources1Query & Source1Query>;
   graphqlError?: ApolloError;
+  submittedSource?: SourceFragFragment;
 }
 
 class NewQuoteRoute extends React.Component<
@@ -300,7 +307,7 @@ class NewQuoteRoute extends React.Component<
   };
 
   render() {
-    const { sourceId, graphqlError } = this.state;
+    const { sourceId, graphqlError, submittedSource } = this.state;
 
     return (
       <div className={classes.newQuoteRoot}>
@@ -314,6 +321,14 @@ class NewQuoteRoute extends React.Component<
               open={!!graphqlError}
               dismiss={this.dismissErrorModal}
               error={graphqlError}
+            />
+          )}
+
+          {submittedSource && (
+            <NewQuoteRouteSuccessModal
+              open={!!submittedSource}
+              dismiss={this.onSuccessModalDismissed}
+              reUseSource={!!sourceId}
             />
           )}
 
@@ -422,7 +437,7 @@ class NewQuoteRoute extends React.Component<
     return (
       <Form onSubmit={handleSubmit}>
         <div>
-          <Dimmer inverted={true} dimmed={isSubmitting} active={isSubmitting} />
+          <Dimmer inverted={true} active={isSubmitting} />
           <Field name="tags" render={this.renderTagControl} />
 
           {!sourceId && (
@@ -471,6 +486,13 @@ class NewQuoteRoute extends React.Component<
       await createQuote();
       formikBag.resetForm();
       this.scrollToTopOfForm();
+      this.setState(s =>
+        update(s, {
+          submittedSource: {
+            $set: values.source
+          }
+        })
+      );
     } catch (error) {
       formikBag.setSubmitting(false);
       this.setState(s =>
@@ -686,7 +708,7 @@ class NewQuoteRoute extends React.Component<
     this.setState(prev =>
       update(prev, {
         formOutputs: {
-          text1: {
+          text: {
             $set: quote
           }
         }
@@ -874,6 +896,38 @@ class NewQuoteRoute extends React.Component<
     this.setState(s =>
       update(s, {
         graphqlError: {
+          $set: undefined
+        }
+      })
+    );
+  };
+
+  onSuccessModalDismissed = (val: ShouldReUseSource) => () => {
+    const { sourceId, submittedSource } = this.state;
+
+    if (
+      !sourceId &&
+      submittedSource &&
+      val === ShouldReUseSource.RE_USE_SOURCE
+    ) {
+      this.setState(s =>
+        update(s, {
+          sourceId: {
+            $set: submittedSource.id
+          },
+
+          initialFormValues: {
+            source: {
+              $set: submittedSource
+            }
+          }
+        })
+      );
+    }
+
+    this.setState(s =>
+      update(s, {
+        submittedSource: {
           $set: undefined
         }
       })
