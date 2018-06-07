@@ -51,6 +51,7 @@ import SOURCE_QUERY from "../graphql/source-1.query";
 import RootHeader from "../components/header.component";
 import QUOTES_QUERY from "../graphql/quotes-1.query";
 import NewQuoteMenu from "../components/new-quote-route-bottom-menu.component";
+import mainContentStyle from "../utils/main-content-centered-style.util";
 
 jss.setup(preset());
 
@@ -81,10 +82,7 @@ const styles = {
   },
 
   mainContent: {
-    flex: 1,
-    overflowX: "hidden",
-    overflowY: "auto",
-    padding: "0 5px"
+    ...mainContentStyle
   },
 
   quoteSourceDisplayContainer: {

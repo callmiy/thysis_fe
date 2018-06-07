@@ -1,5 +1,6 @@
 import { SimpleStyle } from "jss/css";
 
+// ROUTE URLS
 export const ROOT_URL = "/";
 
 export const TAG_URL = "/tags/:id";
@@ -17,6 +18,10 @@ export const makeNewQuoteURL = (id?: string) => {
   return NEW_QUOTE_URL.replace(":sourceId?", id || "");
 };
 
+export const SEARCH_QUOTES_URL = "/search/quotes";
+
+// END ROUTE URLS
+
 export const POSITION_RELATIVE = "relative" as "relative";
 export const POSITION_ABSOLUTE = "absolute" as "absolute";
 export const FLEX_WRAP_WRAP = "wrap" as "wrap";
@@ -30,7 +35,7 @@ export type SimpleCss = Record<string, SimpleStyle>;
 export const ROOT_CONTAINER_STYLE = {
   height: "100%",
   display: "flex",
-  flexDirection: "column",
+  flexDirection: FLEX_DIRECTION_COLUMN,
   flex: 1
 };
 

@@ -3,6 +3,7 @@ import preset from "jss-preset-default";
 import * as React from "react";
 import Loadable from "react-loadable";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
+import { Dimmer, Loader } from "semantic-ui-react";
 
 import {
   ROOT_URL,
@@ -10,7 +11,8 @@ import {
   ROOT_CONTAINER_STYLE,
   TAG_URL,
   SOURCE_URL,
-  NEW_QUOTE_URL
+  NEW_QUOTE_URL,
+  SEARCH_QUOTES_URL
 } from "./constants";
 
 jss.setup(preset());
@@ -33,9 +35,9 @@ const styles = {
 const { classes } = jss.createStyleSheet(styles).attach();
 
 export const Loading = () => (
-  <div className={`${classes.loadingIndicator} ${classes.app}`}>
-    <div>Loading...</div>
-  </div>
+  <Dimmer className={`${classes.app}`} active={true}>
+    <Loader size="medium">Loading</Loader>
+  </Dimmer>
 );
 
 const Home = Loadable({
@@ -58,6 +60,11 @@ const NewQuote = Loadable({
   loader: () => import("./routes/new-quote.route")
 });
 
+const SearchQuotes = Loadable({
+  loading: Loading,
+  loader: () => import("./routes/search-quotes.route")
+});
+
 // tslint:disable-next-line:max-classes-per-file
 class App extends React.Component {
   render() {
@@ -66,6 +73,11 @@ class App extends React.Component {
         <BrowserRouter>
           <Switch>
             <Route exact={true} path={SOURCE_URL} component={Source} />
+            <Route
+              exact={true}
+              path={SEARCH_QUOTES_URL}
+              component={SearchQuotes}
+            />
             <Route exact={true} path={TAG_URL} component={TagDetail} />
             <Route exact={true} path={NEW_QUOTE_URL} component={NewQuote} />
             <Route exact={true} path={ROOT_URL} component={Home} />

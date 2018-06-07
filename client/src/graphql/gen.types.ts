@@ -53,6 +53,21 @@ export interface CreateTagInput {
   text: string,
 };
 
+// When we do full text search, the result returned will contain name of
+// the table from which the result was returned. This object contains an
+// enum of the possible table names
+export enum QuoteFullSearchTable {
+  QUOTES = "QUOTES",
+  SOURCES = "SOURCES",
+  SOURCE_TYPES = "SOURCE_TYPES",
+  TAGS = "TAGS",
+}
+
+
+export interface QuoteFullSearchInput {
+  text: string,
+};
+
 export interface CreateQuoteMutationVariables {
   quote: CreateQuoteInput,
 };
@@ -175,6 +190,37 @@ export interface TagsMinimalQuery {
   } | null > | null,
 };
 
+export interface AllMatchingTextsQueryVariables {
+  text: QuoteFullSearchInput,
+};
+
+export interface AllMatchingTextsQuery {
+  // Specify any text to get queries or tags, or sources or
+  // source types matching the text
+  quoteFullSearch:  {
+    quotes:  Array< {
+      id: string,
+      text: string,
+      source: QuoteFullSearchTable,
+    } | null > | null,
+    sources:  Array< {
+      id: string,
+      text: string,
+      source: QuoteFullSearchTable,
+    } | null > | null,
+    tags:  Array< {
+      id: string,
+      text: string,
+      source: QuoteFullSearchTable,
+    } | null > | null,
+    sourceTypes:  Array< {
+      id: string,
+      text: string,
+      source: QuoteFullSearchTable,
+    } | null > | null,
+  } | null,
+};
+
 export interface Quote1FragFragment {
   id: string,
   text: string,
@@ -220,4 +266,33 @@ export interface TagQuotesFragFragment {
       display: string | null,
     } | null,
   } | null > | null,
+};
+
+export interface TextSearchResultFragFragment {
+  quotes:  Array< {
+    id: string,
+    text: string,
+    source: QuoteFullSearchTable,
+  } | null > | null,
+  sources:  Array< {
+    id: string,
+    text: string,
+    source: QuoteFullSearchTable,
+  } | null > | null,
+  tags:  Array< {
+    id: string,
+    text: string,
+    source: QuoteFullSearchTable,
+  } | null > | null,
+  sourceTypes:  Array< {
+    id: string,
+    text: string,
+    source: QuoteFullSearchTable,
+  } | null > | null,
+};
+
+export interface TextSearchRowFragFragment {
+  id: string,
+  text: string,
+  source: QuoteFullSearchTable,
 };

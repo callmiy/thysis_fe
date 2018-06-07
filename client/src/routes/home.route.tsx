@@ -6,7 +6,12 @@ import { Menu, Icon } from "semantic-ui-react";
 import update from "immutability-helper";
 
 import Header from "../components/header.component";
-import { SimpleCss, ROOT_CONTAINER_STYLE, makeNewQuoteURL } from "../constants";
+import {
+  SimpleCss,
+  ROOT_CONTAINER_STYLE,
+  makeNewQuoteURL,
+  SEARCH_QUOTES_URL
+} from "../constants";
 import centeredMenuStyles from "../utils/centered-menu-styles.util";
 import TagListModal from "../components/tag-list-modal.component";
 import SourceListModal from "../components/source-list-modal.component";
@@ -95,7 +100,7 @@ export default class Home extends React.Component<HomeProps, HomeState> {
             <Menu.Item
               style={styles.menuAnchor}
               as={NavLink}
-              to={makeNewQuoteURL()}
+              to={SEARCH_QUOTES_URL}
             >
               <Icon name="search" />
               Search Quotes
