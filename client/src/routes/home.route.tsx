@@ -37,7 +37,8 @@ const styles = {
   },
 
   menuAnchor: {
-    ...centeredMenuStyles.menuAnchor
+    ...centeredMenuStyles.menuAnchor,
+    minWidth: "130px"
   },
 
   quotesContainer: {
@@ -92,7 +93,16 @@ export default class Home extends React.Component<HomeProps, HomeState> {
             style={styles.menu}
           >
             <Menu.Item
-              className={classes.menuAnchor}
+              style={styles.menuAnchor}
+              as={NavLink}
+              to={makeNewQuoteURL()}
+            >
+              <Icon name="search" />
+              Search Quotes
+            </Menu.Item>
+
+            <Menu.Item
+              style={styles.menuAnchor}
               as={NavLink}
               to={makeNewQuoteURL()}
             >
@@ -101,7 +111,7 @@ export default class Home extends React.Component<HomeProps, HomeState> {
             </Menu.Item>
 
             <Menu.Item
-              className={classes.menuAnchor}
+              style={styles.menuAnchor}
               onClick={this.toggleModalOpen(HomeEnum.TAG_LIST, true)}
             >
               <Icon name="numbered list" />
@@ -109,7 +119,7 @@ export default class Home extends React.Component<HomeProps, HomeState> {
             </Menu.Item>
 
             <Menu.Item
-              className={classes.menuAnchor}
+              style={styles.menuAnchor}
               onClick={this.toggleModalOpen(HomeEnum.SOURCE_LIST, true)}
             >
               <Icon name="numbered list" />
@@ -117,7 +127,7 @@ export default class Home extends React.Component<HomeProps, HomeState> {
             </Menu.Item>
 
             <Menu.Item
-              className={classes.menuAnchor}
+              style={styles.menuAnchor}
               onClick={this.toggleModalOpen(HomeEnum.NEW_TAG, true)}
             >
               <Icon name="tag" />
@@ -125,7 +135,7 @@ export default class Home extends React.Component<HomeProps, HomeState> {
             </Menu.Item>
 
             <Menu.Item
-              className={classes.menuAnchor}
+              style={styles.menuAnchor}
               onClick={this.toggleModalOpen(HomeEnum.NEW_SOURCE, true)}
             >
               <Icon name="user" />
