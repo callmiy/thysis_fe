@@ -32,7 +32,8 @@ jss.setup(preset());
 
 const styles = {
   modal: {
-    marginTop: 0
+    marginTop: 0,
+    background: "#fff"
   },
 
   formButtonsContainer: {
@@ -114,6 +115,7 @@ class NewSourceModal extends React.Component<
         style={{ ...(style || {}), ...styles.modal }}
         basic={true}
         size="small"
+        dimmer="inverted"
         open={open}
         onClose={this.resetModal}
       >
@@ -224,7 +226,7 @@ class NewSourceModal extends React.Component<
     const disableSubmit = dirtyOrSubmitting || !isEmpty(errors);
 
     return (
-      <Form onSubmit={handleSubmit} inverted={true}>
+      <Form onSubmit={handleSubmit}>
         <Field name="sourceType" render={this.renderSourceTypeControl} />
 
         {[
@@ -238,7 +240,6 @@ class NewSourceModal extends React.Component<
           <Button
             basic={true}
             color="red"
-            inverted={true}
             onClick={this.resetModal}
             disabled={isSubmitting}
           >
@@ -248,7 +249,6 @@ class NewSourceModal extends React.Component<
           <Button
             style={styles.submitButton}
             color="green"
-            inverted={true}
             disabled={disableSubmit}
             loading={isSubmitting}
           >
@@ -258,7 +258,6 @@ class NewSourceModal extends React.Component<
           <Button
             basic={true}
             color="red"
-            inverted={true}
             onClick={handleReset}
             disabled={dirtyOrSubmitting}
           >

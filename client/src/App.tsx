@@ -35,8 +35,8 @@ const styles = {
 const { classes } = jss.createStyleSheet(styles).attach();
 
 export const Loading = () => (
-  <Dimmer className={`${classes.app}`} active={true}>
-    <Loader size="medium">Loading</Loader>
+  <Dimmer inverted={true} className={`${classes.app}`} active={true}>
+    <Loader size="medium">Loading..</Loader>
   </Dimmer>
 );
 

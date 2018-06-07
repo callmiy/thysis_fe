@@ -1,5 +1,5 @@
 import React from "react";
-import { Modal, List, Segment } from "semantic-ui-react";
+import { Modal, List } from "semantic-ui-react";
 import jss from "jss";
 import preset from "jss-preset-default";
 import { withRouter, RouteComponentProps } from "react-router-dom";
@@ -10,7 +10,6 @@ import TAGS_QUERY from "../graphql/tags-mini.query";
 import {
   FLEX_DIRECTION_COLUMN,
   OVERFLOW_X_HIDDEN,
-  OVERFLOW_Y_AUTO,
   makeTagURL
 } from "../constants";
 
@@ -34,8 +33,9 @@ const styles = {
     maxHeight: "calc(90vh)"
   },
 
-  segment: {
-    overflowY: OVERFLOW_Y_AUTO
+  list: {
+    background: "#fff",
+    padding: "5px 5px 0 10px"
   },
 
   listItem: {
@@ -67,10 +67,10 @@ class TagListModal extends React.PureComponent<TagListModalProps> {
         style={styles.modal}
         basic={true}
         size="fullscreen"
+        dimmer="inverted"
         open={open}
         closeIcon={true}
         onClose={this.resetModal}
-        dimmer="blurring"
       >
         <Modal.Content style={styles.modalContent} scrolling={true}>
           <TagsMinimalRunQuery query={TAGS_QUERY}>
@@ -78,11 +78,9 @@ class TagListModal extends React.PureComponent<TagListModalProps> {
               const tags = data ? data.tags : ([] as TagFragFragment[]);
 
               return (
-                <Segment style={styles.segment} inverted={true}>
-                  <List divided={true} inverted={true} relaxed={true}>
-                    {(tags || []).map(this.renderTag)}
-                  </List>
-                </Segment>
+                <List style={styles.list} divided={true} relaxed={true}>
+                  {(tags || []).map(this.renderTag)}
+                </List>
               );
             }}
           </TagsMinimalRunQuery>

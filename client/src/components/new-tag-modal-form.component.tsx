@@ -52,9 +52,10 @@ export default class NewTagModalForm extends React.PureComponent<
 
     return (
       <Modal
-        style={{ ...(style || {}) }}
+        style={{ ...(style || {}), ...{ background: "#fff" } }}
         basic={true}
         size="small"
+        dimmer="inverted"
         open={open}
         onClose={this.reset}
       >
@@ -64,7 +65,6 @@ export default class NewTagModalForm extends React.PureComponent<
           <Input
             placeholder="Tag text"
             fluid={true}
-            inverted={true}
             onChange={this.handleChange}
             onFocus={this.handleFocus}
             error={!!formError}

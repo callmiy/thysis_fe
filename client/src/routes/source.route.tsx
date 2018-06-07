@@ -123,8 +123,12 @@ class Source extends React.Component<SourceProps, SourceState> {
 
     if (loading || !source) {
       return (
-        <Dimmer className={`${classes.SourceRoot}`} active={true}>
-          <Loader size="medium">Loading</Loader>
+        <Dimmer
+          inverted={true}
+          className={`${classes.SourceRoot}`}
+          active={true}
+        >
+          <Loader size="medium">Loading..</Loader>
         </Dimmer>
       );
     }
@@ -184,9 +188,13 @@ class Source extends React.Component<SourceProps, SourceState> {
               </Menu>
 
               {loadingQuotes && (
-                <Dimmer className={`${classes.SourceRoot}`} active={true}>
+                <Dimmer
+                  inverted={true}
+                  className={`${classes.SourceRoot}`}
+                  active={true}
+                >
                   <Loader inverted={true} size="medium">
-                    Loading
+                    Loading..
                   </Loader>
                 </Dimmer>
               )}

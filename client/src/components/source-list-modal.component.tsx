@@ -1,5 +1,5 @@
 import React from "react";
-import { Modal, List, Segment } from "semantic-ui-react";
+import { Modal, List } from "semantic-ui-react";
 import jss from "jss";
 import preset from "jss-preset-default";
 import { withRouter, RouteComponentProps } from "react-router-dom";
@@ -10,7 +10,6 @@ import SOURCES_QUERY from "../graphql/sources-1.query";
 import {
   FLEX_DIRECTION_COLUMN,
   OVERFLOW_X_HIDDEN,
-  OVERFLOW_Y_AUTO,
   makeSourceURL
 } from "../constants";
 import { reshapeSources } from "./new-quote-form.component";
@@ -34,8 +33,9 @@ const styles = {
     maxHeight: "calc(90vh)"
   },
 
-  segment: {
-    overflowY: OVERFLOW_Y_AUTO
+  list: {
+    background: "#fff",
+    padding: "3px"
   },
 
   listItem: {
@@ -74,14 +74,12 @@ class SourceListModal extends React.PureComponent<SourceListModalProps> {
         open={open}
         closeIcon={true}
         onClose={this.resetModal}
-        dimmer="blurring"
+        dimmer="inverted"
       >
         <Modal.Content style={styles.modalContent} scrolling={true}>
-          <Segment style={styles.segment} inverted={true}>
-            <List divided={true} inverted={true} relaxed={true}>
-              {(sources || []).map(this.renderSource)}
-            </List>
-          </Segment>
+          <List style={styles.list} divided={true} relaxed={true}>
+            {(sources || []).map(this.renderSource)}
+          </List>
         </Modal.Content>
       </Modal>
     );
