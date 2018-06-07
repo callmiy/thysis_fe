@@ -25,6 +25,31 @@ defmodule GasWeb.QuoteSchema do
     field(:tag, list_of(:tag), resolve: assoc(:tag))
   end
 
+  @desc "When we do full text search, the result returned will contain name of
+  the table from which the result was returned. This object contains an
+  enum of the possible table names"
+  enum :quote_full_search_table do
+    value(:quotes)
+    value(:sources)
+    value(:tags)
+    value(:source_types)
+  end
+
+  @desc "Result row returned when we search quotes by text"
+  object :quote_full_search_result_row do
+    field(:id, non_null(:id))
+    field(:source, non_null(:quote_full_search_table))
+    field(:text, non_null(:string))
+  end
+
+  @desc "Result returned when we search quotes by text"
+  object :quote_full_search_result do
+    field(:quotes, list_of(:quote_full_search_result_row))
+    field(:sources, list_of(:quote_full_search_result_row))
+    field(:tags, list_of(:quote_full_search_result_row))
+    field(:source_types, list_of(:quote_full_search_result_row))
+  end
+
   # MUTATION INPUTS
   @desc "Inputs for creating a Quote object"
   input_object :create_quote_input do
@@ -62,6 +87,13 @@ defmodule GasWeb.QuoteSchema do
     field(:source, :id)
   end
 
+  @desc "Input for full text search on quotes, their sources, tags and source
+   types"
+  input_object :quote_full_search_input do
+    field(:text, non_null(:string))
+  end
+
+  # QUERIES
   @desc "Queries allowed on Quote object"
   object :quote_query do
     @desc "Query list of quotes - everything, or filter by source"
@@ -69,8 +101,16 @@ defmodule GasWeb.QuoteSchema do
       arg(:quote, :get_quotes)
       resolve(&QuoteResolver.quotes/3)
     end
+
+    @desc "Specify any text to get queries or tags, or sources or
+    source types matching the text"
+    field :quote_full_search, type: :quote_full_search_result do
+      arg(:text, non_null(:quote_full_search_input))
+      resolve(&QuoteResolver.full_text_search/3)
+    end
   end
 
+  # MUTATIONS
   @desc "The mutations allowed on the Quote object"
   object :quote_mutation do
     @desc "Create a quote"

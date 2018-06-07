@@ -101,5 +101,166 @@ defmodule Gas.QuoteSchemaTest do
       assert raw_quotes_id == quotes_ids
       refute Enum.member?(quotes_ids, Integer.to_string(source1_quote_id))
     end
+
+    test "full text search across source_types table" do
+      search_text = Faker.String.base64(4)
+      %{id: id} = insert(:source_type, name: search_text)
+      id = Integer.to_string(id)
+
+      assert {:ok,
+              %{
+                data: %{
+                  "quoteFullSearch" => %{
+                    "sourceTypes" => [
+                      %{
+                        "id" => ^id,
+                        "source" => "SOURCE_TYPES",
+                        "text" => ^search_text
+                      }
+                    ]
+                  }
+                }
+              }} =
+               Absinthe.run(
+                 Queries.query(:full_text_search),
+                 Schema,
+                 variables: %{
+                   "text" => %{
+                     "text" => search_text
+                   }
+                 }
+               )
+    end
+
+    test "full text search across sources table" do
+      search_text = Faker.String.base64(4)
+      %{id: id} = insert(:source, author: search_text)
+      id = Integer.to_string(id)
+
+      assert {:ok,
+              %{
+                data: %{
+                  "quoteFullSearch" => %{
+                    "sources" => [
+                      %{
+                        "id" => ^id,
+                        "source" => "SOURCES",
+                        "text" => ^search_text
+                      }
+                    ]
+                  }
+                }
+              }} =
+               Absinthe.run(
+                 Queries.query(:full_text_search),
+                 Schema,
+                 variables: %{
+                   "text" => %{
+                     "text" => search_text
+                   }
+                 }
+               )
+    end
+
+    test "full text search across tags table" do
+      search_text = Faker.String.base64(4)
+      %{id: id} = insert(:tag, text: search_text)
+      id = Integer.to_string(id)
+
+      assert {:ok,
+              %{
+                data: %{
+                  "quoteFullSearch" => %{
+                    "tags" => [
+                      %{
+                        "id" => ^id,
+                        "source" => "TAGS",
+                        "text" => ^search_text
+                      }
+                    ]
+                  }
+                }
+              }} =
+               Absinthe.run(
+                 Queries.query(:full_text_search),
+                 Schema,
+                 variables: %{
+                   "text" => %{
+                     "text" => search_text
+                   }
+                 }
+               )
+    end
+
+    test "full text search across quotes table" do
+      search_text = Faker.String.base64(4)
+      %{id: id} = insert(:quote, text: search_text)
+      id = Integer.to_string(id)
+
+      assert {:ok,
+              %{
+                data: %{
+                  "quoteFullSearch" => %{
+                    "quotes" => [
+                      %{
+                        "id" => ^id,
+                        "source" => "QUOTES",
+                        "text" => ^search_text
+                      }
+                    ]
+                  }
+                }
+              }} =
+               Absinthe.run(
+                 Queries.query(:full_text_search),
+                 Schema,
+                 variables: %{
+                   "text" => %{
+                     "text" => search_text
+                   }
+                 }
+               )
+    end
+
+    test "full text search across quotes and tag tables case insensitive" do
+      search_text = Faker.String.base64(4)
+      %{id: qid} = insert(:quote, text: search_text)
+      qid = Integer.to_string(qid)
+
+      search_text_ = String.upcase(search_text)
+      %{id: tid} = insert(:tag, text: search_text_)
+      tid = Integer.to_string(tid)
+
+      assert {:ok,
+              %{
+                data: %{
+                  "quoteFullSearch" => %{
+                    "quotes" => [
+                      %{
+                        "id" => ^qid,
+                        "source" => "QUOTES",
+                        "text" => ^search_text
+                      }
+                    ],
+                    "tags" => [
+                      %{
+                        "id" => ^tid,
+                        "source" => "TAGS",
+                        "text" => ^search_text_
+                      }
+                    ]
+                  }
+                }
+              }} =
+               Absinthe.run(
+                 Queries.query(:full_text_search),
+                 Schema,
+                 variables: %{
+                   "text" => %{
+                     "text" => search_text
+                   }
+                 }
+               )
+    end
   end
 end

@@ -78,6 +78,27 @@ defmodule GasWeb.QuoteQueries do
     """
   end
 
+  def query(:full_text_search) do
+    result_row = """
+    {
+      id
+      text
+      source
+    }
+    """
+
+    """
+    query GetAllMatchingTexts($text: QuoteFullSearchInput!) {
+      quoteFullSearch(text: $text) {
+        quotes      #{result_row}
+        sources     #{result_row}
+        tags        #{result_row}
+        sourceTypes #{result_row}
+      }
+    }
+    """
+  end
+
   def variables do
     %{
       "quote" => %{

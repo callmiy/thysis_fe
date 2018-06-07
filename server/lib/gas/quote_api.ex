@@ -177,7 +177,7 @@ defmodule Gas.QuoteApi do
         Enum.map(
           data,
           &"""
-          select id, #{&1}, '#{source}' as source from #{source}
+          select id, #{&1} as text, '#{source}' as source from #{source}
           where #{&1} ilike $1
           """
         )
@@ -185,7 +185,14 @@ defmodule Gas.QuoteApi do
       |> Enum.join(" union ")
 
     Repo.execute_and_load(sql, params)
-    |> Enum.group_by(& &1["source"])
+    |> Enum.map(fn map ->
+      Enum.map(map, fn
+        {"source", val} -> {:source, String.to_existing_atom(val)}
+        {k, val} -> {String.to_existing_atom(k), val}
+      end)
+      |> Enum.into(%{})
+    end)
+    |> Enum.group_by(& &1.source)
   end
 
   def get_quotes_by(nil), do: Repo.all(Quote)
