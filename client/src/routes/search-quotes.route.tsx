@@ -29,6 +29,7 @@ import {
 } from "../graphql/gen.types";
 import { TextSearchRowFragFragment } from "../graphql/gen.types";
 import ALL_MATCHING_TEXT_QUERY from "../graphql/text-search.query";
+import ErrorBoundary from "../containers/error-boundary.container";
 
 jss.setup(preset());
 
@@ -116,7 +117,7 @@ class SearchQuotes extends React.Component<
   constructor(props: SearchQuotesProps) {
     super(props);
 
-    this.doSearchDebounced = debounce(this.doSearch, 500);
+    this.doSearchDebounced = debounce(this.doSearch, 700);
   }
 
   componentWillUnmount() {
@@ -140,38 +141,39 @@ class SearchQuotes extends React.Component<
             loading={this.state.searchLoading}
           />
         </form>
+        <ErrorBoundary className={classes.mainContent}>
+          <div className={classes.mainContent}>
+            {this.state.searchError && (
+              <Message
+                error={true}
+                icon={true}
+                style={{
+                  marginTop: "20px"
+                }}
+              >
+                <Icon name="ban" />
 
-        <div className={classes.mainContent}>
-          {this.state.searchError && (
-            <Message
-              error={true}
-              icon={true}
-              style={{
-                marginTop: "20px"
-              }}
-            >
-              <Icon name="ban" />
+                <Message.Content>
+                  <Message.Header
+                    style={{
+                      borderBottom: "1px solid",
+                      display: "inline-block",
+                      marginBottom: "10px"
+                    }}
+                  >
+                    An error has occurred
+                  </Message.Header>
+                  <div>{JSON.stringify(this.state.searchError, null, 2)}</div>
+                </Message.Content>
+              </Message>
+            )}
 
-              <Message.Content>
-                <Message.Header
-                  style={{
-                    borderBottom: "1px solid",
-                    display: "inline-block",
-                    marginBottom: "10px"
-                  }}
-                >
-                  An error has occurred
-                </Message.Header>
-                <div>{JSON.stringify(this.state.searchError, null, 2)}</div>
-              </Message.Content>
-            </Message>
-          )}
-
-          {this.state.searchText &&
-            !this.state.searchError &&
-            this.state.result &&
-            this.renderResult(this.state.result)}
-        </div>
+            {this.state.searchText &&
+              !this.state.searchError &&
+              this.state.result &&
+              this.renderResult(this.state.result)}
+          </div>
+        </ErrorBoundary>
 
         <SearchQuotesMenu />
       </div>
@@ -197,7 +199,7 @@ class SearchQuotes extends React.Component<
   };
 
   doSearch = async () => {
-    const { searchText } = this.state;
+    const searchText = this.state.searchText.trim();
 
     if (!searchText) {
       return;
