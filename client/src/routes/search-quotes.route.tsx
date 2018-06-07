@@ -193,7 +193,7 @@ class SearchQuotes extends React.Component<
       })
     );
 
-    if (value.length > 1) {
+    if (value.trim().length) {
       this.doSearchDebounced();
     }
   };
