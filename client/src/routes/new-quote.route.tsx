@@ -22,6 +22,8 @@ import moment from "moment";
 import update from "immutability-helper";
 import { Mutation } from "react-apollo";
 import { RouteComponentProps, NavLink } from "react-router-dom";
+import { ApolloError } from "apollo-client/errors/ApolloError";
+import { Dimmer } from "semantic-ui-react";
 
 import {
   TagFragFragment,
@@ -52,6 +54,7 @@ import RootHeader from "../components/header.component";
 import QUOTES_QUERY from "../graphql/quotes-1.query";
 import NewQuoteMenu from "../components/new-quote-route-bottom-menu.component";
 import mainContentStyle from "../utils/main-content-centered-style.util";
+import { NewQuoteRouteErrorModal } from "../components/new-quote-route-error-modal.component";
 
 jss.setup(preset());
 
@@ -155,21 +158,12 @@ type NewQuoteFormProps = OwnProps &
   GraphqlQueryControls &
   WithApolloClient<OwnProps>;
 
-const tagsGraphQl = graphql<NewQuoteFormProps, TagsMinimalQuery, {}, {}>(
-  TAGS_QUERY,
-  {
-    props: ({ data, ownProps }, graphqlDataProps) => {
-      // data === graphqlDataProps
-      return { ...data };
-    }
-  }
-);
-
 interface NewQuoteFormState {
   initialFormValues: FormValues;
   formOutputs: CreateQuoteInput;
   sourceId?: string;
   queryResult?: ApolloQueryResult<Sources1Query & Source1Query>;
+  graphqlError?: ApolloError;
 }
 
 class NewQuoteRoute extends React.Component<
@@ -295,28 +289,18 @@ class NewQuoteRoute extends React.Component<
         })
       );
     } catch (error) {
-      // tslint:disable-next-line:no-console
-      console.log(
-        `
-
-
-      logging starts
-
-
-      error`,
-        error,
-        `
-
-      logging ends
-
-
-      `
+      this.setState(s =>
+        update(s, {
+          graphqlError: {
+            $set: error
+          }
+        })
       );
     }
   };
 
   render() {
-    const { sourceId } = this.state;
+    const { sourceId, graphqlError } = this.state;
 
     return (
       <div className={classes.newQuoteRoot}>
@@ -325,6 +309,14 @@ class NewQuoteRoute extends React.Component<
         {sourceId && this.renderSourceQuoteHeader()}
 
         <div className={`${classes.mainContent}`} ref={this.formContainerRef}>
+          {graphqlError && (
+            <NewQuoteRouteErrorModal
+              open={!!graphqlError}
+              dismiss={this.dismissErrorModal}
+              error={graphqlError}
+            />
+          )}
+
           <Mutation
             mutation={QUOTE_MUTATION}
             variables={{ quote: this.state.formOutputs }}
@@ -429,16 +421,21 @@ class NewQuoteRoute extends React.Component<
 
     return (
       <Form onSubmit={handleSubmit}>
-        <Field name="tags" render={this.renderTagControl} />
+        <div>
+          <Dimmer inverted={true} dimmed={isSubmitting} active={isSubmitting} />
+          <Field name="tags" render={this.renderTagControl} />
 
-        {!sourceId && <Field name="source" render={this.renderSourceControl} />}
+          {!sourceId && (
+            <Field name="source" render={this.renderSourceControl} />
+          )}
 
-        <Field name="quote" render={this.renderQuoteControl} />
+          <Field name="quote" render={this.renderQuoteControl} />
 
-        <Field name="date" render={this.renderDateControl} />
-        <Field name="page" render={this.renderPageControl} />
-        <Field name="volumeIssue" render={this.renderVolumeIssueControl} />
-        <Field name="extras" render={this.renderExtrasControl} />
+          <Field name="date" render={this.renderDateControl} />
+          <Field name="page" render={this.renderPageControl} />
+          <Field name="volumeIssue" render={this.renderVolumeIssueControl} />
+          <Field name="extras" render={this.renderExtrasControl} />
+        </div>
 
         <div className={`${classes.submitReset}`}>
           <Button
@@ -476,6 +473,13 @@ class NewQuoteRoute extends React.Component<
       this.scrollToTopOfForm();
     } catch (error) {
       formikBag.setSubmitting(false);
+      this.setState(s =>
+        update(s, {
+          graphqlError: {
+            $set: error
+          }
+        })
+      );
     }
   };
 
@@ -682,7 +686,7 @@ class NewQuoteRoute extends React.Component<
     this.setState(prev =>
       update(prev, {
         formOutputs: {
-          text: {
+          text1: {
             $set: quote
           }
         }
@@ -865,6 +869,26 @@ class NewQuoteRoute extends React.Component<
     reset();
     this.scrollToTopOfForm();
   };
+
+  dismissErrorModal = () => {
+    this.setState(s =>
+      update(s, {
+        graphqlError: {
+          $set: undefined
+        }
+      })
+    );
+  };
 }
+
+const tagsGraphQl = graphql<NewQuoteFormProps, TagsMinimalQuery, {}, {}>(
+  TAGS_QUERY,
+  {
+    props: ({ data, ownProps }, graphqlDataProps) => {
+      // data === graphqlDataProps
+      return { ...data };
+    }
+  }
+);
 
 export default withApollo(tagsGraphQl(NewQuoteRoute));

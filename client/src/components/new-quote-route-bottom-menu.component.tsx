@@ -80,7 +80,7 @@ class NewQuoteMenu extends React.Component<
 
           <Menu.Item style={{}} as={NavLink} to={SEARCH_QUOTES_URL}>
             <Icon name="search" />
-            Search Quotes
+            Search
           </Menu.Item>
         </Menu>
 

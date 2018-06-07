@@ -15,7 +15,7 @@ import {
   WithApolloClient
 } from "react-apollo";
 import { ApolloQueryResult } from "apollo-client";
-import { GraphQLError } from "graphql/error/GraphQLError";
+import { ApolloError } from "apollo-client/errors/ApolloError";
 
 import { ROOT_CONTAINER_STYLE } from "../constants";
 import { SimpleCss } from "../constants";
@@ -90,7 +90,7 @@ interface SearchQuotesState {
   searchText: "";
   searchLoading: boolean;
   result?: TextSearchResultFragFragment;
-  searchError?: GraphQLError[];
+  searchError?: ApolloError;
   hasResult?: boolean;
 }
 
