@@ -10,9 +10,9 @@
 // This link also includes instructions on opting out of this behavior.
 
 const isLocalhost = Boolean(
-  window.location.hostname === 'localhost' ||
+  window.location.hostname === "localhost" ||
     // [::1] is the IPv6 localhost address.
-    window.location.hostname === '[::1]' ||
+    window.location.hostname === "[::1]" ||
     // 127.0.0.1/8 is considered localhost for IPv4.
     window.location.hostname.match(
       /^127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/
@@ -20,7 +20,7 @@ const isLocalhost = Boolean(
 );
 
 export default function register() {
-  if (process.env.NODE_ENV === 'production' && 'serviceWorker' in navigator) {
+  if (process.env.NODE_ENV === "production" && "serviceWorker" in navigator) {
     // The URL constructor is available in all browsers that support SW.
     const publicUrl = new URL(
       process.env.PUBLIC_URL!,
@@ -33,7 +33,7 @@ export default function register() {
       return;
     }
 
-    window.addEventListener('load', () => {
+    window.addEventListener("load", () => {
       const swUrl = `${process.env.PUBLIC_URL}/service-worker.js`;
 
       if (isLocalhost) {
@@ -44,8 +44,8 @@ export default function register() {
         // service worker/PWA documentation.
         navigator.serviceWorker.ready.then(() => {
           console.log(
-            'This web app is being served cache-first by a service ' +
-              'worker. To learn more, visit https://goo.gl/SC7cgQ'
+            "This web app is being served cache-first by a service " +
+              "worker. To learn more, visit https://goo.gl/SC7cgQ"
           );
         });
       } else {
@@ -64,18 +64,19 @@ function registerValidSW(swUrl: string) {
         const installingWorker = registration.installing;
         if (installingWorker) {
           installingWorker.onstatechange = () => {
-            if (installingWorker.state === 'installed') {
+            if (installingWorker.state === "installed") {
               if (navigator.serviceWorker.controller) {
                 // At this point, the old content will have been purged and
                 // the fresh content will have been added to the cache.
                 // It's the perfect time to display a 'New content is
                 // available; please refresh.' message in your web app.
-                console.log('New content is available; please refresh.');
+                // console.log("New content is available; please refresh.");
+                showRefreshUI();
               } else {
                 // At this point, everything has been precached.
                 // It's the perfect time to display a
                 // 'Content is cached for offline use.' message.
-                console.log('Content is cached for offline use.');
+                console.log("Content is cached for offline use.");
               }
             }
           };
@@ -83,7 +84,7 @@ function registerValidSW(swUrl: string) {
       };
     })
     .catch(error => {
-      console.error('Error during service worker registration:', error);
+      console.error("Error during service worker registration:", error);
     });
 }
 
@@ -94,7 +95,7 @@ function checkValidServiceWorker(swUrl: string) {
       // Ensure service worker exists, and that we really are getting a JS file.
       if (
         response.status === 404 ||
-        response.headers.get('content-type')!.indexOf('javascript') === -1
+        response.headers.get("content-type")!.indexOf("javascript") === -1
       ) {
         // No service worker found. Probably a different app. Reload the page.
         navigator.serviceWorker.ready.then(registration => {
@@ -109,13 +110,53 @@ function checkValidServiceWorker(swUrl: string) {
     })
     .catch(() => {
       console.log(
-        'No internet connection found. App is running in offline mode.'
+        "No internet connection found. App is running in offline mode."
       );
     });
 }
 
+const refreshEvent = (e: MouseEvent) => {
+  // tslint:disable-next-line:no-any
+  const target = e.target as any;
+  if (target) {
+    target.removeEventListener("click", refreshEvent, false);
+    document.body.removeChild(target);
+  }
+
+  window.location.reload();
+};
+
+function showRefreshUI() {
+  const style = `
+  position: absolute;
+  bottom: 3px;
+  cursor: pointer;
+  background: #fff;
+  border: 1px solid #b7b7b7;
+  padding: 10px;
+  border-radius: 3px;
+  visibility: hidden;
+  `;
+
+  const div = document.createElement("div");
+  div.style.cssText = style;
+  div.innerText = "New content is available; please click to refresh.";
+
+  const body = document.body;
+  body.appendChild(div);
+
+  const margin = Math.trunc((body.offsetWidth - div.offsetWidth) / 2);
+  div.style.cssText = `
+  ${style}
+  visibility: visible;
+  margin-left: ${margin}px;
+  `;
+
+  div.addEventListener("click", refreshEvent, false);
+}
+
 export function unregister() {
-  if ('serviceWorker' in navigator) {
+  if ("serviceWorker" in navigator) {
     navigator.serviceWorker.ready.then(registration => {
       registration.unregister();
     });
