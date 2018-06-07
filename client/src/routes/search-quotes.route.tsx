@@ -76,7 +76,7 @@ const styles = {
   resultRowItem: {
     ...resultRowItemStyle,
     borderBottom: "1px solid #22242626",
-    marginTop: "8px"
+    marginTop: 8
   }
 } as SimpleCss;
 
