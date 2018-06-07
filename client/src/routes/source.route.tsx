@@ -86,7 +86,8 @@ const styles = {
 
   header: {
     maxHeight: "15vh",
-    overflow: "hidden"
+    overflow: "hidden",
+    padding: "0 0 0 5px"
   }
 } as SimpleCss;
 
@@ -149,7 +150,8 @@ class Source extends React.Component<SourceProps, SourceState> {
               <Menu
                 style={{
                   ...(showingQuotes ? { opacity: 0 } : {}),
-                  ...styles.menu
+                  ...styles.menu,
+                  ...{ margin: "auto 5px" }
                 }}
                 pointing={true}
                 compact={true}
