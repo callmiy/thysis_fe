@@ -6,6 +6,7 @@ import { NavLink } from "react-router-dom";
 import NewSourceModal from "./new-source-modal.component";
 import TagListModal from "./tag-list-modal.component";
 import { MenuItemNames, ROOT_URL } from "../constants";
+import { makeNewQuoteURL } from "../constants";
 
 const styles = {
   container: {
@@ -46,11 +47,16 @@ class SearchQuotesMenu extends React.Component<{}, SearchQuotesMenuState> {
           compact={true}
           icon="labeled"
           style={styles.container}
-          widths={3}
+          widths={4}
         >
           <Menu.Item style={{ background: "none" }} as={NavLink} to={ROOT_URL}>
             <Icon name="home" />
             Home
+          </Menu.Item>
+
+          <Menu.Item style={{}} as={NavLink} to={makeNewQuoteURL()}>
+            <Icon name="quote right" />
+            New Quote
           </Menu.Item>
 
           <Menu.Item

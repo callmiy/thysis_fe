@@ -17,9 +17,10 @@ import {
 import { ApolloQueryResult } from "apollo-client";
 import { GraphQLError } from "graphql/error/GraphQLError";
 
-import { ROOT_CONTAINER_STYLE, SimpleCss } from "../constants";
+import { ROOT_CONTAINER_STYLE } from "../constants";
+import { SimpleCss } from "../constants";
 import RootHeader from "../components/header.component";
-import SearchQuotesMenuState from "../components/search-quotes-route-bottom-menu.component";
+import SearchQuotesMenu from "../components/search-quotes-route-bottom-menu.component";
 import mainContentStyle from "../utils/main-content-centered-style.util";
 import {
   AllMatchingTextsQuery,
@@ -144,7 +145,7 @@ class SearchQuotes extends React.Component<
           {this.state.result && this.renderResult(this.state.result)}
         </div>
 
-        <SearchQuotesMenuState />
+        <SearchQuotesMenu />
       </div>
     );
   }

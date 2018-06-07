@@ -9,6 +9,7 @@ import NewTagModalForm, {
 import NewSourceModal from "./new-source-modal.component";
 import TagListModal from "./tag-list-modal.component";
 import { MenuItemNames, ROOT_URL } from "../constants";
+import { SEARCH_QUOTES_URL } from "../constants";
 
 const styles = {
   container: {
@@ -77,11 +78,9 @@ class NewQuoteMenu extends React.Component<
             New Tag
           </Menu.Item>
 
-          <Menu.Item
-            onClick={this.toggleModalOpen(MenuItemNames.TAG_LIST, true)}
-          >
-            <Icon name="numbered list" />
-            List Tags
+          <Menu.Item style={{}} as={NavLink} to={SEARCH_QUOTES_URL}>
+            <Icon name="search" />
+            Search Quotes
           </Menu.Item>
         </Menu>
 

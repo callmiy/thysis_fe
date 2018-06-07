@@ -13,6 +13,7 @@ import {
 import update from "immutability-helper";
 import { ApolloQueryResult } from "apollo-client";
 import { GraphQLError } from "graphql/error/GraphQLError";
+import { NavLink } from "react-router-dom";
 
 import RootHeader from "../components/header.component";
 import { ROOT_CONTAINER_STYLE, SimpleCss, makeNewQuoteURL } from "../constants";
@@ -29,6 +30,7 @@ import MobileBottomMenu, {
 import QUOTES_QUERY from "../graphql/quotes-1.query";
 import renderQuote from "../components/quote-item.component";
 import centeredMenuStyles from "../utils/centered-menu-styles.util";
+import { SEARCH_QUOTES_URL } from "../constants";
 
 jss.setup(preset());
 
@@ -167,6 +169,15 @@ class Source extends React.Component<SourceProps, SourceState> {
                 >
                   <Icon name="numbered list" />
                   List Quotes
+                </Menu.Item>
+
+                <Menu.Item
+                  className={classes.menuAnchor}
+                  as={NavLink}
+                  to={SEARCH_QUOTES_URL}
+                >
+                  <Icon name="search" />
+                  Search Quotes
                 </Menu.Item>
               </Menu>
 
