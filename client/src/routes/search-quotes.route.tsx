@@ -142,7 +142,35 @@ class SearchQuotes extends React.Component<
         </form>
 
         <div className={classes.mainContent}>
-          {this.state.result && this.renderResult(this.state.result)}
+          {this.state.searchError && (
+            <Message
+              error={true}
+              icon={true}
+              style={{
+                marginTop: "20px"
+              }}
+            >
+              <Icon name="ban" />
+
+              <Message.Content>
+                <Message.Header
+                  style={{
+                    borderBottom: "1px solid",
+                    display: "inline-block",
+                    marginBottom: "10px"
+                  }}
+                >
+                  An error has occurred
+                </Message.Header>
+                <div>{JSON.stringify(this.state.searchError, null, 2)}</div>
+              </Message.Content>
+            </Message>
+          )}
+
+          {this.state.searchText &&
+            !this.state.searchError &&
+            this.state.result &&
+            this.renderResult(this.state.result)}
         </div>
 
         <SearchQuotesMenu />
@@ -155,6 +183,10 @@ class SearchQuotes extends React.Component<
       update(s, {
         searchText: {
           $set: value
+        },
+
+        searchError: {
+          $set: undefined
         }
       })
     );
@@ -165,6 +197,12 @@ class SearchQuotes extends React.Component<
   };
 
   doSearch = async () => {
+    const { searchText } = this.state;
+
+    if (!searchText) {
+      return;
+    }
+
     this.setState(s =>
       update(s, {
         searchLoading: {
@@ -178,7 +216,7 @@ class SearchQuotes extends React.Component<
         query: ALL_MATCHING_TEXT_QUERY,
         variables: {
           text: {
-            text: this.state.searchText
+            text1: searchText
           }
         }
       })) as ApolloQueryResult<AllMatchingTextsQuery>;
