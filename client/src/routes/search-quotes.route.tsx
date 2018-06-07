@@ -216,7 +216,7 @@ class SearchQuotes extends React.Component<
         query: ALL_MATCHING_TEXT_QUERY,
         variables: {
           text: {
-            text1: searchText
+            text: searchText
           }
         }
       })) as ApolloQueryResult<AllMatchingTextsQuery>;
