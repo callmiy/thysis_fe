@@ -308,7 +308,7 @@ class SearchQuotes extends React.Component<
     console.log("data", header, data);
 
     return (
-      <div className={classes.result} key={`${index + 1}-search-header`}>
+      <div className={classes.result} key={`${index + 11}-search-header`}>
         <div className={classes.resultRowHeaderContainer}>
           <span className={classes.resultRowHeader}>{header}</span>
         </div>
