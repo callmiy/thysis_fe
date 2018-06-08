@@ -190,48 +190,26 @@ defmodule Gas.QuoteApi do
       Repo.execute_and_load(sql, params)
       |> Enum.map(fn map ->
         Enum.map(map, fn
-          {"source", val} -> {:source, String.to_existing_atom(val)}
-          {k, val} -> {String.to_existing_atom(k), val}
+          # we need to convert value of source key to atom - Absinthe expects
+          # enum as atom
+          {"source", val} ->
+            {:source, String.to_existing_atom(val)}
+
+          {"id", val} ->
+            {:id, ~s(#{map["source"]}|#{val})}
+
+          {k, val} ->
+            {String.to_existing_atom(k), val}
         end)
         |> Enum.into(%{})
       end)
       |> Enum.group_by(& &1.source)
 
-    Logger.info(fn -> "Result for query: #{text} is: #{inspect(result)}" end)
+    Logger.info(fn ->
+      "Result for query #{__MODULE__} : #{text} is: #{inspect(result)}"
+    end)
 
-    %{
-      quotes: [
-        %{
-          id: 13,
-          source: :quotes,
-          text:
-            "The most frequently used gasification reactors encountered in practice are fixed bed(updraft or downdraft) and fluidised bed (bubbling or circulating) reactors. Figure 2shows the working principle of these gasifier configurations. "
-        },
-        %{
-          id: 17,
-          source: :quotes,
-          text:
-            "All products pass through a high temperature reaction\nzone at the base of the reactor, which explains why the tar level in downdraft\ngasifiers tends to stay below 0.1% (1 g Nm-³)."
-        },
-        %{
-          id: 20,
-          source: :quotes,
-          text:
-            "The product gas of fluidised bed reactors contains intermediate (between updraft and downdraft) tar\nlevels (∼10 g Nm-³)."
-        },
-        %{
-          id: 16,
-          source: :quotes,
-          text:
-            "In the downdraft (co-current) configuration, the feedstock is supplied from\nthe top while gas is introduced at the sides above the grate. The raw product gas is\nwithdrawn below the grate."
-        }
-      ],
-      tags: [
-        %{id: 19, source: :tags, text: "Disadvantage of downdraft gasifier"},
-        %{id: 18, source: :tags, text: "Advantage of downdraft gasifier"},
-        %{id: 17, source: :tags, text: "Description downdraft gasifier"}
-      ]
-    }
+    result
   end
 
   def get_quotes_by(nil), do: Repo.all(Quote)
