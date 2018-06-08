@@ -479,10 +479,9 @@ class NewQuoteRoute extends React.Component<
           )}
 
           <Field name="quote" render={this.renderQuoteControl} />
-
-          <Field name="date" render={this.renderDateControl} />
           <Field name="page" render={this.renderPageControl} />
           <Field name="volumeIssue" render={this.renderVolumeIssueControl} />
+          <Field name="date" render={this.renderDateControl} />
           <Field name="extras" render={this.renderExtrasControl} />
         </div>
 
