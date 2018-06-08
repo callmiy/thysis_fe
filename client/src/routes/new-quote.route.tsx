@@ -58,6 +58,7 @@ import mainContentStyle from "../utils/main-content-centered-style.util";
 import { NewQuoteRouteErrorModal } from "../components/new-quote-route-error-modal.component";
 import { NewQuoteRouteSuccessModal } from "../components/new-quote-route-success-modal.component";
 import { setTitle } from "../utils/route-urls.util";
+import { makeNewQuoteURL } from "../utils/route-urls.util";
 
 jss.setup(preset());
 
@@ -155,8 +156,6 @@ interface FormValues {
   extras: string;
 }
 
-export type FormValuesProps = FieldProps<FormValues>;
-
 type OwnProps = {
   sourceId?: string;
 } & TagsMinimalQuery &
@@ -172,7 +171,8 @@ interface NewQuoteFormState {
   sourceId?: string;
   queryResult?: ApolloQueryResult<Sources1Query & Source1Query>;
   graphqlError?: ApolloError;
-  submittedSource?: SourceFragFragment;
+  submittedSourceId?: string;
+  selectedTags: TagFragFragment[]; // from form
 }
 
 class NewQuoteRoute extends React.Component<
@@ -214,39 +214,11 @@ class NewQuoteRoute extends React.Component<
       sourceId: "",
       tags: [],
       text: ""
-    }
+    },
+    selectedTags: []
   };
 
   formContainerRef = React.createRef<HTMLDivElement>();
-
-  constructor(props: NewQuoteFormProps) {
-    super(props);
-
-    [
-      "renderForm",
-      "renderTagControl",
-      "renderQuoteControl",
-      "renderSourceControl",
-      "validate",
-      "renderDateControl",
-      "validatedate",
-      "validatetags",
-      "validatesource",
-      "validatequote",
-      "validatepage",
-      "renderPageControl",
-      "renderVolumeIssueControl",
-      "handleDateChange",
-      "handlePageChange",
-      "handleVolumeIssueChange",
-      "handleDateBlur",
-      "handlePageBlur",
-      "handleVolumeIssueBlur",
-      "renderExtrasControl",
-      "scrollToTopOfForm",
-      "onResetClicked"
-    ].forEach(fn => (this[fn] = this[fn].bind(this)));
-  }
 
   componentDidMount() {
     this.fetchSource();
@@ -314,7 +286,7 @@ class NewQuoteRoute extends React.Component<
   };
 
   render() {
-    const { sourceId, graphqlError, submittedSource } = this.state;
+    const { sourceId, graphqlError, submittedSourceId } = this.state;
 
     return (
       <div className={classes.newQuoteRoot}>
@@ -331,9 +303,9 @@ class NewQuoteRoute extends React.Component<
             />
           )}
 
-          {submittedSource && (
+          {submittedSourceId && (
             <NewQuoteRouteSuccessModal
-              open={!!submittedSource}
+              open={!!submittedSourceId}
               dismiss={this.onSuccessModalDismissed}
               reUseSource={!!sourceId}
             />
@@ -368,10 +340,10 @@ class NewQuoteRoute extends React.Component<
 
     return (
       <Header dividing={true} style={styles.quoteSourceDisplayContainer}>
-        <div style={styles.quoteSourceLabel}>Click to go to source</div>
-
         {source && (
           <NavLink className={classes.quoteLink} to={makeSourceURL(source.id)}>
+            <div style={styles.quoteSourceLabel}>Click to go to source</div>
+
             <div className={`${classes.quoteSourceDisplay}`}>
               {source.display}
             </div>
@@ -521,8 +493,8 @@ class NewQuoteRoute extends React.Component<
       this.scrollToTopOfForm();
       this.setState(s =>
         update(s, {
-          submittedSource: {
-            $set: values.source
+          submittedSourceId: {
+            $set: values.source && values.source.id
           },
 
           initialFormValues: {
@@ -549,7 +521,7 @@ class NewQuoteRoute extends React.Component<
       update(s, {
         initialFormValues: {
           tags: {
-            $unshift: [tag]
+            $set: [...this.state.selectedTags, tag]
           }
         }
       })
@@ -558,7 +530,7 @@ class NewQuoteRoute extends React.Component<
 
   renderTagControl = (formProps: FieldProps<FormValues>) => {
     const {
-      field: { name },
+      field: { name, value },
       form
     } = formProps;
     const error = form.errors[name];
@@ -574,13 +546,40 @@ class NewQuoteRoute extends React.Component<
           error={booleanError}
           selectError={booleanError}
           tags={tags || []}
-          {...formProps}
+          name={name}
+          value={value}
+          handleChange={this.onTagSelected(formProps)}
+          handleBlur={this.handleFormControlBlur(name, form)}
         >
           {booleanError && touched && <Message error={true} header={error} />}
         </Form.Field>
       </div>
     );
   };
+
+  onTagSelected = ({ form, field }: FieldProps<FormValues>) => (
+    value: TagFragFragment[]
+  ) => {
+    form.setFieldValue(field.name, value);
+    this.setState(s =>
+      update(s, {
+        selectedTags: {
+          $set: value
+        }
+      })
+    );
+  };
+
+  handleFormControlBlur = (
+    name: string,
+    form: FormikProps<FormValues>
+  ) => () => {
+    form.setFieldTouched(name, true);
+  };
+
+  handleControlChange = (name: string, form: FormikProps<FormValues>) => (
+    val: undefined | VolumeIssueType | SourceFragFragment | PageType | DateType
+  ) => form.setFieldValue(name, val);
 
   renderQuoteControl = (formProps: FieldProps<FormValues>) => {
     const { field, form } = formProps;
@@ -632,19 +631,12 @@ class NewQuoteRoute extends React.Component<
     return (
       <Date
         className={`${booleanError ? classes.errorBorder : ""}`}
-        onChange={this.handleDateChange(name, formik)}
-        onBlur={this.handleDateBlur(name, formik)}
+        onChange={this.handleControlChange(name, form)}
+        onBlur={this.handleFormControlBlur(name, form)}
         value={field.value}
       />
     );
   };
-
-  handleDateChange = (name: string, { form }: FieldProps<FormValues>) => (
-    date: DateType
-  ) => form.setFieldValue(name, date);
-
-  handleDateBlur = (name: string, { form }: FieldProps<FormValues>) => () =>
-    form.setFieldTouched(name, true);
 
   renderPageControl = (formik: FieldProps<FormValues>) => {
     const { field, form } = formik;
@@ -655,19 +647,12 @@ class NewQuoteRoute extends React.Component<
     return (
       <Page
         className={`${booleanError ? classes.errorBorder : ""}`}
-        onChange={this.handlePageChange(name, formik)}
-        onBlur={this.handlePageBlur(name, formik)}
+        onChange={this.handleControlChange(name, form)}
+        onBlur={this.handleFormControlBlur(name, form)}
         value={field.value}
       />
     );
   };
-
-  handlePageChange = (name: string, { form }: FieldProps<FormValues>) => (
-    page: PageType
-  ) => form.setFieldValue(name, page);
-
-  handlePageBlur = (name: string, { form }: FieldProps<FormValues>) => () =>
-    form.setFieldTouched(name, true);
 
   renderVolumeIssueControl = (formik: FieldProps<FormValues>) => {
     const { field, form } = formik;
@@ -678,26 +663,16 @@ class NewQuoteRoute extends React.Component<
     return (
       <VolumeIssue
         className={`${booleanError ? classes.errorBorder : ""}`}
-        onChange={this.handleVolumeIssueChange(name, formik)}
-        onBlur={this.handleVolumeIssueBlur(name, formik)}
+        onChange={this.handleControlChange(name, form)}
+        onBlur={this.handleFormControlBlur(name, form)}
         value={field.value}
       />
     );
   };
 
-  handleVolumeIssueChange = (
-    name: string,
-    { form }: FieldProps<FormValues>
-  ) => (volumeIssue: VolumeIssueType) => form.setFieldValue(name, volumeIssue);
-
-  handleVolumeIssueBlur = (
-    name: string,
-    { form }: FieldProps<FormValues>
-  ) => () => form.setFieldTouched(name, true);
-
   renderSourceControl = (formProps: FieldProps<FormValues>) => {
     const {
-      field: { name },
+      field: { name, value },
       form
     } = formProps;
     const error = form.errors[name];
@@ -711,7 +686,10 @@ class NewQuoteRoute extends React.Component<
         error={booleanError}
         selectError={booleanError}
         sources={this.getSources()}
-        {...formProps}
+        name={name}
+        value={value}
+        handleBlur={this.handleFormControlBlur(name, form)}
+        handleChange={this.handleControlChange(name, form)}
       >
         {booleanError && touched && <Message error={true} header={error} />}
       </Form.Field>
@@ -942,35 +920,23 @@ class NewQuoteRoute extends React.Component<
   };
 
   onSuccessModalDismissed = (val: ShouldReUseSource) => () => {
-    const { sourceId, submittedSource } = this.state;
-
-    if (
-      !sourceId &&
-      submittedSource &&
-      val === ShouldReUseSource.RE_USE_SOURCE
-    ) {
-      this.setState(s =>
-        update(s, {
-          sourceId: {
-            $set: submittedSource.id
-          },
-
-          initialFormValues: {
-            source: {
-              $set: submittedSource
-            }
-          }
-        })
-      );
-    }
+    const { sourceId, submittedSourceId } = this.state;
 
     this.setState(s =>
       update(s, {
-        submittedSource: {
+        submittedSourceId: {
           $set: undefined
         }
       })
     );
+
+    if (
+      !sourceId &&
+      submittedSourceId &&
+      val === ShouldReUseSource.RE_USE_SOURCE
+    ) {
+      this.props.history.push(makeNewQuoteURL(submittedSourceId));
+    }
   };
 }
 

@@ -1,30 +1,20 @@
 import Select from "react-select";
 import * as React from "react";
 
-import { FormValuesProps } from "./new-quote-form.component";
-import { SourceFragFragment, Sources1Query } from "../graphql/gen.types";
+import { SourceFragFragment } from "../graphql/gen.types";
 
-type Sources = SourceFragFragment[];
-
-interface SourceControlProps extends FormValuesProps {
+interface SourceControlProps {
   selectError: boolean;
-  sources: Sources;
+  sources: SourceFragFragment[];
+  handleChange: (value: SourceFragFragment[]) => void;
+  handleBlur: () => void;
+  name: string;
+  value: SourceFragFragment;
 }
 
 export default class SourceControl extends React.Component<SourceControlProps> {
-  constructor(props: SourceControlProps) {
-    super(props);
-    this.handleChange = this.handleChange.bind(this);
-    this.handleBlur = this.handleBlur.bind(this);
-    this.reShapeSources = this.reShapeSources.bind(this);
-  }
-
   render() {
-    const {
-      field: { name, value },
-      selectError,
-      sources
-    } = this.props;
+    const { name, value, selectError, sources } = this.props;
     return (
       <Select
         className={`${selectError ? "error" : ""}`}
@@ -32,35 +22,12 @@ export default class SourceControl extends React.Component<SourceControlProps> {
         name={name}
         placeholder="Select source"
         options={sources}
-        onChange={this.handleChange}
-        onBlur={this.handleBlur}
+        onChange={this.props.handleChange}
+        onBlur={this.props.handleBlur}
         value={value}
         labelKey="display"
         valueKey="id"
       />
     );
   }
-
-  reShapeSources = (data: Sources1Query | undefined) => {
-    if (!data || !data.sources) {
-      return [];
-    }
-
-    const sources = data.sources as Sources;
-
-    return sources.map(s => {
-      return {
-        ...s,
-        display: `${s.display} | ${s.sourceType.name}`
-      };
-    });
-  };
-
-  handleChange = (value: Sources) => {
-    this.props.form.setFieldValue(this.props.field.name, value);
-  };
-
-  handleBlur = () => {
-    this.props.form.setFieldTouched(this.props.field.name, true);
-  };
 }
