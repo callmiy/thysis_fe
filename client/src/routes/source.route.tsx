@@ -33,6 +33,7 @@ import QUOTES_QUERY from "../graphql/quotes-1.query";
 import renderQuote from "../components/quote-item.component";
 import centeredMenuStyles from "../utils/centered-menu-styles.util";
 import { SEARCH_QUOTES_URL } from "../utils/route-urls.util";
+import { setTitle } from "../utils/route-urls.util";
 
 jss.setup(preset());
 
@@ -118,6 +119,14 @@ class Source extends React.Component<SourceProps, SourceState> {
     super(props);
 
     ["quotesMenuClicked"].forEach(fn => (this[fn] = this[fn].bind(this)));
+  }
+
+  componentDidMount() {
+    setTitle("Source");
+  }
+
+  componentWillUnmount() {
+    setTitle();
   }
 
   render() {

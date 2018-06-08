@@ -57,6 +57,7 @@ import NewQuoteMenu from "../components/new-quote-route-bottom-menu.component";
 import mainContentStyle from "../utils/main-content-centered-style.util";
 import { NewQuoteRouteErrorModal } from "../components/new-quote-route-error-modal.component";
 import { NewQuoteRouteSuccessModal } from "../components/new-quote-route-success-modal.component";
+import { setTitle } from "../utils/route-urls.util";
 
 jss.setup(preset());
 
@@ -249,12 +250,17 @@ class NewQuoteRoute extends React.Component<
 
   componentDidMount() {
     this.fetchSource();
+    setTitle('New quote');
   }
 
   componentDidUpdate() {
     if (!this.state.queryResult) {
       this.fetchSource();
     }
+  }
+
+  componentWillUnmount() {
+    setTitle();
   }
 
   fetchSource = async () => {

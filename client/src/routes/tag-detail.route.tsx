@@ -13,6 +13,7 @@ import MobileBottomMenu, {
   MenuItem
 } from "../components/mobile-bottom-menu.component";
 import renderQuote from "../components/quote-item.component";
+import { setTitle } from "../utils/route-urls.util";
 
 jss.setup(preset());
 
@@ -43,6 +44,14 @@ export default class TagDetail extends React.Component<TagDetailProps> {
     super(props);
 
     ["renderMain"].forEach(fn => (this[fn] = this[fn].bind(this)));
+  }
+
+  componentDidMount() {
+    setTitle("Tag");
+  }
+
+  componentWillUnmount() {
+    setTitle();
   }
 
   render() {

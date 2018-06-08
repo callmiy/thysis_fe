@@ -30,6 +30,7 @@ import {
 import { TextSearchRowFragFragment } from "../graphql/gen.types";
 import ALL_MATCHING_TEXT_QUERY from "../graphql/text-search.query";
 import ErrorBoundary from "../containers/error-boundary.container";
+import { setTitle } from "../utils/route-urls.util";
 
 jss.setup(preset());
 
@@ -120,7 +121,12 @@ class SearchQuotes extends React.Component<
     this.doSearchDebounced = debounce(this.doSearch, 700);
   }
 
+  componentDidMount() {
+    setTitle("Search all");
+  }
+
   componentWillUnmount() {
+    setTitle();
     this.doSearchDebounced.cancel();
   }
 

@@ -19,3 +19,15 @@ export const makeNewQuoteURL = (id?: string) => {
 export const SEARCH_QUOTES_URL = "/search/quotes";
 
 // END ROUTE URLS
+
+let titleEl = document.getElementById("gasification-title");
+
+export const setTitle = (title?: string) => {
+  if (!titleEl) {
+    titleEl = document.getElementById("gasification-title");
+  }
+
+  if (titleEl) {
+    titleEl.innerText = title ? `Gasifier - ${title}` : "Gasifier";
+  }
+};
