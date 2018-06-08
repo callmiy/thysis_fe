@@ -37,7 +37,7 @@ defmodule GasWeb.QuoteSchema do
 
   @desc "Result row returned when we search quotes by text"
   object :quote_full_search_result_row do
-    field(:id, non_null(:integer))
+    field(:id, non_null(:id))
     field(:source, non_null(:quote_full_search_table))
     field(:text, non_null(:string))
   end

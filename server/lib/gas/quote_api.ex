@@ -5,6 +5,8 @@ defmodule Gas.QuoteApi do
 
   import Ecto.Query, warn: false
 
+  require Logger
+
   alias Ecto.Multi
   alias Gas.Repo
   alias Gas.Quote
@@ -184,15 +186,30 @@ defmodule Gas.QuoteApi do
       end)
       |> Enum.join(" union ")
 
-    Repo.execute_and_load(sql, params)
-    |> Enum.map(fn map ->
-      Enum.map(map, fn
-        {"source", val} -> {:source, String.to_existing_atom(val)}
-        {k, val} -> {String.to_existing_atom(k), val}
+    result =
+      Repo.execute_and_load(sql, params)
+      |> Enum.map(fn map ->
+        Enum.map(map, fn
+          # we need to convert value of source key to atom - Absinthe expects
+          # enum as atom
+          {"source", val} ->
+            {:source, String.to_existing_atom(val)}
+
+          {"id", val} ->
+            {:id, ~s(#{map["source"]}|#{val})}
+
+          {k, val} ->
+            {String.to_existing_atom(k), val}
+        end)
+        |> Enum.into(%{})
       end)
-      |> Enum.into(%{})
+      |> Enum.group_by(& &1.source)
+
+    Logger.info(fn ->
+      "Result for query #{__MODULE__} : #{text} is: #{inspect(result)}"
     end)
-    |> Enum.group_by(& &1.source)
+
+    result
   end
 
   def get_quotes_by(nil), do: Repo.all(Quote)
