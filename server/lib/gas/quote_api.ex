@@ -5,8 +5,6 @@ defmodule Gas.QuoteApi do
 
   import Ecto.Query, warn: false
 
-  require Logger
-
   alias Ecto.Multi
   alias Gas.Repo
   alias Gas.Quote
@@ -198,19 +196,12 @@ defmodule Gas.QuoteApi do
           {"id", val} ->
             {:tid, val}
 
-          # {"id", val} ->
-          # {:id, ~s(#{map["source"]}|#{val})}
-
           {k, val} ->
             {String.to_existing_atom(k), val}
         end)
         |> Enum.into(%{})
       end)
       |> Enum.group_by(& &1.source)
-
-    Logger.info(fn ->
-      "Result for query #{__MODULE__} : #{text} is: #{inspect(result)}"
-    end)
 
     result
   end
