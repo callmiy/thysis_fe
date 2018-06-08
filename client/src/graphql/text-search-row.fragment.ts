@@ -2,7 +2,7 @@ import gql from "graphql-tag";
 
 export const textSearchRowFrag = gql`
   fragment TextSearchRowFrag on QuoteFullSearchResultRow {
-    id
+    tid
     text
     source
   }

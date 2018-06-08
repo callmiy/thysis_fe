@@ -318,9 +318,9 @@ class SearchQuotes extends React.Component<
     );
   };
 
-  renderRow = ({ text, id }: TextSearchRowFragFragment) => {
+  renderRow = ({ text, tid }: TextSearchRowFragFragment) => {
     return (
-      <List.Item key={id} className={classes.resultRowItem}>
+      <List.Item key={tid} className={classes.resultRowItem}>
         <List.Content>{text}</List.Content>
       </List.Item>
     );

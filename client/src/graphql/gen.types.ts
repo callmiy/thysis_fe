@@ -199,22 +199,22 @@ export interface AllMatchingTextsQuery {
   // source types matching the text
   quoteFullSearch:  {
     quotes:  Array< {
-      id: string,
+      tid: number,
       text: string,
       source: QuoteFullSearchTable,
     } | null > | null,
     sources:  Array< {
-      id: string,
+      tid: number,
       text: string,
       source: QuoteFullSearchTable,
     } | null > | null,
     tags:  Array< {
-      id: string,
+      tid: number,
       text: string,
       source: QuoteFullSearchTable,
     } | null > | null,
     sourceTypes:  Array< {
-      id: string,
+      tid: number,
       text: string,
       source: QuoteFullSearchTable,
     } | null > | null,
@@ -270,29 +270,29 @@ export interface TagQuotesFragFragment {
 
 export interface TextSearchResultFragFragment {
   quotes:  Array< {
-    id: string,
+    tid: number,
     text: string,
     source: QuoteFullSearchTable,
   } | null > | null,
   sources:  Array< {
-    id: string,
+    tid: number,
     text: string,
     source: QuoteFullSearchTable,
   } | null > | null,
   tags:  Array< {
-    id: string,
+    tid: number,
     text: string,
     source: QuoteFullSearchTable,
   } | null > | null,
   sourceTypes:  Array< {
-    id: string,
+    tid: number,
     text: string,
     source: QuoteFullSearchTable,
   } | null > | null,
 };
 
 export interface TextSearchRowFragFragment {
-  id: string,
+  tid: number,
   text: string,
   source: QuoteFullSearchTable,
 };

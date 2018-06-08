@@ -196,7 +196,10 @@ defmodule Gas.QuoteApi do
             {:source, String.to_existing_atom(val)}
 
           {"id", val} ->
-            {:id, ~s(#{map["source"]}|#{val})}
+            {:tid, val}
+
+          # {"id", val} ->
+          # {:id, ~s(#{map["source"]}|#{val})}
 
           {k, val} ->
             {String.to_existing_atom(k), val}

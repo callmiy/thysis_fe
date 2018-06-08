@@ -81,7 +81,7 @@ defmodule GasWeb.QuoteQueries do
   def query(:full_text_search) do
     result_row = """
     {
-      id
+      tid
       text
       source
     }
