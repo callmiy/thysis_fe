@@ -197,7 +197,7 @@ defmodule Gas.QuoteApi do
       end)
       |> Enum.group_by(& &1.source)
 
-    Logger.info(fn -> "Result for query: #{text} is: inspect(result)" end)
+    Logger.info(fn -> "Result for query: #{text} is: #{inspect(result)}" end)
 
     result
   end
