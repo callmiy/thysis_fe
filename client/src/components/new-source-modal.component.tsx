@@ -1,14 +1,13 @@
 import React from "react";
 import { Formik, FormikProps, Field, FieldProps, FormikErrors } from "formik";
-import {
-  Icon,
-  Button,
-  Modal,
-  Input,
-  Header,
-  Message,
-  Form
-} from "semantic-ui-react";
+import { Form } from "semantic-ui-react";
+import { Button } from "semantic-ui-react";
+import { Icon } from "semantic-ui-react";
+import { Header } from "semantic-ui-react";
+import { Message } from "semantic-ui-react";
+import { Input } from "semantic-ui-react";
+import { Modal } from "semantic-ui-react";
+import { Card } from "semantic-ui-react";
 import jss from "jss";
 import preset from "jss-preset-default";
 import update from "immutability-helper";
@@ -42,6 +41,12 @@ const styles = {
 
   submitButton: {
     margin: "0 15px"
+  },
+
+  successCard: {
+    backgroundColor: "#fcfff5",
+    boxShadow: "0 0 0 1px #a3c293 inset, 0 0 0 0 transparent",
+    margin: "auto"
   }
 };
 
@@ -120,29 +125,28 @@ class NewSourceModal extends React.Component<
         onClose={this.resetModal}
       >
         {source && (
-          <div onClick={this.goToSource(source.id)}>
-            <Message
-              style={{ padding: "2px" }}
-              compact={true}
-              success={true}
-              icon={true}
-            >
-              <Icon name="circle notched" loading={true} />
-              <Message.Content>
-                <Message.Header>Go to source</Message.Header>
-                <span
-                  style={{
-                    display: "inline-block",
-                    width: "200px",
-                    overflow: "hidden",
-                    maxHeight: "60px"
-                  }}
-                >
-                  {source.display}
-                </span>
-              </Message.Content>
-            </Message>
-          </div>
+          <Card style={styles.successCard}>
+            <Card.Content>
+              <Card.Header style={{ color: "#a3c293" }}>Success</Card.Header>
+
+              <Card.Description>{source.display}</Card.Description>
+
+              <Card.Content extra={true}>
+                <div className="ui two buttons">
+                  <Button
+                    basic={true}
+                    color="green"
+                    onClick={this.goToSource(source.id)}
+                  >
+                    Go to source
+                  </Button>
+                  <Button basic={true} color="red" onClick={this.resetModal}>
+                    Dismiss
+                  </Button>
+                </div>
+              </Card.Content>
+            </Card.Content>
+          </Card>
         )}
 
         <Header icon="user" content="Create quote source" />
@@ -322,6 +326,7 @@ class NewSourceModal extends React.Component<
         label={label}
         id={name}
         error={booleanError}
+        autoComplete="off"
         {...field}
       />
     );

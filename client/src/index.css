@@ -10,7 +10,8 @@ body,
   padding: 0;
 }
 
-#root .Select-input > input {
+/* semantic ui css causes react-select input to be displayed incorrectly */
+#gasification-body .Select-input > input {
   width: 100%;
   background: none #0000;
   border: 0 none;
