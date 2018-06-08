@@ -250,7 +250,7 @@ class NewQuoteRoute extends React.Component<
 
   componentDidMount() {
     this.fetchSource();
-    setTitle('New quote');
+    setTitle("New quote");
   }
 
   componentDidUpdate() {
@@ -524,6 +524,12 @@ class NewQuoteRoute extends React.Component<
         update(s, {
           submittedSource: {
             $set: values.source
+          },
+
+          initialFormValues: {
+            tags: {
+              $set: []
+            }
           }
         })
       );
