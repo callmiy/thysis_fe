@@ -238,6 +238,9 @@ class SearchQuotes extends React.Component<
         }
       })) as ApolloQueryResult<AllMatchingTextsQuery>;
 
+      // tslint:disable-next-line:no-console
+      console.log("\n\nresult.data: ", result.data, "\n\n");
+
       this.setState(s =>
         update(s, {
           searchLoading: {
