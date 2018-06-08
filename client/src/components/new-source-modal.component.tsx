@@ -25,7 +25,7 @@ import {
   SourceFragFragment
 } from "../graphql/gen.types";
 import SourceTypeControl from "./select-source-type-control.component";
-import { makeSourceURL } from "../constants";
+import { makeSourceURL } from "../utils/route-urls.util";
 
 jss.setup(preset());
 

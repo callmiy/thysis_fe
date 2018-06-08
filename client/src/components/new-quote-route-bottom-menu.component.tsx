@@ -8,8 +8,9 @@ import NewTagModalForm, {
 } from "./new-tag-modal-form.component";
 import NewSourceModal from "./new-source-modal.component";
 import TagListModal from "./tag-list-modal.component";
-import { MenuItemNames, ROOT_URL } from "../constants";
-import { SEARCH_QUOTES_URL } from "../constants";
+import { MenuItemNames } from "../constants";
+import { SEARCH_QUOTES_URL } from "../utils/route-urls.util";
+import { ROOT_URL } from "../utils/route-urls.util";
 
 const styles = {
   container: {

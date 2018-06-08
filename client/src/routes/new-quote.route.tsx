@@ -38,7 +38,9 @@ import TAGS_QUERY from "../graphql/tags-mini.query";
 import TagControl from "../components/new-quote-form-tag-control.component";
 import SourceControl from "../components/new-quote-form-source-control.component";
 import Date, { DateType } from "../components/new-quote-date.component";
-import { ERROR_COLOR, ROOT_CONTAINER_STYLE, makeSourceURL } from "../constants";
+import { ROOT_CONTAINER_STYLE } from "../constants";
+import { ERROR_COLOR } from "../constants";
+import { makeSourceURL } from "../utils/route-urls.util";
 import Page, {
   PageType
 } from "../components/new-quote-page-start-end.component";

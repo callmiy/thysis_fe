@@ -7,11 +7,9 @@ import { GraphqlQueryControls, graphql } from "react-apollo";
 
 import { SourceFragFragment, Sources1Query } from "../graphql/gen.types";
 import SOURCES_QUERY from "../graphql/sources-1.query";
-import {
-  FLEX_DIRECTION_COLUMN,
-  OVERFLOW_X_HIDDEN,
-  makeSourceURL
-} from "../constants";
+import { OVERFLOW_X_HIDDEN } from "../constants";
+import { FLEX_DIRECTION_COLUMN } from "../constants";
+import { makeSourceURL } from "../utils/route-urls.util";
 import { reshapeSources } from "./new-quote-form.component";
 
 jss.setup(preset());

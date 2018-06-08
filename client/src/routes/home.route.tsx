@@ -6,12 +6,10 @@ import { Menu, Icon } from "semantic-ui-react";
 import update from "immutability-helper";
 
 import Header from "../components/header.component";
-import {
-  SimpleCss,
-  ROOT_CONTAINER_STYLE,
-  makeNewQuoteURL,
-  SEARCH_QUOTES_URL
-} from "../constants";
+import { SimpleCss } from "../constants";
+import { ROOT_CONTAINER_STYLE } from "../constants";
+import { makeNewQuoteURL } from "../utils/route-urls.util";
+import { SEARCH_QUOTES_URL } from "../utils/route-urls.util";
 import centeredMenuStyles from "../utils/centered-menu-styles.util";
 import TagListModal from "../components/tag-list-modal.component";
 import SourceListModal from "../components/source-list-modal.component";

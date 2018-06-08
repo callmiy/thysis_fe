@@ -16,7 +16,9 @@ import { GraphQLError } from "graphql/error/GraphQLError";
 import { NavLink } from "react-router-dom";
 
 import RootHeader from "../components/header.component";
-import { ROOT_CONTAINER_STYLE, SimpleCss, makeNewQuoteURL } from "../constants";
+import { SimpleCss } from "../constants";
+import { ROOT_CONTAINER_STYLE } from "../constants";
+import { makeNewQuoteURL } from "../utils/route-urls.util";
 import {
   Source1Query,
   Source1QueryVariables,
@@ -30,7 +32,7 @@ import MobileBottomMenu, {
 import QUOTES_QUERY from "../graphql/quotes-1.query";
 import renderQuote from "../components/quote-item.component";
 import centeredMenuStyles from "../utils/centered-menu-styles.util";
-import { SEARCH_QUOTES_URL } from "../constants";
+import { SEARCH_QUOTES_URL } from "../utils/route-urls.util";
 
 jss.setup(preset());
 

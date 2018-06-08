@@ -5,15 +5,13 @@ import Loadable from "react-loadable";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 import { Dimmer, Loader } from "semantic-ui-react";
 
-import {
-  ROOT_URL,
-  SimpleCss,
-  ROOT_CONTAINER_STYLE,
-  TAG_URL,
-  SOURCE_URL,
-  NEW_QUOTE_URL,
-  SEARCH_QUOTES_URL
-} from "./constants";
+import { ROOT_CONTAINER_STYLE } from "./constants";
+import { SimpleCss } from "./constants";
+import { ROOT_URL } from "./utils/route-urls.util";
+import { TAG_URL } from "./utils/route-urls.util";
+import { SOURCE_URL } from "./utils/route-urls.util";
+import { NEW_QUOTE_URL } from "./utils/route-urls.util";
+import { SEARCH_QUOTES_URL } from "./utils/route-urls.util";
 
 jss.setup(preset());
 

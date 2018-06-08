@@ -7,11 +7,9 @@ import { withRouter, RouteComponentProps } from "react-router-dom";
 import { TagsMinimalRunQuery } from "../graphql/ops.types";
 import { TagFragFragment } from "../graphql/gen.types";
 import TAGS_QUERY from "../graphql/tags-mini.query";
-import {
-  FLEX_DIRECTION_COLUMN,
-  OVERFLOW_X_HIDDEN,
-  makeTagURL
-} from "../constants";
+import { OVERFLOW_X_HIDDEN } from "../constants";
+import { FLEX_DIRECTION_COLUMN } from "../constants";
+import { makeTagURL } from "../utils/route-urls.util";
 
 jss.setup(preset());
 
