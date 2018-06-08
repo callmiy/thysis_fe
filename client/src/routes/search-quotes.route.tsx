@@ -193,15 +193,13 @@ class SearchQuotes extends React.Component<
       })
     );
 
-    if (value.trim().length) {
-      this.doSearchDebounced();
-    }
+    this.doSearchDebounced();
   };
 
   doSearch = async () => {
     const searchText = this.state.searchText.trim();
 
-    if (!searchText) {
+    if (searchText.length < 3) {
       return;
     }
 
@@ -257,7 +255,7 @@ class SearchQuotes extends React.Component<
   }: TextSearchResultFragFragment) => {
     return quotes || sources || sourceTypes || tags ? (
       <div className={classes.resultContainer}>
-        {[quotes, sources, sourceTypes, tags].map(this.renderRow)}
+        {[quotes, sources, sourceTypes, tags].map(this.renderCategory)}
       </div>
     ) : (
       <Message
@@ -278,7 +276,7 @@ class SearchQuotes extends React.Component<
     );
   };
 
-  renderRow = (data: TextSearchRowFragFragment[], index: number) => {
+  renderCategory = (data: TextSearchRowFragFragment[], index: number) => {
     if (!data) {
       return;
     }
@@ -292,12 +290,12 @@ class SearchQuotes extends React.Component<
           <span className={classes.resultRowHeader}>{header}</span>
         </div>
 
-        <List divided={true}>{data.map(this.renderData)}</List>
+        <List divided={true}>{data.map(this.renderRow)}</List>
       </div>
     );
   };
 
-  renderData = ({ text, id }: TextSearchRowFragFragment) => {
+  renderRow = ({ text, id }: TextSearchRowFragFragment) => {
     return (
       <List.Item key={id} className={classes.resultRowItem}>
         <List.Content>{text}</List.Content>
