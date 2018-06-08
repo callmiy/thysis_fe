@@ -59,9 +59,7 @@ export class NewQuoteRouteSuccessModal extends React.Component<
                 Quote successfully created
               </Message.Header>
 
-              {!reUseSource && (
-                <span>Create another quote for this source?</span>
-              )}
+              {!reUseSource && <div>Create another quote for this source?</div>}
             </Message.Content>
           </Message>
         </Modal.Content>
