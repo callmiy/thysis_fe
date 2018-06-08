@@ -5,6 +5,8 @@ defmodule Gas.QuoteApi do
 
   import Ecto.Query, warn: false
 
+  require Logger
+
   alias Ecto.Multi
   alias Gas.Repo
   alias Gas.Quote
@@ -184,15 +186,20 @@ defmodule Gas.QuoteApi do
       end)
       |> Enum.join(" union ")
 
-    Repo.execute_and_load(sql, params)
-    |> Enum.map(fn map ->
-      Enum.map(map, fn
-        {"source", val} -> {:source, String.to_existing_atom(val)}
-        {k, val} -> {String.to_existing_atom(k), val}
+    result =
+      Repo.execute_and_load(sql, params)
+      |> Enum.map(fn map ->
+        Enum.map(map, fn
+          {"source", val} -> {:source, String.to_existing_atom(val)}
+          {k, val} -> {String.to_existing_atom(k), val}
+        end)
+        |> Enum.into(%{})
       end)
-      |> Enum.into(%{})
-    end)
-    |> Enum.group_by(& &1.source)
+      |> Enum.group_by(& &1.source)
+
+    Logger.info(fn -> "Result for query: #{text} is: inspect(result)" end)
+
+    result
   end
 
   def get_quotes_by(nil), do: Repo.all(Quote)
