@@ -62,6 +62,27 @@ export default class NewTagModalForm extends React.PureComponent<
         <Header icon="quote left" content="Subject matter of quote" />
 
         <Modal.Content>
+          {!formError &&
+            submitSuccess && (
+              <Message
+                error={true}
+                success={true}
+                content="Tag created successfully!"
+              />
+            )}
+
+          {formError && (
+            <Message icon={true} error={true}>
+              <Icon name="ban" />
+
+              <Message.Content>
+                <Message.Header>An error has occurred</Message.Header>
+
+                {formError}
+              </Message.Content>
+            </Message>
+          )}
+
           <Input
             placeholder="Tag text"
             fluid={true}
@@ -69,23 +90,12 @@ export default class NewTagModalForm extends React.PureComponent<
             onFocus={this.handleFocus}
             error={!!formError}
           />
-
-          {formError && <Message error={true} content={formError} />}
-
-          {submitSuccess && (
-            <Message
-              error={true}
-              success={true}
-              content="Tag created successfully!"
-            />
-          )}
         </Modal.Content>
 
         <Modal.Actions>
           <Button
             basic={true}
             color="red"
-            inverted={true}
             onClick={this.reset}
             disabled={submitting}
           >
@@ -102,7 +112,12 @@ export default class NewTagModalForm extends React.PureComponent<
                 <Button
                   color="green"
                   inverted={true}
-                  disabled={!!formError || text.length < 2 || submitting}
+                  disabled={
+                    !!formError ||
+                    text.length < 2 ||
+                    submitting ||
+                    submitSuccess
+                  }
                   onClick={this.handleSubmit(createTag)}
                   loading={submitting}
                 >
@@ -127,6 +142,10 @@ export default class NewTagModalForm extends React.PureComponent<
       update(s, {
         formError: {
           $set: undefined
+        },
+
+        submitSuccess: {
+          $set: false
         }
       })
     );
@@ -165,13 +184,11 @@ export default class NewTagModalForm extends React.PureComponent<
           }
         })
       );
-
-      setTimeout(this.reset, 2300);
     } catch (error) {
       this.setState(s =>
         update(s, {
           formError: {
-            $set: JSON.stringify(error.graphQLErrors, null, 2)
+            $set: JSON.stringify(error, null, 2)
           },
 
           submitting: {
