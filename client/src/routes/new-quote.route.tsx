@@ -32,8 +32,7 @@ import {
   CreateQuoteInput,
   Sources1Query,
   Source1Query,
-  Quotes1Query,
-  Quote1FragFragment
+  Quotes1Query
 } from "../graphql/gen.types";
 import TAGS_QUERY from "../graphql/tags-mini.query";
 import TagControl from "../components/new-quote-form-tag-control.component";
@@ -385,27 +384,54 @@ class NewQuoteRoute extends React.Component<
 
     // no component has already fetched quotes so we do not have any in the
     // cache
-    if (!rootQuery || !rootQuery.quotes) {
+    if (!rootQuery) {
       return;
     }
 
-    const quotesQuery = cache.readQuery({
-      query: QUOTES_QUERY,
-      variables: {
+    try {
+      const variables = {
         quote: {
           source: this.state.formOutputs.sourceId
         }
-      }
-    }) as Quotes1Query;
+      };
 
-    const quotes = quotesQuery.quotes as Quote1FragFragment[];
+      const quotesQuery = cache.readQuery({
+        query: QUOTES_QUERY,
+        variables
+      }) as Quotes1Query;
 
-    cache.writeQuery({
-      query: QUOTES_QUERY,
-      data: {
-        quotes: [createQuote.createQuote, ...quotes]
+      const quotes = quotesQuery.quotes;
+
+      if (quotes) {
+        cache.writeQuery({
+          query: QUOTES_QUERY,
+          variables,
+          data: {
+            quotes: [createQuote.createQuote, ...quotes]
+          }
+        });
       }
-    });
+    } catch (error) {
+      // Will remove when Apollo graphql allows us to check if query exists
+      //  tslint:disable-next-line:no-console
+      console.log(
+        `
+
+
+      logging starts
+
+
+      error`,
+        error,
+        `
+
+      logging ends
+
+
+      `
+      );
+      return error;
+    }
   };
 
   validate = (values: FormValues) => {
