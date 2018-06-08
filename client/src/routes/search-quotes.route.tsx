@@ -174,8 +174,8 @@ class SearchQuotes extends React.Component<
               </Message>
             )}
 
-            {this.state.searchText &&
-              !this.state.searchError &&
+            {!this.state.searchError &&
+              this.state.searchText &&
               this.state.result &&
               this.renderResult(this.state.result)}
           </div>
@@ -187,6 +187,13 @@ class SearchQuotes extends React.Component<
   }
 
   onSearchInputChange: SemanticOnInputChangeFunc = (e, { value }) => {
+    // if user is pressing backspace or clearing texts in any other way, when
+    // the text input is clear, we clear search results. This fixes the bug
+    // where after user clears input and then begin typing again, we render the
+    // stale search result before hitting network
+    let { result } = this.state;
+    result = value ? result : undefined;
+
     this.setState(s =>
       update(s, {
         searchText: {
@@ -195,6 +202,10 @@ class SearchQuotes extends React.Component<
 
         searchError: {
           $set: undefined
+        },
+
+        result: {
+          $set: result
         }
       })
     );
@@ -289,6 +300,9 @@ class SearchQuotes extends React.Component<
 
     const first = data[0];
     const header = first.source;
+
+    // tslint:disable-next-line:no-console
+    console.log("data", header, data);
 
     return (
       <div className={classes.result} key={`${index + 1}-search-header`}>
