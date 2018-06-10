@@ -59,14 +59,8 @@ const styles = {
 } as SimpleCss;
 
 interface HomeState {
-  modalOpened: {
-    tagList: boolean;
-  };
+  modalOpened: {};
 }
-
-const initialModalOpened = {
-  tagList: false
-};
 
 const { classes } = jss.createStyleSheet(styles).attach();
 
@@ -74,7 +68,7 @@ type HomeProps = RouteComponentProps<{}>;
 
 export default class Home extends React.Component<HomeProps, HomeState> {
   state: HomeState = {
-    modalOpened: initialModalOpened
+    modalOpened: {}
   };
 
   constructor(props: HomeProps) {
@@ -182,7 +176,7 @@ export default class Home extends React.Component<HomeProps, HomeState> {
     this.setState(s =>
       update(s, {
         modalOpened: {
-          $set: initialModalOpened
+          $set: {}
         }
       })
     );

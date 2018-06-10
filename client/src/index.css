@@ -30,3 +30,12 @@ body,
 .Select.error > .Select-control {
   border-color: #9f3a38;
 }
+
+.ui.modals.dimmer {
+  height: 100%;
+  overflow: hidden;
+}
+
+.ui.modals.dimmer.visible.transition {
+  display: flex !important;
+}

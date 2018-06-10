@@ -3,6 +3,7 @@ import { Modal, List } from "semantic-ui-react";
 import jss from "jss";
 import preset from "jss-preset-default";
 import { withRouter, RouteComponentProps } from "react-router-dom";
+import { Loader } from "semantic-ui-react";
 
 import { TagsMinimalRunQuery } from "../graphql/ops.types";
 import { TagFragFragment } from "../graphql/gen.types";
@@ -60,30 +61,36 @@ class TagListModal extends React.PureComponent<TagListModalProps> {
     const { open } = this.props;
 
     return (
-      <Modal
-        className={`aja`}
-        style={styles.modal}
-        basic={true}
-        size="fullscreen"
-        dimmer="inverted"
-        open={open}
-        closeIcon={true}
-        onClose={this.resetModal}
-      >
-        <Modal.Content style={styles.modalContent} scrolling={true}>
-          <TagsMinimalRunQuery query={TAGS_QUERY}>
-            {({ data }) => {
-              const tags = data ? data.tags : ([] as TagFragFragment[]);
+      <TagsMinimalRunQuery query={TAGS_QUERY}>
+        {({ data, loading }) => {
+          const tags = data ? data.tags : null;
 
-              return (
-                <List style={styles.list} divided={true} relaxed={true}>
-                  {(tags || []).map(this.renderTag)}
-                </List>
-              );
-            }}
-          </TagsMinimalRunQuery>
-        </Modal.Content>
-      </Modal>
+          return (
+            <Modal
+              style={{
+                ...((loading && { height: "100%" }) || {}),
+                ...styles.modal
+              }}
+              basic={true}
+              size="fullscreen"
+              dimmer="inverted"
+              open={open}
+              closeIcon={true}
+              onClose={this.resetModal}
+            >
+              <Modal.Content style={styles.modalContent} scrolling={true}>
+                {loading && !tags && <Loader active={true} />}
+
+                {tags && (
+                  <List style={styles.list} divided={true} relaxed={true}>
+                    {(tags || []).map(this.renderTag)}
+                  </List>
+                )}
+              </Modal.Content>
+            </Modal>
+          );
+        }}
+      </TagsMinimalRunQuery>
     );
   }
 

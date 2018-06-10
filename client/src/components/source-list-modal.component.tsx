@@ -1,34 +1,49 @@
 import React from "react";
-import { Modal, List } from "semantic-ui-react";
+import { Modal } from "semantic-ui-react";
+import { List } from "semantic-ui-react";
 import jss from "jss";
 import preset from "jss-preset-default";
 import { withRouter, RouteComponentProps } from "react-router-dom";
 import { GraphqlQueryControls, graphql } from "react-apollo";
+import { Loader } from "semantic-ui-react";
 
 import { SourceFragFragment, Sources1Query } from "../graphql/gen.types";
 import SOURCES_QUERY from "../graphql/sources-1.query";
-import { OVERFLOW_X_HIDDEN } from "../constants";
-import { FLEX_DIRECTION_COLUMN } from "../constants";
 import { makeSourceURL } from "../utils/route-urls.util";
 import { reshapeSources } from "./new-quote-form.component";
+import { SimpleCss } from "../constants";
 
 jss.setup(preset());
 
+const modalStyle = {
+  "&#source-list-modal-menu": {
+    marginTop: ["5%", "!important"],
+    display: ["flex", "!important"]
+  }
+  // tslint:disable-next-line:no-any
+} as any;
+
 const styles = {
   modal: {
-    marginTop: "10%",
-    overflowX: OVERFLOW_X_HIDDEN,
-    display: "flex",
-    flexDirection: FLEX_DIRECTION_COLUMN,
-    flex: 1,
-    flexShrink: 0, // don't allow flexbox to shrink it
-    borderRadius: 0, // clear semantic-ui style
-    margin: 0, // clear semantic-ui style
-    minWidth: "100%"
+    ...modalStyle,
+    overflow: "hidden",
+    flexDirection: "column",
+    height: "100%"
+  },
+
+  modalClose: {
+    flexShrink: 0,
+    fontWeight: 900,
+    fontSize: "2rem",
+    textAlign: "right",
+    cursor: "pointer"
   },
 
   modalContent: {
-    maxHeight: "calc(90vh)"
+    maxHeight: "calc(80vh)",
+    wordWrap: "break-word",
+    border: "1px solid #dad8d8",
+    flex: 1
   },
 
   list: {
@@ -39,7 +54,9 @@ const styles = {
   listItem: {
     cursor: "pointer"
   }
-};
+} as SimpleCss;
+
+const { classes } = jss.createStyleSheet(styles).attach();
 
 type OwnProps = RouteComponentProps<{}> & {
   open: boolean;
@@ -52,32 +69,32 @@ type ComponentDataProps = GraphqlQueryControls & Sources1Query;
 type SourceListModalProps = OwnProps & ComponentDataProps;
 
 class SourceListModal extends React.PureComponent<SourceListModalProps> {
-  constructor(props: SourceListModalProps) {
-    super(props);
-
-    ["navigateTo", "renderSource", "resetModal"].forEach(
-      fn => (this[fn] = this[fn].bind(this))
-    );
-  }
-
   render() {
-    const { open, sources } = this.props;
+    const { open, sources, loading } = this.props;
 
     return (
       <Modal
-        className={`aja`}
-        style={styles.modal}
+        id="source-list-modal-menu"
+        className={classes.modal}
+        style={{ ...((loading && { height: "100%" }) || {}) }}
         basic={true}
-        size="fullscreen"
         open={open}
-        closeIcon={true}
         onClose={this.resetModal}
         dimmer="inverted"
       >
+        <div className={classes.modalClose} onClick={this.props.dismissModal}>
+          &times;
+        </div>
+
         <Modal.Content style={styles.modalContent} scrolling={true}>
-          <List style={styles.list} divided={true} relaxed={true}>
-            {(sources || []).map(this.renderSource)}
-          </List>
+          {loading && !sources && <Loader active={true} />}
+
+          {!loading &&
+            sources && (
+              <List style={styles.list} divided={true} relaxed={true}>
+                {sources.map(this.renderSource)}
+              </List>
+            )}
         </Modal.Content>
       </Modal>
     );
