@@ -368,13 +368,15 @@ class NewQuoteRoute extends React.Component<
       return;
     }
 
-    try {
-      const variables = {
-        quote: {
-          source: this.state.formOutputs.sourceId
-        }
-      };
+    const sourceId = this.state.formOutputs.sourceId;
 
+    const variables = {
+      quote: {
+        source: sourceId
+      }
+    };
+
+    try {
       const quotesQuery = cache.readQuery({
         query: QUOTES_QUERY,
         variables
@@ -392,25 +394,31 @@ class NewQuoteRoute extends React.Component<
         });
       }
     } catch (error) {
-      // Will remove when Apollo graphql allows us to check if query exists
-      //  tslint:disable-next-line:no-console
-      console.log(
-        `
+      const message = error.message;
+      const queryErrorStart = `Can't find field quotes({"quote":{"source":"${sourceId}"}}) on object (ROOT_QUERY)`;
+
+      if (message.startsWith(queryErrorStart)) {
+        // Will remove when Apollo graphql allows us to check if query exists
+        //  tslint:disable-next-line:no-console
+        return console.log(
+          `
 
 
-      logging starts
+                logging starts
 
 
-      error`,
-        error,
-        `
+                error writing new quote to cache:\n`,
+          error.message,
+          `
 
-      logging ends
+                logging ends
 
 
-      `
-      );
-      return error;
+                `
+        );
+      }
+
+      throw error;
     }
   };
 

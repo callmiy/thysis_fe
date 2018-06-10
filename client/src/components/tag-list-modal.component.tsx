@@ -65,6 +65,24 @@ class TagListModal extends React.PureComponent<TagListModalProps> {
         {({ data, loading }) => {
           const tags = data ? data.tags : null;
 
+          // tslint:disable-next-line:no-console
+          console.log(
+            `
+
+
+          logging starts
+
+
+          tags`,
+            tags,
+            `
+
+          logging ends
+
+
+          `
+          );
+
           return (
             <Modal
               style={{
@@ -72,7 +90,6 @@ class TagListModal extends React.PureComponent<TagListModalProps> {
                 ...styles.modal
               }}
               basic={true}
-              size="fullscreen"
               dimmer="inverted"
               open={open}
               closeIcon={true}

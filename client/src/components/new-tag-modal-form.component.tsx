@@ -7,7 +7,7 @@ import update from "immutability-helper";
 import TAG_MUTATION from "../graphql/tag.mutation";
 import { CreateTagFn, CreateTagUpdateFn } from "../graphql/ops.types";
 import { TagsMinimalQuery, TagFragFragment } from "../graphql/gen.types";
-import TAG_QUERY from "../graphql/tags-mini.query";
+import TAGS_QUERY from "../graphql/tags-mini.query";
 
 export type TagModalCreatedCb = (tag: TagFragFragment) => void;
 
@@ -216,21 +216,43 @@ export default class NewTagModalForm extends React.PureComponent<
 
     // no component has already fetched tags so we do not have any in the
     // cache
-    if (!rootQuery || !rootQuery.tags) {
+    if (!rootQuery) {
       return;
     }
 
-    const tagsQuery = cache.readQuery({
-      query: TAG_QUERY
-    }) as TagsMinimalQuery;
+    try {
+      const tagsQuery = cache.readQuery({
+        query: TAGS_QUERY
+      }) as TagsMinimalQuery;
 
-    const tags = tagsQuery.tags as TagFragFragment[];
+      const tags = tagsQuery.tags as TagFragFragment[];
 
-    cache.writeQuery({
-      query: TAG_QUERY,
-      data: {
-        tags: [tag, ...tags]
+      if (tags) {
+        cache.writeQuery({
+          query: TAGS_QUERY,
+          data: {
+            tags: [tag, ...tags]
+          }
+        });
       }
-    });
+    } catch (error) {
+      //  tslint:disable-next-line:no-console
+      console.log(
+        `
+
+
+      logging starts
+
+
+      error writing new tag to cache:\n`,
+        error,
+        `
+
+      logging ends
+
+
+      `
+      );
+    }
   };
 }
