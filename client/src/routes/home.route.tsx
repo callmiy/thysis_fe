@@ -28,15 +28,13 @@ enum HomeEnum {
 const styles = {
   homeRoot: ROOT_CONTAINER_STYLE,
 
-  homeMain: {
-    ...centeredMenuStyles.mainParentContainer,
-    display: "flex",
-    flexDirection: "column"
-  },
+  homeMain: centeredMenuStyles.mainParentContainer,
 
   menu: {
     ...centeredMenuStyles.menu,
-    margin: "10px"
+    flex: "1",
+    margin: "10px",
+    overflowY: "auto"
   },
 
   menuAnchor: {

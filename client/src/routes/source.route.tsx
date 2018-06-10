@@ -88,6 +88,7 @@ const styles = {
   },
 
   header: {
+    flexShrink: 0,
     maxHeight: "15vh",
     overflow: "hidden",
     padding: "0 0 0 5px"
@@ -166,7 +167,7 @@ class Source extends React.Component<SourceProps, SourceState> {
                 style={{
                   ...(showingQuotes ? { opacity: 0 } : {}),
                   ...styles.menu,
-                  ...{ margin: "auto 5px" }
+                  ...{ margin: "5px" }
                 }}
                 pointing={true}
                 compact={true}

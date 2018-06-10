@@ -1,11 +1,6 @@
 export const centeredMenuStyles = {
   mainParentContainer: {
-    position: "relative",
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "center",
-    minHeight: "50vh"
+    display: "flex"
   },
 
   menu: {
@@ -14,8 +9,9 @@ export const centeredMenuStyles = {
     alignItems: "center",
     flexWrap: "wrap",
     minWidth: "80%",
-    minHeight: "30vh",
-    margin: "auto"
+    margin: "auto",
+    flex: "1",
+    overflowY: "auto"
   },
 
   menuAnchor: {
