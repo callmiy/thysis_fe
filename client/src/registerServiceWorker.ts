@@ -115,7 +115,7 @@ function checkValidServiceWorker(swUrl: string) {
     });
 }
 
-const refreshEvent = (e: MouseEvent) => {
+function refreshEvent(e: MouseEvent) {
   // tslint:disable-next-line:no-any
   const target = e.target as any;
   if (target) {
@@ -124,22 +124,23 @@ const refreshEvent = (e: MouseEvent) => {
   }
 
   window.location.reload();
-};
+}
 
 function showRefreshUI() {
   const style = `
   position: absolute;
-  bottom: 3px;
+  bottom: 30px;
   cursor: pointer;
-  background: #fff;
   border: 1px solid #b7b7b7;
   padding: 10px;
   border-radius: 3px;
   visibility: hidden;
+  color: #ffffffe6;
   `;
 
   const div = document.createElement("div");
   div.style.cssText = style;
+  div.classList.add("ui", "green", "inverted", "menu");
   div.innerText = "New content is available; please click to refresh.";
 
   const body = document.body;
