@@ -84,6 +84,7 @@ defmodule GasWeb.QuoteQueries do
       tid
       text
       source
+      column
     }
     """
 

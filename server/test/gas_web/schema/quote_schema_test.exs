@@ -114,7 +114,8 @@ defmodule Gas.QuoteSchemaTest do
                       %{
                         "tid" => ^id,
                         "source" => "SOURCE_TYPES",
-                        "text" => ^search_text
+                        "text" => ^search_text,
+                        "column" => "name"
                       }
                     ]
                   }
@@ -143,7 +144,8 @@ defmodule Gas.QuoteSchemaTest do
                       %{
                         "tid" => ^id,
                         "source" => "SOURCES",
-                        "text" => ^search_text
+                        "text" => ^search_text,
+                        "column" => "author"
                       }
                     ]
                   }
@@ -172,7 +174,8 @@ defmodule Gas.QuoteSchemaTest do
                       %{
                         "tid" => ^id,
                         "source" => "TAGS",
-                        "text" => ^search_text
+                        "text" => ^search_text,
+                        "column" => "text"
                       }
                     ]
                   }
@@ -201,7 +204,8 @@ defmodule Gas.QuoteSchemaTest do
                       %{
                         "tid" => ^id,
                         "source" => "QUOTES",
-                        "text" => ^search_text
+                        "text" => ^search_text,
+                        "column" => "text"
                       }
                     ]
                   }

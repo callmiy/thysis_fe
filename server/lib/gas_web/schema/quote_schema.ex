@@ -40,6 +40,7 @@ defmodule GasWeb.QuoteSchema do
     field(:tid, non_null(:integer))
     field(:source, non_null(:quote_full_search_table))
     field(:text, non_null(:string))
+    field(:column, non_null(:string))
   end
 
   @desc "Result returned when we search quotes by text"

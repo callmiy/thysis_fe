@@ -177,7 +177,12 @@ defmodule Gas.QuoteApi do
         Enum.map(
           data,
           &"""
-          select id, #{&1} as text, '#{source}' as source from #{source}
+          select
+                id,
+                #{&1} as text,
+                '#{&1}' as column,
+                '#{source}' as source
+          from #{source}
           where #{&1} ilike $1
           """
         )
