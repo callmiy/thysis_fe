@@ -202,21 +202,25 @@ export interface AllMatchingTextsQuery {
       tid: number,
       text: string,
       source: QuoteFullSearchTable,
+      column: string,
     } | null > | null,
     sources:  Array< {
       tid: number,
       text: string,
       source: QuoteFullSearchTable,
+      column: string,
     } | null > | null,
     tags:  Array< {
       tid: number,
       text: string,
       source: QuoteFullSearchTable,
+      column: string,
     } | null > | null,
     sourceTypes:  Array< {
       tid: number,
       text: string,
       source: QuoteFullSearchTable,
+      column: string,
     } | null > | null,
   } | null,
 };
@@ -273,21 +277,25 @@ export interface TextSearchResultFragFragment {
     tid: number,
     text: string,
     source: QuoteFullSearchTable,
+    column: string,
   } | null > | null,
   sources:  Array< {
     tid: number,
     text: string,
     source: QuoteFullSearchTable,
+    column: string,
   } | null > | null,
   tags:  Array< {
     tid: number,
     text: string,
     source: QuoteFullSearchTable,
+    column: string,
   } | null > | null,
   sourceTypes:  Array< {
     tid: number,
     text: string,
     source: QuoteFullSearchTable,
+    column: string,
   } | null > | null,
 };
 
@@ -295,4 +303,5 @@ export interface TextSearchRowFragFragment {
   tid: number,
   text: string,
   source: QuoteFullSearchTable,
+  column: string,
 };

@@ -62,27 +62,6 @@ import { makeNewQuoteURL } from "../utils/route-urls.util";
 
 jss.setup(preset());
 
-const reshapeSource = (s: SourceFragFragment | null) => {
-  if (!s) {
-    return {} as SourceFragFragment;
-  }
-
-  return {
-    ...s,
-    display: `${s.display} | ${s.sourceType.name}`
-  } as SourceFragFragment;
-};
-
-export const reshapeSources = (
-  sources: SourceFragFragment[] | null
-): SourceFragFragment[] => {
-  if (!sources) {
-    return [] as SourceFragFragment[];
-  }
-
-  return sources.map(reshapeSource);
-};
-
 export enum ShouldReUseSource {
   RE_USE_SOURCE = "re-use source",
   DO_NOT_RE_USE_SOURCE = "do not re-use source"
@@ -98,7 +77,6 @@ const styles = {
   },
 
   quoteSourceDisplayContainer: {
-    textAlign: "center",
     padding: "5px",
     margin: "0"
   },
@@ -121,7 +99,10 @@ const styles = {
   quoteLink: {
     textDecoration: "none",
     color: "initial",
-    cursor: "pointer"
+    cursor: "pointer",
+    '&:hover': {
+      color: 'initial'
+    }
   },
 
   errorBorder: {
@@ -498,7 +479,7 @@ class NewQuoteRoute extends React.Component<
     try {
       await createQuote();
       formikBag.resetForm();
-      this.scrollToTopOfForm();
+
       this.setState(s =>
         update(s, {
           submittedSourceId: {
@@ -512,6 +493,8 @@ class NewQuoteRoute extends React.Component<
           }
         })
       );
+
+      this.scrollToTopOfForm();
     } catch (error) {
       formikBag.setSubmitting(false);
       this.setState(s =>

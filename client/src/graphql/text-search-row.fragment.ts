@@ -5,6 +5,7 @@ export const textSearchRowFrag = gql`
     tid
     text
     source
+    column
   }
 `;
 

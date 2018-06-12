@@ -947,6 +947,22 @@
               "type": {
                 "ofType": {
                   "ofType": null,
+                  "name": "String",
+                  "kind": "SCALAR"
+                },
+                "name": null,
+                "kind": "NON_NULL"
+              },
+              "name": "column",
+              "isDeprecated": false,
+              "description": null,
+              "deprecationReason": null,
+              "args": []
+            },
+            {
+              "type": {
+                "ofType": {
+                  "ofType": null,
                   "name": "QuoteFullSearchTable",
                   "kind": "ENUM"
                 },

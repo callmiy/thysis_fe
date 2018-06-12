@@ -65,24 +65,6 @@ class TagListModal extends React.PureComponent<TagListModalProps> {
         {({ data, loading }) => {
           const tags = data ? data.tags : null;
 
-          // tslint:disable-next-line:no-console
-          console.log(
-            `
-
-
-          logging starts
-
-
-          tags`,
-            tags,
-            `
-
-          logging ends
-
-
-          `
-          );
-
           return (
             <Modal
               style={{
@@ -123,7 +105,7 @@ class TagListModal extends React.PureComponent<TagListModalProps> {
     this.props.dismissModal();
   };
 
-  navigateTo = (id: string) => () => {
+  private navigateTo = (id: string) => () => {
     this.resetModal();
     this.props.history.push(makeTagURL(id));
   };

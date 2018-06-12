@@ -87,18 +87,8 @@ interface MobileBottomMenuProps extends RouteComponentProps<{}> {
 }
 
 interface MobileBottomMenuState {
-  modalOpened: {
-    newTag: boolean;
-    newSource: boolean;
-    tagList: boolean;
-  };
+  modalOpened: {};
 }
-
-const initialModalOpened = {
-  newTag: false,
-  newSource: false,
-  tagList: false
-};
 
 // tslint:disable-next-line:max-classes-per-file
 class MobileBottomMenu extends React.Component<
@@ -106,16 +96,8 @@ class MobileBottomMenu extends React.Component<
   MobileBottomMenuState
 > {
   state: MobileBottomMenuState = {
-    modalOpened: initialModalOpened
+    modalOpened: {}
   };
-
-  constructor(props: MobileBottomMenuProps) {
-    super(props);
-
-    ["toggleModalOpen", "renderModal", "renderMenuItem", "navigateTo"].forEach(
-      fn => (this[fn] = this[fn].bind(this))
-    );
-  }
 
   render() {
     const { items } = this.props;
@@ -139,6 +121,10 @@ class MobileBottomMenu extends React.Component<
   }
 
   renderModal = (name: MenuItem) => {
+    if (!this.state.modalOpened[name]) {
+      return undefined;
+    }
+
     const modal = menus[name];
 
     if (!modal || !modal.component) {
@@ -191,7 +177,7 @@ class MobileBottomMenu extends React.Component<
     this.setState(s =>
       update(s, {
         modalOpened: {
-          $set: initialModalOpened
+          $set: {}
         }
       })
     );

@@ -93,7 +93,6 @@ interface SearchQuotesState {
   searchLoading: boolean;
   result?: TextSearchResultFragFragment;
   searchError?: ApolloError;
-  hasResult?: boolean;
 }
 
 interface OwnProps {
@@ -147,6 +146,7 @@ class SearchQuotes extends React.Component<
             loading={this.state.searchLoading}
           />
         </form>
+
         <ErrorBoundary className={classes.mainContent}>
           <div className={classes.mainContent}>
             {this.state.searchError && (
@@ -216,7 +216,7 @@ class SearchQuotes extends React.Component<
   doSearch = async () => {
     const searchText = this.state.searchText.trim();
 
-    if (searchText.length < 3) {
+    if (searchText.length < 2) {
       return;
     }
 
@@ -237,9 +237,6 @@ class SearchQuotes extends React.Component<
           }
         }
       })) as ApolloQueryResult<AllMatchingTextsQuery>;
-
-      // tslint:disable-next-line:no-console
-      console.log("\n\nresult.data: ", result.data, "\n\n");
 
       this.setState(s =>
         update(s, {
@@ -296,19 +293,15 @@ class SearchQuotes extends React.Component<
     );
   };
 
-  renderCategory = (data: TextSearchRowFragFragment[], index: number) => {
+  renderCategory = (data: TextSearchRowFragFragment[]) => {
     if (!data) {
       return;
     }
 
-    const first = data[0];
-    const header = first.source;
-
-    // tslint:disable-next-line:no-console
-    console.log("data", header, data);
+    const header = data[0].source;
 
     return (
-      <div className={classes.result} key={`${index + 11}-search-header`}>
+      <div className={classes.result} key={header}>
         <div className={classes.resultRowHeaderContainer}>
           <span className={classes.resultRowHeader}>{header}</span>
         </div>
@@ -318,9 +311,9 @@ class SearchQuotes extends React.Component<
     );
   };
 
-  renderRow = ({ text, tid }: TextSearchRowFragFragment) => {
+  renderRow = ({ text, tid, column }: TextSearchRowFragFragment) => {
     return (
-      <List.Item key={tid} className={classes.resultRowItem}>
+      <List.Item key={tid + column} className={classes.resultRowItem}>
         <List.Content>{text}</List.Content>
       </List.Item>
     );

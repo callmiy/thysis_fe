@@ -63,7 +63,20 @@ export class NewQuoteRouteSuccessModal extends React.Component<
             </Message.Content>
           </Message>
         </Modal.Content>
-        {!reUseSource && (
+
+        {reUseSource ? (
+          <Modal.Actions>
+            <Button
+              color="red"
+              inverted={true}
+              onClick={this.props.dismiss(
+                ShouldReUseSource.DO_NOT_RE_USE_SOURCE
+              )}
+            >
+              <Icon name="remove" /> Dismiss
+            </Button>
+          </Modal.Actions>
+        ) : (
           <Modal.Actions>
             <Button
               color="red"
@@ -81,20 +94,6 @@ export class NewQuoteRouteSuccessModal extends React.Component<
               onClick={this.props.dismiss(ShouldReUseSource.RE_USE_SOURCE)}
             >
               <Icon name="checkmark" /> Ok
-            </Button>
-          </Modal.Actions>
-        )}
-
-        {reUseSource && (
-          <Modal.Actions>
-            <Button
-              color="red"
-              inverted={true}
-              onClick={this.props.dismiss(
-                ShouldReUseSource.DO_NOT_RE_USE_SOURCE
-              )}
-            >
-              <Icon name="remove" /> Dismiss
             </Button>
           </Modal.Actions>
         )}
