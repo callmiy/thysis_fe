@@ -1,109 +1,27 @@
 import * as React from "react";
-import jss from "jss";
-import preset from "jss-preset-default";
 import { Input } from "semantic-ui-react";
 import { List } from "semantic-ui-react";
 import { Message } from "semantic-ui-react";
 import { Icon } from "semantic-ui-react";
-import { InputOnChangeData } from "semantic-ui-react/dist/commonjs/elements/Input/Input";
 import debounce from "lodash-es/debounce";
 import { Cancelable } from "lodash";
 import update from "immutability-helper";
-import {
-  GraphqlQueryControls,
-  withApollo,
-  WithApolloClient
-} from "react-apollo";
 import { ApolloQueryResult } from "apollo-client";
-import { ApolloError } from "apollo-client/errors/ApolloError";
 
-import { ROOT_CONTAINER_STYLE } from "../constants";
-import { SimpleCss } from "../constants";
-import RootHeader from "../components/header.component";
-import SearchQuotesMenu from "../components/search-quotes-route-bottom-menu.component";
-import mainContentStyle from "../utils/main-content-centered-style.util";
-import {
-  AllMatchingTextsQuery,
-  AllMatchingTextsQueryVariables,
-  TextSearchResultFragFragment
-} from "../graphql/gen.types";
-import { TextSearchRowFragFragment } from "../graphql/gen.types";
-import ALL_MATCHING_TEXT_QUERY from "../graphql/text-search.query";
-import ErrorBoundary from "../containers/error-boundary.container";
-import { setTitle } from "../utils/route-urls.util";
+import RootHeader from "../../components/header.component";
+import SearchQuotesMenu from "../../components/search-quotes-route-bottom-menu.component";
+import { TextSearchResultFragFragment } from "../../graphql/gen.types";
+import { AllMatchingTextsQuery } from "../../graphql/gen.types";
+import { TextSearchRowFragFragment } from "../../graphql/gen.types";
+import ALL_MATCHING_TEXT_QUERY from "../../graphql/text-search.query";
+import ErrorBoundary from "../../containers/error-boundary.container";
+import { setTitle } from "../../utils/route-urls.util";
+import { classes } from "./styles";
+import { SemanticOnInputChangeFunc } from "./utils";
+import { SearchQuotesState } from "./utils";
+import { SearchQuotesProps } from "./utils";
 
-jss.setup(preset());
-
-const resultRowItemStyle = {
-  borderTop: ["none", "!important;"]
-  // tslint:disable-next-line:no-any
-} as any;
-
-const styles = {
-  root: ROOT_CONTAINER_STYLE,
-
-  input: {
-    margin: "0 5px"
-  },
-
-  mainContent: {
-    ...mainContentStyle,
-    margin: "5px 3px 0 0"
-  },
-
-  resultContainer: {
-    margin: "0",
-    overflowY: "auto",
-    wordBreak: "break-all"
-  },
-
-  result: {
-    marginTop: "15px;",
-    "&.first-of-type": {
-      marginTop: "0;"
-    }
-  },
-
-  resultRowHeaderContainer: {
-    textAlign: "center"
-  },
-
-  resultRowHeader: {
-    display: "inline-block",
-    minWidth: "40%",
-    boxShadow: "0 1px 1px -1px black;"
-  },
-
-  resultRowItem: {
-    ...resultRowItemStyle,
-    borderBottom: "1px solid #22242626",
-    marginTop: 8
-  }
-} as SimpleCss;
-
-const { classes } = jss.createStyleSheet(styles).attach();
-
-type SemanticOnInputChangeFunc = (
-  e: React.ChangeEvent<HTMLInputElement>,
-  data: InputOnChangeData
-) => void;
-
-interface SearchQuotesState {
-  searchText: "";
-  searchLoading: boolean;
-  result?: TextSearchResultFragFragment;
-  searchError?: ApolloError;
-}
-
-interface OwnProps {
-  ignore?: boolean;
-}
-
-type SearchQuotesProps = OwnProps &
-  GraphqlQueryControls<AllMatchingTextsQueryVariables> &
-  WithApolloClient<OwnProps>;
-
-class SearchQuotes extends React.Component<
+export class SearchQuotes extends React.Component<
   SearchQuotesProps,
   SearchQuotesState
 > {
@@ -320,4 +238,4 @@ class SearchQuotes extends React.Component<
   };
 }
 
-export default withApollo(SearchQuotes);
+export default SearchQuotes;

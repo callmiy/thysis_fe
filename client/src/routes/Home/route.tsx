@@ -1,22 +1,19 @@
 import * as React from "react";
-import jss from "jss";
-import preset from "jss-preset-default";
-import { RouteComponentProps, NavLink } from "react-router-dom";
-import { Menu, Icon } from "semantic-ui-react";
+import { RouteComponentProps } from "react-router-dom";
+import { NavLink } from "react-router-dom";
+import { Menu } from "semantic-ui-react";
+import { Icon } from "semantic-ui-react";
 import update from "immutability-helper";
 
-import Header from "../components/header.component";
-import { SimpleCss } from "../constants";
-import { ROOT_CONTAINER_STYLE } from "../constants";
-import { makeNewQuoteURL } from "../utils/route-urls.util";
-import { SEARCH_QUOTES_URL } from "../utils/route-urls.util";
-import centeredMenuStyles from "../utils/centered-menu-styles.util";
-import TagListModal from "../components/tag-list-modal.component";
-import SourceListModal from "../components/source-list-modal.component";
-import NewTagModalForm from "../components/new-tag-modal-form.component";
-import NewSourceModal from "../components/new-source-modal.component";
-
-jss.setup(preset());
+import Header from "../../components/header.component";
+import { makeNewQuoteURL } from "../../utils/route-urls.util";
+import { SEARCH_QUOTES_URL } from "../../utils/route-urls.util";
+import TagListModal from "../../components/tag-list-modal.component";
+import SourceListModal from "../../components/source-list-modal.component";
+import NewTagModalForm from "../../components/new-tag-modal-form.component";
+import NewSourceModal from "../../components/new-source-modal.component";
+import styles from "./styles";
+import { classes } from "./styles";
 
 enum HomeEnum {
   TAG_LIST = "tagList",
@@ -25,48 +22,13 @@ enum HomeEnum {
   NEW_SOURCE = "newSource"
 }
 
-const styles = {
-  homeRoot: ROOT_CONTAINER_STYLE,
-
-  homeMain: centeredMenuStyles.mainParentContainer,
-
-  menu: {
-    ...centeredMenuStyles.menu,
-    flex: "1",
-    margin: "10px",
-    overflowY: "auto"
-  },
-
-  menuAnchor: {
-    ...centeredMenuStyles.menuAnchor,
-    minWidth: "130px"
-  },
-
-  quotesContainer: {
-    position: "absolute",
-    left: 0,
-    top: 0,
-    padding: "10px",
-    overflowX: "hidden",
-    overflowY: "auto",
-    opacity: 1,
-    margin: "10px",
-    border: "1px solid #dcd6d6",
-    borderRadius: "3px",
-    boxShadow: "5px 5px 2px -2px #757575",
-    maxHeight: "70vh"
-  }
-} as SimpleCss;
-
 interface HomeState {
   modalOpened: {};
 }
 
-const { classes } = jss.createStyleSheet(styles).attach();
-
 type HomeProps = RouteComponentProps<{}>;
 
-export default class Home extends React.Component<HomeProps, HomeState> {
+export class Home extends React.Component<HomeProps, HomeState> {
   state: HomeState = {
     modalOpened: {}
   };
@@ -192,3 +154,5 @@ export default class Home extends React.Component<HomeProps, HomeState> {
     );
   };
 }
+
+export default Home;

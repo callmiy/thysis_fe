@@ -7,7 +7,7 @@ import { ApolloError } from "apollo-client/errors/ApolloError";
 import jss from "jss";
 import preset from "jss-preset-default";
 
-import { SimpleCss } from "../constants";
+import { SimpleCss } from "../../constants";
 
 jss.setup(preset());
 
@@ -31,7 +31,7 @@ interface NewQuoteRouteErrorModalProps {
   error: ApolloError;
 }
 
-export class NewQuoteRouteErrorModal extends React.Component<
+export class ErrorModal extends React.Component<
   NewQuoteRouteErrorModalProps
 > {
   render() {
@@ -71,4 +71,4 @@ export class NewQuoteRouteErrorModal extends React.Component<
   }
 }
 
-export default NewQuoteRouteErrorModal;
+export default ErrorModal;

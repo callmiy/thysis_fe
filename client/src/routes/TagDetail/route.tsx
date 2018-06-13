@@ -1,51 +1,24 @@
 import * as React from "react";
-import jss from "jss";
-import preset from "jss-preset-default";
 import { RouteComponentProps } from "react-router-dom";
-import { Header, Dimmer, Loader, List } from "semantic-ui-react";
+import { Header } from "semantic-ui-react";
+import { Dimmer } from "semantic-ui-react";
+import { Loader } from "semantic-ui-react";
+import { List } from "semantic-ui-react";
 
-import RootHeader from "../components/header.component";
-import { ROOT_CONTAINER_STYLE, SimpleCss } from "../constants";
-import { TagQuoteRunQuery } from "../graphql/ops.types";
-import TAG_QUOTE_QUERY from "../graphql/tag-with-quotes.query";
-import { TagQuoteQuery } from "../graphql/gen.types";
-import MobileBottomMenu, {
-  MenuItem
-} from "../components/mobile-bottom-menu.component";
-import renderQuote from "../components/quote-item.component";
-import { setTitle } from "../utils/route-urls.util";
-
-jss.setup(preset());
-
-const styles = {
-  tagDetailRoot: ROOT_CONTAINER_STYLE,
-
-  tagDetailMain: {
-    flex: 1,
-    overflowX: "hidden",
-    overflowY: "auto",
-    display: "flex",
-    flexDirection: "column",
-    padding: "0 5px 15px 10px"
-  },
-
-  tagText: {
-    padding: "3px 5px 10px 5px",
-    marginBottom: 0
-  }
-} as SimpleCss;
-
-const { classes } = jss.createStyleSheet(styles).attach();
+import RootHeader from "../../components/header.component";
+import { TagQuoteRunQuery } from "../../graphql/ops.types";
+import TAG_QUOTE_QUERY from "../../graphql/tag-with-quotes.query";
+import { TagQuoteQuery } from "../../graphql/gen.types";
+import MobileBottomMenu from "../../components/mobile-bottom-menu.component";
+import { MenuItem } from "../../components/mobile-bottom-menu.component";
+import renderQuote from "../../components/quote-item.component";
+import { setTitle } from "../../utils/route-urls.util";
+import { styles } from "./styles";
+import { classes } from "./styles";
 
 type TagDetailProps = RouteComponentProps<{ id: string }>;
 
-export default class TagDetail extends React.Component<TagDetailProps> {
-  constructor(props: TagDetailProps) {
-    super(props);
-
-    ["renderMain"].forEach(fn => (this[fn] = this[fn].bind(this)));
-  }
-
+export class TagDetail extends React.Component<TagDetailProps> {
   componentDidMount() {
     setTitle("Tag");
   }
@@ -108,3 +81,5 @@ export default class TagDetail extends React.Component<TagDetailProps> {
     );
   };
 }
+
+export default TagDetail;

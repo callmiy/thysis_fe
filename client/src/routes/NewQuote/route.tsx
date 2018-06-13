@@ -1,168 +1,61 @@
 import * as React from "react";
-import jss from "jss";
-import preset from "jss-preset-default";
-import { Formik, FormikProps, Field, FieldProps, FormikErrors } from "formik";
-import {
-  graphql,
-  GraphqlQueryControls,
-  withApollo,
-  WithApolloClient
-} from "react-apollo";
+import { Formik } from "formik";
+import { FormikProps } from "formik";
+import { Field } from "formik";
+import { FieldProps } from "formik";
+import { FormikErrors } from "formik";
 import { ApolloQueryResult } from "apollo-client";
 import isEmpty from "lodash/isEmpty";
-import {
-  Button,
-  Form,
-  TextArea,
-  Message,
-  Icon,
-  Header
-} from "semantic-ui-react";
+import { Header } from "semantic-ui-react";
+import { Button } from "semantic-ui-react";
+import { Form } from "semantic-ui-react";
+import { TextArea } from "semantic-ui-react";
+import { Message } from "semantic-ui-react";
+import { Icon } from "semantic-ui-react";
+import { Dimmer } from "semantic-ui-react";
 import moment from "moment";
 import update from "immutability-helper";
 import { Mutation } from "react-apollo";
-import { RouteComponentProps, NavLink } from "react-router-dom";
-import { ApolloError } from "apollo-client/errors/ApolloError";
-import { Dimmer } from "semantic-ui-react";
+import { NavLink } from "react-router-dom";
 
-import {
-  TagFragFragment,
-  TagsMinimalQuery,
-  SourceFragFragment,
-  CreateQuoteInput,
-  Sources1Query,
-  Source1Query,
-  Quotes1Query
-} from "../graphql/gen.types";
-import TAGS_QUERY from "../graphql/tags-mini.query";
-import TagControl from "../components/new-quote-form-tag-control.component";
-import SourceControl from "../components/new-quote-form-source-control.component";
-import Date, { DateType } from "../components/new-quote-date.component";
-import { ROOT_CONTAINER_STYLE } from "../constants";
-import { ERROR_COLOR } from "../constants";
-import { makeSourceURL } from "../utils/route-urls.util";
-import Page, {
-  PageType
-} from "../components/new-quote-page-start-end.component";
-import VolumeIssue, {
-  VolumeIssueType
-} from "../components/new-quote-volume-issue.component";
-import QUOTE_MUTATION from "../graphql/quote.mutation";
-import { CreateQuoteFn, CreateQuoteUpdateFn } from "../graphql/ops.types";
-import SOURCES_QUERY from "../graphql/sources-1.query";
-import SOURCE_QUERY from "../graphql/source-1.query";
-import RootHeader from "../components/header.component";
-import QUOTES_QUERY from "../graphql/quotes-1.query";
-import NewQuoteMenu from "../components/new-quote-route-bottom-menu.component";
-import mainContentStyle from "../utils/main-content-centered-style.util";
-import { NewQuoteRouteErrorModal } from "../components/new-quote-route-error-modal.component";
-import { NewQuoteRouteSuccessModal } from "../components/new-quote-route-success-modal.component";
-import { setTitle } from "../utils/route-urls.util";
-import { makeNewQuoteURL } from "../utils/route-urls.util";
+import { Quotes1Query } from "../../graphql/gen.types";
+import { TagFragFragment } from "../../graphql/gen.types";
+import { SourceFragFragment } from "../../graphql/gen.types";
+import { Sources1Query } from "../../graphql/gen.types";
+import { Source1Query } from "../../graphql/gen.types";
+import TagControl from "./form-tag-control.component";
+import SourceControl from "./form-source-control.component";
+import Date from "./date.component";
+import { DateType } from "./date.component";
+import { makeSourceURL } from "../../utils/route-urls.util";
+import Page from "./form-page-start-end-control.component";
+import { PageType } from "./form-page-start-end-control.component";
+import VolumeIssue from "./form-volume-issue-control.component";
+import { VolumeIssueType } from "./form-volume-issue-control.component";
+import QUOTE_MUTATION from "../../graphql/quote.mutation";
+import { CreateQuoteFn } from "../../graphql/ops.types";
+import { CreateQuoteUpdateFn } from "../../graphql/ops.types";
+import SOURCES_QUERY from "../../graphql/sources-1.query";
+import SOURCE_QUERY from "../../graphql/source-1.query";
+import RootHeader from "../../components/header.component";
+import QUOTES_QUERY from "../../graphql/quotes-1.query";
+import NewQuoteMenu from "./bottom-menu.component";
+import { ErrorModal } from "./error-modal.component";
+import { SuccessModal } from "./success-modal.component";
+import { setTitle } from "../../utils/route-urls.util";
+import { makeNewQuoteURL } from "../../utils/route-urls.util";
+import { styles } from "./styles";
+import { inlineStyle } from "./styles";
+import { classes } from "./styles";
+import { ShouldReUseSource } from "./utils";
+import { FormValues } from "./utils";
+import { NewQuoteState } from "./utils";
+import { NewQuoteProps } from "./utils";
 
-jss.setup(preset());
-
-export enum ShouldReUseSource {
-  RE_USE_SOURCE = "re-use source",
-  DO_NOT_RE_USE_SOURCE = "do not re-use source"
-}
-
-const styles = {
-  newQuoteRoot: {
-    ...ROOT_CONTAINER_STYLE
-  },
-
-  mainContent: {
-    ...mainContentStyle
-  },
-
-  quoteSourceDisplayContainer: {
-    padding: "5px",
-    margin: "0"
-  },
-
-  quoteSourceDisplay: {
-    margin: "0",
-    padding: "0",
-    overflow: "hidden",
-    maxHeight: "10vh"
-  },
-
-  quoteSourceLabel: {
-    textAlign: "center",
-    marginBottom: "5px",
-    fontWeight: "100",
-    fontSize: "1.1rem",
-    fontStyle: "italic"
-  },
-
-  quoteLink: {
-    textDecoration: "none",
-    color: "initial",
-    cursor: "pointer",
-    '&:hover': {
-      color: 'initial'
-    }
-  },
-
-  errorBorder: {
-    borderColor: ERROR_COLOR
-  },
-
-  tagsField: {
-    marginTop: "15px"
-  },
-
-  submitReset: {
-    margin: "25px 0 40px 0",
-    display: "flex",
-    justifyContent: "center"
-  },
-
-  submitButton: {
-    marginLeft: ["20px", "!important"]
-  }
-  // tslint:disable-next-line:no-any
-} as any;
-
-const { classes } = jss.createStyleSheet(styles).attach();
-
-interface FormValues {
-  tags: TagFragFragment[];
-  source: SourceFragFragment | null;
-  quote: string;
-  date: DateType | null;
-  page: PageType | null;
-  volumeIssue: VolumeIssueType | null;
-  extras: string;
-}
-
-type OwnProps = {
-  sourceId?: string;
-} & TagsMinimalQuery &
-  RouteComponentProps<{ sourceId?: string }>;
-
-type NewQuoteFormProps = OwnProps &
-  GraphqlQueryControls &
-  WithApolloClient<OwnProps>;
-
-interface NewQuoteFormState {
-  initialFormValues: FormValues;
-  formOutputs: CreateQuoteInput;
-  sourceId?: string;
-  queryResult?: ApolloQueryResult<Sources1Query & Source1Query>;
-  graphqlError?: ApolloError;
-  submittedSourceId?: string;
-  selectedTags: TagFragFragment[]; // from form
-}
-
-class NewQuoteRoute extends React.Component<
-  NewQuoteFormProps,
-  NewQuoteFormState
-> {
+export class NewQuote extends React.Component<NewQuoteProps, NewQuoteState> {
   static getDerivedStateFromProps(
-    nextProps: NewQuoteFormProps,
-    currentState: NewQuoteFormState
+    nextProps: NewQuoteProps,
+    currentState: NewQuoteState
   ) {
     const { sourceId } = nextProps.match.params;
 
@@ -180,7 +73,7 @@ class NewQuoteRoute extends React.Component<
     return null;
   }
 
-  state: NewQuoteFormState = {
+  state: NewQuoteState = {
     initialFormValues: {
       tags: [],
       source: null,
@@ -277,7 +170,7 @@ class NewQuoteRoute extends React.Component<
 
         <div className={`${classes.mainContent}`} ref={this.formContainerRef}>
           {graphqlError && (
-            <NewQuoteRouteErrorModal
+            <ErrorModal
               open={!!graphqlError}
               dismiss={this.dismissErrorModal}
               error={graphqlError}
@@ -285,7 +178,7 @@ class NewQuoteRoute extends React.Component<
           )}
 
           {submittedSourceId && (
-            <NewQuoteRouteSuccessModal
+            <SuccessModal
               open={!!submittedSourceId}
               dismiss={this.onSuccessModalDismissed}
               reUseSource={!!sourceId}
@@ -323,7 +216,9 @@ class NewQuoteRoute extends React.Component<
       <Header dividing={true} style={styles.quoteSourceDisplayContainer}>
         {source && (
           <NavLink className={classes.quoteLink} to={makeSourceURL(source.id)}>
-            <div style={styles.quoteSourceLabel}>Click to go to source</div>
+            <div style={inlineStyle.quoteSourceLabel}>
+              Click to go to source
+            </div>
 
             <div className={`${classes.quoteSourceDisplay}`}>
               {source.display}
@@ -931,14 +826,4 @@ class NewQuoteRoute extends React.Component<
   };
 }
 
-const tagsGraphQl = graphql<NewQuoteFormProps, TagsMinimalQuery, {}, {}>(
-  TAGS_QUERY,
-  {
-    props: ({ data, ownProps }, graphqlDataProps) => {
-      // data === graphqlDataProps
-      return { ...data };
-    }
-  }
-);
-
-export default withApollo(tagsGraphQl(NewQuoteRoute));
+export default NewQuote;

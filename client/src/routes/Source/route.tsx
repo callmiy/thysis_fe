@@ -1,127 +1,25 @@
 import * as React from "react";
-import jss from "jss";
-import preset from "jss-preset-default";
-import { RouteComponentProps } from "react-router-dom";
 import { Header, Dimmer, Loader, Menu, Icon, Message } from "semantic-ui-react";
 import { List } from "semantic-ui-react";
-import {
-  GraphqlQueryControls,
-  graphql,
-  withApollo,
-  WithApolloClient
-} from "react-apollo";
 import update from "immutability-helper";
 import { ApolloQueryResult } from "apollo-client";
-import { GraphQLError } from "graphql/error/GraphQLError";
 import { NavLink } from "react-router-dom";
 
-import RootHeader from "../components/header.component";
-import { SimpleCss } from "../constants";
-import { ROOT_CONTAINER_STYLE } from "../constants";
-import { makeNewQuoteURL } from "../utils/route-urls.util";
-import {
-  Source1Query,
-  Source1QueryVariables,
-  Quotes1Query,
-  Quote1FragFragment
-} from "../graphql/gen.types";
-import SOURCE_QUERY from "../graphql/source-1.query";
-import MobileBottomMenu, {
-  MenuItem
-} from "../components/mobile-bottom-menu.component";
-import QUOTES_QUERY from "../graphql/quotes-1.query";
-import renderQuote from "../components/quote-item.component";
-import centeredMenuStyles from "../utils/centered-menu-styles.util";
-import { SEARCH_QUOTES_URL } from "../utils/route-urls.util";
-import { setTitle } from "../utils/route-urls.util";
+import RootHeader from "../../components/header.component";
+import { makeNewQuoteURL } from "../../utils/route-urls.util";
+import { Quotes1Query } from "../../graphql/gen.types";
+import MobileBottomMenu from "../../components/mobile-bottom-menu.component";
+import { MenuItem } from "../../components/mobile-bottom-menu.component";
+import QUOTES_QUERY from "../../graphql/quotes-1.query";
+import renderQuote from "../../components/quote-item.component";
+import { SEARCH_QUOTES_URL } from "../../utils/route-urls.util";
+import { setTitle } from "../../utils/route-urls.util";
+import { styles } from "./styles";
+import { classes } from "./styles";
+import { SourceProps } from "./utils";
+import { SourceState } from "./utils";
 
-jss.setup(preset());
-
-const styles = {
-  SourceRoot: {
-    ...ROOT_CONTAINER_STYLE,
-    overflow: "hidden",
-    position: "relative"
-  },
-
-  SourceMain: {
-    flex: 1,
-    overflowX: "hidden",
-    overflowY: "auto",
-    display: "flex",
-    flexDirection: "column",
-    padding: "0 5px 15px 10px"
-  },
-
-  mainContent: {
-    ...centeredMenuStyles.mainParentContainer
-  },
-
-  menu: {
-    ...centeredMenuStyles.menu
-  },
-
-  menuAnchor: {
-    ...centeredMenuStyles.menuAnchor
-  },
-
-  quotesContainer: {
-    position: "absolute",
-    overflowX: "hidden",
-    overflowY: "auto",
-    opacity: 1,
-    margin: "10px",
-    border: "1px solid #dcd6d6",
-    borderRadius: "3px",
-    boxShadow: "5px 5px 2px -2px #757575",
-    maxHeight: "60vh",
-    minWidth: "90%",
-    display: "flex",
-    flexDirection: "column"
-  },
-
-  quotesCloseButton: {
-    fontSize: "2em",
-    fontWeight: 900,
-    padding: "0 3px 5px 30px",
-    cursor: "pointer",
-    flexShrink: 0,
-    textAlign: "right",
-    marginTop: "0"
-  },
-
-  quotesList: {
-    overflowY: "auto",
-    marginTop: 0,
-    padding: "0 5px 5px 5px",
-    marginRight: "-50px",
-    paddingRight: "50px"
-  },
-
-  header: {
-    flexShrink: 0,
-    maxHeight: "15vh",
-    overflow: "hidden",
-    padding: "0 0 0 5px"
-  }
-} as SimpleCss;
-
-const { classes } = jss.createStyleSheet(styles).attach();
-
-type OwnProps = RouteComponentProps<{ id: string }> & Source1Query;
-
-type SourceProps = OwnProps &
-  GraphqlQueryControls<Source1QueryVariables> &
-  WithApolloClient<OwnProps>;
-
-interface SourceState {
-  loadingQuotes: boolean;
-  showingQuotes: boolean;
-  quotes?: Quote1FragFragment[];
-  fetchQuotesError?: GraphQLError[];
-}
-
-class Source extends React.Component<SourceProps, SourceState> {
+export class Source extends React.Component<SourceProps, SourceState> {
   state: SourceState = {
     loadingQuotes: false,
     showingQuotes: false
@@ -340,25 +238,4 @@ class Source extends React.Component<SourceProps, SourceState> {
   };
 }
 
-const sourceGraphQl = graphql<
-  SourceProps,
-  Source1Query,
-  Source1QueryVariables,
-  {}
->(SOURCE_QUERY, {
-  props: ({ data }) => {
-    return { ...data };
-  },
-
-  options: ({ match }) => {
-    return {
-      variables: {
-        source: {
-          id: match.params.id
-        }
-      }
-    };
-  }
-});
-
-export default withApollo(sourceGraphQl(Source));
+export default Source;

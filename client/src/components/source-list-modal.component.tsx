@@ -10,7 +10,6 @@ import { Loader } from "semantic-ui-react";
 import { SourceFragFragment, Sources1Query } from "../graphql/gen.types";
 import SOURCES_QUERY from "../graphql/sources-1.query";
 import { makeSourceURL } from "../utils/route-urls.util";
-import { reshapeSources } from "./new-quote-form.component";
 import { SimpleCss } from "../constants";
 
 jss.setup(preset());
@@ -57,6 +56,28 @@ const styles = {
 } as SimpleCss;
 
 const { classes } = jss.createStyleSheet(styles).attach();
+
+const reshapeSource = (s: SourceFragFragment | null) => {
+  if (!s) {
+    return {} as SourceFragFragment;
+  }
+
+  return {
+    ...s,
+    display: `${s.display} | ${s.sourceType.name}`
+  } as SourceFragFragment;
+};
+
+export const reshapeSources = (
+  sources: SourceFragFragment[] | null
+): SourceFragFragment[] => {
+  if (!sources) {
+    return [] as SourceFragFragment[];
+  }
+
+  return sources.map(reshapeSource);
+};
+
 
 type OwnProps = RouteComponentProps<{}> & {
   open: boolean;

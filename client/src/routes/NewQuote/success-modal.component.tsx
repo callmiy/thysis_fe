@@ -6,8 +6,8 @@ import { Button } from "semantic-ui-react";
 import jss from "jss";
 import preset from "jss-preset-default";
 
-import { SimpleCss } from "../constants";
-import { ShouldReUseSource } from "../routes/new-quote.route";
+import { SimpleCss } from "../../constants";
+import { ShouldReUseSource } from "./utils";
 
 jss.setup(preset());
 
@@ -31,7 +31,7 @@ interface NewQuoteRouteSuccessModalProps {
   reUseSource: boolean;
 }
 
-export class NewQuoteRouteSuccessModal extends React.Component<
+export class SuccessModal extends React.Component<
   NewQuoteRouteSuccessModalProps
 > {
   render() {
@@ -102,4 +102,4 @@ export class NewQuoteRouteSuccessModal extends React.Component<
   }
 }
 
-export default NewQuoteRouteSuccessModal;
+export default SuccessModal;

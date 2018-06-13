@@ -1,7 +1,7 @@
 import Select from "react-select";
 import * as React from "react";
 
-import { TagFragFragment } from "../graphql/gen.types";
+import { TagFragFragment } from "../../graphql/gen.types";
 
 interface TagControlProps {
   tags: TagFragFragment[];

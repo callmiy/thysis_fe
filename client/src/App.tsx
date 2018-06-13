@@ -40,27 +40,27 @@ export const Loading = () => (
 
 const Home = Loadable({
   loading: Loading,
-  loader: () => import("./routes/home.route")
+  loader: () => import("./routes/Home")
 });
 
 const TagDetail = Loadable({
   loading: Loading,
-  loader: () => import("./routes/tag-detail.route")
+  loader: () => import("./routes/TagDetail")
 });
 
 const Source = Loadable({
   loading: Loading,
-  loader: () => import("./routes/source.route")
+  loader: () => import("./routes/Source")
 });
 
 const NewQuote = Loadable({
   loading: Loading,
-  loader: () => import("./routes/new-quote.route")
+  loader: () => import("./routes/NewQuote")
 });
 
 const SearchQuotes = Loadable({
   loading: Loading,
-  loader: () => import("./routes/search-quotes.route")
+  loader: () => import("./routes/SearchQuotes")
 });
 
 // tslint:disable-next-line:max-classes-per-file
