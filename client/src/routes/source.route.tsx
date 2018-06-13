@@ -38,7 +38,11 @@ import { setTitle } from "../utils/route-urls.util";
 jss.setup(preset());
 
 const styles = {
-  SourceRoot: ROOT_CONTAINER_STYLE,
+  SourceRoot: {
+    ...ROOT_CONTAINER_STYLE,
+    overflow: "hidden",
+    position: "relative"
+  },
 
   SourceMain: {
     flex: 1,
@@ -63,9 +67,6 @@ const styles = {
 
   quotesContainer: {
     position: "absolute",
-    left: 0,
-    top: 0,
-    padding: "10px",
     overflowX: "hidden",
     overflowY: "auto",
     opacity: 1,
@@ -74,17 +75,27 @@ const styles = {
     borderRadius: "3px",
     boxShadow: "5px 5px 2px -2px #757575",
     maxHeight: "60vh",
-    maxWidth: "100%"
+    minWidth: "90%",
+    display: "flex",
+    flexDirection: "column"
   },
 
   quotesCloseButton: {
-    position: "absolute",
-    right: "-3px",
-    top: "-7px",
     fontSize: "2em",
     fontWeight: 900,
-    padding: "10px 10px 10px 30px",
-    cursor: "pointer"
+    padding: "0 3px 5px 30px",
+    cursor: "pointer",
+    flexShrink: 0,
+    textAlign: "right",
+    marginTop: "0"
+  },
+
+  quotesList: {
+    overflowY: "auto",
+    marginTop: 0,
+    padding: "0 5px 5px 5px",
+    marginRight: "-50px",
+    paddingRight: "50px"
   },
 
   header: {
@@ -116,12 +127,6 @@ class Source extends React.Component<SourceProps, SourceState> {
     showingQuotes: false
   };
 
-  constructor(props: SourceProps) {
-    super(props);
-
-    ["quotesMenuClicked"].forEach(fn => (this[fn] = this[fn].bind(this)));
-  }
-
   componentDidMount() {
     setTitle("Source");
   }
@@ -145,105 +150,78 @@ class Source extends React.Component<SourceProps, SourceState> {
       );
     }
 
-    const {
-      showingQuotes,
-      loadingQuotes,
-      quotes,
-      fetchQuotesError
-    } = this.state;
+    const { showingQuotes, loadingQuotes } = this.state;
 
     return (
       <div className={`${classes.SourceRoot}`}>
         <RootHeader title="Source" />
 
         <div className={`${classes.SourceRoot}`}>
-          <div className={`${classes.SourceRoot}`}>
-            <Header style={styles.header} as="h3" dividing={true}>
-              {source.display}
-            </Header>
+          <Header style={styles.header} as="h3" dividing={true}>
+            {source.display}
+          </Header>
 
-            <div className={`${classes.mainContent}`}>
-              <Menu
-                style={{
-                  ...(showingQuotes ? { opacity: 0 } : {}),
-                  ...styles.menu,
-                  ...{ margin: "5px" }
-                }}
-                pointing={true}
-                compact={true}
-                icon="labeled"
+          <div className={`${classes.mainContent}`}>
+            <Menu
+              style={{
+                ...(showingQuotes ? { opacity: 0 } : {}),
+                ...styles.menu,
+                ...{ margin: "5px" }
+              }}
+              pointing={true}
+              compact={true}
+              icon="labeled"
+            >
+              <Menu.Item
+                className={classes.menuAnchor}
+                onClick={this.newQuoteClicked}
               >
-                <Menu.Item
-                  className={classes.menuAnchor}
-                  onClick={this.newQuoteClicked}
+                <Icon name="quote right" />
+                New Quote
+              </Menu.Item>
+
+              <Menu.Item
+                className={classes.menuAnchor}
+                onClick={this.quotesMenuClicked(source.id)}
+              >
+                <Icon name="numbered list" />
+                List Quotes
+              </Menu.Item>
+
+              <Menu.Item
+                className={classes.menuAnchor}
+                as={NavLink}
+                to={SEARCH_QUOTES_URL}
+              >
+                <Icon name="search" />
+                Search Quotes
+              </Menu.Item>
+            </Menu>
+
+            {loadingQuotes && (
+              <Dimmer
+                inverted={true}
+                className={`${classes.SourceRoot}`}
+                active={true}
+              >
+                <Loader inverted={true} size="medium">
+                  Loading..
+                </Loader>
+              </Dimmer>
+            )}
+
+            {showingQuotes && (
+              <div className={`${classes.quotesContainer}`}>
+                <span
+                  className={`${classes.quotesCloseButton}`}
+                  onClick={this.quotesMenuCloseClicked}
                 >
-                  <Icon name="quote right" />
-                  New Quote
-                </Menu.Item>
+                  &times;
+                </span>
 
-                <Menu.Item
-                  className={classes.menuAnchor}
-                  onClick={this.quotesMenuClicked(source.id)}
-                >
-                  <Icon name="numbered list" />
-                  List Quotes
-                </Menu.Item>
-
-                <Menu.Item
-                  className={classes.menuAnchor}
-                  as={NavLink}
-                  to={SEARCH_QUOTES_URL}
-                >
-                  <Icon name="search" />
-                  Search Quotes
-                </Menu.Item>
-              </Menu>
-
-              {loadingQuotes && (
-                <Dimmer
-                  inverted={true}
-                  className={`${classes.SourceRoot}`}
-                  active={true}
-                >
-                  <Loader inverted={true} size="medium">
-                    Loading..
-                  </Loader>
-                </Dimmer>
-              )}
-
-              {showingQuotes && (
-                <div className={`${classes.quotesContainer}`}>
-                  <span
-                    className={`${classes.quotesCloseButton}`}
-                    onClick={this.quotesMenuCloseClicked}
-                  >
-                    &times;
-                  </span>
-
-                  {fetchQuotesError && (
-                    <Message error={true}>
-                      <Message.Header>Error fetching quotes</Message.Header>
-                      <pre>{JSON.stringify(fetchQuotesError, null, 2)}</pre>
-                    </Message>
-                  )}
-
-                  {!fetchQuotesError &&
-                    !(quotes && quotes.length) && (
-                      <Message info={true}>
-                        <Message.Header>No quote for source</Message.Header>
-                        <p>Click New Quote to add quote</p>
-                      </Message>
-                    )}
-
-                  {quotes &&
-                    quotes.length && (
-                      <List divided={true} relaxed={true}>
-                        {quotes.map(renderQuote)}
-                      </List>
-                    )}
-                </div>
-              )}
-            </div>
+                {this.renderQuoteOr()}
+              </div>
+            )}
           </div>
         </div>
 
@@ -327,6 +305,38 @@ class Source extends React.Component<SourceProps, SourceState> {
     if (source) {
       this.props.history.push(makeNewQuoteURL(source.id));
     }
+  };
+
+  renderQuoteOr = () => {
+    const { fetchQuotesError } = this.state;
+
+    if (fetchQuotesError) {
+      return (
+        <Message error={true}>
+          <Message.Header>Error fetching quotes</Message.Header>
+          <pre style={{ whiteSpace: "pre-wrap" }}>
+            {JSON.stringify(fetchQuotesError, null, 2)}
+          </pre>
+        </Message>
+      );
+    }
+
+    const { quotes } = this.state;
+
+    if (!quotes || !quotes.length) {
+      return (
+        <Message info={true}>
+          <Message.Header>No quote for source</Message.Header>
+          <p>Click New Quote to add quote</p>
+        </Message>
+      );
+    }
+
+    return (
+      <List style={styles.quotesList} divided={true} relaxed={true}>
+        {quotes.map(renderQuote)}
+      </List>
+    );
   };
 }
 
