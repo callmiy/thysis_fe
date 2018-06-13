@@ -117,43 +117,46 @@ function checkValidServiceWorker(swUrl: string) {
 
 function refreshEvent(e: MouseEvent) {
   // tslint:disable-next-line:no-any
-  const target = e.target as any;
-  if (target) {
-    target.removeEventListener("click", refreshEvent, false);
-    document.body.removeChild(target);
+  const currentTarget = e.currentTarget as any;
+  if (currentTarget) {
+    currentTarget.removeEventListener("click", refreshEvent, false);
+    // document.body.removeChild(c  urrentTarget);
   }
 
   window.location.reload();
 }
 
 function showRefreshUI() {
-  const style = `
-  position: absolute;
-  bottom: 30px;
-  cursor: pointer;
+  const div = document.createElement("div");
+  div.classList.add("ui", "green", "inverted", "menu");
+  const textNode = document.createTextNode(
+    "New content is available; please click to refresh."
+  );
+  div.appendChild(textNode);
+  div.style.cssText = `
   border: 1px solid #b7b7b7;
   padding: 10px;
   border-radius: 3px;
-  visibility: hidden;
   color: #ffffffe6;
   `;
 
-  const div = document.createElement("div");
-  div.style.cssText = style;
-  div.classList.add("ui", "green", "inverted", "menu");
-  div.innerText = "New content is available; please click to refresh.";
-
-  const body = document.body;
-  body.appendChild(div);
-
-  const margin = Math.trunc((body.offsetWidth - div.offsetWidth) / 2);
-  div.style.cssText = `
-  ${style}
-  visibility: visible;
-  margin-left: ${margin}px;
+  const parent = document.createElement("div");
+  parent.style.cssText = `
+  cursor: pointer;
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 1;
+  background: #fdfdfdc2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   `;
-
-  div.addEventListener("click", refreshEvent, false);
+  parent.appendChild(div);
+  document.body.appendChild(parent);
+  parent.addEventListener("click", refreshEvent, false);
 }
 
 export function unregister() {
