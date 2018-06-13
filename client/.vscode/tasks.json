@@ -10,7 +10,7 @@
       "options": {
         "env": {
           "PORT": "3016",
-          // "BROWSER": "none",
+          "BROWSER": "none",
           "REACT_APP_API_URL": "http://localhost:4016/__api"
         }
       },
@@ -44,13 +44,15 @@
     {
       "label": "Apollo code gen",
       "type": "shell",
-      "command": "apollo-codegen generate src/graphql/*.ts --schema schema.json --target typescript --output src/graphql/gen.types.ts",
+      "command":
+        "apollo-codegen generate src/graphql/*.ts --schema schema.json --target typescript --output src/graphql/gen.types.ts",
       "problemMatcher": []
     },
     {
       "label": "introspect-schema",
       "type": "shell",
-      "command": "apollo-codegen introspect-schema http://localhost:4016/__api --output schema.json",
+      "command":
+        "apollo-codegen introspect-schema http://localhost:4016/__api --output schema.json",
       "problemMatcher": []
     }
   ]
