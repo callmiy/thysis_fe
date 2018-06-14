@@ -45,7 +45,8 @@ defmodule GasWeb.SourceSchemaTest do
       %Source{
         author: author,
         id: id,
-        source_type_id: source_type_id
+        source_type_id: source_type_id,
+        year: year
       } = insert(:source)
 
       id = Integer.to_string(id)
@@ -57,6 +58,7 @@ defmodule GasWeb.SourceSchemaTest do
                   "source" => %{
                     "id" => ^id,
                     "author" => ^author,
+                    "year" => ^year,
                     "display" => display,
                     "sourceType" => %{
                       "id" => ^source_type_id
@@ -81,7 +83,15 @@ defmodule GasWeb.SourceSchemaTest do
   describe "mutatation" do
     test "create source" do
       %{id: source_type_id, name: name} = source_type = insert(:source_type)
-      %{author: author} = source = params_for(:source, source_type: source_type)
+
+      %{author: author, year: year} =
+        source =
+        params_for(
+          :source,
+          source_type: source_type,
+          year: "2016"
+        )
+
       source_type_id = Integer.to_string(source_type_id)
 
       source =
@@ -95,6 +105,7 @@ defmodule GasWeb.SourceSchemaTest do
                   "createSource" => %{
                     "id" => _,
                     "author" => ^author,
+                    "year" => ^year,
                     "sourceType" => %{
                       "id" => ^source_type_id,
                       "name" => ^name

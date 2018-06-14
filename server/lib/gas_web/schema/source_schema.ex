@@ -13,6 +13,7 @@ defmodule GasWeb.SourceSchema do
     field(:id, non_null(:id))
     field(:author, non_null(:string))
     field(:topic, non_null(:string))
+    field(:year, :string)
     field(:publication, :string)
     field(:url, :string)
     field(:inserted_at, non_null(:iso_datetime))
@@ -37,6 +38,9 @@ defmodule GasWeb.SourceSchema do
 
     @desc "The source type i.e. book, journal etc. - mandatory"
     field(:source_type_id, non_null(:id))
+
+    @desc "The year the source was published"
+    field(:year, :string)
 
     @desc "For which conference was this work published - optional"
     field(:publication, :string)

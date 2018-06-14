@@ -1,20 +1,25 @@
 defmodule GasWeb.SourceQueries do
+  @fields """
+    id
+    author
+    topic
+    year
+    publication
+    url
+    insertedAt
+    updatedAt
+    display
+    sourceType {
+      id
+      name
+    }
+  """
+
   def query(:sources) do
     """
     query Sources {
       sources {
-        id
-        author
-        topic
-        publication
-        url
-        insertedAt
-        updatedAt
-        display
-        sourceType {
-          id
-          name
-        }
+        #{@fields}
       }
     }
     """
@@ -24,18 +29,7 @@ defmodule GasWeb.SourceQueries do
     """
     query GetSource($source: GetSourceInput!) {
       source(source: $source) {
-        id
-        author
-        topic
-        publication
-        url
-        insertedAt
-        updatedAt
-        display
-        sourceType {
-          id
-          name
-        }
+        #{@fields}
         quotes {
           id
           text
@@ -50,18 +44,7 @@ defmodule GasWeb.SourceQueries do
     """
     mutation CreateSource($source: CreateSourceInput!) {
       createSource(source: $source) {
-        id
-        author
-        topic
-        publication
-        url
-        insertedAt
-        updatedAt
-        display
-        sourceType {
-          id
-          name
-        }
+        #{@fields}
         quotes {
           id
           text

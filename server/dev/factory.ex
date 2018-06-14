@@ -20,6 +20,7 @@ defmodule Gas.Factory do
     %Source{
       author: Faker.Name.name(),
       topic: Faker.String.base64(),
+      year: Enum.random([Integer.to_string(random_date().year), nil]),
       publication: Enum.random([Faker.String.base64(), nil]),
       url: Enum.random([Faker.Internet.url(), nil]),
       source_type: build(:source_type)
