@@ -34,7 +34,7 @@ defmodule GasWeb.SourceResolver do
   def display(%Source{} = source, _, _) do
     text =
       source
-      |> Map.take([:author, :topic, :publication, :url])
+      |> Map.take([:author, :topic, :publication, :year, :url])
       |> Enum.reduce([], fn
         {_, nil}, acc -> acc
         {_, v}, acc -> [v | acc]
