@@ -6,6 +6,7 @@ export const source1Frag = gql`
   fragment SourceFrag on Source {
     id
     display
+    year
     sourceType {
       ...SourceTypeFrag
     }

@@ -58,6 +58,7 @@ interface FormValues {
   topic: string;
   publication: string;
   url: string;
+  year: string;
 }
 
 const initialFormValues: FormValues = {
@@ -65,7 +66,8 @@ const initialFormValues: FormValues = {
   author: "",
   topic: "",
   publication: "",
-  url: ""
+  url: "",
+  year: ""
 };
 
 export type FormValuesProps = FieldProps<FormValues>;
@@ -90,26 +92,6 @@ class NewSourceModal extends React.Component<
   NewSourceModalState
 > {
   state = initialState;
-
-  constructor(props: NewSourceModalProps) {
-    super(props);
-
-    [
-      "submit",
-      "renderForm",
-      "validate",
-      "renderSourceTypeControl",
-      "renderTextControlFormik",
-      "validatesourceType",
-      "validateauthor",
-      "validatetopic",
-      "validatepublication",
-      "validateurl",
-      "resetModal",
-      "renderTextControl",
-      "writeSourcesToCache"
-    ].forEach(fn => (this[fn] = this[fn].bind(this)));
-  }
 
   render() {
     const { open, style } = this.props;
@@ -236,6 +218,7 @@ class NewSourceModal extends React.Component<
         {[
           { name: "author", label: "Author name(s)" },
           { name: "topic" },
+          { name: "year" },
           { name: "publication" },
           { name: "url" }
         ].map(this.renderTextControl)}
@@ -413,6 +396,24 @@ class NewSourceModal extends React.Component<
         output: {
           topic: {
             $set: topic
+          }
+        }
+      })
+    );
+
+    return "";
+  };
+
+  validateyear = (year: string | null) => {
+    if (!year) {
+      return "";
+    }
+
+    this.setState(prev =>
+      update(prev, {
+        output: {
+          year: {
+            $set: year
           }
         }
       })

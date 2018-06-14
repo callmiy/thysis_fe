@@ -196,6 +196,16 @@
               "name": "url",
               "description": "The URI where author's original work can be accessed - optional",
               "defaultValue": null
+            },
+            {
+              "type": {
+                "ofType": null,
+                "name": "String",
+                "kind": "SCALAR"
+              },
+              "name": "year",
+              "description": "The year the source was published",
+              "defaultValue": null
             }
           ],
           "fields": null,
@@ -1196,6 +1206,18 @@
                 "kind": "SCALAR"
               },
               "name": "url",
+              "isDeprecated": false,
+              "description": null,
+              "deprecationReason": null,
+              "args": []
+            },
+            {
+              "type": {
+                "ofType": null,
+                "name": "String",
+                "kind": "SCALAR"
+              },
+              "name": "year",
               "isDeprecated": false,
               "description": null,
               "deprecationReason": null,

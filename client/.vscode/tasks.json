@@ -45,14 +45,14 @@
       "label": "Apollo code gen",
       "type": "shell",
       "command":
-        "apollo-codegen generate src/graphql/*.ts --schema schema.json --target typescript --output src/graphql/gen.types.ts",
+        "apollo-codegen generate src/graphql/*.ts --schema src/graphql/schema.json --target typescript --output src/graphql/gen.types.ts",
       "problemMatcher": []
     },
     {
       "label": "introspect-schema",
       "type": "shell",
       "command":
-        "apollo-codegen introspect-schema http://localhost:4016/__api --output schema.json",
+        "apollo-codegen introspect-schema http://localhost:4016/__api --output src/graphql/schema.json",
       "problemMatcher": []
     }
   ]
