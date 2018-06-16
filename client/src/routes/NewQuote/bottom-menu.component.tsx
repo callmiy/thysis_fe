@@ -7,7 +7,7 @@ import NewTagModalForm, {
   TagModalCreatedCb
 } from "../../components/new-tag-modal-form.component";
 import NewSourceModal from "../../components/new-source-modal.component";
-import TagListModal from "../../components/tag-list-modal.component";
+import TagListModal from "../../components/TagListModal";
 import { MenuItemNames } from "../../constants";
 import { SEARCH_QUOTES_URL } from "../../utils/route-urls.util";
 import { ROOT_URL } from "../../utils/route-urls.util";

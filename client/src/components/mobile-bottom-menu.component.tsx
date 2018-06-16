@@ -6,8 +6,8 @@ import { withRouter, RouteComponentProps } from "react-router-dom";
 
 import NewTagModalForm from "./new-tag-modal-form.component";
 import NewSourceModal from "./new-source-modal.component";
-import TagListModal from "./tag-list-modal.component";
-import SourceListModal from "./source-list-modal.component";
+import TagListModal from "./TagListModal";
+import SourceListModal from "./SourceListModal";
 
 // import { SimpleCss } from "../constants";
 

@@ -1,4 +1,7 @@
-import { Query, MutationFn, MutationUpdaterFn } from "react-apollo";
+import { Query } from "react-apollo";
+import { MutationFn } from "react-apollo";
+import { MutationUpdaterFn } from "react-apollo";
+import { QueryResult } from "react-apollo";
 
 import {
   TagsMinimalQuery,
@@ -17,6 +20,7 @@ import {
 } from "./gen.types";
 
 export class TagsMinimalRunQuery extends Query<TagsMinimalQuery, {}> {}
+export type TagsMinimalQueryResult = QueryResult<TagsMinimalQuery>;
 
 // tslint:disable-next-line:max-classes-per-file
 export class Sources1RunQuery extends Query<Sources1Query, {}> {}
