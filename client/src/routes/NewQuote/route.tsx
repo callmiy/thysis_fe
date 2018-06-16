@@ -13,6 +13,7 @@ import { TextArea } from "semantic-ui-react";
 import { Message } from "semantic-ui-react";
 import { Icon } from "semantic-ui-react";
 import { Dimmer } from "semantic-ui-react";
+import { Loader } from "semantic-ui-react";
 import moment from "moment";
 import update from "immutability-helper";
 import { Mutation } from "react-apollo";
@@ -327,7 +328,11 @@ export class NewQuote extends React.Component<NewQuoteProps, NewQuoteState> {
     return (
       <Form onSubmit={handleSubmit}>
         <div>
-          <Dimmer inverted={true} active={isSubmitting} />
+          <Dimmer inverted={true} active={isSubmitting}>
+            <Loader active={isSubmitting} size="medium">
+              Saving..
+            </Loader>
+          </Dimmer>
           <Field name="tags" render={this.renderTagControl} />
 
           {!sourceId && (
