@@ -41,7 +41,7 @@ export class SearchQuotesComponent extends React.Component<
 
   render() {
     return (
-      <div>
+      <div className={classes.root}>
         <form>
           <Input
             className={classes.input}

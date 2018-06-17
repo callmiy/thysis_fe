@@ -36,6 +36,10 @@ const styles = {
     fontWeight: 900,
     fontSize: "1.2em",
     marginBottom: 10
+  },
+
+  listItem: {
+    cursor: "pointer"
   }
 } as SimpleCss;
 

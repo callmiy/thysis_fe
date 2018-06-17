@@ -6,6 +6,7 @@ import { Icon } from "semantic-ui-react";
 import { WithApolloClient } from "react-apollo";
 import update from "immutability-helper";
 import { ApolloError } from "apollo-client";
+import { RouteComponentProps } from "react-router-dom";
 
 import { messageIconStyle } from "./styles";
 import { classes } from "./styles";
@@ -19,6 +20,8 @@ import QUOTES_QUERY from "../../../graphql/quotes-1.query";
 import TAGS_QUERY from "../../../graphql/tags-mini.query";
 import SOURCES_QUERY from "../../../graphql/sources-1.query";
 import SearchQuotesComponent from "../../../components/SearchQuotesComponent";
+import { makeSourceURL } from "../../../utils/route-urls.util";
+import { makeTagURL } from "../../../utils/route-urls.util";
 
 enum ResourceName {
   QUOTES = "quotes",
@@ -30,7 +33,7 @@ type Resources = Array<
   Quote1FragFragment | TagFragFragment | SourceFragFragment
 >;
 
-interface OwnProps {
+interface OwnProps extends RouteComponentProps<{}> {
   className?: string;
 }
 
@@ -56,7 +59,12 @@ export class QuotesSidebar extends React.Component<
     return (
       <Tab
         className={className}
-        menu={{ pointing: true }}
+        menu={{
+          pointing: true,
+          inverted: true,
+          color: "green",
+          tabular: false
+        }}
         panes={[
           this.renderQuotes(),
           this.renderTags(),
@@ -179,7 +187,11 @@ export class QuotesSidebar extends React.Component<
 
   renderTag = ({ id, text }: TagFragFragment) => {
     return (
-      <List.Item key={id}>
+      <List.Item
+        key={id}
+        className={classes.listItem}
+        onClick={this.navigateTo(makeTagURL(id))}
+      >
         <List.Content>{text}</List.Content>
       </List.Item>
     );
@@ -202,7 +214,11 @@ export class QuotesSidebar extends React.Component<
 
   renderSource = ({ id, display }: SourceFragFragment) => {
     return (
-      <List.Item key={id}>
+      <List.Item
+        key={id}
+        className={classes.listItem}
+        onClick={this.navigateTo(makeSourceURL(id))}
+      >
         <List.Content>{display}</List.Content>
       </List.Item>
     );
@@ -314,6 +330,10 @@ export class QuotesSidebar extends React.Component<
         })
       );
     }
+  };
+
+  navigateTo = (url: string) => () => {
+    this.props.history.push(url);
   };
 }
 

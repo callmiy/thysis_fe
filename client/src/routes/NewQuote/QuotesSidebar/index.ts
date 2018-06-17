@@ -1,5 +1,6 @@
 import { withApollo } from "react-apollo";
+import { withRouter } from "react-router-dom";
 
 import QuotesSidebar from "./component";
 
-export default withApollo(QuotesSidebar);
+export default withRouter(withApollo(QuotesSidebar));
