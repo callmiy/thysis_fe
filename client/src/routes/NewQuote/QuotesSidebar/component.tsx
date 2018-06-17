@@ -18,7 +18,7 @@ import { Sources1QueryClientResult } from "../../../graphql/ops.types";
 import QUOTES_QUERY from "../../../graphql/quotes-1.query";
 import TAGS_QUERY from "../../../graphql/tags-mini.query";
 import SOURCES_QUERY from "../../../graphql/sources-1.query";
-import SearchQuotes from "../../SearchQuotes";
+import SearchQuotesComponent from "../../../components/SearchQuotesComponent";
 
 enum ResourceName {
   QUOTES = "quotes",
@@ -217,7 +217,7 @@ export class QuotesSidebar extends React.Component<
           attached={false}
           loading={this.state.loading}
         >
-          <SearchQuotes showMenu={false} showHeader={false} />
+          <SearchQuotesComponent />
         </Tab.Pane>
       )
     };

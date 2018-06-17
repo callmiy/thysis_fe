@@ -19,8 +19,7 @@ export interface SearchQuotesState {
 }
 
 export interface OwnProps {
-  showMenu?: boolean;
-  showHeader?: boolean;
+  ignore?: boolean;
 }
 
 export type SearchQuotesProps = OwnProps &
