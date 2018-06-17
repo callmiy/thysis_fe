@@ -1,5 +1,4 @@
 import * as React from "react";
-import { Message } from "semantic-ui-react";
 import { Icon } from "semantic-ui-react";
 import { Modal } from "semantic-ui-react";
 import { Button } from "semantic-ui-react";
@@ -8,22 +7,38 @@ import jss from "jss";
 import preset from "jss-preset-default";
 
 import { SimpleCss } from "../../constants";
+import { ERROR_COLOR } from "../../utils/colors";
+import { ERROR_BG_COLOR } from "../../utils/colors";
 
 jss.setup(preset());
 
-const modalStyle = {
-  marginTop: "20px"
-} as React.CSSProperties;
-
 const styles = {
   modal: {
-    "&.ui.visible > .content": {
-      padding: ["0", "!important;"]
-    }
+    marginTop: "20px",
+    maxHeight: "40%"
+  },
+
+  content: {
+    color: ERROR_COLOR,
+    backgroundColor: ERROR_BG_COLOR
+  },
+
+  error: {
+    flex: 1,
+    padding: 20,
+    textAlign: "center"
+  },
+
+  buttonContainer: {
+    flexShrink: 0,
+    textAlign: "right",
+    padding: "0 0 5px 0"
   }
 } as SimpleCss;
 
-const { classes } = jss.createStyleSheet(styles).attach();
+const modalStyle = styles.modal as React.CSSProperties;
+const errorStyle = styles.error as React.CSSProperties;
+const buttonContainerStyle = styles.buttonContainer as React.CSSProperties;
 
 interface NewQuoteRouteErrorModalProps {
   open: boolean;
@@ -31,41 +46,24 @@ interface NewQuoteRouteErrorModalProps {
   error: ApolloError;
 }
 
-export class ErrorModal extends React.Component<
-  NewQuoteRouteErrorModalProps
-> {
+export class ErrorModal extends React.Component<NewQuoteRouteErrorModalProps> {
   render() {
     return (
       <Modal
         style={modalStyle}
-        className={classes.modal}
         dimmer="inverted"
         open={this.props.open}
         onClose={this.props.dismiss}
       >
-        <Modal.Content>
-          <Message error={true} icon={true}>
-            <Icon name="ban" />
+        <Modal.Content style={styles.content}>
+          <div style={errorStyle}>{this.props.error.message}</div>
 
-            <Message.Content>
-              <Message.Header
-                style={{
-                  borderBottom: "1px solid",
-                  display: "inline-block",
-                  marginBottom: "10px"
-                }}
-              >
-                An error has occurred
-              </Message.Header>
-              <div>{JSON.stringify(this.props.error, null, 2)}</div>
-            </Message.Content>
-          </Message>
+          <div style={buttonContainerStyle}>
+            <Button color="red" onClick={this.props.dismiss}>
+              <Icon name="remove" /> Dismiss
+            </Button>
+          </div>
         </Modal.Content>
-        <Modal.Actions>
-          <Button color="red" onClick={this.props.dismiss}>
-            <Icon name="remove" /> Dismiss
-          </Button>
-        </Modal.Actions>
       </Modal>
     );
   }

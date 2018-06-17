@@ -4,7 +4,7 @@ import update from "immutability-helper";
 import { SemanticICONS, SemanticWIDTHS } from "semantic-ui-react/dist/commonjs";
 import { withRouter, RouteComponentProps } from "react-router-dom";
 
-import NewTagModalForm from "./new-tag-modal-form.component";
+import NewTagModalForm from "./NewTagModalForm";
 import NewSourceModal from "./new-source-modal.component";
 import TagListModal from "./TagListModal";
 import SourceListModal from "./SourceListModal";

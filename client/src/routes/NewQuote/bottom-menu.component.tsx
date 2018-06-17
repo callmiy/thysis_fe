@@ -3,9 +3,8 @@ import { Menu, Icon } from "semantic-ui-react";
 import update from "immutability-helper";
 import { NavLink } from "react-router-dom";
 
-import NewTagModalForm, {
-  TagModalCreatedCb
-} from "../../components/new-tag-modal-form.component";
+import NewTagModalForm from "../../components/NewTagModalForm";
+import { TagModalCreatedCb } from "../../components/NewTagModalForm/utils";
 import NewSourceModal from "../../components/new-source-modal.component";
 import TagListModal from "../../components/TagListModal";
 import { MenuItemNames } from "../../constants";

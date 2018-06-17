@@ -10,6 +10,19 @@
       "options": {
         "env": {
           "PORT": "3016",
+          "REACT_APP_API_URL": "http://localhost:4016/__api"
+        }
+      },
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "label": "start front end js only",
+      "type": "shell",
+      "command": "yarn start",
+      "options": {
+        "env": {
+          "PORT": "3016",
           "BROWSER": "none",
           "REACT_APP_API_URL": "http://localhost:4016/__api"
         }

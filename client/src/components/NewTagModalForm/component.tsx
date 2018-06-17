@@ -4,35 +4,16 @@ import { Icon, Button, Modal, Input, Header, Message } from "semantic-ui-react";
 import { Mutation } from "react-apollo";
 import update from "immutability-helper";
 
-import TAG_MUTATION from "../graphql/tag.mutation";
-import { CreateTagFn, CreateTagUpdateFn } from "../graphql/ops.types";
-import { TagsMinimalQuery, TagFragFragment } from "../graphql/gen.types";
-import TAGS_QUERY from "../graphql/tags-mini.query";
+import TAG_MUTATION from "../../graphql/tag.mutation";
+import { CreateTagFn, CreateTagUpdateFn } from "../../graphql/ops.types";
+import { TagsMinimalQuery } from "../../graphql/gen.types";
+import { TagFragFragment } from "../../graphql/gen.types";
+import TAGS_QUERY from "../../graphql/tags-mini.query";
+import { initalStateNewTagModalFormState } from "./utils";
+import { NewTagModalFormProps } from "./utils";
+import { NewTagModalFormState } from "./utils";
 
-export type TagModalCreatedCb = (tag: TagFragFragment) => void;
-
-interface NewTagModalFormProps {
-  open: boolean;
-  dismissModal: () => void;
-  style: React.CSSProperties;
-  onTagCreated?: TagModalCreatedCb;
-}
-
-interface NewTagModalFormState {
-  text: string;
-  formError?: string;
-  submitting: boolean;
-  submitSuccess: boolean;
-}
-
-const initalStateNewTagModalFormState: NewTagModalFormState = {
-  text: "",
-  formError: undefined,
-  submitting: false,
-  submitSuccess: false
-};
-
-export default class NewTagModalForm extends React.PureComponent<
+export class NewTagModalForm extends React.PureComponent<
   NewTagModalFormProps,
   NewTagModalFormState
 > {
@@ -62,26 +43,7 @@ export default class NewTagModalForm extends React.PureComponent<
         <Header icon="quote left" content="Subject matter of quote" />
 
         <Modal.Content>
-          {!formError &&
-            submitSuccess && (
-              <Message
-                error={true}
-                success={true}
-                content="Tag created successfully!"
-              />
-            )}
-
-          {formError && (
-            <Message icon={true} error={true}>
-              <Icon name="ban" />
-
-              <Message.Content>
-                <Message.Header>An error has occurred</Message.Header>
-
-                {formError}
-              </Message.Content>
-            </Message>
-          )}
+          {this.renderErrorOrSuccess()}
 
           <Input
             placeholder="Tag text"
@@ -90,46 +52,82 @@ export default class NewTagModalForm extends React.PureComponent<
             onFocus={this.handleFocus}
             error={!!formError}
           />
-        </Modal.Content>
 
-        <Modal.Actions>
-          <Button
-            basic={true}
-            color="red"
-            onClick={this.reset}
-            disabled={submitting}
-          >
-            <Icon name="remove" /> Dismiss
-          </Button>
-
-          <Mutation
-            mutation={TAG_MUTATION}
-            variables={{ tag: { text } }}
-            update={this.writeTagsToCache}
-          >
-            {createTag => {
-              return (
-                <Button
-                  color="green"
-                  inverted={true}
-                  disabled={
-                    !!formError ||
-                    text.length < 2 ||
-                    submitting ||
-                    submitSuccess
-                  }
-                  onClick={this.handleSubmit(createTag)}
-                  loading={submitting}
-                >
-                  <Icon name="checkmark" /> Ok
-                </Button>
-              );
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              marginTop: "20px"
             }}
-          </Mutation>
-        </Modal.Actions>
+          >
+            <Button
+              basic={true}
+              color="red"
+              onClick={this.reset}
+              disabled={submitting}
+            >
+              <Icon name="remove" /> Dismiss
+            </Button>
+
+            <Mutation
+              mutation={TAG_MUTATION}
+              variables={{ tag: { text } }}
+              update={this.writeTagsToCache}
+            >
+              {createTag => {
+                return (
+                  <Button
+                    color="green"
+                    inverted={true}
+                    disabled={
+                      !!formError ||
+                      text.length < 2 ||
+                      submitting ||
+                      submitSuccess
+                    }
+                    onClick={this.handleSubmit(createTag)}
+                    loading={submitting}
+                  >
+                    <Icon name="checkmark" /> Ok
+                  </Button>
+                );
+              }}
+            </Mutation>
+          </div>
+        </Modal.Content>
       </Modal>
     );
   }
+
+  renderErrorOrSuccess = () => {
+    const { formError, submitSuccess } = this.state;
+
+    if (formError) {
+      return (
+        <Message icon={true} error={true}>
+          <Icon name="ban" />
+
+          <Message.Content>
+            <Message.Header>An error has occurred</Message.Header>
+
+            {formError.message}
+          </Message.Content>
+        </Message>
+      );
+    }
+
+    if (submitSuccess) {
+      return (
+        <Message
+          error={true}
+          success={true}
+          content="Tag created successfully!"
+        />
+      );
+    }
+
+    return undefined;
+  };
 
   reset = async () => {
     // React complained I'm calling set state on an unmounted componnent?
@@ -188,7 +186,7 @@ export default class NewTagModalForm extends React.PureComponent<
       this.setState(s =>
         update(s, {
           formError: {
-            $set: JSON.stringify(error, null, 2)
+            $set: error
           },
 
           submitting: {
@@ -256,3 +254,5 @@ export default class NewTagModalForm extends React.PureComponent<
     }
   };
 }
+
+export default NewTagModalForm;

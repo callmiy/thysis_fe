@@ -17,8 +17,6 @@ export const ROOT_CONTAINER_STYLE = {
   flex: 1
 };
 
-export const ERROR_COLOR = "#9f3a38";
-
 export enum MenuItemNames {
   HOME = "home",
   NEW_TAG = "newTag",

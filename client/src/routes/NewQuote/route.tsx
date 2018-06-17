@@ -42,7 +42,7 @@ import RootHeader from "../../components/header.component";
 import QUOTES_QUERY from "../../graphql/quotes-1.query";
 import NewQuoteMenu from "./bottom-menu.component";
 import { ErrorModal } from "./error-modal.component";
-import { SuccessModal } from "./success-modal.component";
+import SuccessModal from "./SuccessModal";
 import { setTitle } from "../../utils/route-urls.util";
 import { makeNewQuoteURL } from "../../utils/route-urls.util";
 import { styles } from "./styles";
@@ -161,30 +161,14 @@ export class NewQuote extends React.Component<NewQuoteProps, NewQuoteState> {
   };
 
   render() {
-    const { sourceId, graphqlError, submittedSourceId } = this.state;
-
     return (
       <div className={classes.newQuoteRoot}>
         <RootHeader style={{ margin: 0 }} title="New Quote" />
 
-        {sourceId && this.renderSourceQuoteHeader()}
+        {this.state.sourceId && this.renderSourceQuoteHeader()}
 
         <div className={`${classes.mainContent}`} ref={this.formContainerRef}>
-          {graphqlError && (
-            <ErrorModal
-              open={!!graphqlError}
-              dismiss={this.dismissErrorModal}
-              error={graphqlError}
-            />
-          )}
-
-          {submittedSourceId && (
-            <SuccessModal
-              open={!!submittedSourceId}
-              dismiss={this.onSuccessModalDismissed}
-              reUseSource={!!sourceId}
-            />
-          )}
+          {this.renderErrorOrSuccess()}
 
           <Mutation
             mutation={QUOTE_MUTATION}
@@ -209,6 +193,32 @@ export class NewQuote extends React.Component<NewQuoteProps, NewQuoteState> {
       </div>
     );
   }
+
+  renderErrorOrSuccess = () => {
+    const { sourceId, graphqlError, submittedSourceId } = this.state;
+
+    if (graphqlError) {
+      return (
+        <ErrorModal
+          open={!!graphqlError}
+          dismiss={this.dismissErrorModal}
+          error={graphqlError}
+        />
+      );
+    }
+
+    if (submittedSourceId) {
+      return (
+        <SuccessModal
+          open={!!submittedSourceId}
+          dismiss={this.onSuccessModalDismissed}
+          reUseSource={!!sourceId}
+        />
+      );
+    }
+
+    return undefined;
+  };
 
   renderSourceQuoteHeader = () => {
     const { source } = this.state.initialFormValues;
@@ -327,24 +337,21 @@ export class NewQuote extends React.Component<NewQuoteProps, NewQuoteState> {
 
     return (
       <Form onSubmit={handleSubmit}>
-        <div>
-          <Dimmer inverted={true} active={isSubmitting}>
-            <Loader active={isSubmitting} size="medium">
-              Saving..
-            </Loader>
-          </Dimmer>
-          <Field name="tags" render={this.renderTagControl} />
+        <Dimmer inverted={true} active={isSubmitting}>
+          <Loader active={isSubmitting} size="medium">
+            Saving..
+          </Loader>
+        </Dimmer>
 
-          {!sourceId && (
-            <Field name="source" render={this.renderSourceControl} />
-          )}
+        <Field name="tags" render={this.renderTagControl} />
 
-          <Field name="quote" render={this.renderQuoteControl} />
-          <Field name="page" render={this.renderPageControl} />
-          <Field name="volumeIssue" render={this.renderVolumeIssueControl} />
-          <Field name="date" render={this.renderDateControl} />
-          <Field name="extras" render={this.renderExtrasControl} />
-        </div>
+        {!sourceId && <Field name="source" render={this.renderSourceControl} />}
+
+        <Field name="quote" render={this.renderQuoteControl} />
+        <Field name="page" render={this.renderPageControl} />
+        <Field name="volumeIssue" render={this.renderVolumeIssueControl} />
+        <Field name="date" render={this.renderDateControl} />
+        <Field name="extras" render={this.renderExtrasControl} />
 
         <div className={`${classes.submitReset}`}>
           <Button

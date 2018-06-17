@@ -3,7 +3,7 @@ import jss from "jss";
 import preset from "jss-preset-default";
 
 import { ROOT_CONTAINER_STYLE } from "../../constants";
-import { ERROR_COLOR } from "../../constants";
+import { ERROR_COLOR } from "../../utils/colors";
 import mainContentStyle from "../../utils/main-content-centered-style.util";
 import { SimpleCss } from "../../constants";
 
