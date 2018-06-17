@@ -3,7 +3,7 @@ import * as React from "react";
 
 import { FormValuesProps } from "./new-source-modal.component";
 import { SourceTypeFragFragment } from "../graphql/gen.types";
-import { SourceTypeRunQuery } from "../graphql/ops.types";
+import { SourceTypeQueryComponent } from "../graphql/ops.types";
 import SOURCE_TYPE_QUERY from "../graphql/source-types.query";
 
 type SourceTypes = SourceTypeFragFragment[];
@@ -22,7 +22,7 @@ export default class SourceTypeControl extends React.PureComponent<
     } = this.props;
 
     return (
-      <SourceTypeRunQuery query={SOURCE_TYPE_QUERY}>
+      <SourceTypeQueryComponent query={SOURCE_TYPE_QUERY}>
         {({ data }) => {
           let sourceTypes = [] as SourceTypes;
 
@@ -45,7 +45,7 @@ export default class SourceTypeControl extends React.PureComponent<
             />
           );
         }}
-      </SourceTypeRunQuery>
+      </SourceTypeQueryComponent>
     );
   }
 

@@ -2,7 +2,7 @@ import React from "react";
 import { Modal, List } from "semantic-ui-react";
 import { Loader } from "semantic-ui-react";
 
-import { TagsMinimalRunQuery } from "../../graphql/ops.types";
+import { TagsMinimalQueryComponent } from "../../graphql/ops.types";
 import { TagsMinimalQueryResult } from "../../graphql/ops.types";
 import { TagFragFragment } from "../../graphql/gen.types";
 import TAGS_QUERY from "../../graphql/tags-mini.query";
@@ -17,7 +17,7 @@ export class TagListModal extends React.PureComponent<TagListModalProps> {
     const { open } = this.props;
 
     return (
-      <TagsMinimalRunQuery query={TAGS_QUERY}>
+      <TagsMinimalQueryComponent query={TAGS_QUERY}>
         {dataProps => {
           return (
             <Modal
@@ -42,7 +42,7 @@ export class TagListModal extends React.PureComponent<TagListModalProps> {
             </Modal>
           );
         }}
-      </TagsMinimalRunQuery>
+      </TagsMinimalQueryComponent>
     );
   }
 

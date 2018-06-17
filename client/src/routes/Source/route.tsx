@@ -2,12 +2,11 @@ import * as React from "react";
 import { Header, Dimmer, Loader, Menu, Icon, Message } from "semantic-ui-react";
 import { List } from "semantic-ui-react";
 import update from "immutability-helper";
-import { ApolloQueryResult } from "apollo-client";
 import { NavLink } from "react-router-dom";
 
 import RootHeader from "../../components/header.component";
 import { makeNewQuoteURL } from "../../utils/route-urls.util";
-import { Quotes1Query } from "../../graphql/gen.types";
+import { Quotes1QueryClientResult } from "../../graphql/ops.types";
 import MobileBottomMenu from "../../components/mobile-bottom-menu.component";
 import { MenuItem } from "../../components/mobile-bottom-menu.component";
 import QUOTES_QUERY from "../../graphql/quotes-1.query";
@@ -156,7 +155,7 @@ export class Source extends React.Component<SourceProps, SourceState> {
             source: id
           }
         }
-      })) as ApolloQueryResult<Quotes1Query>;
+      })) as Quotes1QueryClientResult;
 
       this.setState(s =>
         update(s, {

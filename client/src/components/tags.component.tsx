@@ -3,7 +3,7 @@ import jss from "jss";
 import preset from "jss-preset-default";
 
 import { TagFragFragment } from "../graphql/gen.types";
-import { TagsMinimalRunQuery } from "../graphql/ops.types";
+import { TagsMinimalQueryComponent } from "../graphql/ops.types";
 import TAGS_QUERY from "../graphql/tags-mini.query";
 import { Loading } from "../App";
 import { SimpleCss } from "../constants";
@@ -79,7 +79,7 @@ export default class TagsList extends React.PureComponent<TagsListProps> {
 
   render() {
     return (
-      <TagsMinimalRunQuery query={TAGS_QUERY}>
+      <TagsMinimalQueryComponent query={TAGS_QUERY}>
         {({ loading, error, data }) => {
           if (loading || !data) {
             return <Loading />;
@@ -93,7 +93,7 @@ export default class TagsList extends React.PureComponent<TagsListProps> {
             </div>
           );
         }}
-      </TagsMinimalRunQuery>
+      </TagsMinimalQueryComponent>
     );
   }
 

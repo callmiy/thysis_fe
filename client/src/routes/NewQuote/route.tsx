@@ -52,6 +52,7 @@ import { ShouldReUseSource } from "./utils";
 import { FormValues } from "./utils";
 import { NewQuoteState } from "./utils";
 import { NewQuoteProps } from "./utils";
+import QuotesSidebar from "./QuotesSidebar";
 
 export class NewQuote extends React.Component<NewQuoteProps, NewQuoteState> {
   static getDerivedStateFromProps(
@@ -163,33 +164,48 @@ export class NewQuote extends React.Component<NewQuoteProps, NewQuoteState> {
   render() {
     return (
       <div className={classes.newQuoteRoot}>
-        <RootHeader style={{ margin: 0 }} title="New Quote" />
+        <RootHeader
+          className={classes.rootHeader}
+          style={{ margin: 0 }}
+          title="New Quote"
+        />
 
-        {this.state.sourceId && this.renderSourceQuoteHeader()}
+        <div className={classes.rootInner}>
+          <div className={classes.formWithHeader}>
+            {this.state.sourceId && this.renderSourceQuoteHeader()}
 
-        <div className={`${classes.mainContent}`} ref={this.formContainerRef}>
-          {this.renderErrorOrSuccess()}
+            <div
+              className={`${classes.mainContent}`}
+              ref={this.formContainerRef}
+            >
+              {this.renderErrorOrSuccess()}
 
-          <Mutation
-            mutation={QUOTE_MUTATION}
-            variables={{ quote: this.state.formOutputs }}
-            update={this.writeQuoteToCache}
-          >
-            {createQuote => {
-              return (
-                <Formik
-                  initialValues={this.state.initialFormValues}
-                  enableReinitialize={true}
-                  onSubmit={this.submit(createQuote)}
-                  render={this.renderForm}
-                  validate={this.validate}
-                />
-              );
-            }}
-          </Mutation>
+              <Mutation
+                mutation={QUOTE_MUTATION}
+                variables={{ quote: this.state.formOutputs }}
+                update={this.writeQuoteToCache}
+              >
+                {createQuote => {
+                  return (
+                    <Formik
+                      initialValues={this.state.initialFormValues}
+                      enableReinitialize={true}
+                      onSubmit={this.submit(createQuote)}
+                      render={this.renderForm}
+                      validate={this.validate}
+                    />
+                  );
+                }}
+              </Mutation>
+            </div>
+          </div>
+
+          <QuotesSidebar className={classes.quotesSidebar} />
         </div>
 
-        <NewQuoteMenu onTagCreated={this.onTagCreated} />
+        <div className={classes.bottomMenu}>
+          <NewQuoteMenu onTagCreated={this.onTagCreated} />
+        </div>
       </div>
     );
   }

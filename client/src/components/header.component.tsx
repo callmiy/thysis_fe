@@ -16,11 +16,13 @@ const styles = {
 interface Props {
   title: string;
   style?: React.CSSProperties;
+  className?: string;
 }
 
-export default ({ title, style = {} }: Props) => {
+export default ({ title, style = {}, className = "" }: Props) => {
   return (
     <Menu
+      className={className}
       style={{ ...styles.header, ...style }}
       inverted={true}
       color="green"

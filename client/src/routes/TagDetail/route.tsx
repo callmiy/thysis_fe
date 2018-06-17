@@ -6,7 +6,7 @@ import { Loader } from "semantic-ui-react";
 import { List } from "semantic-ui-react";
 
 import RootHeader from "../../components/header.component";
-import { TagQuoteRunQuery } from "../../graphql/ops.types";
+import { TagQuoteQueryComponent } from "../../graphql/ops.types";
 import TAG_QUOTE_QUERY from "../../graphql/tag-with-quotes.query";
 import { TagQuoteQuery } from "../../graphql/gen.types";
 import MobileBottomMenu from "../../components/mobile-bottom-menu.component";
@@ -34,7 +34,10 @@ export class TagDetail extends React.Component<TagDetailProps> {
       <div className={`${classes.tagDetailRoot}`}>
         <RootHeader title="Tag Detail" />
 
-        <TagQuoteRunQuery query={TAG_QUOTE_QUERY} variables={{ tag: { id } }}>
+        <TagQuoteQueryComponent
+          query={TAG_QUOTE_QUERY}
+          variables={{ tag: { id } }}
+        >
           {({ data, loading }) => {
             return (
               <div className={`${classes.tagDetailRoot}`}>
@@ -52,7 +55,7 @@ export class TagDetail extends React.Component<TagDetailProps> {
               </div>
             );
           }}
-        </TagQuoteRunQuery>
+        </TagQuoteQueryComponent>
 
         <MobileBottomMenu items={[MenuItem.HOME, MenuItem.TAG_LIST]} />
       </div>
