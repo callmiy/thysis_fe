@@ -18,8 +18,9 @@ export interface SearchQuotesState {
   searchError?: ApolloError;
 }
 
-interface OwnProps {
-  ignore?: boolean;
+export interface OwnProps {
+  showMenu?: boolean;
+  showHeader?: boolean;
 }
 
 export type SearchQuotesProps = OwnProps &

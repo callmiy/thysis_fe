@@ -50,7 +50,9 @@ export class SearchQuotes extends React.Component<
   render() {
     return (
       <div className={classes.root}>
-        <RootHeader title="Search Quotes" />
+        {this.props.showHeader !== false && (
+          <RootHeader title="Search Quotes" />
+        )}
 
         <form>
           <Input
@@ -99,7 +101,7 @@ export class SearchQuotes extends React.Component<
           </div>
         </ErrorBoundary>
 
-        <SearchQuotesMenu />
+        {this.props.showMenu !== false && <SearchQuotesMenu />}
       </div>
     );
   }

@@ -18,6 +18,7 @@ import { Sources1QueryClientResult } from "../../../graphql/ops.types";
 import QUOTES_QUERY from "../../../graphql/quotes-1.query";
 import TAGS_QUERY from "../../../graphql/tags-mini.query";
 import SOURCES_QUERY from "../../../graphql/sources-1.query";
+import SearchQuotes from "../../SearchQuotes";
 
 enum ResourceName {
   QUOTES = "quotes",
@@ -56,7 +57,12 @@ export class QuotesSidebar extends React.Component<
       <Tab
         className={className}
         menu={{ pointing: true }}
-        panes={[this.renderQuotes(), this.renderTags(), this.renderSources()]}
+        panes={[
+          this.renderQuotes(),
+          this.renderTags(),
+          this.renderSources(),
+          this.renderSearch()
+        ]}
         onTabChange={this.onTabChange}
         defaultActiveIndex={-1}
       />
@@ -200,6 +206,21 @@ export class QuotesSidebar extends React.Component<
         <List.Content>{display}</List.Content>
       </List.Item>
     );
+  };
+
+  renderSearch = () => {
+    return {
+      menuItem: "Search",
+      render: () => (
+        <Tab.Pane
+          className={classes.pane}
+          attached={false}
+          loading={this.state.loading}
+        >
+          <SearchQuotes showMenu={false} showHeader={false} />
+        </Tab.Pane>
+      )
+    };
   };
 
   fetchQuotes = async () => {
