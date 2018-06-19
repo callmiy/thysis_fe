@@ -17,11 +17,12 @@ defmodule GasWeb.QuoteResolver do
         {:ok, quote_}
 
       {:error, failed_operation, changeset, _success} ->
-        changeset_string = ResolversUtil.changeset_errors_to_string(changeset)
-
         {
           :error,
-          message: "{name: #{failed_operation}, error: #{changeset_string}}"
+          ResolversUtil.transaction_errors_to_string(
+            changeset,
+            failed_operation
+          )
         }
     end
   end

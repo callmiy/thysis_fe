@@ -18,8 +18,10 @@ alias Gas.Source
 alias Gas.Quote
 alias Gas.Tag
 alias Gas.QuoteTag
+alias Gas.SourceAuthor
 
 [
+  SourceAuthor,
   QuoteTag,
   SourceType,
   Source,

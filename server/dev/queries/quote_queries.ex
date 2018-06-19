@@ -15,9 +15,7 @@ defmodule GasWeb.QuoteQueries do
           updatedAt
 
           source {
-            id
-            author
-            topic
+            ...SourceFragment
           }
 
           tag {
@@ -25,6 +23,12 @@ defmodule GasWeb.QuoteQueries do
             text
           }
         }
+      }
+
+      fragment SourceFragment on Source {
+        id
+        topic
+        __typename
       }
     """
   end
@@ -70,10 +74,14 @@ defmodule GasWeb.QuoteQueries do
         id
         text
         source {
-          id
-          author
+          ...SourceFragment
         }
       }
+    }
+
+    fragment SourceFragment on Source {
+      id
+      __typename
     }
     """
   end

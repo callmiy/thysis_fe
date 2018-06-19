@@ -1,7 +1,6 @@
 defmodule GasWeb.SourceQueries do
   @fields """
     id
-    author
     topic
     year
     publication
@@ -10,6 +9,10 @@ defmodule GasWeb.SourceQueries do
     updatedAt
     display
     sourceType {
+      id
+      name
+    }
+    authors {
       id
       name
     }

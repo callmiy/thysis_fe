@@ -8,8 +8,7 @@ defmodule Gas.QuoteSchemaTest do
   describe "mutation" do
     test "create quote succeeds" do
       %{
-        id: source_id,
-        author: author
+        id: source_id
       } = source = insert(:source)
 
       source_id = Integer.to_string(source_id)
@@ -30,8 +29,7 @@ defmodule Gas.QuoteSchemaTest do
                 data: %{
                   "createQuote" => %{
                     "source" => %{
-                      "id" => ^source_id,
-                      "author" => ^author
+                      "id" => ^source_id
                     }
                   }
                 }

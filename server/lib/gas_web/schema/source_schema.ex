@@ -19,6 +19,7 @@ defmodule GasWeb.SourceSchema do
     field(:inserted_at, non_null(:iso_datetime))
     field(:updated_at, non_null(:iso_datetime))
 
+    field(:authors, list_of(:author), resolve: assoc(:authors))
     field(:source_type, non_null(:source_type), resolve: assoc(:source_type))
     field(:quotes, list_of(:quote), resolve: assoc(:quotes))
 
@@ -28,11 +29,8 @@ defmodule GasWeb.SourceSchema do
   end
 
   # MUTATION INPUTS
-  @desc "Inputs for creating a source"
-  input_object :create_source_input do
-    @desc "The original owner of the work - mandatory"
-    field(:author, non_null(:string))
-
+  @desc "Inputs for creating a source without authors"
+  input_object :create_source_only_input do
     @desc "The topic of the work, as given by authour - manadatory"
     field(:topic, non_null(:string))
 
@@ -47,6 +45,17 @@ defmodule GasWeb.SourceSchema do
 
     @desc ~S{The URI where author's original work can be accessed - optional}
     field(:url, :string)
+  end
+
+  @desc "Inputs for creating a source with authors"
+  input_object :create_source_input do
+    @desc "other source fields excluding authors"
+    field(:source, non_null(:create_source_only_input))
+
+    @desc "The original owners of the work - Either author creation inputs
+    or list of author IDs mandatory"
+    field(:author_maps, list_of(:create_author_input))
+    field(:author_ids, list_of(:id))
   end
 
   # QUERY INPUTS

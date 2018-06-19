@@ -25,4 +25,14 @@ defmodule GasWeb.ResolversUtil do
   def unauthorized do
     {:error, message: @unauthorized}
   end
+
+  @doc """
+  Take an error returned by applying Ecto.Repo.transaction to a Multi
+  operation and return a string representation.
+  """
+  @spec transaction_errors_to_string(%Ecto.Changeset{}, Multi.name()) :: String.t()
+  def transaction_errors_to_string(%Ecto.Changeset{} = changeset, failed_operation) do
+    changeset_string = changeset_errors_to_string(changeset)
+    "{name: #{failed_operation}, error: #{changeset_string}}"
+  end
 end

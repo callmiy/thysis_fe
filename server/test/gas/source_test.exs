@@ -1,15 +1,17 @@
-defmodule Gas.SourcesTest do
+defmodule Gas.SourceTest do
   use Gas.DataCase
 
   alias Gas.Source
   alias Gas.SourceApi, as: Api
 
   defp make_source(attrs \\ %{}) do
-    {:ok, source} =
-      params_with_assocs(:source, attrs)
-      |> Api.create_()
+    {:ok, %{source: source}} = Api.create_(params_with_assocs(:source, attrs))
 
-    source
+    %{
+      source
+      | author_ids: nil,
+        author_maps: nil
+    }
   end
 
   test "list/0 returns all sources" do
@@ -24,18 +26,35 @@ defmodule Gas.SourcesTest do
 
   test "create_/1 with valid data creates a source" do
     %{
-      author: author,
       topic: topic
-    } = valid_attrs = params_with_assocs(:source)
+    } = attrs = params_with_assocs(:source)
 
-    assert {:ok, %Source{} = source} = Api.create_(valid_attrs)
-    assert source.author == author
+    assert {:ok,
+            %{
+              source: %Source{} = source,
+              author_maps: {1, [_]}
+            }} =
+             Api.create_(%{
+               source: attrs,
+               author_maps: [params_for(:author)]
+             })
+
     assert source.topic == topic
   end
 
+  test "create_/1 with no authors error" do
+    assert {:error, :no_authors} =
+             Api.create_(%{
+               source: params_with_assocs(:source)
+             })
+  end
+
   test "create_/1 with invalid data returns error changeset" do
-    invalid_attrs = params_with_assocs(:source, author: nil)
-    assert {:error, %Ecto.Changeset{}} = Api.create_(invalid_attrs)
+    assert {:error, :source, %Ecto.Changeset{}, %{}} =
+             Api.create_(%{
+               source: params_with_assocs(:source, topic: nil),
+               author_maps: [params_for(:author)]
+             })
   end
 
   test "update_/2 with valid data updates the source" do
@@ -43,15 +62,14 @@ defmodule Gas.SourcesTest do
 
     assert {:ok, %Source{} = source} =
              source
-             |> Api.update_(%{author: "yeah", topic: "sss73bsbddj"})
+             |> Api.update_(%{topic: "sss73bsbddj"})
 
-    assert source.author == "yeah"
     assert source.topic == "sss73bsbddj"
   end
 
   test "update_/2 with invalid data returns error changeset" do
     source = make_source()
-    assert {:error, %Ecto.Changeset{}} = Api.update_(source, %{author: nil})
+    assert {:error, %Ecto.Changeset{}} = Api.update_(source, %{topic: nil})
     assert source == Api.get!(source.id)
   end
 
@@ -63,6 +81,6 @@ defmodule Gas.SourcesTest do
 
   test "change_/1 returns a source changeset" do
     source = make_source()
-    assert %Ecto.Changeset{} = Api.change_(source)
+    assert %Ecto.Changeset{} = Api.change_(source, %{})
   end
 end

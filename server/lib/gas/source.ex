@@ -4,6 +4,8 @@ defmodule Gas.Source do
 
   alias Gas.Quote
   alias Gas.SourceType
+  alias Gas.Author
+  alias Gas.SourceAuthor
 
   @timestamps_opts [
     type: Timex.Ecto.DateTime,
@@ -11,6 +13,8 @@ defmodule Gas.Source do
   ]
 
   schema "sources" do
+    field(:author_maps, {:array, :map}, virtual: true)
+    field(:author_ids, {:array, :id}, virtual: true)
     field(:author, :string)
     field(:topic, :string)
     field(:year, :string)
@@ -18,6 +22,8 @@ defmodule Gas.Source do
     field(:url, :string)
     belongs_to(:source_type, SourceType)
     has_many(:quotes, Quote)
+    has_many(:sources_authors, SourceAuthor)
+    many_to_many(:authors, Author, join_through: "source_authors")
 
     timestamps()
   end
@@ -26,13 +32,33 @@ defmodule Gas.Source do
   def changeset(source, attrs \\ %{}) do
     source
     |> cast(attrs, [
-      :author,
       :topic,
       :year,
       :publication,
       :url,
-      :source_type_id
+      :source_type_id,
+      :author_ids,
+      :author_maps
     ])
-    |> validate_required([:author, :topic, :source_type_id])
+    |> validate_required([:topic, :source_type_id])
+    |> validate_authors()
+  end
+
+  defp validate_authors(changes) do
+    case changes.valid? do
+      true ->
+        author_ids = fetch_field(changes, :author_ids)
+
+        case {author_ids, fetch_field(changes, :author)} do
+          {:error, :error} ->
+            add_error(changes, :author_maps, "author ids or map empty")
+
+          _ ->
+            changes
+        end
+
+      _ ->
+        changes
+    end
   end
 end

@@ -48,15 +48,33 @@ defmodule GasWeb.SourceResolver do
   @doc """
   Create a source
   """
-  @spec create_source(any, %{source: %{author: String.t(), topic: String.t()}}, any) ::
-          {:ok, %Source{}} | {:error, String.t()}
+  @spec create_source(
+          any,
+          %{
+            source: %{
+              source: Map.t(),
+              author_maps: [Map.t()] | nil,
+              author_ids: [Integer.t() | String.t()] | nil
+            }
+          },
+          any
+        ) :: {:ok, %Source{}} | {:error, String.t()}
   def create_source(_root, %{source: inputs} = _args, _info) do
     case Api.create_(inputs) do
-      {:ok, source} ->
+      {:ok, %{source: source}} ->
         {:ok, source}
 
-      {:error, changeset} ->
-        {:error, ResolversUtil.changeset_errors_to_string(changeset)}
+      {:error, :no_authors} ->
+        {:error, "You must specify at least one author"}
+
+      {:error, failed_operation, changeset, _success} ->
+        {
+          :error,
+          ResolversUtil.transaction_errors_to_string(
+            changeset,
+            failed_operation
+          )
+        }
     end
   end
 end
