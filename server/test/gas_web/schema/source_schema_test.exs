@@ -8,13 +8,13 @@ defmodule GasWeb.SourceSchemaTest do
   describe "query" do
     test "get all sources succeeds" do
       # first source
-      insert(:source)
+      SourceFactory.insert(:source)
 
       # 2nd source
       %Source{
         id: id,
         source_type_id: source_type_id
-      } = insert(:source)
+      } = SourceFactory.insert(:source)
 
       id = inspect(id)
       source_type_id = inspect(source_type_id)
@@ -42,7 +42,7 @@ defmodule GasWeb.SourceSchemaTest do
         id: id,
         source_type_id: source_type_id,
         year: year
-      } = insert(:source)
+      } = SourceFactory.insert(:source)
 
       id = Integer.to_string(id)
       source_type_id = inspect(source_type_id)
@@ -80,7 +80,7 @@ defmodule GasWeb.SourceSchemaTest do
 
       %{year: year} =
         source =
-        params_for(
+        SourceFactory.params_for(
           :source,
           source_type: source_type,
           year: "2016"
@@ -118,7 +118,11 @@ defmodule GasWeb.SourceSchemaTest do
 
     test "create source without author names or IDs errors" do
       source =
-        params_with_assocs(:source, author_ids: nil, author_maps: nil)
+        SourceFactory.params_with_assocs(
+          :source,
+          author_ids: nil,
+          author_maps: nil
+        )
         |> MapHelpers.stringify_keys()
 
       variables = %{

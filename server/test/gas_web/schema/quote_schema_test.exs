@@ -4,12 +4,13 @@ defmodule Gas.QuoteSchemaTest do
   alias GasWeb.Schema
   alias Gas.MapHelpers
   alias GasWeb.QuoteQueries, as: Queries
+  alias Gas.Factory.Source, as: SourceFactory
 
   describe "mutation" do
     test "create quote succeeds" do
       %{
         id: source_id
-      } = source = insert(:source)
+      } = source = SourceFactory.insert(:source)
 
       source_id = Integer.to_string(source_id)
 
@@ -61,7 +62,7 @@ defmodule Gas.QuoteSchemaTest do
     end
 
     test "get quotes by source id succeeds" do
-      [source1, source2] = insert_list(2, :source)
+      [source1, source2] = SourceFactory.insert_list(2, :source)
       %{id: source1_quote_id} = insert(:quote, source: source1)
 
       source2_id = Integer.to_string(source2.id)
@@ -132,7 +133,7 @@ defmodule Gas.QuoteSchemaTest do
 
     test "full text search across sources table" do
       search_text = Faker.String.base64(4)
-      %{id: id} = insert(:source, author: search_text)
+      %{id: id} = SourceFactory.insert(:source, author: search_text)
 
       assert {:ok,
               %{

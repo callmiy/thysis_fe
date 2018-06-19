@@ -2,11 +2,11 @@ defmodule Gas.Factory do
   use ExMachina.Ecto, repo: Gas.Repo
 
   alias Gas.SourceType
-  alias Gas.Source
   alias Gas.Quote
   alias Gas.Tag
   alias Gas.QuoteTag
   alias Gas.Author
+  alias Gas.Factory.Source, as: SourceFactory
 
   @start_date ~D[1998-01-01]
   @end_date ~D[2018-12-31]
@@ -14,46 +14,6 @@ defmodule Gas.Factory do
   def source_type_factory do
     %SourceType{
       name: Faker.Name.name()
-    }
-  end
-
-  def source_factory do
-    {authors, author_ids} =
-      case Enum.random([:authors, :author_ids, 2]) do
-        :authors ->
-          authors =
-            1..Faker.random_between(1, 5)
-            |> Enum.map(fn _ -> params_for(:author) end)
-
-          {authors, nil}
-
-        :author_ids ->
-          author_ids =
-            insert_list(Faker.random_between(1, 5), :author)
-            |> Enum.map(& &1.id)
-
-          {nil, author_ids}
-
-        2 ->
-          authors =
-            1..Faker.random_between(1, 5)
-            |> Enum.map(fn _ -> params_for(:author) end)
-
-          author_ids =
-            insert_list(Faker.random_between(1, 5), :author)
-            |> Enum.map(& &1.id)
-
-          {authors, author_ids}
-      end
-
-    %Source{
-      topic: Faker.String.base64(),
-      year: Enum.random([Integer.to_string(random_date().year), nil]),
-      publication: Enum.random([Faker.String.base64(), nil]),
-      url: Enum.random([Faker.Internet.url(), nil]),
-      source_type: build(:source_type),
-      author_ids: author_ids,
-      author_maps: authors
     }
   end
 
@@ -82,7 +42,7 @@ defmodule Gas.Factory do
       volume: Enum.random([get_random_string_integer(), nil]),
       issue: Enum.random([get_random_string_integer(), nil]),
       extras: Enum.random([Faker.String.base64(), nil]),
-      source: build(:source)
+      source: SourceFactory.build(:source)
     }
   end
 

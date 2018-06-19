@@ -3,9 +3,12 @@ defmodule Gas.SourceTest do
 
   alias Gas.Source
   alias Gas.SourceApi, as: Api
+  alias Gas.Factory.Source, as: Factory
 
   defp make_source(attrs \\ %{}) do
-    {:ok, %{source: source}} = Api.create_(params_with_assocs(:source, attrs))
+    {:ok, %{source: source}} =
+      Factory.params_with_assocs(:source, attrs)
+      |> Api.create_()
 
     %{
       source
@@ -27,7 +30,7 @@ defmodule Gas.SourceTest do
   test "create_/1 with valid data creates a source" do
     %{
       topic: topic
-    } = attrs = params_with_assocs(:source)
+    } = attrs = Factory.params_with_assocs(:source)
 
     assert {:ok,
             %{
@@ -45,14 +48,14 @@ defmodule Gas.SourceTest do
   test "create_/1 with no authors error" do
     assert {:error, :no_authors} =
              Api.create_(%{
-               source: params_with_assocs(:source)
+               source: Factory.params_with_assocs(:source)
              })
   end
 
   test "create_/1 with invalid data returns error changeset" do
     assert {:error, :source, %Ecto.Changeset{}, %{}} =
              Api.create_(%{
-               source: params_with_assocs(:source, topic: nil),
+               source: Factory.params_with_assocs(:source, topic: nil),
                author_maps: [params_for(:author)]
              })
   end

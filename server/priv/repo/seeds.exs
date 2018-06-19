@@ -19,6 +19,7 @@ alias Gas.Quote
 alias Gas.Tag
 alias Gas.QuoteTag
 alias Gas.SourceAuthor
+alias Gas.Factory.Source, as: SourceFactory
 
 [
   SourceAuthor,
@@ -35,7 +36,13 @@ Repo.transaction(fn ->
 
   ["Journal", "Book", "Oral discussion"]
   |> Enum.map(&insert(:source_type, name: &1))
-  |> Enum.flat_map(&insert_list(random_between(2, 3), :source, source_type: &1))
+  |> Enum.flat_map(
+    &SourceFactory.insert_list(
+      random_between(2, 3),
+      :source,
+      source_type: &1
+    )
+  )
   |> Enum.flat_map(&insert_list(random_between(2, 5), :quote, source: &1))
   |> Enum.each(fn q ->
     1..random_between(1, 8)

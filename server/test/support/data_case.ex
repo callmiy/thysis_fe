@@ -19,6 +19,7 @@ defmodule Gas.DataCase do
   using do
     quote do
       alias Gas.Repo
+      alias Gas.Factory.Source, as: SourceFactory
 
       import Ecto
       import Ecto.Changeset

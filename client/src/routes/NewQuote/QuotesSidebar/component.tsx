@@ -129,17 +129,9 @@ export class QuotesSidebar extends React.Component<
     }
 
     if (resources.length) {
-      const fnName = this[
-        "render" +
-          resourcesName.charAt(0).toUpperCase() +
-          resourcesName.slice(1, -1)
-      ] as (
-        value: Quote1FragFragment | SourceFragFragment | TagFragFragment
-      ) => JSX.Element;
-
       return (
         <List divided={true} relaxed={true} ordered={true}>
-          {resources.map(fnName)}
+          {resources.map(this["render" + resourcesName.slice(0, -1)])}
         </List>
       );
     }
@@ -162,7 +154,7 @@ export class QuotesSidebar extends React.Component<
     };
   };
 
-  renderQuote = ({ id, text }: Quote1FragFragment) => {
+  renderquote = ({ id, text }: Quote1FragFragment) => {
     return (
       <List.Item key={id}>
         <List.Content>{text}</List.Content>
@@ -185,7 +177,7 @@ export class QuotesSidebar extends React.Component<
     };
   };
 
-  renderTag = ({ id, text }: TagFragFragment) => {
+  rendertag = ({ id, text }: TagFragFragment) => {
     return (
       <List.Item
         key={id}
@@ -212,7 +204,7 @@ export class QuotesSidebar extends React.Component<
     };
   };
 
-  renderSource = ({ id, display }: SourceFragFragment) => {
+  rendersource = ({ id, display }: SourceFragFragment) => {
     return (
       <List.Item
         key={id}

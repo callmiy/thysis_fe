@@ -15,3 +15,4 @@ alias Gas.QuoteTagApi
 alias GasWeb.Schema
 alias Gas.Author
 alias Gas.AuthorApi
+alias Gas.Factory.Source, as: SourceFactory
