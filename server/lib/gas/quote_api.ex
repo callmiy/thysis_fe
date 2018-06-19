@@ -171,7 +171,8 @@ defmodule Gas.QuoteApi do
         "quotes" => ["text", "volume", "issue", "extras"],
         "sources" => ["author", "topic", "publication", "url"],
         "tags" => ["text"],
-        "source_types" => ["name"]
+        "source_types" => ["name"],
+        "authors" => ["name"]
       }
       |> Enum.flat_map(fn {source, data} ->
         Enum.map(

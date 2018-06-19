@@ -103,6 +103,7 @@ defmodule GasWeb.QuoteQueries do
         sources     #{result_row}
         tags        #{result_row}
         sourceTypes #{result_row}
+        authors #{result_row}
       }
     }
     """

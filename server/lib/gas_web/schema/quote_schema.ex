@@ -33,22 +33,40 @@ defmodule GasWeb.QuoteSchema do
     value(:sources)
     value(:tags)
     value(:source_types)
+    value(:authors)
   end
 
   @desc "Result row returned when we search quotes by text"
   object :quote_full_search_result_row do
+    @desc "The ID of the row from which the search was obtained"
     field(:tid, non_null(:integer))
+
+    @desc "The table name from which the sarch was obtained"
     field(:source, non_null(:quote_full_search_table))
+
+    @desc "The matched search text"
     field(:text, non_null(:string))
+
+    @desc "The column name of the table from which the search was obtained"
     field(:column, non_null(:string))
   end
 
   @desc "Result returned when we search quotes by text"
   object :quote_full_search_result do
+    @desc "A search result from quotes table"
     field(:quotes, list_of(:quote_full_search_result_row))
+
+    @desc "A search result from sources table"
     field(:sources, list_of(:quote_full_search_result_row))
+
+    @desc "A search result from tags table"
     field(:tags, list_of(:quote_full_search_result_row))
+
+    @desc "A search result from source types table"
     field(:source_types, list_of(:quote_full_search_result_row))
+
+    @desc "A search result from authors table"
+    field(:authors, list_of(:quote_full_search_result_row))
   end
 
   # MUTATION INPUTS

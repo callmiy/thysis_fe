@@ -259,5 +259,35 @@ defmodule Gas.QuoteSchemaTest do
                  }
                )
     end
+
+    test "full text search across authors table" do
+      search_text = Faker.String.base64(4)
+      %{id: id} = insert(:author, name: search_text)
+
+      assert {:ok,
+              %{
+                data: %{
+                  "quoteFullSearch" => %{
+                    "authors" => [
+                      %{
+                        "tid" => ^id,
+                        "source" => "AUTHORS",
+                        "text" => ^search_text,
+                        "column" => "name"
+                      }
+                    ]
+                  }
+                }
+              }} =
+               Absinthe.run(
+                 Queries.query(:full_text_search),
+                 Schema,
+                 variables: %{
+                   "text" => %{
+                     "text" => search_text
+                   }
+                 }
+               )
+    end
   end
 end
