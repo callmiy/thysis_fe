@@ -172,13 +172,14 @@ export class SearchQuotesComponent extends React.Component<
 
   renderResult = ({
     quotes,
+    tags,
+    authors,
     sources,
-    sourceTypes,
-    tags
+    sourceTypes
   }: TextSearchResultFragFragment) => {
-    return quotes || sources || sourceTypes || tags ? (
+    return authors || quotes || sources || sourceTypes || tags ? (
       <div className={classes.resultContainer}>
-        {[quotes, sources, sourceTypes, tags].map(this.renderCategory)}
+        {[quotes, tags, authors, sources, sourceTypes].map(this.renderCategory)}
       </div>
     ) : (
       <Message

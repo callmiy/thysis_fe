@@ -16,6 +16,10 @@ export const textSearchResultFrag = gql`
       ...TextSearchRowFrag
     }
 
+    authors {
+      ...TextSearchRowFrag
+    }
+
     sourceTypes {
       ...TextSearchRowFrag
     }

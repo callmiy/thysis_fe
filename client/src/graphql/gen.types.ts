@@ -263,6 +263,17 @@ export interface AllMatchingTextsQuery {
       // The column name of the table from which the search was obtained
       column: string,
     } | null > | null,
+    // A search result from authors table
+    authors:  Array< {
+      // The ID of the row from which the search was obtained
+      tid: number,
+      // The matched search text
+      text: string,
+      // The table name from which the sarch was obtained
+      source: QuoteFullSearchTable,
+      // The column name of the table from which the search was obtained
+      column: string,
+    } | null > | null,
     // A search result from source types table
     sourceTypes:  Array< {
       // The ID of the row from which the search was obtained
@@ -355,6 +366,17 @@ export interface TextSearchResultFragFragment {
   } | null > | null,
   // A search result from tags table
   tags:  Array< {
+    // The ID of the row from which the search was obtained
+    tid: number,
+    // The matched search text
+    text: string,
+    // The table name from which the sarch was obtained
+    source: QuoteFullSearchTable,
+    // The column name of the table from which the search was obtained
+    column: string,
+  } | null > | null,
+  // A search result from authors table
+  authors:  Array< {
     // The ID of the row from which the search was obtained
     tid: number,
     // The matched search text
