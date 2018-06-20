@@ -1,6 +1,10 @@
 /* tslint:disable */
 //  This file was automatically generated and should not be edited.
 
+export interface CreateAuthorInput {
+  name: string,
+};
+
 export interface CreateQuoteInput {
   // The quote date
   date?: string | null,
@@ -48,10 +52,6 @@ export interface CreateSourceInput {
   year?: string | null,
 };
 
-export interface CreateAuthorInput {
-  name: string,
-};
-
 export interface GetTagInput {
   id?: string | null,
   text?: string | null,
@@ -82,6 +82,18 @@ export interface GetAllAuthorsQuery {
     id: string,
     name: string,
   } | null > | null,
+};
+
+export interface CreateAuthorMutationVariables {
+  author: CreateAuthorInput,
+};
+
+export interface CreateAuthorMutation {
+  // Create an author
+  createAuthor:  {
+    id: string,
+    name: string,
+  } | null,
 };
 
 export interface CreateQuoteMutationVariables {

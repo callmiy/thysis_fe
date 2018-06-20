@@ -18,6 +18,8 @@ import { TagQuoteQueryVariables } from "./gen.types";
 import { Quotes1Query } from "./gen.types";
 import { Quotes1QueryVariables } from "./gen.types";
 import { GetAllAuthorsQuery } from "./gen.types";
+import { CreateAuthorMutation } from "./gen.types";
+import { CreateAuthorMutationVariables } from "./gen.types";
 
 export class TagsMinimalQueryComponent extends Query<TagsMinimalQuery, {}> {}
 export type TagsMinimalQueryResult = QueryResult<TagsMinimalQuery>;
@@ -70,3 +72,10 @@ export class Quotes1QueryComponent extends Query<
 > {}
 
 export type Quotes1QueryClientResult = ApolloQueryResult<Quotes1Query>;
+
+export type CreateAuthorFn = MutationFn<
+  CreateAuthorMutation,
+  CreateAuthorMutationVariables
+>;
+
+export type CreateAuthorUpdateFn = MutationUpdaterFn<CreateAuthorMutation>;

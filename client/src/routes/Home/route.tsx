@@ -12,6 +12,7 @@ import TagListModal from "../../components/TagListModal";
 import SourceListModal from "../../components/SourceListModal";
 import NewTagModalForm from "../../components/NewTagModalForm";
 import NewSourceModal from "../../components/NewSourceModal";
+import NewAuthorModal from "../../components/NewAuthorModal";
 import styles from "./styles";
 import { classes } from "./styles";
 
@@ -19,7 +20,8 @@ enum HomeEnum {
   TAG_LIST = "tagList",
   SOURCE_LIST = "sourceList",
   NEW_TAG = "newTag",
-  NEW_SOURCE = "newSource"
+  NEW_SOURCE = "newSource",
+  NEW_AUTHOR = "newAuthor"
 }
 
 interface HomeState {
@@ -85,6 +87,14 @@ export class Home extends React.Component<HomeProps, HomeState> {
 
             <Menu.Item
               style={styles.menuAnchor}
+              onClick={this.toggleModalOpen(HomeEnum.NEW_AUTHOR, true)}
+            >
+              <Icon name="user" />
+              New Author
+            </Menu.Item>
+
+            <Menu.Item
+              style={styles.menuAnchor}
               onClick={this.toggleModalOpen(HomeEnum.NEW_TAG, true)}
             >
               <Icon name="tag" />
@@ -112,6 +122,14 @@ export class Home extends React.Component<HomeProps, HomeState> {
           <SourceListModal
             open={this.state.modalOpened[HomeEnum.SOURCE_LIST]}
             dismissModal={this.toggleModalOpen(HomeEnum.SOURCE_LIST, false)}
+          />
+        )}
+
+        {this.state.modalOpened[HomeEnum.NEW_AUTHOR] && (
+          <NewAuthorModal
+            open={this.state.modalOpened[HomeEnum.NEW_AUTHOR]}
+            dismissModal={this.toggleModalOpen(HomeEnum.NEW_AUTHOR, false)}
+            style={{ marginTop: 0 }}
           />
         )}
 
