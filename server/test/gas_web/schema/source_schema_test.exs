@@ -11,10 +11,12 @@ defmodule GasWeb.SourceSchemaTest do
       SourceFactory.insert(:source)
 
       # 2nd source
-      %Source{
-        id: id,
-        source_type_id: source_type_id
-      } = SourceFactory.insert(:source)
+
+      source =
+        %Source{
+          id: id,
+          source_type_id: source_type_id
+        } = SourceFactory.insert(:source)
 
       id = inspect(id)
       source_type_id = inspect(source_type_id)
@@ -30,19 +32,25 @@ defmodule GasWeb.SourceSchemaTest do
 
       assert %{
                "id" => ^id,
-               "display" => _display,
+               "display" => display,
                "sourceType" => %{
                  "id" => ^source_type_id
-               }
+               },
+               "authors" => authors_
              } = List.last(sources)
+
+      assert_display(authors_, display)
+      {authors, _} = make_authors(source)
+      assert_authors(authors, authors_)
     end
 
     test "get one source succeeds" do
-      %Source{
-        id: id,
-        source_type_id: source_type_id,
-        year: year
-      } = SourceFactory.insert(:source)
+      source =
+        %Source{
+          id: id,
+          source_type_id: source_type_id,
+          year: year
+        } = SourceFactory.insert(:source)
 
       id = Integer.to_string(id)
       source_type_id = inspect(source_type_id)
@@ -53,10 +61,11 @@ defmodule GasWeb.SourceSchemaTest do
                   "source" => %{
                     "id" => ^id,
                     "year" => ^year,
-                    "display" => _display,
+                    "display" => display,
                     "sourceType" => %{
                       "id" => ^source_type_id
-                    }
+                    },
+                    "authors" => authors_
                   }
                 }
               }} =
@@ -69,6 +78,10 @@ defmodule GasWeb.SourceSchemaTest do
                    }
                  }
                )
+
+      assert_display(authors_, display)
+      {authors, _} = make_authors(source)
+      assert_authors(authors, authors_)
     end
   end
 
@@ -86,7 +99,7 @@ defmodule GasWeb.SourceSchemaTest do
           year: "2016"
         )
 
-      {authors, count, source_input} = make_authors(source)
+      {authors, source_input} = make_authors(source)
 
       variables = %{
         "source" => source_input
@@ -98,6 +111,7 @@ defmodule GasWeb.SourceSchemaTest do
                   "createSource" => %{
                     "id" => _,
                     "year" => ^year,
+                    "display" => display,
                     "sourceType" => %{
                       "id" => ^source_type_id,
                       "name" => ^name
@@ -112,24 +126,20 @@ defmodule GasWeb.SourceSchemaTest do
                  variables: variables
                )
 
-      assert length(authors_) == count
+      assert_display(authors_, display)
       assert_authors(authors, authors_)
     end
 
     test "create source without author names or IDs errors" do
-      source =
+      {_, source} =
         SourceFactory.params_with_assocs(
           :source,
           author_ids: nil,
           author_maps: nil
         )
-        |> MapHelpers.stringify_keys()
+        |> make_authors()
 
-      variables = %{
-        "source" => %{
-          "source" => source
-        }
-      }
+      variables = %{"source" => source}
 
       assert {:ok,
               %{
@@ -138,7 +148,7 @@ defmodule GasWeb.SourceSchemaTest do
                 },
                 errors: [
                   %{
-                    message: "You must specify at least one author",
+                    message: "{name: source, error: [author_maps: author ids or map empty]}",
                     path: ["createSource"]
                   }
                 ]
@@ -152,6 +162,13 @@ defmodule GasWeb.SourceSchemaTest do
   end
 
   defp assert_authors(authors, authors_graphql) do
+    authors_length =
+      Map.values(authors)
+      |> Enum.concat()
+      |> length()
+
+    assert authors_length == length(authors_graphql)
+
     case Map.get(authors, "author_ids") do
       nil ->
         :ok
@@ -172,56 +189,37 @@ defmodule GasWeb.SourceSchemaTest do
     end
   end
 
-  defp make_authors(source) do
-    authors = %{}
-    count = 0
+  defp assert_display(authors, display),
+    do: assert(Enum.all?(authors, &String.contains?(display, &1["name"])))
 
-    {authors, count, source} =
+  defp make_authors(source) do
+    {authors, source} =
       case Map.pop(source, :author_ids) do
         {nil, source} ->
-          {authors, count, source}
+          {%{}, source}
 
         {author_ids, source} ->
           author_ids = Enum.map(author_ids, &Integer.to_string/1)
-
-          {
-            Map.merge(authors, %{"author_ids" => author_ids}),
-            count + length(author_ids),
-            source
-          }
+          {%{"author_ids" => author_ids}, source}
       end
 
-    {authors, count, source} =
+    {authors, source} =
       case {author_maps, source} = Map.pop(source, :author_maps) do
         {nil, source} ->
-          {authors, count, source}
+          {authors, source}
 
         {author_maps, source} ->
           author_maps = Enum.map(author_maps, &MapHelpers.stringify_keys/1)
-
-          {
-            Map.merge(authors, %{"author_maps" => author_maps}),
-            count + length(author_maps),
-            source
-          }
+          {Map.merge(authors, %{"author_maps" => author_maps}), source}
       end
-
-    source_type_id = Integer.to_string(source.source_type_id)
 
     source =
       source
       |> MapHelpers.stringify_keys()
       |> Map.merge(%{
-        "sourceTypeId" => source_type_id
+        "sourceTypeId" => Integer.to_string(source.source_type_id)
       })
 
-    source_input =
-      if authors == %{} do
-        %{"source" => source}
-      else
-        Map.merge(%{"source" => source}, authors)
-      end
-
-    {authors, count, source_input}
+    {authors, Map.merge(source, authors)}
   end
 end

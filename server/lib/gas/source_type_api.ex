@@ -98,8 +98,14 @@ defmodule Gas.SourceTypeApi do
       %Ecto.Changeset{source: %SourceType{}}
 
   """
-  def change_(%SourceType{} = source_type) do
-    SourceType.changeset(source_type, %{})
+  def change_(source_type, attrs \\ %{})
+
+  def change_(source_type, %SourceType{} = attrs) do
+    SourceType.changeset(source_type, Map.from_struct(attrs))
+  end
+
+  def change_(%SourceType{} = source_type, attrs) do
+    SourceType.changeset(source_type, attrs)
   end
 
   @doc """

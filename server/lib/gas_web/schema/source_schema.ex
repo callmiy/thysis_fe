@@ -23,14 +23,12 @@ defmodule GasWeb.SourceSchema do
     field(:source_type, non_null(:source_type), resolve: assoc(:source_type))
     field(:quotes, list_of(:quote), resolve: assoc(:quotes))
 
-    field :display, :string do
-      resolve(&SourceResolver.display/3)
-    end
+    field(:display, :string, do: resolve(&SourceResolver.display/3))
   end
 
   # MUTATION INPUTS
-  @desc "Inputs for creating a source without authors"
-  input_object :create_source_only_input do
+  @desc "Inputs for creating a source with authors"
+  input_object :create_source_input do
     @desc "The topic of the work, as given by authour - manadatory"
     field(:topic, non_null(:string))
 
@@ -45,12 +43,6 @@ defmodule GasWeb.SourceSchema do
 
     @desc ~S{The URI where author's original work can be accessed - optional}
     field(:url, :string)
-  end
-
-  @desc "Inputs for creating a source with authors"
-  input_object :create_source_input do
-    @desc "other source fields excluding authors"
-    field(:source, non_null(:create_source_only_input))
 
     @desc "The original owners of the work - Either author creation inputs
     or list of author IDs mandatory"

@@ -133,7 +133,7 @@ defmodule Gas.QuoteSchemaTest do
 
     test "full text search across sources table" do
       search_text = Faker.String.base64(4)
-      %{id: id} = SourceFactory.insert(:source, author: search_text)
+      %{id: id} = SourceFactory.insert(:source, topic: search_text)
 
       assert {:ok,
               %{
@@ -144,7 +144,7 @@ defmodule Gas.QuoteSchemaTest do
                         "tid" => ^id,
                         "source" => "SOURCES",
                         "text" => ^search_text,
-                        "column" => "author"
+                        "column" => "topic"
                       }
                     ]
                   }

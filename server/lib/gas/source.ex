@@ -29,7 +29,18 @@ defmodule Gas.Source do
   end
 
   @doc false
-  def changeset(source, attrs \\ %{}) do
+  def changeset(source, attrs \\ %{})
+
+  def changeset(%{id: nil} = source, attrs) do
+    cast_and_validate(source, attrs)
+    |> validate_authors()
+  end
+
+  def changeset(source, attrs) do
+    cast_and_validate(source, attrs)
+  end
+
+  defp cast_and_validate(source, attrs) do
     source
     |> cast(attrs, [
       :topic,
@@ -41,16 +52,24 @@ defmodule Gas.Source do
       :author_maps
     ])
     |> validate_required([:topic, :source_type_id])
-    |> validate_authors()
   end
 
   defp validate_authors(changes) do
     case changes.valid? do
       true ->
-        author_ids = fetch_field(changes, :author_ids)
+        authors =
+          [
+            fetch_field(changes, :author_ids),
+            fetch_field(changes, :author_maps)
+          ]
+          |> Enum.map(fn
+            :error -> nil
+            {:data, nil} -> nil
+            _ -> :ok
+          end)
 
-        case {author_ids, fetch_field(changes, :author)} do
-          {:error, :error} ->
+        case authors do
+          [nil, nil] ->
             add_error(changes, :author_maps, "author ids or map empty")
 
           _ ->

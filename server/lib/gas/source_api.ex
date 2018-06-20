@@ -9,6 +9,8 @@ defmodule Gas.SourceApi do
   alias Gas.Source
   alias Gas.SourceAuthor
   alias Gas.Author
+  alias Gas.SourceType
+  alias Gas.SourceTypeApi
 
   @doc """
   Returns the list of sources.
@@ -85,61 +87,71 @@ defmodule Gas.SourceApi do
   """
   @spec create_(
           %{
-            source: Map.t(),
+            topic: String.t() | nil,
+            source_type_id: Integer.t() | String.t() | nil,
             author_maps: [Map.t()] | nil,
             author_ids: [Integer.t() | String.t()] | nil
           }
-          | %{
-              topic: String.t() | nil,
-              author_maps: [Map.t()] | nil,
-              author_ids: [Integer.t() | String.t()] | nil
-            }
           | %{}
         ) ::
           {:ok,
            %{
              source: %Source{},
+             source_type: %SourceType{} | nil,
              author_ids: {Integer.t(), nil} | nil,
              author_maps: {Integer.t(), [%Author{id: Integer.t()}]} | nil
            }}
-          | {:error, :no_authors}
           | {:error, Multi.name(), any(), %{optional(Multi.name()) => any()}}
-  def create_(%{topic: _} = attrs) do
-    authors = Map.take(attrs, [:author_ids, :author_maps])
 
-    %{source: Map.delete(attrs, [:author_ids, :author_maps])}
-    |> Map.merge(authors)
-    |> create_
+  def create_(%{source_type_id: nil, source_type: %{id: nil} = source_type} = attrs) do
+    source_type_multi =
+      Multi.new()
+      |> Multi.insert(
+        :source_type,
+        SourceTypeApi.change_(%SourceType{}, source_type)
+      )
+
+    create_source(source_type_multi, attrs)
   end
 
-  def create_(%{source: _} = attrs) do
-    author_maps = Map.get(attrs, :author_maps)
-    author_ids = Map.get(attrs, :author_ids)
-
-    create_(attrs, author_maps, author_ids)
+  def create_(%{source_type_id: _id} = attrs) do
+    source_type_multi = nil
+    create_source(source_type_multi, attrs)
   end
 
-  def create_(%{} = attrs), do: create_(Map.put(attrs, :topic, nil))
+  def create_(attrs), do: create_source(nil, attrs)
 
-  def create_(_, nil, nil), do: {:error, :no_authors}
-
-  def create_(source, author_maps, author_ids) do
-    {source, rest} = Map.pop(source, :source)
-
-    Multi.new()
-    |> Multi.insert(
-      :source,
-      change_(%Source{}, Map.merge(rest, source))
-    )
-    |> create_authors_multi(:author_maps, author_maps)
-    |> create_authors_multi(:author_ids, author_ids)
+  defp create_source(source_type_multi, attrs) do
+    create_source_multi(source_type_multi, attrs)
+    |> create_authors_multi(:author_maps, attrs)
+    |> create_authors_multi(:author_ids, attrs)
     |> Repo.transaction()
   end
 
-  def create_authors_multi(transaction, _, nil),
-    do: Multi.merge(transaction, fn _ -> Multi.new() end)
+  defp create_source_multi(source_type_multi, %Source{} = source) do
+    create_source_multi(source_type_multi, Map.from_struct(source))
+  end
 
-  def create_authors_multi(transaction, :author_ids, author_ids) when is_list(author_ids) do
+  defp create_source_multi(nil, source) do
+    Multi.new()
+    |> Multi.insert(
+      :source,
+      change_(%Source{}, source)
+    )
+  end
+
+  defp create_source_multi(source_type_multi, source) do
+    Multi.merge(source_type_multi, fn %{source_type: %SourceType{id: id}} ->
+      Multi.new()
+      |> Multi.insert(
+        :source,
+        change_(%Source{}, Map.put(source, :source_type_id, id))
+      )
+    end)
+  end
+
+  defp create_authors_multi(transaction, :author_ids, %{author_ids: author_ids})
+       when is_list(author_ids) do
     now = Timex.now()
 
     Multi.merge(transaction, fn %{source: %Source{id: id}} ->
@@ -163,7 +175,8 @@ defmodule Gas.SourceApi do
     end)
   end
 
-  def create_authors_multi(transaction, :author_maps, author_maps) when is_list(author_maps) do
+  defp create_authors_multi(transaction, :author_maps, %{author_maps: author_maps})
+       when is_list(author_maps) do
     now = Timex.now()
 
     Multi.merge(transaction, fn %{source: %Source{id: id}} ->
@@ -195,6 +208,9 @@ defmodule Gas.SourceApi do
       end)
     end)
   end
+
+  defp create_authors_multi(transaction, _, _),
+    do: Multi.merge(transaction, fn _ -> Multi.new() end)
 
   @doc """
   Updates a source.
@@ -241,7 +257,13 @@ defmodule Gas.SourceApi do
       %Ecto.Changeset{source: %Source{}}
 
   """
-  def change_(%Source{} = source, attrs \\ %{}) do
+  def change_(source, attrs \\ %{})
+
+  def change_(%Source{} = source, %Source{} = attrs) do
+    Source.changeset(source, Map.from_struct(attrs))
+  end
+
+  def change_(%Source{} = source, attrs) do
     Source.changeset(source, attrs)
   end
 end

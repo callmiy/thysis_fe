@@ -28,36 +28,37 @@ defmodule Gas.SourceTest do
   end
 
   test "create_/1 with valid data creates a source" do
-    %{
-      topic: topic
-    } = attrs = Factory.params_with_assocs(:source)
+    %{topic: topic} =
+      attrs =
+      Factory.params_with_assocs(
+        :source,
+        author_maps: [params_for(:author)]
+      )
 
     assert {:ok,
             %{
               source: %Source{} = source,
               author_maps: {1, [_]}
-            }} =
-             Api.create_(%{
-               source: attrs,
-               author_maps: [params_for(:author)]
-             })
+            }} = Api.create_(attrs)
 
     assert source.topic == topic
   end
 
   test "create_/1 with no authors error" do
-    assert {:error, :no_authors} =
-             Api.create_(%{
-               source: Factory.params_with_assocs(:source)
-             })
+    assert {:error, :source, %Ecto.Changeset{errors: [author_maps: _]}, %{}} =
+             :source
+             |> Factory.params_with_assocs(author_maps: nil, author_ids: nil)
+             |> Api.create_()
   end
 
   test "create_/1 with invalid data returns error changeset" do
     assert {:error, :source, %Ecto.Changeset{}, %{}} =
-             Api.create_(%{
-               source: Factory.params_with_assocs(:source, topic: nil),
-               author_maps: [params_for(:author)]
-             })
+             Factory.params_with_assocs(:source, topic: nil) |> Api.create_()
+  end
+
+  test "create_/1 with no source type returns error changeset" do
+    assert {:error, :source, %Ecto.Changeset{}, %{}} =
+             Factory.params_for(:source) |> Api.create_()
   end
 
   test "update_/2 with valid data updates the source" do

@@ -1,26 +1,27 @@
 defmodule Gas.Factory.SourceStrategy do
-  use ExMachina.Strategy, function_name: :create
+  use ExMachina.Strategy, function_name: :insert
 
   alias Gas.SourceApi
   alias Gas.Source
 
-  def handle_create(record, _opts) do
-    %Source{} = source = elem(SourceApi.create_(record), 1)
+  def handle_insert(record, _opts) do
+    {:ok, %{source: source}} =
+      Map.from_struct(record)
+      |> SourceApi.create_()
 
-    %{
-      source
-      | author_ids: nil,
-        author_maps: nil
-    }
+    source
   end
 end
 
 defmodule Gas.Factory.Source do
-  use ExMachina.Ecto, repo: Gas.Repo
+  use ExMachina
   use Gas.Factory.SourceStrategy
 
   alias Gas.Factory
   alias Gas.Source
+  alias ExMachina.Ecto, as: ExEcto
+
+  @name __MODULE__
 
   @start_date ~D[1998-01-01]
   @end_date ~D[2018-12-31]
@@ -64,6 +65,23 @@ defmodule Gas.Factory.Source do
       author_maps: authors
     }
   end
+
+  def params_for(:source, attrs \\ %{}), do: params(attrs)
+
+  def params_with_assocs(:source, attrs \\ %{}) do
+    %{id: id} = Factory.insert(:source_type)
+
+    params(attrs)
+    |> Map.put(:source_type_id, id)
+  end
+
+  defp params(attrs),
+    do:
+      ExEcto.params_for(
+        @name,
+        :source,
+        attrs
+      )
 
   defp random_date, do: Faker.Date.between(@start_date, @end_date)
 end

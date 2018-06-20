@@ -5,6 +5,7 @@ defmodule GasWeb.SourceResolver do
   alias Gas.Source
   alias Gas.SourceApi, as: Api
   alias GasWeb.ResolversUtil
+  alias Gas.Repo
 
   @doc """
   Get all sources.
@@ -34,38 +35,47 @@ defmodule GasWeb.SourceResolver do
   def display(%Source{} = source, _, _) do
     text =
       source
-      |> Map.take([:author, :topic, :publication, :year, :url])
-      |> Enum.reduce([], fn
-        {_, nil}, acc -> acc
-        {_, v}, acc -> [v | acc]
-      end)
-      |> Enum.reverse()
+      |> Repo.preload([:authors])
+      |> Map.take([:authors, :topic, :publication, :year, :url])
+      |> map_reduce()
       |> Enum.join(" | ")
 
     {:ok, text}
   end
 
+  defp map_reduce(list) when is_list(list), do: Enum.map(list, &map_reduce/1)
+
+  defp map_reduce(%{} = map) do
+    Enum.reduce(map, [], fn
+      {:authors, authors}, acc ->
+        authors = Enum.map(authors, &Map.take(&1, [:name]))
+        Enum.concat(acc, map_reduce(authors))
+
+      {_, nil}, acc ->
+        acc
+
+      {_, %{__struct__: _}}, acc ->
+        acc
+
+      {_, val}, acc when is_list(val) or is_map(val) ->
+        Enum.concat(acc, map_reduce(val))
+
+      {_, v}, acc ->
+        [v | acc]
+    end)
+    |> Enum.reverse()
+  end
+
+  defp map_reduce(val), do: val
+
   @doc """
   Create a source
   """
-  @spec create_source(
-          any,
-          %{
-            source: %{
-              source: Map.t(),
-              author_maps: [Map.t()] | nil,
-              author_ids: [Integer.t() | String.t()] | nil
-            }
-          },
-          any
-        ) :: {:ok, %Source{}} | {:error, String.t()}
+  @spec create_source(any, %{source: Map.t()}, any) :: {:ok, %Source{}} | {:error, String.t()}
   def create_source(_root, %{source: inputs} = _args, _info) do
     case Api.create_(inputs) do
       {:ok, %{source: source}} ->
         {:ok, source}
-
-      {:error, :no_authors} ->
-        {:error, "You must specify at least one author"}
 
       {:error, failed_operation, changeset, _success} ->
         {
