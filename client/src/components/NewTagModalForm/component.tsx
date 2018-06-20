@@ -19,14 +19,6 @@ export class NewTagModalForm extends React.PureComponent<
 > {
   state = initalStateNewTagModalFormState;
 
-  constructor(props: NewTagModalFormProps) {
-    super(props);
-
-    ["handleChange", "handleSubmit", "handleFocus", "writeTagsToCache"].forEach(
-      fn => (this[fn] = this[fn].bind(this))
-    );
-  }
-
   render() {
     const { open, style } = this.props;
     const { text, formError, submitting, submitSuccess } = this.state;

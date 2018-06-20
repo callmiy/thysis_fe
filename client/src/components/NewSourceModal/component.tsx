@@ -1,5 +1,9 @@
 import React from "react";
-import { Formik, FormikProps, Field, FieldProps, FormikErrors } from "formik";
+import { Formik } from "formik";
+import { FormikProps } from "formik";
+import { Field } from "formik";
+import { FieldProps } from "formik";
+import { FormikErrors } from "formik";
 import { Form } from "semantic-ui-react";
 import { Button } from "semantic-ui-react";
 import { Icon } from "semantic-ui-react";
@@ -8,86 +12,30 @@ import { Message } from "semantic-ui-react";
 import { Input } from "semantic-ui-react";
 import { Modal } from "semantic-ui-react";
 import { Card } from "semantic-ui-react";
-import jss from "jss";
-import preset from "jss-preset-default";
 import update from "immutability-helper";
 import { Mutation } from "react-apollo";
 import isEmpty from "lodash/isEmpty";
-import { withRouter, RouteComponentProps } from "react-router-dom";
 
-import SOURCE_MUTATION from "../graphql/source.mutation";
-import SOURCE_QUERY from "../graphql/sources-1.query";
-import { CreateSourceFn, CreateSourceUpdateFn } from "../graphql/ops.types";
+import SOURCE_MUTATION from "../../graphql/source.mutation";
+import SOURCE_QUERY from "../../graphql/sources-1.query";
+import { CreateSourceFn, CreateSourceUpdateFn } from "../../graphql/ops.types";
 import {
-  CreateSourceInput,
   SourceTypeFragFragment,
   Sources1Query,
   SourceFragFragment
-} from "../graphql/gen.types";
-import SourceTypeControl from "./select-source-type-control.component";
-import { makeSourceURL } from "../utils/route-urls.util";
+} from "../../graphql/gen.types";
+import SourceTypeControl from ".././select-source-type-control.component";
+import { makeSourceURL } from "../../utils/route-urls.util";
+import { styles } from "./styles";
+import { classes } from "./styles";
+import { NewSourceModalProps } from "./utils";
+import { NewSourceModalState } from "./utils";
+import { initialState } from "./utils";
+import { initialFormValues } from "./utils";
+import { FormValues } from "./utils";
+import {} from "./utils";
 
-jss.setup(preset());
-
-const styles = {
-  modal: {
-    marginTop: 0,
-    background: "#fff"
-  },
-
-  formButtonsContainer: {
-    display: "flex"
-  },
-
-  submitButton: {
-    margin: "0 15px"
-  },
-
-  successCard: {
-    backgroundColor: "#fcfff5",
-    boxShadow: "0 0 0 1px #a3c293 inset, 0 0 0 0 transparent",
-    margin: "auto"
-  }
-};
-
-const { classes } = jss.createStyleSheet(styles).attach();
-
-interface FormValues {
-  sourceType: SourceTypeFragFragment | null;
-  author: string;
-  topic: string;
-  publication: string;
-  url: string;
-  year: string;
-}
-
-const initialFormValues: FormValues = {
-  sourceType: null,
-  author: "",
-  topic: "",
-  publication: "",
-  url: "",
-  year: ""
-};
-
-export type FormValuesProps = FieldProps<FormValues>;
-
-interface NewSourceModalState {
-  output: Partial<CreateSourceInput>;
-  source?: SourceFragFragment;
-}
-
-const initialState: NewSourceModalState = {
-  output: {}
-};
-
-interface NewSourceModalProps extends RouteComponentProps<{}> {
-  open: boolean;
-  dismissModal: () => void;
-  style?: React.CSSProperties;
-}
-
-class NewSourceModal extends React.Component<
+export class NewSourceModal extends React.Component<
   NewSourceModalProps,
   NewSourceModalState
 > {
@@ -95,7 +43,6 @@ class NewSourceModal extends React.Component<
 
   render() {
     const { open, style } = this.props;
-    const { source } = this.state;
 
     return (
       <Modal
@@ -106,30 +53,7 @@ class NewSourceModal extends React.Component<
         open={open}
         onClose={this.resetModal}
       >
-        {source && (
-          <Card style={styles.successCard}>
-            <Card.Content>
-              <Card.Header style={{ color: "#a3c293" }}>Success</Card.Header>
-
-              <Card.Description>{source.display}</Card.Description>
-
-              <Card.Content extra={true}>
-                <div className="ui two buttons">
-                  <Button
-                    basic={true}
-                    color="green"
-                    onClick={this.goToSource(source.id)}
-                  >
-                    Go to source
-                  </Button>
-                  <Button basic={true} color="red" onClick={this.resetModal}>
-                    Dismiss
-                  </Button>
-                </div>
-              </Card.Content>
-            </Card.Content>
-          </Card>
-        )}
+        {this.renderErrorOrSuccess()}
 
         <Header icon="user" content="Create quote source" />
 
@@ -182,6 +106,14 @@ class NewSourceModal extends React.Component<
       formikBag.resetForm();
       formikBag.setSubmitting(false);
     } catch (error) {
+      this.setState(s =>
+        update(s, {
+          formError: {
+            $set: error
+          }
+        })
+      );
+
       formikBag.setSubmitting(false);
     }
   };
@@ -260,6 +192,66 @@ class NewSourceModal extends React.Component<
     this.props.dismissModal();
   };
 
+  renderErrorOrSuccess = () => {
+    const { formError, source } = this.state;
+
+    if (formError) {
+      return (
+        <Message icon={true} error={true}>
+          <Icon name="ban" />
+
+          <Message.Content>
+            <Message.Header>An error has occurred</Message.Header>
+
+            {formError.message}
+          </Message.Content>
+        </Message>
+      );
+    }
+
+    if (source) {
+      return (
+        <Card style={styles.successCard}>
+          <Card.Content>
+            <Card.Header style={{ color: "#a3c293" }}>Success</Card.Header>
+
+            <Card.Description>{source.display}</Card.Description>
+
+            <Card.Content extra={true}>
+              <div className="ui two buttons">
+                <Button
+                  basic={true}
+                  color="green"
+                  onClick={this.goToSource(source.id)}
+                >
+                  Go to source
+                </Button>
+                <Button basic={true} color="red" onClick={this.resetModal}>
+                  Dismiss
+                </Button>
+              </div>
+            </Card.Content>
+          </Card.Content>
+        </Card>
+      );
+    }
+
+    return undefined;
+  };
+
+  handleFocus = () =>
+    this.setState(s =>
+      update(s, {
+        formError: {
+          $set: undefined
+        },
+
+        source: {
+          $set: undefined
+        }
+      })
+    );
+
   renderSourceTypeControl = (formProps: FieldProps<FormValues>) => {
     const {
       field: { name },
@@ -275,6 +267,7 @@ class NewSourceModal extends React.Component<
         label="Select source type"
         error={booleanError}
         selectError={booleanError}
+        onFocus={this.handleFocus}
         {...formProps}
       >
         {booleanError && touched && <Message error={true} header={error} />}
@@ -310,6 +303,7 @@ class NewSourceModal extends React.Component<
         id={name}
         error={booleanError}
         autoComplete="off"
+        onFocus={this.handleFocus}
         {...field}
       />
     );
@@ -459,4 +453,4 @@ class NewSourceModal extends React.Component<
   };
 }
 
-export default withRouter(NewSourceModal);
+export default NewSourceModal;

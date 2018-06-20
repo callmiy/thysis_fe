@@ -11,7 +11,7 @@ import { SEARCH_QUOTES_URL } from "../../utils/route-urls.util";
 import TagListModal from "../../components/TagListModal";
 import SourceListModal from "../../components/SourceListModal";
 import NewTagModalForm from "../../components/NewTagModalForm";
-import NewSourceModal from "../../components/new-source-modal.component";
+import NewSourceModal from "../../components/NewSourceModal";
 import styles from "./styles";
 import { classes } from "./styles";
 

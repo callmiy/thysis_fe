@@ -1,7 +1,7 @@
 import Select from "react-select";
 import * as React from "react";
 
-import { FormValuesProps } from "./new-source-modal.component";
+import { FormValuesProps } from "./NewSourceModal/utils";
 import { SourceTypeFragFragment } from "../graphql/gen.types";
 import { SourceTypeQueryComponent } from "../graphql/ops.types";
 import SOURCE_TYPE_QUERY from "../graphql/source-types.query";

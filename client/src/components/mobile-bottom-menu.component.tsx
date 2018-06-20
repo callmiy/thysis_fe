@@ -5,7 +5,7 @@ import { SemanticICONS, SemanticWIDTHS } from "semantic-ui-react/dist/commonjs";
 import { withRouter, RouteComponentProps } from "react-router-dom";
 
 import NewTagModalForm from "./NewTagModalForm";
-import NewSourceModal from "./new-source-modal.component";
+import NewSourceModal from "./NewSourceModal";
 import TagListModal from "./TagListModal";
 import SourceListModal from "./SourceListModal";
 

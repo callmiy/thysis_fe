@@ -3,7 +3,7 @@ import { Menu, Icon } from "semantic-ui-react";
 import update from "immutability-helper";
 import { NavLink } from "react-router-dom";
 
-import NewSourceModal from "./new-source-modal.component";
+import NewSourceModal from "./NewSourceModal";
 import TagListModal from "./TagListModal";
 import { MenuItemNames } from "../constants";
 import { makeNewQuoteURL } from "../utils/route-urls.util";
