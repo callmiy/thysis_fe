@@ -24,7 +24,8 @@ import {
   Sources1Query,
   SourceFragFragment
 } from "../../graphql/gen.types";
-import SourceTypeControl from ".././select-source-type-control.component";
+import SourceTypeControlComponent from "../SourceTypeControl";
+import AuthorsControlComponent from "../AuthorsControl";
 import { makeSourceURL } from "../../utils/route-urls.util";
 import { styles } from "./styles";
 import { classes } from "./styles";
@@ -33,7 +34,7 @@ import { NewSourceModalState } from "./utils";
 import { initialState } from "./utils";
 import { initialFormValues } from "./utils";
 import { FormValues } from "./utils";
-import {} from "./utils";
+import { AuthorFragFragment } from "../../graphql/gen.types";
 
 export class NewSourceModal extends React.Component<
   NewSourceModalProps,
@@ -146,9 +147,9 @@ export class NewSourceModal extends React.Component<
     return (
       <Form onSubmit={handleSubmit}>
         <Field name="sourceType" render={this.renderSourceTypeControl} />
+        <Field name="authors" render={this.renderAuthorsControl} />
 
         {[
-          { name: "author", label: "Author name(s)" },
           { name: "topic" },
           { name: "year" },
           { name: "publication" },
@@ -263,12 +264,38 @@ export class NewSourceModal extends React.Component<
 
     return (
       <Form.Field
-        control={SourceTypeControl}
+        control={SourceTypeControlComponent}
         label="Select source type"
         error={booleanError}
         selectError={booleanError}
         onFocus={this.handleFocus}
         {...formProps}
+      >
+        {booleanError && touched && <Message error={true} header={error} />}
+      </Form.Field>
+    );
+  };
+
+  renderAuthorsControl = (formProps: FieldProps<FormValues>) => {
+    const {
+      field: { name, value },
+      form
+    } = formProps;
+    const error = form.errors[name];
+    const booleanError = !!error;
+    const touched = form.touched[name];
+
+    return (
+      <Form.Field
+        control={AuthorsControlComponent}
+        label="Select authors"
+        error={booleanError}
+        selectError={booleanError}
+        onFocus={this.handleFocus}
+        name={name}
+        value={value}
+        handleBlur={this.handleFormControlBlur(name, form)}
+        handleChange={this.handleControlChange(name, form)}
       >
         {booleanError && touched && <Message error={true} header={error} />}
       </Form.Field>
@@ -308,6 +335,17 @@ export class NewSourceModal extends React.Component<
       />
     );
   };
+
+  handleFormControlBlur = (
+    name: string,
+    form: FormikProps<FormValues>
+  ) => () => {
+    form.setFieldTouched(name, true);
+  };
+
+  handleControlChange = (name: string, form: FormikProps<FormValues>) => (
+    val: undefined | AuthorFragFragment
+  ) => form.setFieldValue(name, val);
 
   writeSourcesToCache: CreateSourceUpdateFn = (
     cache,
@@ -362,16 +400,16 @@ export class NewSourceModal extends React.Component<
     return "";
   };
 
-  validateauthor = (author: string | null) => {
-    if (!author) {
-      return "Enter author name(s)";
+  validateauthors = (authors: AuthorFragFragment[]) => {
+    if (!authors || !authors.length) {
+      return "Select at least one author";
     }
 
     this.setState(prev =>
       update(prev, {
         output: {
-          author: {
-            $set: author
+          authorIds: {
+            $set: authors.map(a => a.id)
           }
         }
       })

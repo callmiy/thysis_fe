@@ -5,10 +5,11 @@ import { ApolloError } from "apollo-client";
 import { SourceFragFragment } from "../../graphql/gen.types";
 import { CreateSourceInput } from "../../graphql/gen.types";
 import { SourceTypeFragFragment } from "../../graphql/gen.types";
+import { AuthorFragFragment } from "../../graphql/gen.types";
 
 export interface FormValues {
   sourceType: SourceTypeFragFragment | null;
-  author: string;
+  authors: AuthorFragFragment[];
   topic: string;
   publication: string;
   url: string;
@@ -17,7 +18,7 @@ export interface FormValues {
 
 export const initialFormValues: FormValues = {
   sourceType: null,
-  author: "",
+  authors: [],
   topic: "",
   publication: "",
   url: "",

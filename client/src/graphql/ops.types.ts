@@ -4,25 +4,30 @@ import { MutationUpdaterFn } from "react-apollo";
 import { QueryResult } from "react-apollo";
 import { ApolloQueryResult } from "apollo-client";
 
-import {
-  TagsMinimalQuery,
-  Sources1Query,
-  CreateQuoteMutation,
-  CreateQuoteMutationVariables,
-  CreateTagMutation,
-  CreateTagMutationVariables,
-  CreateSourceMutation,
-  CreateSourceMutationVariables,
-  SourceTypesQuery,
-  TagQuoteQuery,
-  TagQuoteQueryVariables,
-  Quotes1Query,
-  Quotes1QueryVariables
-} from "./gen.types";
+import { TagsMinimalQuery } from "./gen.types";
+import { Sources1Query } from "./gen.types";
+import { CreateQuoteMutation } from "./gen.types";
+import { CreateQuoteMutationVariables } from "./gen.types";
+import { CreateTagMutation } from "./gen.types";
+import { CreateTagMutationVariables } from "./gen.types";
+import { CreateSourceMutation } from "./gen.types";
+import { CreateSourceMutationVariables } from "./gen.types";
+import { SourceTypesQuery } from "./gen.types";
+import { TagQuoteQuery } from "./gen.types";
+import { TagQuoteQueryVariables } from "./gen.types";
+import { Quotes1Query } from "./gen.types";
+import { Quotes1QueryVariables } from "./gen.types";
+import { GetAllAuthorsQuery } from "./gen.types";
 
 export class TagsMinimalQueryComponent extends Query<TagsMinimalQuery, {}> {}
 export type TagsMinimalQueryResult = QueryResult<TagsMinimalQuery>;
 export type TagsMinimalQueryClientResult = ApolloQueryResult<TagsMinimalQuery>;
+
+// tslint:disable-next-line:max-classes-per-file
+export class GetAllAuthorsQueryComponent extends Query<
+  GetAllAuthorsQuery,
+  {}
+> {}
 
 // tslint:disable-next-line:max-classes-per-file
 export class Sources1QueryComponent extends Query<Sources1Query, {}> {}

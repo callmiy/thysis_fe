@@ -1,10 +1,10 @@
 import Select from "react-select";
 import * as React from "react";
 
-import { FormValuesProps } from "./NewSourceModal/utils";
-import { SourceTypeFragFragment } from "../graphql/gen.types";
-import { SourceTypeQueryComponent } from "../graphql/ops.types";
-import SOURCE_TYPE_QUERY from "../graphql/source-types.query";
+import { FormValuesProps } from "../NewSourceModal/utils";
+import { SourceTypeFragFragment } from "../../graphql/gen.types";
+import { SourceTypeQueryComponent } from "../../graphql/ops.types";
+import SOURCE_TYPE_QUERY from "../../graphql/source-types.query";
 
 type SourceTypes = SourceTypeFragFragment[];
 
@@ -12,7 +12,7 @@ interface SourceTypeControlProps extends FormValuesProps {
   selectError: boolean;
 }
 
-export default class SourceTypeControl extends React.PureComponent<
+export class SourceTypeControlComponent extends React.PureComponent<
   SourceTypeControlProps
 > {
   render() {
@@ -57,3 +57,5 @@ export default class SourceTypeControl extends React.PureComponent<
     this.props.form.setFieldTouched(this.props.field.name, true);
   };
 }
+
+export default SourceTypeControlComponent;
