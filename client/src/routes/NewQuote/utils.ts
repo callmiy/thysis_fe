@@ -43,6 +43,23 @@ export interface NewQuoteState {
   selectedTags: TagFragFragment[]; // from form
 }
 
+export const initialFormValues: FormValues = {
+  tags: [],
+  source: null,
+  quote: "",
+  date: null,
+  page: null,
+  volumeIssue: null,
+  extras: ""
+};
+
+export const formOutputs: CreateQuoteInput = {
+  date: "",
+  sourceId: "",
+  tags: [],
+  text: ""
+};
+
 export enum ShouldReUseSource {
   RE_USE_SOURCE = "re-use source",
   DO_NOT_RE_USE_SOURCE = "do not re-use source"

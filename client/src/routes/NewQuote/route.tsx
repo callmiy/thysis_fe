@@ -53,6 +53,8 @@ import { FormValues } from "./utils";
 import { NewQuoteState } from "./utils";
 import { NewQuoteProps } from "./utils";
 import QuotesSidebar from "./QuotesSidebar";
+import { initialFormValues } from "./utils";
+import { formOutputs } from "./utils";
 
 export class NewQuote extends React.Component<NewQuoteProps, NewQuoteState> {
   static getDerivedStateFromProps(
@@ -76,21 +78,8 @@ export class NewQuote extends React.Component<NewQuoteProps, NewQuoteState> {
   }
 
   state: NewQuoteState = {
-    initialFormValues: {
-      tags: [],
-      source: null,
-      quote: "",
-      date: null,
-      page: null,
-      volumeIssue: null,
-      extras: ""
-    },
-    formOutputs: {
-      date: "",
-      sourceId: "",
-      tags: [],
-      text: ""
-    },
+    initialFormValues,
+    formOutputs,
     selectedTags: []
   };
 
