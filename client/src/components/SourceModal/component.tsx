@@ -29,16 +29,16 @@ import AuthorsControlComponent from "../AuthorsControl";
 import { makeSourceURL } from "../../utils/route-urls.util";
 import { styles } from "./styles";
 import { classes } from "./styles";
-import { NewSourceModalProps } from "./utils";
-import { NewSourceModalState } from "./utils";
+import { SourceModalProps } from "./utils";
+import { SourceModalState } from "./utils";
 import { initialState } from "./utils";
 import { initialFormValues } from "./utils";
 import { FormValues } from "./utils";
 import { AuthorFragFragment } from "../../graphql/gen.types";
 
-export class NewSourceModal extends React.Component<
-  NewSourceModalProps,
-  NewSourceModalState
+export class SourceModal extends React.Component<
+  SourceModalProps,
+  SourceModalState
 > {
   state = initialState;
 
@@ -491,4 +491,4 @@ export class NewSourceModal extends React.Component<
   };
 }
 
-export default NewSourceModal;
+export default SourceModal;

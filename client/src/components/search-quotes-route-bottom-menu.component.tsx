@@ -3,7 +3,7 @@ import { Menu, Icon } from "semantic-ui-react";
 import update from "immutability-helper";
 import { NavLink } from "react-router-dom";
 
-import NewSourceModal from "./NewSourceModal";
+import SourceModal from "./SourceModal";
 import TagListModal from "./TagListModal";
 import { MenuItemNames } from "../constants";
 import { makeNewQuoteURL } from "../utils/route-urls.util";
@@ -76,7 +76,7 @@ class SearchQuotesMenu extends React.Component<{}, SearchQuotesMenuState> {
         </Menu>
 
         {this.state.modalOpened[MenuItemNames.NEW_SOURCE] && (
-          <NewSourceModal
+          <SourceModal
             open={this.state.modalOpened[MenuItemNames.NEW_SOURCE]}
             dismissModal={this.toggleModalOpen(MenuItemNames.NEW_SOURCE, false)}
             style={{ marginTop: 0 }}

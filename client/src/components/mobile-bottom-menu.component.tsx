@@ -5,7 +5,7 @@ import { SemanticICONS, SemanticWIDTHS } from "semantic-ui-react/dist/commonjs";
 import { withRouter, RouteComponentProps } from "react-router-dom";
 
 import NewTagModalForm from "./NewTagModalForm";
-import NewSourceModal from "./NewSourceModal";
+import SourceModal from "./SourceModal";
 import TagListModal from "./TagListModal";
 import SourceListModal from "./SourceListModal";
 
@@ -55,7 +55,7 @@ const menus: Menus = {
   },
 
   [MenuItem.NEW_SOURCE]: {
-    component: NewSourceModal,
+    component: SourceModal,
     icon: "user",
     label: "New Source",
     action: MenuAction.MODAL

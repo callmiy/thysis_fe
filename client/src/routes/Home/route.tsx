@@ -11,7 +11,7 @@ import { SEARCH_QUOTES_URL } from "../../utils/route-urls.util";
 import TagListModal from "../../components/TagListModal";
 import SourceListModal from "../../components/SourceListModal";
 import NewTagModalForm from "../../components/NewTagModalForm";
-import NewSourceModal from "../../components/NewSourceModal";
+import SourceModal from "../../components/SourceModal";
 import NewAuthorModal from "../../components/NewAuthorModal";
 import styles from "./styles";
 import { classes } from "./styles";
@@ -142,7 +142,7 @@ export class Home extends React.Component<HomeProps, HomeState> {
         )}
 
         {this.state.modalOpened[HomeEnum.NEW_SOURCE] && (
-          <NewSourceModal
+          <SourceModal
             open={this.state.modalOpened[HomeEnum.NEW_SOURCE]}
             dismissModal={this.toggleModalOpen(HomeEnum.NEW_SOURCE, false)}
             style={{ marginTop: 0 }}

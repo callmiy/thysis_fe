@@ -27,17 +27,17 @@ export const initialFormValues: FormValues = {
 
 export type FormValuesProps = FieldProps<FormValues>;
 
-export interface NewSourceModalState {
+export interface SourceModalState {
   output: Partial<CreateSourceInput>;
   source?: SourceFragFragment;
   formError?: ApolloError;
 }
 
-export const initialState: NewSourceModalState = {
+export const initialState: SourceModalState = {
   output: {}
 };
 
-export interface NewSourceModalProps extends RouteComponentProps<{}> {
+export interface SourceModalProps extends RouteComponentProps<{}> {
   open: boolean;
   dismissModal: () => void;
   style?: React.CSSProperties;

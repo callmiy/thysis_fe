@@ -5,7 +5,7 @@ import { NavLink } from "react-router-dom";
 
 import NewTagModalForm from "../../components/NewTagModalForm";
 import { TagModalCreatedCb } from "../../components/NewTagModalForm/utils";
-import NewSourceModal from "../../components/NewSourceModal";
+import SourceModal from "../../components/SourceModal";
 import TagListModal from "../../components/TagListModal";
 import { MenuItemNames } from "../../constants";
 import { SEARCH_QUOTES_URL } from "../../utils/route-urls.util";
@@ -85,7 +85,7 @@ class NewQuoteMenu extends React.Component<
         </Menu>
 
         {this.state.modalOpened[MenuItemNames.NEW_SOURCE] && (
-          <NewSourceModal
+          <SourceModal
             open={this.state.modalOpened[MenuItemNames.NEW_SOURCE]}
             dismissModal={this.toggleModalOpen(MenuItemNames.NEW_SOURCE, false)}
             style={{ marginTop: 0 }}
