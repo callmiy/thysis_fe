@@ -41,4 +41,12 @@ export interface SourceModalProps extends RouteComponentProps<{}> {
   open: boolean;
   dismissModal: () => void;
   style?: React.CSSProperties;
+  action: Action;
+  source?: SourceFragFragment;
+}
+
+export enum Action {
+  VIEWING = "viewing",
+  EDITING = "editing",
+  NEW = "new"
 }
