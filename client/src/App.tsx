@@ -63,25 +63,22 @@ const SearchQuotes = Loadable({
   loader: () => import("./routes/SearchQuotes")
 });
 
-// tslint:disable-next-line:max-classes-per-file
 class App extends React.Component {
   render() {
     return (
-      <div className={`${classes.app}`}>
-        <BrowserRouter>
-          <Switch>
-            <Route exact={true} path={SOURCE_URL} component={Source} />
-            <Route
-              exact={true}
-              path={SEARCH_QUOTES_URL}
-              component={SearchQuotes}
-            />
-            <Route exact={true} path={TAG_URL} component={TagDetail} />
-            <Route exact={true} path={NEW_QUOTE_URL} component={NewQuote} />
-            <Route exact={true} path={ROOT_URL} component={Home} />
-          </Switch>
-        </BrowserRouter>
-      </div>
+      <BrowserRouter>
+        <Switch>
+          <Route exact={true} path={SOURCE_URL} component={Source} />
+          <Route
+            exact={true}
+            path={SEARCH_QUOTES_URL}
+            component={SearchQuotes}
+          />
+          <Route exact={true} path={TAG_URL} component={TagDetail} />
+          <Route exact={true} path={NEW_QUOTE_URL} component={NewQuote} />
+          <Route exact={true} path={ROOT_URL} component={Home} />
+        </Switch>
+      </BrowserRouter>
     );
   }
 }
