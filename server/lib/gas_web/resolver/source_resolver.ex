@@ -5,14 +5,13 @@ defmodule GasWeb.SourceResolver do
   alias Gas.Source
   alias Gas.SourceApi, as: Api
   alias GasWeb.ResolversUtil
-  alias Gas.Repo
 
   @doc """
   Get all sources.
   """
   @spec sources(any, any, any) :: {:ok, [%Source{}]}
   def sources(_root, _args, _info) do
-    {:ok, Api.list()}
+    {:ok, Api.list(:authors)}
   end
 
   @doc """
@@ -35,7 +34,6 @@ defmodule GasWeb.SourceResolver do
   def display(%Source{} = source, _, _) do
     text =
       source
-      |> Repo.preload([:authors])
       |> Map.take([:authors, :topic, :publication, :year, :url])
       |> map_reduce()
       |> Enum.join(" | ")
@@ -48,13 +46,14 @@ defmodule GasWeb.SourceResolver do
   defp map_reduce(%{} = map) do
     Enum.reduce(map, [], fn
       {:authors, authors}, acc ->
-        authors = Enum.map(authors, &Map.take(&1, [:name]))
+        authors =
+          authors
+          # |> Map.from_struct()
+          |> Enum.map(&Map.take(&1, [:name]))
+
         Enum.concat(acc, map_reduce(authors))
 
       {_, nil}, acc ->
-        acc
-
-      {_, %{__struct__: _}}, acc ->
         acc
 
       {_, val}, acc when is_list(val) or is_map(val) ->

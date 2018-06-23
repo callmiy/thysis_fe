@@ -25,6 +25,13 @@ defmodule Gas.SourceApi do
     Repo.all(Source)
   end
 
+  def list(:authors) do
+    Source
+    |> join(:inner, [s], a in assoc(s, :authors))
+    |> preload([s, a], authors: a)
+    |> Repo.all()
+  end
+
   @doc """
   Gets a single source.
 
@@ -40,7 +47,14 @@ defmodule Gas.SourceApi do
 
   """
   def get!(id), do: Repo.get!(Source, id)
-  def get(id), do: Repo.get(Source, id)
+
+  def get(id) do
+    Source
+    |> where([s], s.id == ^id)
+    |> join(:inner, [s], a in assoc(s, :authors))
+    |> preload([s, a], authors: a)
+    |> Repo.one()
+  end
 
   @doc """
   Creates a source.
@@ -96,9 +110,10 @@ defmodule Gas.SourceApi do
         ) ::
           {:ok,
            %{
-             source: %Source{},
+             source: %Source{authors: [%Author{}]},
              source_type: %SourceType{} | nil,
-             author_ids: {Integer.t(), nil} | nil,
+             soure_author_ids: {Integer.t(), nil} | nil,
+             soure_author_maps: {Integer.t(), nil} | nil,
              author_maps: {Integer.t(), [%Author{id: Integer.t()}]} | nil
            }}
           | {:error, Multi.name(), any(), %{optional(Multi.name()) => any()}}
@@ -122,10 +137,16 @@ defmodule Gas.SourceApi do
   def create_(attrs), do: create_source(nil, attrs)
 
   defp create_source(source_type_multi, attrs) do
-    create_source_multi(source_type_multi, attrs)
-    |> create_authors_multi(:author_maps, attrs)
-    |> create_authors_multi(:author_ids, attrs)
-    |> Repo.transaction()
+    {source_multi, changes} = create_source_multi(source_type_multi, attrs)
+
+    with {:ok, result} <-
+           source_multi
+           |> create_authors_multi(:author_maps, changes)
+           |> create_authors_multi(:author_ids, changes)
+           |> Repo.transaction() do
+      result = create_source_result(result)
+      {:ok, result}
+    end
   end
 
   defp create_source_multi(source_type_multi, %Source{} = source) do
@@ -133,33 +154,44 @@ defmodule Gas.SourceApi do
   end
 
   defp create_source_multi(nil, source) do
-    Multi.new()
-    |> Multi.insert(
-      :source,
-      change_(%Source{}, source)
-    )
+    changes = change_(%Source{}, source)
+
+    multi =
+      Multi.new()
+      |> Multi.insert(:source, changes)
+
+    {multi, changes}
   end
 
   defp create_source_multi(source_type_multi, source) do
-    Multi.merge(source_type_multi, fn %{source_type: %SourceType{id: id}} ->
-      Multi.new()
-      |> Multi.insert(
-        :source,
-        change_(%Source{}, Map.put(source, :source_type_id, id))
-      )
-    end)
+    # we don't have source_type_id yet, so we fake 0 so that changeset passes
+    # for source_type_id
+    changes = change_(%Source{}, Map.put(source, :source_type_id, 0))
+
+    multi =
+      Multi.merge(source_type_multi, fn %{source_type: %SourceType{id: id}} ->
+        Multi.new()
+        |> Multi.insert(
+          :source,
+          change_(%Source{}, Map.put(source, :source_type_id, id))
+        )
+      end)
+
+    {multi, changes}
   end
 
-  defp create_authors_multi(transaction, :author_ids, %{author_ids: author_ids})
+  defp create_authors_multi(transaction, :author_ids, %Ecto.Changeset{
+         changes: %{author_ids: author_ids}
+       })
        when is_list(author_ids) do
     now = Timex.now()
 
-    Multi.merge(transaction, fn %{source: %Source{id: id}} ->
+    Multi.merge(transaction, fn %{source: %Source{id: id}} = _result ->
       source_authors =
         Enum.map(
           author_ids,
           &[
-            author_id: String.to_integer("#{&1}"),
+            author_id: &1.id,
             source_id: id,
             inserted_at: now,
             updated_at: now
@@ -168,14 +200,16 @@ defmodule Gas.SourceApi do
 
       Multi.new()
       |> Multi.insert_all(
-        :author_ids,
+        :source_author_ids,
         SourceAuthor,
         source_authors
       )
     end)
   end
 
-  defp create_authors_multi(transaction, :author_maps, %{author_maps: author_maps})
+  defp create_authors_multi(transaction, :author_maps, %Ecto.Changeset{
+         changes: %{author_maps: author_maps}
+       })
        when is_list(author_maps) do
     now = Timex.now()
 
@@ -185,7 +219,7 @@ defmodule Gas.SourceApi do
         :author_maps,
         Author,
         Enum.map(author_maps, &Map.merge(&1, %{inserted_at: now, updated_at: now})),
-        returning: [:id]
+        returning: true
       )
       |> Multi.merge(fn %{author_maps: {_num_inserts, authors}} ->
         source_authors =
@@ -201,7 +235,7 @@ defmodule Gas.SourceApi do
 
         Multi.new()
         |> Multi.insert_all(
-          :source_authors,
+          :source_author_maps,
           SourceAuthor,
           source_authors
         )
@@ -211,6 +245,28 @@ defmodule Gas.SourceApi do
 
   defp create_authors_multi(transaction, _, _),
     do: Multi.merge(transaction, fn _ -> Multi.new() end)
+
+  defp create_source_result(%{source: %{author_ids: nil}, author_maps: {_, maps}} = result)
+       when is_list(maps),
+       do: create_source_result(result, maps)
+
+  defp create_source_result(%{source: %{author_ids: ids}, author_maps: {_, maps}} = result)
+       when is_list(ids) and is_list(maps) do
+    create_source_result(result, Enum.concat(ids, maps))
+  end
+
+  defp create_source_result(%{source: %{author_ids: ids}} = result)
+       when is_list(ids),
+       do: create_source_result(result, ids)
+
+  defp create_source_result(%{source: source} = result, authors) when is_list(authors),
+    do: %{
+      result
+      | source: %{
+          source
+          | authors: authors
+        }
+    }
 
   @doc """
   Updates a source.
@@ -266,4 +322,9 @@ defmodule Gas.SourceApi do
   def change_(%Source{} = source, attrs) do
     Source.changeset(source, attrs)
   end
+
+  def author_required_error_string, do: "author ids or map required"
+
+  def invalid_ids_error_string(ids) when is_list(ids),
+    do: ~s[Invalid author IDs: #{Enum.join(ids, ", ")}]
 end

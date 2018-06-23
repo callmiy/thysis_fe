@@ -17,8 +17,12 @@ defmodule Gas.AuthorApi do
       [%Author{}, ...]
 
   """
-  def list do
-    Repo.all(Author)
+  def list, do: Repo.all(Author)
+
+  def list(ids) when is_list(ids) do
+    Author
+    |> where([a], a.id in ^ids)
+    |> Repo.all()
   end
 
   @doc """
@@ -98,8 +102,8 @@ defmodule Gas.AuthorApi do
       %Ecto.Changeset{source: %Author{}}
 
   """
-  def change_(%Author{} = author) do
-    Author.changeset(author, %{})
+  def change_(%Author{} = author, attrs \\ %{}) do
+    Author.changeset(author, attrs)
   end
 
   @doc """

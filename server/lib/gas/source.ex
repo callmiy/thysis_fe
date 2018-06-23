@@ -5,7 +5,9 @@ defmodule Gas.Source do
   alias Gas.Quote
   alias Gas.SourceType
   alias Gas.Author
+  alias Gas.AuthorApi
   alias Gas.SourceAuthor
+  alias Gas.SourceApi
 
   @timestamps_opts [
     type: Timex.Ecto.DateTime,
@@ -57,20 +59,16 @@ defmodule Gas.Source do
   defp validate_authors(changes) do
     case changes.valid? do
       true ->
-        authors =
-          [
-            fetch_field(changes, :author_ids),
-            fetch_field(changes, :author_maps)
-          ]
-          |> Enum.map(fn
-            :error -> nil
-            {:data, nil} -> nil
-            _ -> :ok
-          end)
+        {author_ids, changes} = validate(changes, :author_ids)
+        author_maps = validate(changes, :author_maps)
 
-        case authors do
-          [nil, nil] ->
-            add_error(changes, :author_maps, "author ids or map empty")
+        case {author_ids, author_maps} do
+          {nil, nil} ->
+            add_error(
+              changes,
+              :author_maps,
+              SourceApi.author_required_error_string()
+            )
 
           _ ->
             changes
@@ -80,4 +78,55 @@ defmodule Gas.Source do
         changes
     end
   end
+
+  defp validate(changes, :author_ids) do
+    case fetch_field(changes, :author_ids) |> get_data_or_error() do
+      nil ->
+        {nil, changes}
+
+      ids ->
+        authors = AuthorApi.list(ids)
+        author_ids = Enum.map(authors, & &1.id)
+
+        invalid_ids =
+          Enum.reduce(ids, [], fn id, acc ->
+            # ids can be given as list of string or integer so we always convert
+            case Enum.member?(author_ids, String.to_integer("#{id}")) do
+              true -> acc
+              _ -> [id | acc]
+            end
+          end)
+
+        changes = put_change(changes, :author_ids, authors)
+
+        case invalid_ids do
+          [] ->
+            {ids, changes}
+
+          _ ->
+            changes =
+              add_error(
+                changes,
+                :author_ids,
+                SourceApi.invalid_ids_error_string(invalid_ids)
+              )
+
+            {ids, changes}
+        end
+    end
+  end
+
+  defp validate(changes, :author_maps) do
+    case fetch_field(changes, :author_maps) |> get_data_or_error() do
+      nil ->
+        nil
+
+      val ->
+        val
+    end
+  end
+
+  defp get_data_or_error(:error), do: nil
+  defp get_data_or_error({:data, nil}), do: nil
+  defp get_data_or_error({_, val}) when is_list(val), do: val
 end

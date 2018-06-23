@@ -4,15 +4,18 @@ defmodule GasWeb.SourceSchemaTest do
   alias GasWeb.SourceQueries, as: Queries
   alias Gas.Source
   alias Gas.MapHelpers
+  alias Gas.SourceApi
 
+  # @tag :norun
   describe "query" do
+    # @tag :norun
     test "get all sources succeeds" do
       # first source
       SourceFactory.insert(:source)
 
       # 2nd source
 
-      source =
+      __source =
         %Source{
           id: id,
           source_type_id: source_type_id
@@ -40,17 +43,15 @@ defmodule GasWeb.SourceSchemaTest do
              } = List.last(sources)
 
       assert_display(authors_, display)
-      {authors, _} = make_authors(source)
-      assert_authors(authors, authors_)
     end
 
+    # @tag :norun
     test "get one source succeeds" do
-      source =
-        %Source{
-          id: id,
-          source_type_id: source_type_id,
-          year: year
-        } = SourceFactory.insert(:source)
+      %Source{
+        id: id,
+        source_type_id: source_type_id,
+        year: year
+      } = SourceFactory.insert(:source)
 
       id = Integer.to_string(id)
       source_type_id = inspect(source_type_id)
@@ -80,11 +81,10 @@ defmodule GasWeb.SourceSchemaTest do
                )
 
       assert_display(authors_, display)
-      {authors, _} = make_authors(source)
-      assert_authors(authors, authors_)
     end
   end
 
+  # @tag :norun
   describe "mutatation" do
     test "create source with author names only" do
       %{id: source_type_id, name: name} = source_type = insert(:source_type)
@@ -140,6 +140,7 @@ defmodule GasWeb.SourceSchemaTest do
         |> make_authors()
 
       variables = %{"source" => source}
+      error = "{name: source, error: [author_maps: #{SourceApi.author_required_error_string()}]}"
 
       assert {:ok,
               %{
@@ -148,7 +149,7 @@ defmodule GasWeb.SourceSchemaTest do
                 },
                 errors: [
                   %{
-                    message: "{name: source, error: [author_maps: author ids or map empty]}",
+                    message: ^error,
                     path: ["createSource"]
                   }
                 ]
