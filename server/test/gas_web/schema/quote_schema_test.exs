@@ -6,6 +6,7 @@ defmodule Gas.QuoteSchemaTest do
   alias GasWeb.QuoteQueries, as: Queries
   alias Gas.Factory.Source, as: SourceFactory
 
+  # @tag :norun
   describe "mutation" do
     test "create quote succeeds" do
       %{
@@ -43,7 +44,9 @@ defmodule Gas.QuoteSchemaTest do
     end
   end
 
+  # @tag :norun
   describe "query" do
+    # @tag :norun
     test "get all quotes with no variables succeeds" do
       insert_list(3, :quote)
 
@@ -61,6 +64,7 @@ defmodule Gas.QuoteSchemaTest do
       assert length(quotes) == 3
     end
 
+    # @tag :norun
     test "get quotes by source id succeeds" do
       [source1, source2] = SourceFactory.insert_list(2, :source)
       %{id: source1_quote_id} = insert(:quote, source: source1)
@@ -72,6 +76,12 @@ defmodule Gas.QuoteSchemaTest do
         |> Enum.map(&Integer.to_string(&1.id))
         |> Enum.sort()
 
+      variables = %{
+        "quote" => %{
+          "source" => source2_id
+        }
+      }
+
       assert {:ok,
               %{
                 data: %{
@@ -79,7 +89,8 @@ defmodule Gas.QuoteSchemaTest do
                     [
                       %{
                         "source" => %{
-                          "id" => ^source2_id
+                          "id" => ^source2_id,
+                          "authors" => graphQl_authors
                         }
                       },
                       _
@@ -89,18 +100,37 @@ defmodule Gas.QuoteSchemaTest do
                Absinthe.run(
                  Queries.query(:quotes),
                  Schema,
-                 variables: %{
-                   "quote" => %{
-                     "source" => source2_id
-                   }
-                 }
+                 variables: variables
                )
 
+      {ids, names} =
+        Enum.reduce(source2.authors, {[], []}, fn %{id: id, name: name}, {ids, names} ->
+          {
+            [Integer.to_string(id) | ids],
+            [name | names]
+          }
+        end)
+
+      {graphQl_ids, graphQl_names} =
+        Enum.reduce(graphQl_authors, {[], []}, fn %{"id" => id, "name" => name}, {ids, names} ->
+          {
+            [id | ids],
+            [name | names]
+          }
+        end)
+
+      assert Enum.sort(ids) == Enum.sort(graphQl_ids)
+      assert Enum.sort(names) == Enum.sort(graphQl_names)
+
       quotes_ids = Enum.map(quotes, & &1["id"]) |> Enum.sort()
+
       assert raw_quotes_id == quotes_ids
       refute Enum.member?(quotes_ids, Integer.to_string(source1_quote_id))
     end
+  end
 
+  # @tag :norun
+  describe "full text search" do
     test "full text search across source_types table" do
       search_text = Faker.String.base64(4)
       %{id: id} = insert(:source_type, name: search_text)

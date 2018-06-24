@@ -28,7 +28,15 @@ defmodule GasWeb.QuoteQueries do
       fragment SourceFragment on Source {
         id
         topic
+        authors {
+          ...AuthorFragment
+        }
         __typename
+      }
+
+      fragment AuthorFragment on Author {
+        id
+        name
       }
     """
   end
@@ -73,16 +81,15 @@ defmodule GasWeb.QuoteQueries do
       quotes(quote: $quote) {
         id
         text
+        __typename
+
         source {
           ...SourceFragment
         }
       }
     }
 
-    fragment SourceFragment on Source {
-      id
-      __typename
-    }
+    #{source_fragment()}
     """
   end
 
@@ -123,4 +130,24 @@ defmodule GasWeb.QuoteQueries do
       }
     }
   end
+
+  defp source_fragment, do: ~s(
+    fragment SourceFragment on Source {
+      id
+      __typename
+
+      authors {
+        ...AuthorFragment
+      }
+    }
+
+    #{author_fragment()}
+
+  )
+
+  defp author_fragment, do: ~s(
+    fragment AuthorFragment on Author {
+      id
+      name
+  })
 end

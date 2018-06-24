@@ -6,6 +6,8 @@ defmodule GasWeb.QuoteResolver do
   alias Gas.Quote
   alias Gas.QuoteApi, as: Api
   alias GasWeb.ResolversUtil
+  alias Gas.SourceApi
+  alias Gas.Source
 
   @doc """
   Create a quote
@@ -35,5 +37,14 @@ defmodule GasWeb.QuoteResolver do
   @spec full_text_search(any, %{text: %{text: String.t()}}, any) :: {:ok, %{}}
   def full_text_search(_root, %{text: %{text: text}}, _info) do
     {:ok, Api.full_text_search(text)}
+  end
+
+  @spec author(%Quote{source_id: Integer.t()}, any, any) ::
+          {:ok, [%Source{}]} | {:error, String.t()}
+  def author(%Quote{source_id: id}, _, _) do
+    case SourceApi.get(id) do
+      nil -> {:error, "No quote source with ID: #{id}"}
+      source -> {:ok, source}
+    end
   end
 end

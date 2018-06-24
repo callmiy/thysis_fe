@@ -6,7 +6,7 @@ defmodule GasWeb.QuoteSchema do
   use Absinthe.Schema.Notation
   use Absinthe.Ecto, repo: Gas.Repo
 
-  alias GasWeb.QuoteResolver
+  alias GasWeb.QuoteResolver, as: Resolver
 
   @desc "A Quote"
   object :quote do
@@ -21,7 +21,7 @@ defmodule GasWeb.QuoteSchema do
     field(:inserted_at, non_null(:iso_datetime))
     field(:updated_at, non_null(:iso_datetime))
 
-    field(:source, :source, resolve: assoc(:source))
+    field(:source, :source, do: resolve(&Resolver.author/3))
     field(:tag, list_of(:tag), resolve: assoc(:tag))
   end
 
@@ -118,14 +118,14 @@ defmodule GasWeb.QuoteSchema do
     @desc "Query list of quotes - everything, or filter by source"
     field :quotes, type: list_of(:quote) do
       arg(:quote, :get_quotes)
-      resolve(&QuoteResolver.quotes/3)
+      resolve(&Resolver.quotes/3)
     end
 
     @desc "Specify any text to get queries or tags, or sources or
     source types matching the text"
     field :quote_full_search, type: :quote_full_search_result do
       arg(:text, non_null(:quote_full_search_input))
-      resolve(&QuoteResolver.full_text_search/3)
+      resolve(&Resolver.full_text_search/3)
     end
   end
 
@@ -136,7 +136,7 @@ defmodule GasWeb.QuoteSchema do
     field :create_quote, type: :quote do
       arg(:quote, non_null(:create_quote_input))
 
-      resolve(&QuoteResolver.create_quote/3)
+      resolve(&Resolver.create_quote/3)
     end
   end
 end
