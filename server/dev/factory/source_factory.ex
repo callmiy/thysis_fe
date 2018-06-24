@@ -1,18 +1,3 @@
-defmodule Gas.Factory.SourceStrategy do
-  use ExMachina.Strategy, function_name: :insert
-
-  alias Gas.SourceApi
-  alias Gas.Source
-
-  def handle_insert(record, _opts) do
-    {:ok, %{source: source}} =
-      Map.from_struct(record)
-      |> SourceApi.create_()
-
-    source
-  end
-end
-
 defmodule Gas.Factory.Source do
   use ExMachina
   use Gas.Factory.SourceStrategy
@@ -30,27 +15,14 @@ defmodule Gas.Factory.Source do
     {authors, author_ids} =
       case Enum.random([:authors, :author_ids, 2]) do
         :authors ->
-          authors =
-            1..Faker.random_between(1, 5)
-            |> Enum.map(fn _ -> Factory.params_for(:author) end)
-
-          {authors, nil}
+          make_authors()
 
         :author_ids ->
-          author_ids =
-            Factory.insert_list(Faker.random_between(1, 5), :author)
-            |> Enum.map(& &1.id)
-
-          {nil, author_ids}
+          make_author_ids()
 
         2 ->
-          authors =
-            1..Faker.random_between(1, 5)
-            |> Enum.map(fn _ -> Factory.params_for(:author) end)
-
-          author_ids =
-            Factory.insert_list(Faker.random_between(1, 5), :author)
-            |> Enum.map(& &1.id)
+          {authors, nil} = make_authors()
+          {nil, author_ids} = make_author_ids()
 
           {authors, author_ids}
       end
@@ -84,4 +56,20 @@ defmodule Gas.Factory.Source do
       )
 
   defp random_date, do: Faker.Date.between(@start_date, @end_date)
+
+  defp make_authors(how_many \\ 5) when is_integer(how_many) do
+    authors =
+      1..Faker.random_between(1, how_many)
+      |> Enum.map(fn _ -> Factory.params_for(:author) end)
+
+    {authors, nil}
+  end
+
+  defp make_author_ids(how_many \\ 5) when is_integer(how_many) do
+    author_ids =
+      Factory.insert_list(Faker.random_between(1, how_many), :author)
+      |> Enum.map(& &1.id)
+
+    {nil, author_ids}
+  end
 end
