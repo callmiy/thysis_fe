@@ -1,21 +1,17 @@
 import React from "react";
 import { Dimmer } from "semantic-ui-react";
 import { Loader } from "semantic-ui-react";
-import { Menu } from "semantic-ui-react";
 import { Icon } from "semantic-ui-react";
 import { NavLink } from "react-router-dom";
 
 import RootHeader from "../../components/header.component";
-import { SEARCH_QUOTES_URL } from "../../utils/route-urls.util";
 import { setTitle } from "../../utils/route-urls.util";
-import { styles } from "./styles";
+import { makeNewQuoteURL } from "../../utils/route-urls.util";
 import { classes } from "./styles";
 import { SourceProps } from "./utils";
 import { SourceState } from "./utils";
 import SourceMenu from "./bottom-menu.component";
 import SourceAccordion from "./SourceAccordion";
-// import { ExistingSourceProps } from "../../components/SourceModal/utils";
-// import SourceModal from "../../components/SourceModal";
 
 export class Source extends React.Component<SourceProps, SourceState> {
   state: SourceState = {
@@ -60,31 +56,17 @@ export class Source extends React.Component<SourceProps, SourceState> {
       );
     }
 
-    const { showingQuotes } = this.state;
-
     return (
       <div className={`${classes.sourceMain}`}>
-        <SourceAccordion source={source} />
-
-        <Menu
-          style={{
-            ...(showingQuotes ? { opacity: 0 } : {}),
-            ...styles.menu,
-            ...{ margin: "5px", display: "none" }
-          }}
-          pointing={true}
-          compact={true}
-          icon="labeled"
+        <NavLink
+          to={makeNewQuoteURL(source.id)}
+          className={classes.newQuoteButton}
         >
-          <Menu.Item
-            className={classes.menuAnchor}
-            as={NavLink}
-            to={SEARCH_QUOTES_URL}
-          >
-            <Icon name="search" />
-            Search Quotes
-          </Menu.Item>
-        </Menu>
+          <Icon name="add circle" circular={true} />
+          New Quote
+        </NavLink>
+
+        <SourceAccordion source={source} />
       </div>
     );
   };
