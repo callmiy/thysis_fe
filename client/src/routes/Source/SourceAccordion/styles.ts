@@ -44,9 +44,15 @@ const styles = {
 
   editSourceIcon: {
     position: "absolute",
-    right: 25,
-    top: -30,
-    padding: "0px 10px 10px 30px"
+    right: 0,
+    top: -40,
+    padding: "10px 10px 10px 50px",
+    cursor: "pointer",
+
+    "&.icon": {
+      width: "5em",
+      height: "3em"
+    }
   },
 
   quotesAccordion: {

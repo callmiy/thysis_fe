@@ -30,7 +30,7 @@ export class SourceAccordion extends React.Component<Props, State> {
       <Accordion fluid={true} styled={true} className={classes.accordion}>
         <Accordion.Title
           active={activeIndex === SourceAccordionIndex.DETAIL}
-          index={0}
+          index={SourceAccordionIndex.DETAIL}
           onClick={this.handleAccordionClick}
         >
           <Icon name="dropdown" />
@@ -41,7 +41,7 @@ export class SourceAccordion extends React.Component<Props, State> {
 
         <Accordion.Title
           active={activeIndex === SourceAccordionIndex.LIST_QUOTES}
-          index={1}
+          index={SourceAccordionIndex.LIST_QUOTES}
           onClick={this.handleAccordionClick}
         >
           <Icon name="dropdown" />
@@ -162,7 +162,7 @@ export class SourceAccordion extends React.Component<Props, State> {
           active={true}
         >
           <Loader inverted={true} size="medium">
-            Loading..
+            Loading quotes...
           </Loader>
         </Dimmer>
       );
