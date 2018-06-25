@@ -44,7 +44,12 @@ export const styles = {
   newQuoteButton: {
     position: "absolute",
     bottom: 15,
-    right: 10
+    right: 15,
+    color: "#01751c",
+
+    "&:hover": {
+      color: "#01751c"
+    }
   }
 } as SimpleCss;
 

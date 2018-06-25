@@ -45,7 +45,7 @@ export class SourceAccordion extends React.Component<Props, State> {
           onClick={this.handleAccordionClick}
         >
           <Icon name="dropdown" />
-          View quotes
+          Quotes
         </Accordion.Title>
 
         {this.renderAccordionQuotes(activeIndex)}
