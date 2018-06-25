@@ -1,21 +1,25 @@
-import { GraphQLError } from "graphql/error/GraphQLError";
+import { ApolloError } from "apollo-client";
 import { RouteComponentProps } from "react-router-dom";
-import { GraphqlQueryControls } from "react-apollo";
 import { WithApolloClient } from "react-apollo";
+import { ChildProps } from "react-apollo";
+import { GraphqlQueryControls } from "react-apollo";
 
 import { Quote1FragFragment } from "../../graphql/gen.types";
-import { Source1Query } from "../../graphql/gen.types";
-import { Source1QueryVariables } from "../../graphql/gen.types";
+import { SourceFullQuery } from "../../graphql/gen.types";
+import { SourceFullQueryVariables } from "../../graphql/gen.types";
 
-type OwnProps = RouteComponentProps<{ id: string }> & Source1Query;
+export type OwnProps = RouteComponentProps<{ id: string }> & SourceFullQuery;
 
-export type SourceProps = OwnProps &
-  GraphqlQueryControls<Source1QueryVariables> &
-  WithApolloClient<OwnProps>;
+export type SourceProps = GraphqlQueryControls<SourceFullQueryVariables> &
+  ChildProps<
+    WithApolloClient<OwnProps>,
+    SourceFullQuery,
+    SourceFullQueryVariables
+  >;
 
 export interface SourceState {
   loadingQuotes: boolean;
   showingQuotes: boolean;
   quotes?: Quote1FragFragment[];
-  fetchQuotesError?: GraphQLError[];
+  fetchQuotesError?: ApolloError;
 }

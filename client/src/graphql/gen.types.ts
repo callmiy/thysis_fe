@@ -110,6 +110,10 @@ export interface CreateQuoteMutation {
       id: string,
       display: string | null,
       year: string | null,
+      authors:  Array< {
+        id: string,
+        name: string,
+      } | null >,
       sourceType:  {
         id: string,
         name: string | null,
@@ -131,19 +135,27 @@ export interface Quotes1Query {
   } | null > | null,
 };
 
-export interface Source1QueryVariables {
+export interface SourceFullQueryVariables {
   source: GetSourceInput,
 };
 
-export interface Source1Query {
+export interface SourceFullQuery {
   source:  {
     id: string,
     display: string | null,
     year: string | null,
+    authors:  Array< {
+      id: string,
+      name: string,
+    } | null >,
     sourceType:  {
       id: string,
       name: string | null,
     },
+    topic: string,
+    publication: string | null,
+    url: string | null,
+    insertedAt: string,
   } | null,
 };
 
@@ -163,6 +175,30 @@ export interface CreateSourceMutation {
     id: string,
     display: string | null,
     year: string | null,
+    authors:  Array< {
+      id: string,
+      name: string,
+    } | null >,
+    sourceType:  {
+      id: string,
+      name: string | null,
+    },
+  } | null,
+};
+
+export interface Source1QueryVariables {
+  source: GetSourceInput,
+};
+
+export interface Source1Query {
+  source:  {
+    id: string,
+    display: string | null,
+    year: string | null,
+    authors:  Array< {
+      id: string,
+      name: string,
+    } | null >,
     sourceType:  {
       id: string,
       name: string | null,
@@ -176,6 +212,10 @@ export interface Sources1Query {
     id: string,
     display: string | null,
     year: string | null,
+    authors:  Array< {
+      id: string,
+      name: string,
+    } | null >,
     sourceType:  {
       id: string,
       name: string | null,
@@ -308,19 +348,41 @@ export interface QuoteFromtagFragFragment {
   } | null,
 };
 
-export interface SourceFragFragment {
+export interface SourceFullFragFragment {
   id: string,
   display: string | null,
   year: string | null,
+  authors:  Array< {
+    id: string,
+    name: string,
+  } | null >,
   sourceType:  {
     id: string,
     name: string | null,
   },
+  topic: string,
+  publication: string | null,
+  url: string | null,
+  insertedAt: string,
 };
 
 export interface SourceTypeFragFragment {
   id: string,
   name: string | null,
+};
+
+export interface SourceFragFragment {
+  id: string,
+  display: string | null,
+  year: string | null,
+  authors:  Array< {
+    id: string,
+    name: string,
+  } | null >,
+  sourceType:  {
+    id: string,
+    name: string | null,
+  },
 };
 
 export interface TagFragFragment {

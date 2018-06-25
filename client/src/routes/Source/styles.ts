@@ -2,30 +2,37 @@ import jss from "jss";
 import preset from "jss-preset-default";
 
 import { SimpleCss } from "../../constants";
-import { ROOT_CONTAINER_STYLE } from "../../constants";
 import centeredMenuStyles from "../../utils/centered-menu-styles.util";
-
 
 jss.setup(preset());
 
 export const styles = {
   SourceRoot: {
-    ...ROOT_CONTAINER_STYLE,
+    height: "100%",
     overflow: "hidden",
-    position: "relative"
-  },
-
-  SourceMain: {
+    position: "relative",
     flex: 1,
-    overflowX: "hidden",
-    overflowY: "auto",
-    display: "flex",
-    flexDirection: "column",
-    padding: "0 5px 15px 10px"
+    display: "grid",
+    gridTemplateAreas: `
+      "header"
+      "main"
+      "bottom-menu";
+    `,
+    gridTemplateRows: "auto 1fr auto",
+    gridTemplateColumns: "100%"
   },
 
-  mainContent: {
-    ...centeredMenuStyles.mainParentContainer
+  rootHeader: {
+    gridArea: "header"
+  },
+
+  sourceMain: {
+    gridArea: "main",
+    overflow: "hidden"
+  },
+
+  bottomMenu: {
+    gridArea: "bottom-menu"
   },
 
   menu: {

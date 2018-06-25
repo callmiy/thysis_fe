@@ -11,7 +11,7 @@ import TAG_QUOTE_QUERY from "../../graphql/tag-with-quotes.query";
 import { TagQuoteQuery } from "../../graphql/gen.types";
 import MobileBottomMenu from "../../components/mobile-bottom-menu.component";
 import { MenuItem } from "../../components/mobile-bottom-menu.component";
-import renderQuote from "../../components/quote-item.component";
+import renderQuote from "../../components/QuoteItem";
 import { setTitle } from "../../utils/route-urls.util";
 import { styles } from "./styles";
 import { classes } from "./styles";

@@ -1,17 +1,17 @@
 import { graphql } from "react-apollo";
 import { withApollo } from "react-apollo";
+import { compose } from "react-apollo";
 
 import Source from "./route";
-import { SourceProps } from "./utils";
-import { Source1Query } from "../../graphql/gen.types";
-import { Source1QueryVariables } from "../../graphql/gen.types";
-import SOURCE_QUERY from "../../graphql/source-1.query";
+import { OwnProps } from "./utils";
+import { SourceFullQuery } from "../../graphql/gen.types";
+import { SourceFullQueryVariables } from "../../graphql/gen.types";
+import SOURCE_QUERY from "../../graphql/source-full.query";
 
 const sourceGraphQl = graphql<
-  SourceProps,
-  Source1Query,
-  Source1QueryVariables,
-  {}
+  OwnProps,
+  SourceFullQuery,
+  SourceFullQueryVariables
 >(SOURCE_QUERY, {
   props: ({ data }) => {
     return { ...data };
@@ -28,4 +28,7 @@ const sourceGraphQl = graphql<
   }
 });
 
-export default withApollo(sourceGraphQl(Source));
+export default compose(
+  withApollo,
+  sourceGraphQl
+)(Source);

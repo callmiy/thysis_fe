@@ -37,7 +37,7 @@ import QUOTE_MUTATION from "../../graphql/quote.mutation";
 import { CreateQuoteFn } from "../../graphql/ops.types";
 import { CreateQuoteUpdateFn } from "../../graphql/ops.types";
 import SOURCES_QUERY from "../../graphql/sources-1.query";
-import SOURCE_QUERY from "../../graphql/source-1.query";
+import SOURCE_QUERY from "../../graphql/source.query";
 import RootHeader from "../../components/header.component";
 import QUOTES_QUERY from "../../graphql/quotes-1.query";
 import NewQuoteMenu from "./bottom-menu.component";

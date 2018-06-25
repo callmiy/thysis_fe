@@ -13,6 +13,8 @@ const submitButton = {
   // tslint:disable-next-line:no-any
 } as any;
 
+const twoColumnBreakPt = "745px";
+
 export const styles = {
   newQuoteRoot: {
     height: "100%",
@@ -33,7 +35,7 @@ export const styles = {
       overflow: "hidden"
     },
 
-    "@media (min-width: 700px)": {
+    [`@media (min-width: ${twoColumnBreakPt})`]: {
       display: "grid",
       gridTemplateAreas: `
         "formWithHeader quotesSidebar"
@@ -49,7 +51,7 @@ export const styles = {
     flexDirection: "column",
     gridArea: "formWithHeader",
 
-    "@media (min-width: 700px)": {
+    [`@media (min-width: ${twoColumnBreakPt})`]: {
       height: "initial",
       boxShadow: "1px -1px 6px -1px #9e9898"
     }
@@ -60,7 +62,7 @@ export const styles = {
     gridArea: "quotesSidebar",
     margin: "5px 5px 0",
 
-    "@media (min-width: 700px)": {
+    [`@media (min-width: ${twoColumnBreakPt})`]: {
       display: "flex",
       flexDirection: "column"
     }

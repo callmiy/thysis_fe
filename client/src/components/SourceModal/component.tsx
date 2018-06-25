@@ -13,33 +13,47 @@ import { Input } from "semantic-ui-react";
 import { Modal } from "semantic-ui-react";
 import { Card } from "semantic-ui-react";
 import update from "immutability-helper";
-import { Mutation } from "react-apollo";
 import isEmpty from "lodash/isEmpty";
 
-import SOURCE_MUTATION from "../../graphql/source.mutation";
-import SOURCE_QUERY from "../../graphql/sources-1.query";
-import { CreateSourceFn, CreateSourceUpdateFn } from "../../graphql/ops.types";
-import {
-  SourceTypeFragFragment,
-  Sources1Query,
-  SourceFragFragment
-} from "../../graphql/gen.types";
+import SOURCES_QUERY from "../../graphql/sources-1.query";
+import { CreateSourceUpdateFn } from "../../graphql/ops.types";
+import { SourceTypeFragFragment } from "../../graphql/gen.types";
+import { SourceFragFragment } from "../../graphql/gen.types";
+import { Sources1Query } from "../../graphql/gen.types";
+import { AuthorFragFragment } from "../../graphql/gen.types";
 import SourceTypeControlComponent from "../SourceTypeControl";
 import AuthorsControlComponent from "../AuthorsControl";
 import { makeSourceURL } from "../../utils/route-urls.util";
 import { styles } from "./styles";
 import { classes } from "./styles";
+import { modalStyle } from "./styles";
 import { SourceModalProps } from "./utils";
 import { SourceModalState } from "./utils";
 import { initialState } from "./utils";
 import { initialFormValues } from "./utils";
 import { FormValues } from "./utils";
-import { AuthorFragFragment } from "../../graphql/gen.types";
+import { CreateSourceFn } from "./utils";
+import { Action } from "./utils";
 
 export class SourceModal extends React.Component<
   SourceModalProps,
   SourceModalState
 > {
+  static getDerivedStateFromProps(
+    nextProps: SourceModalProps,
+    currentState: SourceModalState
+  ) {
+    if (!currentState.action && !nextProps.existingSource) {
+      return update(currentState, {
+        action: {
+          $set: Action.NEW
+        }
+      });
+    }
+
+    return null;
+  }
+
   state = initialState;
 
   render() {
@@ -47,7 +61,7 @@ export class SourceModal extends React.Component<
 
     return (
       <Modal
-        style={{ ...(style || {}), ...styles.modal }}
+        style={{ ...(style || {}), ...modalStyle }}
         basic={true}
         size="small"
         dimmer="inverted"
@@ -59,40 +73,26 @@ export class SourceModal extends React.Component<
         <Header icon="user" content="Create quote source" />
 
         <Modal.Content>
-          <Mutation
-            mutation={SOURCE_MUTATION}
-            variables={{ source: this.state.output }}
-            update={this.writeSourcesToCache}
-          >
-            {createSource => {
-              return (
-                <Formik
-                  initialValues={initialFormValues}
-                  enableReinitialize={true}
-                  onSubmit={this.submit(createSource)}
-                  render={this.renderForm}
-                  validate={this.validate}
-                />
-              );
-            }}
-          </Mutation>
+          <Formik
+            initialValues={initialFormValues}
+            enableReinitialize={true}
+            onSubmit={this.submit}
+            render={this.renderForm}
+            validate={this.validate}
+          />
         </Modal.Content>
       </Modal>
     );
   }
 
-  submit = (createSource: CreateSourceFn) => async (
-    values: FormValues,
-    formikBag: FormikProps<FormValues>
-  ) => {
+  submit = async (values: FormValues, formikBag: FormikProps<FormValues>) => {
     formikBag.setSubmitting(true);
+    const createSource = this.props.createSource as CreateSourceFn;
 
     try {
-      const { data } = (await createSource()) as {
-        data?: {
-          createSource: SourceFragFragment;
-        };
-      };
+      const { data } = await createSource(this.state.output);
+
+      formikBag.setSubmitting(false);
 
       if (data) {
         this.setState(s =>
@@ -102,10 +102,9 @@ export class SourceModal extends React.Component<
             }
           })
         );
-      }
 
-      formikBag.resetForm();
-      formikBag.setSubmitting(false);
+        formikBag.resetForm();
+      }
     } catch (error) {
       this.setState(s =>
         update(s, {
@@ -145,7 +144,7 @@ export class SourceModal extends React.Component<
     const disableSubmit = dirtyOrSubmitting || !isEmpty(errors);
 
     return (
-      <Form onSubmit={handleSubmit}>
+      <Form className={classes.form} onSubmit={handleSubmit}>
         <Field name="sourceType" render={this.renderSourceTypeControl} />
         <Field name="authors" render={this.renderAuthorsControl} />
 
@@ -263,16 +262,18 @@ export class SourceModal extends React.Component<
     const touched = form.touched[name];
 
     return (
-      <Form.Field
-        control={SourceTypeControlComponent}
-        label="Select source type"
-        error={booleanError}
-        selectError={booleanError}
-        onFocus={this.handleFocus}
-        {...formProps}
-      >
-        {booleanError && touched && <Message error={true} header={error} />}
-      </Form.Field>
+      <div>
+        <Form.Field
+          control={SourceTypeControlComponent}
+          label="Select source type"
+          error={booleanError}
+          selectError={booleanError}
+          onFocus={this.handleFocus}
+          {...formProps}
+        />
+
+        {this.renderFieldError(booleanError && touched, error)}
+      </div>
     );
   };
 
@@ -286,19 +287,21 @@ export class SourceModal extends React.Component<
     const touched = form.touched[name];
 
     return (
-      <Form.Field
-        control={AuthorsControlComponent}
-        label="Select authors"
-        error={booleanError}
-        selectError={booleanError}
-        onFocus={this.handleFocus}
-        name={name}
-        value={value}
-        handleBlur={this.handleFormControlBlur(name, form)}
-        handleChange={this.handleControlChange(name, form)}
-      >
-        {booleanError && touched && <Message error={true} header={error} />}
-      </Form.Field>
+      <div>
+        <Form.Field
+          control={AuthorsControlComponent}
+          label="Select authors"
+          error={booleanError}
+          selectError={booleanError}
+          onFocus={this.handleFocus}
+          name={name}
+          value={value}
+          handleBlur={this.handleFormControlBlur(name, form)}
+          handleChange={this.handleControlChange(name, form)}
+        />
+
+        {this.renderFieldError(booleanError && touched, error)}
+      </div>
     );
   };
 
@@ -321,18 +324,31 @@ export class SourceModal extends React.Component<
     const { name } = field;
     const error = form.errors[name];
     const booleanError = !!error;
+    const touched = form.touched[name];
 
     return (
-      <Form.Field
-        control={Input}
-        placeholder={label}
-        label={label}
-        id={name}
-        error={booleanError}
-        autoComplete="off"
-        onFocus={this.handleFocus}
-        {...field}
-      />
+      <div>
+        <Form.Field
+          control={Input}
+          placeholder={label}
+          label={label}
+          id={name}
+          error={booleanError}
+          autoComplete="off"
+          onFocus={this.handleFocus}
+          {...field}
+        />
+
+        {this.renderFieldError(booleanError && touched, error)}
+      </div>
+    );
+  };
+
+  renderFieldError = (show: boolean, error: string) => {
+    return show ? (
+      <div className={classes.errorMessage}> {error} </div>
+    ) : (
+      undefined
     );
   };
 
@@ -364,13 +380,13 @@ export class SourceModal extends React.Component<
     }
 
     const sourcesQuery = cache.readQuery({
-      query: SOURCE_QUERY
+      query: SOURCES_QUERY
     }) as Sources1Query;
 
     const sources = sourcesQuery.sources as SourceFragFragment[];
 
     cache.writeQuery({
-      query: SOURCE_QUERY,
+      query: SOURCES_QUERY,
       data: {
         sources: [createSource.createSource, ...sources]
       }

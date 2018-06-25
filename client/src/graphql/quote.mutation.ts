@@ -1,6 +1,6 @@
 import gql from "graphql-tag";
 
-import { source1Frag } from "./source-1.fragment";
+import { sourceFrag } from "./source.fragment";
 import { quote1Frag } from "./quote-1.fragment";
 
 export const quoteMut = gql`
@@ -15,7 +15,7 @@ export const quoteMut = gql`
   }
 
   ${quote1Frag}
-  ${source1Frag}
+  ${sourceFrag}
 `;
 
 export default quoteMut;

@@ -19,7 +19,7 @@ defmodule GasWeb.SourceSchema do
     field(:inserted_at, non_null(:iso_datetime))
     field(:updated_at, non_null(:iso_datetime))
 
-    field(:authors, list_of(:author))
+    field(:authors, list_of(:author) |> non_null())
     field(:source_type, non_null(:source_type), resolve: assoc(:source_type))
     field(:quotes, list_of(:quote), resolve: assoc(:quotes))
 
