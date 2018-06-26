@@ -1,18 +1,18 @@
 import Select from "react-select";
-import * as React from "react";
+import React from "react";
+import { FieldProps } from "formik";
 
-import { FormValuesProps } from "../SourceModal/utils";
 import { SourceTypeFragFragment } from "../../graphql/gen.types";
 import { SourceTypeQueryComponent } from "../../graphql/ops.types";
 import SOURCE_TYPE_QUERY from "../../graphql/source-types.query";
 
 type SourceTypes = SourceTypeFragFragment[];
 
-interface SourceTypeControlProps extends FormValuesProps {
+interface SourceTypeControlProps extends FieldProps {
   selectError: boolean;
 }
 
-export class SourceTypeControlComponent extends React.PureComponent<
+export class SourceTypeControlComponent extends React.Component<
   SourceTypeControlProps
 > {
   render() {
