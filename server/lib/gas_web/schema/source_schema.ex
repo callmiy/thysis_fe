@@ -11,13 +11,14 @@ defmodule GasWeb.SourceSchema do
   @desc "A source"
   object :source do
     field(:id, non_null(:id))
-    field(:author, non_null(:string))
     field(:topic, non_null(:string))
     field(:year, :string)
     field(:publication, :string)
     field(:url, :string)
     field(:inserted_at, non_null(:iso_datetime))
     field(:updated_at, non_null(:iso_datetime))
+
+    field(:author, :string)
 
     field(:authors, list_of(:author) |> non_null())
     field(:source_type, non_null(:source_type), resolve: assoc(:source_type))

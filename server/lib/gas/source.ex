@@ -51,7 +51,8 @@ defmodule Gas.Source do
       :url,
       :source_type_id,
       :author_ids,
-      :author_maps
+      :author_maps,
+      :author
     ])
     |> validate_required([:topic, :source_type_id])
   end
