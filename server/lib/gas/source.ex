@@ -24,7 +24,7 @@ defmodule Gas.Source do
     field(:url, :string)
     belongs_to(:source_type, SourceType)
     has_many(:quotes, Quote)
-    has_many(:sources_authors, SourceAuthor)
+    has_many(:source_authors, SourceAuthor)
     many_to_many(:authors, Author, join_through: "source_authors")
 
     timestamps()

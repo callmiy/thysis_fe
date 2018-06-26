@@ -27,8 +27,9 @@ defmodule Gas.SourceApi do
 
   def list(:authors) do
     Source
-    |> join(:inner, [s], a in assoc(s, :authors))
-    |> preload([s, a], authors: a)
+    # |> join(:inner, [s], a in assoc(s, :authors))
+    # |> preload([s, a], authors: a)
+    |> preload([s], [:authors])
     |> Repo.all()
   end
 
@@ -49,11 +50,23 @@ defmodule Gas.SourceApi do
   def get!(id), do: Repo.get!(Source, id)
 
   def get(id) do
-    Source
-    |> where([s], s.id == ^id)
-    |> join(:inner, [s], a in assoc(s, :authors))
-    |> preload([s, a], authors: a)
-    |> Repo.one()
+    case Source
+         |> where([s], s.id == ^id)
+         |> join(:inner, [s], a in assoc(s, :authors))
+         |> preload([s, a], authors: a)
+         |> Repo.one() do
+      nil ->
+        case Repo.get(Source, id) do
+          nil ->
+            nil
+
+          source ->
+            Repo.preload(source, [:authors])
+        end
+
+      source ->
+        source
+    end
   end
 
   @doc """
@@ -299,8 +312,8 @@ defmodule Gas.SourceApi do
 
   """
   def delete_(%Source{} = source) do
-    source = Repo.preload(source, [:sources_authors])
-    Enum.each(source.sources_authors, &Repo.delete(&1))
+    source = Repo.preload(source, [:source_authors])
+    Enum.each(source.source_authors, &Repo.delete(&1))
     Repo.delete(source)
   end
 
