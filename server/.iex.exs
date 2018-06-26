@@ -18,19 +18,3 @@ alias Gas.AuthorApi
 alias Gas.Factory.Source, as: SourceFactory
 alias Gas.Factory.SourceStrategy, as: SourceStrategy
 
-[
-  QuoteApi,
-  Quote,
-  SourceApi,
-  SourceTypeApi,
-  SourceType,
-  Factory,
-  Tag,
-  TagApi,
-  QuoteTag,
-  QuoteTagApi,
-  Author,
-  SourceFactory,
-  SourceStrategy
-]
-|> Enum.each(fn m -> :int.ni(m) end)
