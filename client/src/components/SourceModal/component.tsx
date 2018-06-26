@@ -32,7 +32,6 @@ import { SourceModalState } from "./utils";
 import { initialState } from "./utils";
 import { initialFormValues } from "./utils";
 import { FormValues } from "./utils";
-import { CreateSourceFn } from "./utils";
 import { Action } from "./utils";
 
 export class SourceModal extends React.Component<
@@ -87,24 +86,35 @@ export class SourceModal extends React.Component<
 
   submit = async (values: FormValues, formikBag: FormikProps<FormValues>) => {
     formikBag.setSubmitting(true);
-    const createSource = this.props.createSource as CreateSourceFn;
 
     try {
-      const { data } = await createSource(this.state.output);
+      const result = await this.props.createSource({
+        variables: {
+          source: this.state.output
+        }
+      });
 
       formikBag.setSubmitting(false);
 
-      if (data) {
-        this.setState(s =>
-          update(s, {
-            source: {
-              $set: data.createSource
-            }
-          })
-        );
-
-        formikBag.resetForm();
+      if (!result) {
+        return;
       }
+
+      const data = result.data;
+
+      if (!data) {
+        return;
+      }
+
+      this.setState(s =>
+        update(s, {
+          source: {
+            $set: data.createSource
+          }
+        })
+      );
+
+      formikBag.resetForm();
     } catch (error) {
       this.setState(s =>
         update(s, {

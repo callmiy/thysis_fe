@@ -11,6 +11,7 @@ import { CreateQuoteMutationVariables } from "./gen.types";
 import { CreateTagMutation } from "./gen.types";
 import { CreateTagMutationVariables } from "./gen.types";
 import { CreateSourceMutation } from "./gen.types";
+import { CreateSourceMutationVariables } from "./gen.types";
 import { SourceTypesQuery } from "./gen.types";
 import { TagQuoteQuery } from "./gen.types";
 import { TagQuoteQueryVariables } from "./gen.types";
@@ -50,6 +51,11 @@ export type CreateTagUpdateFn = MutationUpdaterFn<CreateTagMutation>;
 
 export type CreateSourceMutationCallResult = ApolloQueryResult<
   CreateSourceMutation
+>;
+
+export type CreateSourceMutationFn = MutationFn<
+  CreateSourceMutation,
+  CreateSourceMutationVariables
 >;
 
 export type CreateSourceUpdateFn = MutationUpdaterFn<CreateSourceMutation>;

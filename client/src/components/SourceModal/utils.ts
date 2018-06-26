@@ -1,5 +1,4 @@
 import { RouteComponentProps } from "react-router-dom";
-import { FieldProps } from "formik";
 import { ApolloError } from "apollo-client";
 import { ChildProps } from "react-apollo";
 
@@ -9,7 +8,7 @@ import { SourceTypeFragFragment } from "../../graphql/gen.types";
 import { AuthorFragFragment } from "../../graphql/gen.types";
 import { CreateSourceMutation } from "../../graphql/gen.types";
 import { CreateSourceMutationVariables } from "../../graphql/gen.types";
-import { CreateSourceMutationCallResult } from "../../graphql/ops.types";
+import { CreateSourceMutationFn } from "../../graphql/ops.types";
 
 export interface FormValues {
   sourceType: SourceTypeFragFragment | null;
@@ -29,22 +28,19 @@ export const initialFormValues: FormValues = {
   year: ""
 };
 
-export type FormValuesProps = FieldProps<FormValues>;
-
 export interface SourceModalState {
-  output: CreateSourceInput | Partial<CreateSourceInput>;
+  output: CreateSourceInput;
   source?: SourceFragFragment;
   formError?: ApolloError;
   action?: Action;
 }
 
 export const initialState: SourceModalState = {
-  output: {}
+  output: {
+    sourceTypeId: "",
+    topic: ""
+  }
 };
-
-export type CreateSourceFn = (
-  createSourceObject: Partial<CreateSourceInput>
-) => CreateSourceMutationCallResult;
 
 export interface OwnProps extends RouteComponentProps<{}> {
   open: boolean;
@@ -52,7 +48,7 @@ export interface OwnProps extends RouteComponentProps<{}> {
   style?: React.CSSProperties;
   action: Action;
   existingSource?: ExistingSourceProps;
-  createSource?: CreateSourceFn;
+  createSource: CreateSourceMutationFn;
 }
 
 export type SourceModalProps = ChildProps<
