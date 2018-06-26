@@ -55,7 +55,7 @@ export class SourceAccordion extends React.Component<Props, State> {
 
   renderDetail = (activeIndex: number) => {
     const {
-      source: { sourceType, authors, year, topic, publication, url }
+      source: { sourceType, authors, year, topic, publication, url, author }
     } = this.props;
 
     const { detailAction } = this.state;
@@ -85,6 +85,14 @@ export class SourceAccordion extends React.Component<Props, State> {
 
           <div className={classes.details}>{sourceType.name}</div>
         </div>
+
+        {author && (
+          <div className={`${classes.root}`}>
+            <div className={classes.labels}>Author</div>
+
+            <div className={classes.details}>{author}</div>
+          </div>
+        )}
 
         <div className={`authors ${classes.root}`}>
           <div className={classes.labels}>Authors</div>

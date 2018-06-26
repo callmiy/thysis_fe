@@ -110,6 +110,7 @@ export interface CreateQuoteMutation {
       id: string,
       display: string | null,
       year: string | null,
+      author: string | null,
       authors:  Array< {
         id: string,
         name: string,
@@ -144,6 +145,7 @@ export interface SourceFullQuery {
     id: string,
     display: string | null,
     year: string | null,
+    author: string | null,
     authors:  Array< {
       id: string,
       name: string,
@@ -175,6 +177,7 @@ export interface CreateSourceMutation {
     id: string,
     display: string | null,
     year: string | null,
+    author: string | null,
     authors:  Array< {
       id: string,
       name: string,
@@ -195,6 +198,7 @@ export interface Source1Query {
     id: string,
     display: string | null,
     year: string | null,
+    author: string | null,
     authors:  Array< {
       id: string,
       name: string,
@@ -212,6 +216,7 @@ export interface Sources1Query {
     id: string,
     display: string | null,
     year: string | null,
+    author: string | null,
     authors:  Array< {
       id: string,
       name: string,
@@ -352,6 +357,7 @@ export interface SourceFullFragFragment {
   id: string,
   display: string | null,
   year: string | null,
+  author: string | null,
   authors:  Array< {
     id: string,
     name: string,
@@ -375,6 +381,7 @@ export interface SourceFragFragment {
   id: string,
   display: string | null,
   year: string | null,
+  author: string | null,
   authors:  Array< {
     id: string,
     name: string,

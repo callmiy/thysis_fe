@@ -1302,13 +1302,9 @@
           "fields": [
             {
               "type": {
-                "ofType": {
-                  "ofType": null,
-                  "name": "String",
-                  "kind": "SCALAR"
-                },
-                "name": null,
-                "kind": "NON_NULL"
+                "ofType": null,
+                "name": "String",
+                "kind": "SCALAR"
               },
               "name": "author",
               "isDeprecated": false,
