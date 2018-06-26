@@ -20,6 +20,10 @@ export const styles: SimpleCss = {
     paddingRight: 10
   },
 
+  fieldWrapper: {
+    marginBottom: '1em'
+  },
+
   formButtonsContainer: {
     display: "flex"
   },

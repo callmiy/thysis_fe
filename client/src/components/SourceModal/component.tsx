@@ -262,7 +262,7 @@ export class SourceModal extends React.Component<
     const touched = form.touched[name];
 
     return (
-      <div>
+      <div className={classes.fieldWrapper}>
         <Form.Field
           control={SourceTypeControlComponent}
           label="Select source type"
@@ -287,7 +287,7 @@ export class SourceModal extends React.Component<
     const touched = form.touched[name];
 
     return (
-      <div>
+      <div className={classes.fieldWrapper}>
         <Form.Field
           control={AuthorsControlComponent}
           label="Select authors"
@@ -327,7 +327,7 @@ export class SourceModal extends React.Component<
     const touched = form.touched[name];
 
     return (
-      <div>
+      <div className={classes.fieldWrapper}>
         <Form.Field
           control={Input}
           placeholder={label}
