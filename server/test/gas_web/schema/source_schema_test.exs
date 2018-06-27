@@ -340,6 +340,44 @@ defmodule GasWeb.SourceSchemaTest do
                source_graphQl[key] == val && Map.get(source, key_) != val
              end)
     end
+
+    test "update source with deleted authors succeeds" do
+      author_ids =
+        insert_list(3, :author)
+        |> Enum.map(&Integer.to_string(&1.id))
+
+      taken = Enum.take(author_ids, 2)
+
+      %{id: id} = SourceFactory.insert(author_ids: author_ids, author_attrs: nil)
+
+      id = Integer.to_string(id)
+
+      variables = %{
+        "source" => %{
+          "id" => id,
+          "deleted_authors" => taken
+        }
+      }
+
+      assert {:ok,
+              %{
+                data: %{
+                  "updateSource" => %{
+                    "id" => ^id,
+                    "authors" => authors_graphQl
+                  }
+                }
+              }} =
+               Absinthe.run(
+                 Queries.mutation(:update_source),
+                 Schema,
+                 variables: variables
+               )
+
+      assert length(authors_graphQl) == 1
+      authors_graphQl = Enum.map(authors_graphQl, & &1["id"])
+      refute Enum.all?(taken, &Enum.member?(authors_graphQl, &1))
+    end
   end
 
   defp assert_authors(authors, authors_graphql) do

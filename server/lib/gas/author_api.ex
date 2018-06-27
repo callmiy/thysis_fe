@@ -40,6 +40,7 @@ defmodule Gas.AuthorApi do
 
   """
   def get!(id), do: Repo.get!(Author, id)
+  def get(id), do: Repo.get(Author, id)
 
   @doc """
   Creates a author.

@@ -5,7 +5,14 @@ defmodule Gas.SourceTest do
   alias Gas.SourceApi, as: Api
   alias Gas.Factory.Source, as: Factory
 
-  defp make_source(attrs \\ %{}) do
+  defp make_source(attrs \\ %{})
+
+  defp make_source(attrs) when is_list(attrs),
+    do:
+      Map.new(attrs)
+      |> make_source()
+
+  defp make_source(%{} = attrs) do
     Factory.insert(attrs)
     |> Map.merge(%{
       author_ids: nil,
@@ -101,12 +108,46 @@ defmodule Gas.SourceTest do
   # @tag :norun
   test "update_/2 with valid data updates the source" do
     source = make_source()
+    topic = "sss73bsbddj"
 
-    assert {:ok, %{source: %Source{} = source}} =
+    assert {:ok, %{source: %Source{topic: ^topic}}} = Api.update_(source, %{topic: topic})
+  end
+
+  # @tag :norun
+  test "update_/2 with deleted authors succeed" do
+    author_ids = insert_list(3, :author) |> Enum.map(& &1.id)
+    taken = Enum.take(author_ids, 2)
+    source = make_source(author_ids: author_ids, author_attrs: nil)
+    topic = "sss73bsbddj"
+
+    assert {:ok, %{source: %Source{authors: authors, topic: ^topic}}} =
              source
-             |> Api.update_(%{topic: "sss73bsbddj"})
+             |> Api.update_(%{
+               topic: topic,
+               deleted_authors: taken
+             })
 
-    assert source.topic == "sss73bsbddj"
+    authors = Enum.map(authors, & &1.id)
+    assert length(authors) == 1
+    refute Enum.all?(taken, &Enum.member?(authors, &1))
+  end
+
+  # @tag :norun
+  test "update_/2 with inserted authors succeed" do
+    author_id = insert(:author).id
+    %{authors: source_authors} = source = make_source()
+
+    assert {:ok, %{source: %Source{authors: authors}}} =
+             source
+             |> Api.update_(%{
+               author_ids: [author_id]
+             })
+
+    authors = Enum.map(authors, & &1.id)
+    source_authors = Enum.map(source_authors, & &1.id)
+    assert length(authors) == length(source_authors) + 1
+    assert Enum.member?(authors, author_id)
+    refute Enum.member?(source_authors, author_id)
   end
 
   # @tag :norun

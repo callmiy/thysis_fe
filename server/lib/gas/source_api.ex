@@ -11,6 +11,7 @@ defmodule Gas.SourceApi do
   alias Gas.Author
   alias Gas.SourceType
   alias Gas.SourceTypeApi
+  alias Gas.SourceAuthorApi
 
   @doc """
   Returns the list of sources.
@@ -312,11 +313,15 @@ defmodule Gas.SourceApi do
 
     with {:ok, result} <-
            Multi.new()
+           |> delete_authors_multi(attrs)
            |> Multi.update(:source, changes)
            |> create_authors_multi(:author_attrs, changes)
            |> create_authors_multi(:author_ids, changes)
            |> Repo.transaction() do
-      result = create_source_result(result)
+      result =
+        create_source_result(result)
+        |> delete_authors()
+
       {:ok, result}
     end
   end
@@ -362,4 +367,27 @@ defmodule Gas.SourceApi do
 
   def invalid_ids_error_string(ids) when is_list(ids),
     do: ~s[Invalid author IDs: #{Enum.join(ids, ", ")}]
+
+  defp delete_authors_multi(transaction, %{deleted_authors: ids}) when is_list(ids) do
+    Multi.run(transaction, :delete_authors, fn _n ->
+      {:ok, SourceAuthorApi.delete_(ids)}
+    end)
+  end
+
+  defp delete_authors_multi(transaction, _) do
+    Multi.run(transaction, :delete_authors, fn _ -> {:ok, []} end)
+  end
+
+  defp delete_authors(%{source: %{authors: authors} = source, delete_authors: ids} = record)
+       when is_list(authors) and is_list(ids) do
+    %{
+      record
+      | source: %{
+          source
+          | authors: Enum.filter(authors, &(!Enum.member?(ids, &1.id)))
+        }
+    }
+  end
+
+  defp delete_authors(record), do: record
 end

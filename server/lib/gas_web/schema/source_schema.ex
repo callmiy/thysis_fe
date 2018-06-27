@@ -71,10 +71,14 @@ defmodule GasWeb.SourceSchema do
     @desc ~S{The URI where author's original work can be accessed}
     field(:url, :string)
 
-    @desc "The original owners of the work - Either author creation inputs
-    or list of author IDs"
+    @desc "The new authors we wish to add by attributes"
     field(:author_attrs, list_of(:create_author_input))
+
+    @desc "New authors we wish to add by IDs"
     field(:author_ids, list_of(:id))
+
+    @desc "The authors we wish to delete"
+    field(:deleted_authors, list_of(:id))
   end
 
   # QUERY INPUTS
