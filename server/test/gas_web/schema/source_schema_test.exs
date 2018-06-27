@@ -139,8 +139,7 @@ defmodule GasWeb.SourceSchemaTest do
 
       variables = %{"source" => source}
 
-      error =
-        "{name: source, error: [author_params: #{SourceApi.author_required_error_string()}]}"
+      error = "{name: source, error: [authors: #{SourceApi.author_required_error_string()}]}"
 
       assert {:ok,
               %{

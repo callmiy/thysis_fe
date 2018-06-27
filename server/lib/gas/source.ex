@@ -67,7 +67,7 @@ defmodule Gas.Source do
           {nil, nil} ->
             add_error(
               changes,
-              :author_params,
+              :authors,
               SourceApi.author_required_error_string()
             )
 

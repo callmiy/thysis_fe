@@ -58,7 +58,7 @@ defmodule Gas.SourceTest do
 
   # @tag :norun
   test "create_/1 with no authors error" do
-    assert {:error, :source, %Ecto.Changeset{errors: [author_params: _]}, %{}} =
+    assert {:error, :source, %Ecto.Changeset{errors: [authors: _]}, %{}} =
              Factory.params_with_assocs()
              |> Api.create_()
   end
