@@ -78,10 +78,12 @@ export interface QuoteFullSearchInput {
 };
 
 export interface UpdateSourceInput {
-  // The original owners of the work - Either author creation inputs
-  // or list of author IDs
+  // The new authors we wish to add by attributes
   authorAttrs?: Array< CreateAuthorInput | null > | null,
+  // New authors we wish to add by IDs
   authorIds?: Array< string | null > | null,
+  // The authors we wish to delete
+  deletedAuthors?: Array< string | null > | null,
   // ID of source to be updated
   id: string,
   // For which conference was this work published
@@ -129,7 +131,6 @@ export interface CreateQuoteMutation {
       id: string,
       display: string | null,
       year: string | null,
-      author: string | null,
       authors:  Array< {
         id: string,
         name: string,
@@ -164,7 +165,6 @@ export interface SourceFullQuery {
     id: string,
     display: string | null,
     year: string | null,
-    author: string | null,
     authors:  Array< {
       id: string,
       name: string,
@@ -197,7 +197,6 @@ export interface CreateSourceMutation {
     id: string,
     display: string | null,
     year: string | null,
-    author: string | null,
     authors:  Array< {
       id: string,
       name: string,
@@ -218,7 +217,6 @@ export interface Source1Query {
     id: string,
     display: string | null,
     year: string | null,
-    author: string | null,
     authors:  Array< {
       id: string,
       name: string,
@@ -236,7 +234,6 @@ export interface Sources1Query {
     id: string,
     display: string | null,
     year: string | null,
-    author: string | null,
     authors:  Array< {
       id: string,
       name: string,
@@ -363,7 +360,6 @@ export interface UpdateSourceMutation {
     id: string,
     display: string | null,
     year: string | null,
-    author: string | null,
     authors:  Array< {
       id: string,
       name: string,
@@ -403,7 +399,6 @@ export interface SourceFullFragFragment {
   id: string,
   display: string | null,
   year: string | null,
-  author: string | null,
   authors:  Array< {
     id: string,
     name: string,
@@ -427,7 +422,6 @@ export interface SourceFragFragment {
   id: string,
   display: string | null,
   year: string | null,
-  author: string | null,
   authors:  Array< {
     id: string,
     name: string,

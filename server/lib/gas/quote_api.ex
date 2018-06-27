@@ -169,7 +169,7 @@ defmodule Gas.QuoteApi do
     sql =
       %{
         "quotes" => ["text", "volume", "issue", "extras"],
-        "sources" => ["author", "topic", "publication", "url"],
+        "sources" => ["topic", "publication", "url"],
         "tags" => ["text"],
         "source_types" => ["name"],
         "authors" => ["name"]

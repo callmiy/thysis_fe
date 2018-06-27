@@ -18,7 +18,6 @@ defmodule Gas.Source do
     field(:author_attrs, {:array, :map}, virtual: true)
     field(:author_ids, {:array, :id}, virtual: true)
     field(:deleted_authors, {:array, :id}, virtual: true)
-    field(:author, :string)
     field(:topic, :string)
     field(:year, :string)
     field(:publication, :string)
@@ -55,7 +54,6 @@ defmodule Gas.Source do
         :source_type_id,
         :author_ids,
         :author_attrs,
-        :author,
         :deleted_authors
       ])
       |> validate_required([:topic, :source_type_id])

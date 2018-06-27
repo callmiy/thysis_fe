@@ -28,9 +28,8 @@ defmodule Gas.SourceApi do
 
   def list(:authors) do
     Source
-    # |> join(:inner, [s], a in assoc(s, :authors))
-    # |> preload([s, a], authors: a)
-    |> preload([s], [:authors])
+    |> join(:inner, [s], a in assoc(s, :authors))
+    |> preload([s, a], authors: a)
     |> Repo.all()
   end
 
@@ -51,23 +50,11 @@ defmodule Gas.SourceApi do
   def get!(id), do: Repo.get!(Source, id)
 
   def get(id) do
-    case Source
-         |> where([s], s.id == ^id)
-         |> join(:inner, [s], a in assoc(s, :authors))
-         |> preload([s, a], authors: a)
-         |> Repo.one() do
-      nil ->
-        case Repo.get(Source, id) do
-          nil ->
-            nil
-
-          source ->
-            Repo.preload(source, [:authors])
-        end
-
-      source ->
-        source
-    end
+    Source
+    |> where([s], s.id == ^id)
+    |> join(:inner, [s], a in assoc(s, :authors))
+    |> preload([s, a], authors: a)
+    |> Repo.one()
   end
 
   @doc """

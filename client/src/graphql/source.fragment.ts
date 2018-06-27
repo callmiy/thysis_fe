@@ -8,7 +8,6 @@ export const sourceFrag = gql`
     id
     display
     year
-    author
     authors {
       ...AuthorFrag
     }
