@@ -59,7 +59,29 @@ defmodule Gas.SourceTest do
   # @tag :norun
   test "create_/1 with no authors error" do
     assert {:error, :source, %Ecto.Changeset{errors: [author_params: _]}, %{}} =
-             Factory.params_with_assocs(:source)
+             Factory.params_with_assocs()
+             |> Api.create_()
+  end
+
+  # @tag :norun
+  test "create_/1 invalid author attributes error" do
+    assert {
+             :error,
+             :source,
+             %Ecto.Changeset{
+               errors: [
+                 author_attrs: {
+                   "[name: {can't be blank, [validation: required] }]",
+                   []
+                 }
+               ]
+             },
+             %{}
+           } =
+             Factory.params_with_assocs(
+               :with_authors,
+               author_params: [%{}, %{}]
+             )
              |> Api.create_()
   end
 
