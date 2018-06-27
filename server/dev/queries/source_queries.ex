@@ -1,20 +1,23 @@
 defmodule GasWeb.SourceQueries do
-  @fields """
-    id
-    topic
-    year
-    publication
-    url
-    insertedAt
-    updatedAt
-    display
-    sourceType {
+  @default_fragment """
+    fragment SourceFragment on Source {
+      __typename
       id
-      name
-    }
-    authors {
-      id
-      name
+      topic
+      year
+      publication
+      url
+      insertedAt
+      updatedAt
+      display
+      sourceType {
+        id
+        name
+      }
+      authors {
+        id
+        name
+      }
     }
   """
 
@@ -22,9 +25,11 @@ defmodule GasWeb.SourceQueries do
     """
     query Sources {
       sources {
-        #{@fields}
+        ...SourceFragment
       }
     }
+
+    #{@default_fragment}
     """
   end
 
@@ -32,7 +37,7 @@ defmodule GasWeb.SourceQueries do
     """
     query GetSource($source: GetSourceInput!) {
       source(source: $source) {
-        #{@fields}
+        ...SourceFragment
         quotes {
           id
           text
@@ -40,6 +45,8 @@ defmodule GasWeb.SourceQueries do
         }
       }
     }
+
+    #{@default_fragment}
     """
   end
 
@@ -47,7 +54,7 @@ defmodule GasWeb.SourceQueries do
     """
     mutation CreateSource($source: CreateSourceInput!) {
       createSource(source: $source) {
-        #{@fields}
+        ...SourceFragment
         quotes {
           id
           text
@@ -55,6 +62,25 @@ defmodule GasWeb.SourceQueries do
         }
       }
     }
+
+    #{@default_fragment}
+    """
+  end
+
+  def mutation(:update_source) do
+    """
+    mutation UpdateSource($source: UpdateSourceInput!) {
+      updateSource(source: $source) {
+        ...SourceFragment
+        quotes {
+          id
+          text
+          date
+        }
+      }
+    }
+
+    #{@default_fragment}
     """
   end
 end

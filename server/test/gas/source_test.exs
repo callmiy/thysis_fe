@@ -102,7 +102,7 @@ defmodule Gas.SourceTest do
   test "update_/2 with valid data updates the source" do
     source = make_source()
 
-    assert {:ok, %Source{} = source} =
+    assert {:ok, %{source: %Source{} = source}} =
              source
              |> Api.update_(%{topic: "sss73bsbddj"})
 
@@ -112,7 +112,14 @@ defmodule Gas.SourceTest do
   # @tag :norun
   test "update_/2 with invalid data returns error changeset" do
     source = make_source()
-    assert {:error, %Ecto.Changeset{}} = Api.update_(source, %{topic: nil})
+
+    assert {
+             :error,
+             :source,
+             %Ecto.Changeset{},
+             _success
+           } = Api.update_(source, %{topic: nil})
+
     assert_source_equal(source, Api.get(source.id))
   end
 

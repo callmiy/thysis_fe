@@ -34,53 +34,48 @@ defmodule Gas.Source do
   def changeset(source, attrs \\ %{})
 
   def changeset(%{id: nil} = source, attrs) do
-    cast_default(source, attrs)
-    |> validate_authors()
+    {author_ids, author_attrs, changes} = cast_default(source, attrs)
+
+    validate_authors(author_ids, author_attrs, changes)
   end
 
   def changeset(source, attrs) do
-    cast_default(source, attrs)
+    {_, _, changes} = cast_default(source, attrs)
+    changes
   end
 
   defp cast_default(source, attrs) do
-    source
-    |> cast(attrs, [
-      :topic,
-      :year,
-      :publication,
-      :url,
-      :source_type_id,
-      :author_ids,
-      :author_attrs,
-      :author
-    ])
-    |> validate_required([:topic, :source_type_id])
+    changes =
+      cast(source, attrs, [
+        :topic,
+        :year,
+        :publication,
+        :url,
+        :source_type_id,
+        :author_ids,
+        :author_attrs,
+        :author
+      ])
+      |> validate_required([:topic, :source_type_id])
+
+    {author_ids, changes} = validate_author_ids(changes)
+    {author_attrs, changes} = validate_author_attrs(changes)
+    {author_ids, author_attrs, changes}
   end
 
-  defp validate_authors(changes) do
-    case changes.valid? do
-      true ->
-        {author_ids, changes} = validate(changes, :author_ids)
-        {author_attrs, changes} = validate(changes, :author_attrs)
+  defp validate_authors(_, _, %{valid?: false} = changes), do: changes
 
-        case {author_ids, author_attrs} do
-          {nil, nil} ->
-            add_error(
-              changes,
-              :authors,
-              SourceApi.author_required_error_string()
-            )
+  defp validate_authors(nil, nil, changes),
+    do:
+      add_error(
+        changes,
+        :authors,
+        SourceApi.author_required_error_string()
+      )
 
-          _ ->
-            changes
-        end
+  defp validate_authors(_, _, changes), do: changes
 
-      _ ->
-        changes
-    end
-  end
-
-  defp validate(changes, :author_ids) do
+  defp validate_author_ids(changes) do
     case fetch_field(changes, :author_ids) |> get_data_or_error() do
       nil ->
         {nil, changes}
@@ -117,7 +112,7 @@ defmodule Gas.Source do
     end
   end
 
-  defp validate(changes, :author_attrs) do
+  defp validate_author_attrs(changes) do
     case fetch_field(changes, :author_attrs) |> get_data_or_error() do
       nil ->
         {nil, changes}

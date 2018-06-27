@@ -70,8 +70,8 @@ defmodule GasWeb.SourceResolver do
   @doc """
   Create a source
   """
-  @spec create_source(any, %{source: Map.t()}, any) :: {:ok, %Source{}} | {:error, String.t()}
-  def create_source(_root, %{source: inputs} = _args, _info) do
+  @spec create(any, %{source: Map.t()}, any) :: {:ok, %Source{}} | {:error, String.t()}
+  def create(_root, %{source: inputs} = _args, _info) do
     case Api.create_(inputs) do
       {:ok, %{source: source}} ->
         {:ok, source}
@@ -84,6 +84,33 @@ defmodule GasWeb.SourceResolver do
             failed_operation
           )
         }
+    end
+  end
+
+  @doc """
+  Create a source
+  """
+  @spec update(any, %{source: %{id: Integer.t() | String.t()}}, any) ::
+          {:ok, %Source{}} | {:error, String.t()}
+  def update(_root, %{source: %{id: id} = inputs} = _args, _info) do
+    case Api.get(id) do
+      nil ->
+        {:error, "No source with id: #{id}"}
+
+      source ->
+        case Api.update_(source, inputs) do
+          {:ok, %{source: source}} ->
+            {:ok, source}
+
+          {:error, failed_operation, changeset, _success} ->
+            {
+              :error,
+              ResolversUtil.transaction_errors_to_string(
+                changeset,
+                failed_operation
+              )
+            }
+        end
     end
   end
 end

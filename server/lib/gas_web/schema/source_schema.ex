@@ -30,7 +30,7 @@ defmodule GasWeb.SourceSchema do
   # MUTATION INPUTS
   @desc "Inputs for creating a source with authors"
   input_object :create_source_input do
-    @desc "The topic of the work, as given by authour - manadatory"
+    @desc "The topic of the work, as given by authours - mandatory"
     field(:topic, non_null(:string))
 
     @desc "The source type i.e. book, journal etc. - mandatory"
@@ -46,8 +46,34 @@ defmodule GasWeb.SourceSchema do
     field(:url, :string)
 
     @desc "The original owners of the work - Either author creation inputs
-    or list of author IDs mandatory"
-    field(:author_maps, list_of(:create_author_input))
+    or list of author IDs, one of which is mandatory"
+    field(:author_attrs, list_of(:create_author_input))
+    field(:author_ids, list_of(:id))
+  end
+
+  @desc "Inputs for updating a source"
+  input_object :update_source_input do
+    @desc "ID of source to be updated"
+    field(:id, non_null(:id))
+
+    @desc "The topic of the work, as given by authours"
+    field(:topic, :string)
+
+    @desc "The source type i.e. book, journal etc. - if needed to be changed"
+    field(:source_type_id, :id)
+
+    @desc "The year the source was published"
+    field(:year, :string)
+
+    @desc "For which conference was this work published"
+    field(:publication, :string)
+
+    @desc ~S{The URI where author's original work can be accessed}
+    field(:url, :string)
+
+    @desc "The original owners of the work - Either author creation inputs
+    or list of author IDs"
+    field(:author_attrs, list_of(:create_author_input))
     field(:author_ids, list_of(:id))
   end
 
@@ -76,9 +102,16 @@ defmodule GasWeb.SourceSchema do
   # MUTATIONS
   @desc "Mutations that may be performed on source object"
   object :source_mutation do
+    @desc "create source mutation"
     field :create_source, type: :source do
       arg(:source, non_null(:create_source_input))
-      resolve(&SourceResolver.create_source/3)
+      resolve(&SourceResolver.create/3)
+    end
+
+    @desc "update source mutation"
+    field :update_source, type: :source do
+      arg(:source, non_null(:update_source_input))
+      resolve(&SourceResolver.update/3)
     end
   end
 end

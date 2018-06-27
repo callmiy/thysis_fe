@@ -272,14 +272,27 @@ defmodule Gas.SourceApi do
        when is_list(ids),
        do: create_source_result(result, ids)
 
-  defp create_source_result(%{source: source} = result, authors) when is_list(authors),
-    do: %{
+  defp create_source_result(result), do: create_source_result(result, [])
+
+  defp create_source_result(%{source: %{authors: source_authors} = source} = result, authors)
+       when is_list(authors) do
+    authors =
+      case source_authors do
+        source_authors when is_list(source_authors) ->
+          Enum.concat(source_authors, authors)
+
+        _ ->
+          authors
+      end
+
+    %{
       result
       | source: %{
           source
           | authors: authors
         }
     }
+  end
 
   @doc """
   Updates a source.
@@ -293,10 +306,19 @@ defmodule Gas.SourceApi do
       {:error, %Ecto.Changeset{}}
 
   """
+
   def update_(%Source{} = source, attrs) do
-    source
-    |> Source.changeset(attrs)
-    |> Repo.update()
+    changes = Source.changeset(source, attrs)
+
+    with {:ok, result} <-
+           Multi.new()
+           |> Multi.update(:source, changes)
+           |> create_authors_multi(:author_attrs, changes)
+           |> create_authors_multi(:author_ids, changes)
+           |> Repo.transaction() do
+      result = create_source_result(result)
+      {:ok, result}
+    end
   end
 
   @doc """
