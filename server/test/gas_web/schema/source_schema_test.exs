@@ -11,7 +11,7 @@ defmodule GasWeb.SourceSchemaTest do
     # @tag :norun
     test "get all sources succeeds" do
       # first source
-      SourceFactory.insert(:source)
+      SourceFactory.insert()
 
       # 2nd source
 
@@ -19,7 +19,7 @@ defmodule GasWeb.SourceSchemaTest do
         %Source{
           id: id,
           source_type_id: source_type_id
-        } = SourceFactory.insert(:source)
+        } = SourceFactory.insert()
 
       id = inspect(id)
       source_type_id = inspect(source_type_id)
@@ -51,7 +51,7 @@ defmodule GasWeb.SourceSchemaTest do
         id: id,
         source_type_id: source_type_id,
         year: year
-      } = SourceFactory.insert(:source)
+      } = SourceFactory.insert()
 
       id = Integer.to_string(id)
       source_type_id = inspect(source_type_id)
@@ -86,6 +86,7 @@ defmodule GasWeb.SourceSchemaTest do
 
   # @tag :norun
   describe "mutatation" do
+    # @tag :norun
     test "create source with author names only" do
       %{id: source_type_id, name: name} = source_type = insert(:source_type)
 
@@ -94,7 +95,7 @@ defmodule GasWeb.SourceSchemaTest do
       %{year: year} =
         source =
         SourceFactory.params_for(
-          :source,
+          :with_authors,
           source_type: source_type,
           year: "2016"
         )
@@ -130,17 +131,16 @@ defmodule GasWeb.SourceSchemaTest do
       assert_authors(authors, authors_)
     end
 
+    # @tag :norun
     test "create source without author names or IDs errors" do
       {_, source} =
-        SourceFactory.params_with_assocs(
-          :source,
-          author_ids: nil,
-          author_maps: nil
-        )
+        SourceFactory.params_with_assocs(:source)
         |> make_authors()
 
       variables = %{"source" => source}
-      error = "{name: source, error: [author_maps: #{SourceApi.author_required_error_string()}]}"
+
+      error =
+        "{name: source, error: [author_params: #{SourceApi.author_required_error_string()}]}"
 
       assert {:ok,
               %{
@@ -159,6 +159,44 @@ defmodule GasWeb.SourceSchemaTest do
                  Schema,
                  variables: variables
                )
+    end
+
+    # @tag :norun
+    test "create source does not insert duplicate author IDs" do
+      id = insert(:author).id
+
+      author_params =
+        build_list(3, :author)
+        |> Enum.map(&%{name: &1.name})
+
+      source =
+        SourceFactory.params_with_assocs(
+          :with_authors,
+          author_ids: [id, id],
+          author_params: author_params
+        )
+
+      {_authors, source_input} = make_authors(source)
+
+      variables = %{
+        "source" => source_input
+      }
+
+      assert {:ok,
+              %{
+                data: %{
+                  "createSource" => %{
+                    "authors" => authors
+                  }
+                }
+              }} =
+               Absinthe.run(
+                 Queries.mutation(:source),
+                 Schema,
+                 variables: variables
+               )
+
+      assert length(authors) == 4
     end
   end
 
@@ -179,14 +217,14 @@ defmodule GasWeb.SourceSchemaTest do
         assert Enum.all?(author_ids, &Enum.member?(ids, &1))
     end
 
-    case Map.get(authors, "author_maps") do
+    case Map.get(authors, "author_params") do
       nil ->
         :ok
 
-      author_maps ->
-        author_maps = Enum.map(author_maps, & &1["name"])
+      author_params ->
+        author_params = Enum.map(author_params, & &1["name"])
         names = Enum.map(authors_graphql, & &1["name"])
-        assert Enum.all?(author_maps, &Enum.member?(names, &1))
+        assert Enum.all?(author_params, &Enum.member?(names, &1))
     end
   end
 
@@ -205,13 +243,13 @@ defmodule GasWeb.SourceSchemaTest do
       end
 
     {authors, source} =
-      case {author_maps, source} = Map.pop(source, :author_maps) do
+      case {author_params, source} = Map.pop(source, :author_params) do
         {nil, source} ->
           {authors, source}
 
-        {author_maps, source} ->
-          author_maps = Enum.map(author_maps, &MapHelpers.stringify_keys/1)
-          {Map.merge(authors, %{"author_maps" => author_maps}), source}
+        {author_params, source} ->
+          author_params = Enum.map(author_params, &MapHelpers.stringify_keys/1)
+          {Map.merge(authors, %{"author_params" => author_params}), source}
       end
 
     source =

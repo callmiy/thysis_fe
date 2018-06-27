@@ -11,7 +11,7 @@ defmodule Gas.QuoteSchemaTest do
     test "create quote succeeds" do
       %{
         id: source_id
-      } = source = SourceFactory.insert(:source)
+      } = source = SourceFactory.insert()
 
       source_id = Integer.to_string(source_id)
 
@@ -66,7 +66,7 @@ defmodule Gas.QuoteSchemaTest do
 
     # @tag :norun
     test "get quotes by source id succeeds" do
-      [source1, source2] = SourceFactory.insert_list(2, :source)
+      [source1, source2] = SourceFactory.insert_list(2)
       %{id: source1_quote_id} = insert(:quote, source: source1)
 
       source2_id = Integer.to_string(source2.id)
@@ -163,7 +163,7 @@ defmodule Gas.QuoteSchemaTest do
 
     test "full text search across sources table" do
       search_text = Faker.String.base64(4)
-      %{id: id} = SourceFactory.insert(:source, topic: search_text)
+      %{id: id} = SourceFactory.insert(topic: search_text)
 
       assert {:ok,
               %{

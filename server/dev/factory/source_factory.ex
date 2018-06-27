@@ -1,9 +1,9 @@
 defmodule Gas.Factory.Source do
   use ExMachina
-  use Gas.Factory.SourceStrategy
 
   alias Gas.Factory
   alias Gas.Source
+  alias Gas.SourceApi
   alias ExMachina.Ecto, as: ExEcto
 
   @name __MODULE__
@@ -12,42 +12,58 @@ defmodule Gas.Factory.Source do
   @end_date ~D[2018-12-31]
 
   def source_factory do
-    {authors, author_ids} =
-      case Enum.random([:authors, :author_ids, 2]) do
-        :authors ->
-          make_authors()
-
-        :author_ids ->
-          make_author_ids()
-
-        2 ->
-          {authors, nil} = make_authors()
-          {nil, author_ids} = make_author_ids()
-
-          {authors, author_ids}
-      end
-
     %Source{
       topic: Faker.String.base64(),
       year: Enum.random([Integer.to_string(random_date().year), nil]),
       publication: Enum.random([Faker.String.base64(), nil]),
       url: Enum.random([Faker.Internet.url(), nil]),
-      source_type: Factory.build(:source_type),
-      author_ids: author_ids,
-      author_maps: authors
+      source_type: Factory.build(:source_type)
     }
+    |> handle_assoc()
   end
 
-  def params_for(:source, attrs \\ %{}), do: params(attrs)
+  def with_authors(attrs \\ %{})
 
-  def params_with_assocs(:source, attrs \\ %{}) do
+  def with_authors(attrs) when is_list(attrs) do
+    Map.new(attrs)
+    |> with_authors()
+  end
+
+  def with_authors(%{} = attrs) do
+    build(:source, attrs)
+    |> Map.merge(make_authors_map(attrs))
+  end
+
+  def params_for(factory, attrs \\ %{})
+
+  def params_for(factory, attrs) when is_list(attrs) do
+    params_for(factory, Map.new(attrs))
+  end
+
+  def params_for(:with_authors, %{} = attrs),
+    do:
+      params(attrs)
+      |> Map.merge(make_authors_map(attrs))
+
+  def params_with_assocs(factory, attrs \\ %{})
+
+  def params_with_assocs(factory, attrs) when is_list(attrs) do
+    params_with_assocs(factory, Map.new(attrs))
+  end
+
+  def params_with_assocs(:with_authors, %{} = attrs) do
+    params_with_assocs(nil, attrs)
+    |> Map.merge(make_authors_map(attrs))
+  end
+
+  def params_with_assocs(_any, %{} = attrs) do
     %{id: id} = Factory.insert(:source_type)
 
     params(attrs)
     |> Map.put(:source_type_id, id)
   end
 
-  defp params(attrs),
+  def params(attrs \\ %{}),
     do:
       ExEcto.params_for(
         @name,
@@ -55,21 +71,87 @@ defmodule Gas.Factory.Source do
         attrs
       )
 
+  def insert(attrs \\ %{})
+  def insert(attrs) when is_list(attrs), do: Map.new(attrs) |> insert()
+
+  def insert(attrs) do
+    {:ok, %{source: %Source{} = source}} =
+      params_with_assocs(:with_authors, attrs)
+      |> SourceApi.create_()
+
+    source
+  end
+
+  def insert_list(how_many \\ 2, attrs \\ %{})
+
+  def insert_list(how_many, attrs) when is_list(attrs) do
+    attrs = Map.new(attrs)
+    insert_list(how_many, attrs)
+  end
+
+  def insert_list(how_many, attrs) do
+    Enum.map(1..how_many, fn _ -> insert(attrs) end)
+  end
+
   defp random_date, do: Faker.Date.between(@start_date, @end_date)
 
-  defp make_authors(how_many \\ 5) when is_integer(how_many) do
-    authors =
-      1..Faker.random_between(1, how_many)
-      |> Enum.map(fn _ -> Factory.params_for(:author) end)
-
-    {authors, nil}
+  defp make_author_params(how_many \\ 5) when is_integer(how_many) do
+    1..Faker.random_between(1, how_many)
+    |> Enum.map(fn _ -> Factory.params_for(:author) end)
   end
 
   defp make_author_ids(how_many \\ 5) when is_integer(how_many) do
-    author_ids =
-      Factory.insert_list(Faker.random_between(1, how_many), :author)
-      |> Enum.map(& &1.id)
-
-    {nil, author_ids}
+    Factory.insert_list(Faker.random_between(1, how_many), :author)
+    |> Enum.map(& &1.id)
   end
+
+  defp make_authors_map(%{} = attrs) do
+    case {Map.has_key?(attrs, :author_ids), Map.has_key?(attrs, :author_params)} do
+      {false, false} ->
+        make_authors_map(2)
+
+      {true, false} ->
+        %{
+          author_ids: Map.get(attrs, :author_ids),
+          author_params: make_author_params()
+        }
+
+      {false, true} ->
+        %{
+          author_ids: make_author_ids(),
+          author_params: Map.get(attrs, :author_params)
+        }
+
+      _ ->
+        %{}
+    end
+  end
+
+  defp make_authors_map(2) do
+    {author_params, author_ids} =
+      case Enum.random([:author_params, :author_ids, 2]) do
+        :author_params ->
+          {make_author_params(), nil}
+
+        :author_ids ->
+          {nil, make_author_ids()}
+
+        2 ->
+          {make_author_params(), make_author_ids()}
+      end
+
+    %{
+      author_ids: author_ids,
+      author_params: author_params
+    }
+  end
+
+  defp handle_assoc(%{source_type_id: nil, source_type: %{id: id}} = record) do
+    %{
+      record
+      | source_type_id: id
+    }
+  end
+
+  defp handle_assoc(record), do: record
 end

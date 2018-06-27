@@ -42,7 +42,7 @@ defmodule Gas.Factory do
       volume: Enum.random([get_random_string_integer(), nil]),
       issue: Enum.random([get_random_string_integer(), nil]),
       extras: Enum.random([Faker.String.base64(), nil]),
-      source: SourceFactory.build(:source)
+      source: SourceFactory.with_authors()
     }
   end
 

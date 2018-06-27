@@ -76,11 +76,11 @@ defmodule Gas.SourceApi do
 
       iex> create_(%{
           source: %{topic: "topic", ..},
-          author_maps: [
+          author_params: [
             %{name: "author 1"}, %{name: "author 2"}
           ]
         })
-      {:ok, %{source: %Source{}, author_maps: {2, [%Author{}, %Author{}]} }}
+      {:ok, %{source: %Source{}, author_params: {2, [%Author{}, %Author{}]} }}
 
       iex> create_(%{
           source: %{topic: "topic", ..},
@@ -91,14 +91,14 @@ defmodule Gas.SourceApi do
       iex> create_(%{
           source: %{topic: "topic", ..},
           author_ids: [1, 2, 3, 4],
-          author_maps: [
+          author_params: [
             %{name: "author 1"}, %{name: "author 2"}
           ]
         })
       {:ok, %{
         source: %Source{},
         author_ids: {4, nil},
-        author_maps: [%Author{}, %Author{}]
+        author_params: [%Author{}, %Author{}]
       }}
 
       iex> create_(%{
@@ -116,7 +116,7 @@ defmodule Gas.SourceApi do
           %{
             topic: String.t() | nil,
             source_type_id: Integer.t() | String.t() | nil,
-            author_maps: [Map.t()] | nil,
+            author_params: [Map.t()] | nil,
             author_ids: [Integer.t() | String.t()] | nil
           }
           | %{}
@@ -126,8 +126,8 @@ defmodule Gas.SourceApi do
              source: %Source{authors: [%Author{}]},
              source_type: %SourceType{} | nil,
              soure_author_ids: {Integer.t(), nil} | nil,
-             soure_author_maps: {Integer.t(), nil} | nil,
-             author_maps: {Integer.t(), [%Author{id: Integer.t()}]} | nil
+             soure_author_params: {Integer.t(), nil} | nil,
+             author_params: {Integer.t(), [%Author{id: Integer.t()}]} | nil
            }}
           | {:error, Multi.name(), any(), %{optional(Multi.name()) => any()}}
 
@@ -154,7 +154,7 @@ defmodule Gas.SourceApi do
 
     with {:ok, result} <-
            source_multi
-           |> create_authors_multi(:author_maps, changes)
+           |> create_authors_multi(:author_params, changes)
            |> create_authors_multi(:author_ids, changes)
            |> Repo.transaction() do
       result = create_source_result(result)
@@ -220,21 +220,21 @@ defmodule Gas.SourceApi do
     end)
   end
 
-  defp create_authors_multi(transaction, :author_maps, %Ecto.Changeset{
-         changes: %{author_maps: author_maps}
+  defp create_authors_multi(transaction, :author_params, %Ecto.Changeset{
+         changes: %{author_params: author_params}
        })
-       when is_list(author_maps) do
+       when is_list(author_params) do
     now = Timex.now()
 
     Multi.merge(transaction, fn %{source: %Source{id: id}} ->
       Multi.new()
       |> Multi.insert_all(
-        :author_maps,
+        :author_params,
         Author,
-        Enum.map(author_maps, &Map.merge(&1, %{inserted_at: now, updated_at: now})),
+        Enum.map(author_params, &Map.merge(&1, %{inserted_at: now, updated_at: now})),
         returning: true
       )
-      |> Multi.merge(fn %{author_maps: {_num_inserts, authors}} ->
+      |> Multi.merge(fn %{author_params: {_num_inserts, authors}} ->
         source_authors =
           Enum.map(
             authors,
@@ -248,7 +248,7 @@ defmodule Gas.SourceApi do
 
         Multi.new()
         |> Multi.insert_all(
-          :source_author_maps,
+          :source_author_params,
           SourceAuthor,
           source_authors
         )
@@ -259,11 +259,11 @@ defmodule Gas.SourceApi do
   defp create_authors_multi(transaction, _, _),
     do: Multi.merge(transaction, fn _ -> Multi.new() end)
 
-  defp create_source_result(%{source: %{author_ids: nil}, author_maps: {_, maps}} = result)
+  defp create_source_result(%{source: %{author_ids: nil}, author_params: {_, maps}} = result)
        when is_list(maps),
        do: create_source_result(result, maps)
 
-  defp create_source_result(%{source: %{author_ids: ids}, author_maps: {_, maps}} = result)
+  defp create_source_result(%{source: %{author_ids: ids}, author_params: {_, maps}} = result)
        when is_list(ids) and is_list(maps) do
     create_source_result(result, Enum.concat(ids, maps))
   end

@@ -6,15 +6,11 @@ defmodule Gas.SourceTest do
   alias Gas.Factory.Source, as: Factory
 
   defp make_source(attrs \\ %{}) do
-    {:ok, %{source: source}} =
-      Factory.params_with_assocs(:source, attrs)
-      |> Api.create_()
-
-    %{
-      source
-      | author_ids: nil,
-        author_maps: nil
-    }
+    Factory.insert(attrs)
+    |> Map.merge(%{
+      author_ids: nil,
+      author_params: nil
+    })
   end
 
   defp assert_source_equal(source_a, source_b) do
@@ -48,13 +44,13 @@ defmodule Gas.SourceTest do
       attrs =
       Factory.params_with_assocs(
         :source,
-        author_maps: [params_for(:author)]
+        author_params: [params_for(:author)]
       )
 
     assert {:ok,
             %{
               source: %Source{} = source,
-              author_maps: {1, [_]}
+              author_params: {1, [_]}
             }} = Api.create_(attrs)
 
     assert source.topic == topic
@@ -62,9 +58,8 @@ defmodule Gas.SourceTest do
 
   # @tag :norun
   test "create_/1 with no authors error" do
-    assert {:error, :source, %Ecto.Changeset{errors: [author_maps: _]}, %{}} =
-             :source
-             |> Factory.params_with_assocs(author_maps: nil, author_ids: nil)
+    assert {:error, :source, %Ecto.Changeset{errors: [author_params: _]}, %{}} =
+             Factory.params_with_assocs(:source)
              |> Api.create_()
   end
 
@@ -77,7 +72,8 @@ defmodule Gas.SourceTest do
   # @tag :norun
   test "create_/1 with no source type returns error changeset" do
     assert {:error, :source, %Ecto.Changeset{}, %{}} =
-             Factory.params_for(:source) |> Api.create_()
+             Factory.params_for(:with_authors, source_type: nil)
+             |> Api.create_()
   end
 
   # @tag :norun
