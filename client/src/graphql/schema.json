@@ -239,6 +239,20 @@
               "type": {
                 "ofType": {
                   "ofType": null,
+                  "name": "CreateAuthorInput",
+                  "kind": "INPUT_OBJECT"
+                },
+                "name": null,
+                "kind": "LIST"
+              },
+              "name": "authorAttrs",
+              "description": "The original owners of the work - Either author creation inputs\n    or list of author IDs, one of which is mandatory",
+              "defaultValue": null
+            },
+            {
+              "type": {
+                "ofType": {
+                  "ofType": null,
                   "name": "ID",
                   "kind": "SCALAR"
                 },
@@ -247,20 +261,6 @@
               },
               "name": "authorIds",
               "description": null,
-              "defaultValue": null
-            },
-            {
-              "type": {
-                "ofType": {
-                  "ofType": null,
-                  "name": "CreateAuthorInput",
-                  "kind": "INPUT_OBJECT"
-                },
-                "name": null,
-                "kind": "LIST"
-              },
-              "name": "authorMaps",
-              "description": "The original owners of the work - Either author creation inputs\n    or list of author IDs mandatory",
               "defaultValue": null
             },
             {
@@ -298,7 +298,7 @@
                 "kind": "NON_NULL"
               },
               "name": "topic",
-              "description": "The topic of the work, as given by authour - manadatory",
+              "description": "The topic of the work, as given by authours - mandatory",
               "defaultValue": null
             },
             {
@@ -599,7 +599,7 @@
               },
               "name": "createSource",
               "isDeprecated": false,
-              "description": null,
+              "description": "create source mutation",
               "deprecationReason": null,
               "args": [
                 {
@@ -640,6 +640,33 @@
                     "kind": "NON_NULL"
                   },
                   "name": "tag",
+                  "description": null,
+                  "defaultValue": null
+                }
+              ]
+            },
+            {
+              "type": {
+                "ofType": null,
+                "name": "Source",
+                "kind": "OBJECT"
+              },
+              "name": "updateSource",
+              "isDeprecated": false,
+              "description": "update source mutation",
+              "deprecationReason": null,
+              "args": [
+                {
+                  "type": {
+                    "ofType": {
+                      "ofType": null,
+                      "name": "UpdateSourceInput",
+                      "kind": "INPUT_OBJECT"
+                    },
+                    "name": null,
+                    "kind": "NON_NULL"
+                  },
+                  "name": "source",
                   "description": null,
                   "defaultValue": null
                 }
@@ -1619,6 +1646,109 @@
           ],
           "enumValues": null,
           "description": "A Tag"
+        },
+        {
+          "possibleTypes": null,
+          "name": "UpdateSourceInput",
+          "kind": "INPUT_OBJECT",
+          "interfaces": null,
+          "inputFields": [
+            {
+              "type": {
+                "ofType": {
+                  "ofType": null,
+                  "name": "CreateAuthorInput",
+                  "kind": "INPUT_OBJECT"
+                },
+                "name": null,
+                "kind": "LIST"
+              },
+              "name": "authorAttrs",
+              "description": "The original owners of the work - Either author creation inputs\n    or list of author IDs",
+              "defaultValue": null
+            },
+            {
+              "type": {
+                "ofType": {
+                  "ofType": null,
+                  "name": "ID",
+                  "kind": "SCALAR"
+                },
+                "name": null,
+                "kind": "LIST"
+              },
+              "name": "authorIds",
+              "description": null,
+              "defaultValue": null
+            },
+            {
+              "type": {
+                "ofType": {
+                  "ofType": null,
+                  "name": "ID",
+                  "kind": "SCALAR"
+                },
+                "name": null,
+                "kind": "NON_NULL"
+              },
+              "name": "id",
+              "description": "ID of source to be updated",
+              "defaultValue": null
+            },
+            {
+              "type": {
+                "ofType": null,
+                "name": "String",
+                "kind": "SCALAR"
+              },
+              "name": "publication",
+              "description": "For which conference was this work published",
+              "defaultValue": null
+            },
+            {
+              "type": {
+                "ofType": null,
+                "name": "ID",
+                "kind": "SCALAR"
+              },
+              "name": "sourceTypeId",
+              "description": "The source type i.e. book, journal etc. - if needed to be changed",
+              "defaultValue": null
+            },
+            {
+              "type": {
+                "ofType": null,
+                "name": "String",
+                "kind": "SCALAR"
+              },
+              "name": "topic",
+              "description": "The topic of the work, as given by authours",
+              "defaultValue": null
+            },
+            {
+              "type": {
+                "ofType": null,
+                "name": "String",
+                "kind": "SCALAR"
+              },
+              "name": "url",
+              "description": "The URI where author's original work can be accessed",
+              "defaultValue": null
+            },
+            {
+              "type": {
+                "ofType": null,
+                "name": "String",
+                "kind": "SCALAR"
+              },
+              "name": "year",
+              "description": "The year the source was published",
+              "defaultValue": null
+            }
+          ],
+          "fields": null,
+          "enumValues": null,
+          "description": "Inputs for updating a source"
         },
         {
           "possibleTypes": null,

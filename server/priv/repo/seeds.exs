@@ -39,7 +39,6 @@ Repo.transaction(fn ->
   |> Enum.flat_map(
     &SourceFactory.insert_list(
       random_between(2, 3),
-      :source,
       source_type: &1
     )
   )

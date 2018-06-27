@@ -20,6 +20,8 @@ import { Quotes1QueryVariables } from "./gen.types";
 import { GetAllAuthorsQuery } from "./gen.types";
 import { CreateAuthorMutation } from "./gen.types";
 import { CreateAuthorMutationVariables } from "./gen.types";
+import { UpdateSourceMutation } from "./gen.types";
+import { UpdateSourceMutationVariables } from "./gen.types";
 
 export class TagsMinimalQueryComponent extends Query<TagsMinimalQuery, {}> {}
 export type TagsMinimalQueryResult = QueryResult<TagsMinimalQuery>;
@@ -59,6 +61,11 @@ export type CreateSourceMutationFn = MutationFn<
 >;
 
 export type CreateSourceUpdateFn = MutationUpdaterFn<CreateSourceMutation>;
+
+export type UpdateSourceMutationFn = MutationFn<
+  UpdateSourceMutation,
+  UpdateSourceMutationVariables
+>;
 
 // tslint:disable-next-line:max-classes-per-file
 export class SourceTypeQueryComponent extends Query<SourceTypesQuery, {}> {}

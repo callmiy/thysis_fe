@@ -1,6 +1,7 @@
 import { AccordionTitleProps } from "semantic-ui-react";
 import { WithApolloClient } from "react-apollo";
 import { ApolloError } from "apollo-client";
+import { InjectedFormikProps } from "formik";
 
 import { SourceFullFragFragment } from "../../../graphql/gen.types";
 import { Quote1FragFragment } from "../../../graphql/gen.types";
@@ -19,7 +20,14 @@ interface OwnProps {
   source: SourceFullFragFragment;
 }
 
-export type Props = WithApolloClient<OwnProps>;
+export type PropsWithApolloClient = WithApolloClient<OwnProps>;
+
+export type PropsWithFormikProps = InjectedFormikProps<
+  PropsWithApolloClient,
+  SourceFullFragFragment
+>;
+
+export type Props = PropsWithFormikProps;
 
 export interface State {
   activeIndex: number;
@@ -27,6 +35,7 @@ export interface State {
   loadingQuotes?: boolean;
   quotes?: Quote1FragFragment[];
   fetchQuotesError?: ApolloError;
+  editedSource?: SourceFullFragFragment;
 }
 
 export const initialState: State = {

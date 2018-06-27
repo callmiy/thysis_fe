@@ -1,5 +1,5 @@
 import Select from "react-select";
-import * as React from "react";
+import React from "react";
 
 import { AuthorFragFragment } from "../../graphql/gen.types";
 import { GetAllAuthorsQueryComponent } from "../../graphql/ops.types";
@@ -22,7 +22,7 @@ export class AuthorsControl extends React.Component<AuthorsControlProps> {
         {({ data }) => {
           let authors = [] as AuthorFragFragment[];
 
-          if (data) {
+          if (data && data.authors) {
             authors = data.authors as AuthorFragFragment[];
           }
 

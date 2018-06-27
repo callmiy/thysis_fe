@@ -1,5 +1,11 @@
 import { withApollo } from "react-apollo";
+import { compose } from "react-apollo";
+import { withFormik } from "formik";
+import { config } from "./formik.config";
 
 import SourceAccordion from "./component";
 
-export default withApollo(SourceAccordion);
+export default compose(
+  withFormik(config),
+  withApollo
+)(SourceAccordion);

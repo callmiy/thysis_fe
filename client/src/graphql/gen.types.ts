@@ -36,15 +36,15 @@ export interface GetSourceInput {
 };
 
 export interface CreateSourceInput {
-  authorIds?: Array< string | null > | null,
   // The original owners of the work - Either author creation inputs
-  // or list of author IDs mandatory
-  authorMaps?: Array< CreateAuthorInput | null > | null,
+  // or list of author IDs, one of which is mandatory
+  authorAttrs?: Array< CreateAuthorInput | null > | null,
+  authorIds?: Array< string | null > | null,
   // For which conference was this work published - optional
   publication?: string | null,
   // The source type i.e. book, journal etc. - mandatory
   sourceTypeId: string,
-  // The topic of the work, as given by authour - manadatory
+  // The topic of the work, as given by authours - mandatory
   topic: string,
   // The URI where author's original work can be accessed - optional
   url?: string | null,
@@ -75,6 +75,25 @@ export enum QuoteFullSearchTable {
 
 export interface QuoteFullSearchInput {
   text: string,
+};
+
+export interface UpdateSourceInput {
+  // The original owners of the work - Either author creation inputs
+  // or list of author IDs
+  authorAttrs?: Array< CreateAuthorInput | null > | null,
+  authorIds?: Array< string | null > | null,
+  // ID of source to be updated
+  id: string,
+  // For which conference was this work published
+  publication?: string | null,
+  // The source type i.e. book, journal etc. - if needed to be changed
+  sourceTypeId?: string | null,
+  // The topic of the work, as given by authours
+  topic?: string | null,
+  // The URI where author's original work can be accessed
+  url?: string | null,
+  // The year the source was published
+  year?: string | null,
 };
 
 export interface GetAllAuthorsQuery {
@@ -173,6 +192,7 @@ export interface CreateSourceMutationVariables {
 };
 
 export interface CreateSourceMutation {
+  // create source mutation
   createSource:  {
     id: string,
     display: string | null,
@@ -330,6 +350,32 @@ export interface AllMatchingTextsQuery {
       // The column name of the table from which the search was obtained
       column: string,
     } | null > | null,
+  } | null,
+};
+
+export interface UpdateSourceMutationVariables {
+  source: UpdateSourceInput,
+};
+
+export interface UpdateSourceMutation {
+  // update source mutation
+  updateSource:  {
+    id: string,
+    display: string | null,
+    year: string | null,
+    author: string | null,
+    authors:  Array< {
+      id: string,
+      name: string,
+    } | null >,
+    sourceType:  {
+      id: string,
+      name: string | null,
+    },
+    topic: string,
+    publication: string | null,
+    url: string | null,
+    insertedAt: string,
   } | null,
 };
 

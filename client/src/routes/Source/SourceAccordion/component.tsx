@@ -4,11 +4,15 @@ import { Icon } from "semantic-ui-react";
 import { Dimmer } from "semantic-ui-react";
 import { Loader } from "semantic-ui-react";
 import { List } from "semantic-ui-react";
+import { Form } from "semantic-ui-react";
+import { Input } from "semantic-ui-react";
 import update from "immutability-helper";
+import isEqual from "lodash/isEqual";
 
 import { AuthorFragFragment } from "../../../graphql/gen.types";
 import QUOTES_QUERY from "../../../graphql/quotes-1.query";
 import { Quotes1QueryClientResult } from "../../../graphql/ops.types";
+import { SourceFullFragFragment } from "../../../graphql/gen.types";
 import { classes } from "./styles";
 import { rootStyle } from "./styles";
 import { quotesAccordion } from "./styles";
@@ -19,9 +23,45 @@ import { Props } from "./utils";
 import { State } from "./utils";
 import { SourceAccordionIndex } from "./utils";
 import renderQuote from "../../../components/QuoteItem";
+import AuthorsControlComponent from "../../../components/AuthorsControl";
 
 export class SourceAccordion extends React.Component<Props, State> {
-  state = initialState;
+  constructor(props: Props) {
+    super(props);
+    let { source } = props;
+    source = (source ? { ...source } : undefined) as SourceFullFragFragment;
+    this.state = update(initialState, {
+      editedSource: {
+        $set: source
+      }
+    });
+  }
+
+  getSnapshotBeforeUpdate(prevProps: Props, prevState: State) {
+    // if we were editing and we change to view mode, then we cancel all
+    // editing changes
+    if (
+      prevState.detailAction === DetailAction.EDITING &&
+      this.state.detailAction === DetailAction.VIEWING
+    ) {
+      const { source } = this.props;
+      const { editedSource } = prevState;
+
+      if (isEqual(source, editedSource)) {
+        return null;
+      }
+
+      return { editedSource: source };
+    }
+    return null;
+  }
+
+  // tslint:disable-next-line:no-any
+  componentDidUpdate(prevProps: Props, prevState: State, snapshot: any) {
+    if (snapshot && snapshot.editedSource) {
+      this.props.setValues(snapshot.editedSource);
+    }
+  }
 
   render() {
     const { activeIndex } = this.state;
@@ -58,24 +98,22 @@ export class SourceAccordion extends React.Component<Props, State> {
       source: { sourceType, authors, year, topic, publication, url, author }
     } = this.props;
 
-    const { detailAction } = this.state;
-
     return (
       <Accordion.Content
         style={rootStyle}
         className={classes.detailsAccordionContent}
         active={activeIndex === 0}
       >
-        {detailAction === DetailAction.VIEWING ? (
+        {this.isEditing() ? (
           <Icon
             className={classes.editSourceIcon}
-            name="edit"
+            name="eye"
             onClick={this.handleToggleEditView}
           />
         ) : (
           <Icon
             className={classes.editSourceIcon}
-            name="eye"
+            name="edit"
             onClick={this.handleToggleEditView}
           />
         )}
@@ -86,7 +124,7 @@ export class SourceAccordion extends React.Component<Props, State> {
           <div className={classes.details}>{sourceType.name}</div>
         </div>
 
-        {author && (
+        {(this.isEditing() || author) && (
           <div className={`${classes.root}`}>
             <div className={classes.labels}>Author</div>
 
@@ -98,39 +136,19 @@ export class SourceAccordion extends React.Component<Props, State> {
           <div className={classes.labels}>Authors</div>
 
           <div className={classes.details}>
-            {authors && authors.map(this.renderAuthor)}
+            {this.isEditing()
+              ? this.renderAuthorsControl()
+              : authors.map(this.renderAuthor)}
           </div>
         </div>
 
-        <div className={`topic ${classes.root}`}>
-          <div className={classes.labels}>Topic</div>
+        {this.renderTextField(topic, "topic")}
 
-          <div className={classes.details}>{topic}</div>
-        </div>
+        {this.renderTextField(year, "year")}
 
-        {year && (
-          <div className={`${classes.root}`}>
-            <div className={classes.labels}>Year</div>
+        {this.renderTextField(publication, "publication")}
 
-            <div className={classes.details}>{year}</div>
-          </div>
-        )}
-
-        {publication && (
-          <div className={`${classes.root}`}>
-            <div className={classes.labels}>Publication</div>
-
-            <div className={classes.details}>{publication}</div>
-          </div>
-        )}
-
-        {url && (
-          <div className={`${classes.root}`}>
-            <div className={classes.labels}>URL</div>
-
-            <div className={classes.details}>{url}</div>
-          </div>
-        )}
+        {this.renderTextField(url, "url", "URL")}
       </Accordion.Content>
     );
   };
@@ -191,6 +209,112 @@ export class SourceAccordion extends React.Component<Props, State> {
       <List divided={true} relaxed={true}>
         {quotes.map(renderQuote)}
       </List>
+    );
+  };
+
+  // tslint:disable-next-line:no-any
+  renderTextField = (value: any, name: string, label?: string) => {
+    label = label ? label : name.charAt(0).toUpperCase() + name.slice(1);
+
+    if (this.isEditing()) {
+      return (
+        <div className={`${classes.root}`}>
+          <div className={classes.labels}> {label} </div>
+
+          <div className={classes.details}>{this.renderTextControl(name)}</div>
+        </div>
+      );
+    }
+
+    if (value) {
+      return (
+        <div className={`${classes.root}`}>
+          <div className={classes.labels}> {label} </div>
+
+          <div className={classes.details}>{value}</div>
+        </div>
+      );
+    }
+
+    return undefined;
+  };
+
+  renderAuthorsControl = () => {
+    const name = "authors";
+    const error = this.props.errors[name];
+    const booleanError = !!error;
+    const touched = !!this.props.touched[name];
+
+    return (
+      <div className={classes.fieldWrapper}>
+        <Form.Field
+          control={AuthorsControlComponent}
+          error={booleanError}
+          selectError={booleanError}
+          name={name}
+          value={this.props.values[name]}
+          handleBlur={this.handleFormControlBlur(name)}
+          handleChange={this.handleControlChange(name)}
+        />
+
+        {this.renderFieldError(booleanError && touched, error)}
+      </div>
+    );
+  };
+
+  renderTextControl = (name: string) => {
+    const error = this.props.errors[name];
+    const booleanError = !!error;
+    const touched = !!this.props.touched[name];
+
+    return (
+      <div className={classes.fieldWrapper}>
+        <Form.Field
+          control={Input}
+          placeholder={name}
+          fluid={true}
+          id={name}
+          error={booleanError}
+          autoComplete="off"
+          value={this.props.values[name] || ""}
+          onBlur={this.props.handleBlur}
+          onChange={this.handleControlChange(name)}
+        />
+
+        {this.renderFieldError(booleanError && touched, error)}
+      </div>
+    );
+  };
+
+  renderFieldError = (show: boolean, error: string) => {
+    return show ? (
+      <div className={classes.errorMessage}> {error} </div>
+    ) : (
+      undefined
+    );
+  };
+
+  handleFormControlBlur = (name: string) => () => {
+    this.props.setFieldTouched(name, true);
+  };
+
+  handleControlChange = (name: string) => async (
+    // tslint:disable-next-line:no-any
+    val: any,
+    // tslint:disable-next-line:no-any
+    other: any
+  ) => {
+    val = other ? other.value : val;
+    this.props.setFieldValue(name, val);
+
+    this.setState(s =>
+      update(s, {
+        editedSource: {
+          [name]: {
+            $set: val
+          }
+        }
+      })
     );
   };
 
@@ -268,6 +392,8 @@ export class SourceAccordion extends React.Component<Props, State> {
       );
     }
   };
+
+  private isEditing = () => this.state.detailAction === DetailAction.EDITING;
 }
 
 export default SourceAccordion;
