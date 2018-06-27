@@ -134,7 +134,7 @@ defmodule GasWeb.SourceSchemaTest do
     # @tag :norun
     test "create source without author names or IDs errors" do
       {_, source} =
-        SourceFactory.params_with_assocs(:source)
+        SourceFactory.params_with_assocs()
         |> make_authors()
 
       variables = %{"source" => source}
@@ -197,6 +197,38 @@ defmodule GasWeb.SourceSchemaTest do
                )
 
       assert length(authors) == 4
+    end
+
+    # @tag :norun
+    test "create source with invalid author IDs errors" do
+      id = insert(:author).id
+
+      {_, source} =
+        SourceFactory.params_with_assocs(nil, author_ids: [id, id + 1])
+        |> make_authors()
+
+      variables = %{"source" => source}
+
+      error =
+        "{name: source, error: [author_ids: #{SourceApi.invalid_ids_error_string([id + 1])}]}"
+
+      assert {:ok,
+              %{
+                data: %{
+                  "createSource" => nil
+                },
+                errors: [
+                  %{
+                    message: ^error,
+                    path: ["createSource"]
+                  }
+                ]
+              }} =
+               Absinthe.run(
+                 Queries.mutation(:source),
+                 Schema,
+                 variables: variables
+               )
     end
   end
 

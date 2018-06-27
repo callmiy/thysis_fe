@@ -45,7 +45,7 @@ defmodule Gas.Factory.Source do
       params(attrs)
       |> Map.merge(make_authors_map(attrs))
 
-  def params_with_assocs(factory, attrs \\ %{})
+  def params_with_assocs(factory \\ nil, attrs \\ %{})
 
   def params_with_assocs(factory, attrs) when is_list(attrs) do
     params_with_assocs(factory, Map.new(attrs))
