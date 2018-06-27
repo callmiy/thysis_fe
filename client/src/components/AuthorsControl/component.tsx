@@ -7,11 +7,10 @@ import AUTHORS_QUERY from "../../graphql/authors.query";
 
 interface AuthorsControlProps {
   selectError: boolean;
-  authors: AuthorFragFragment[];
   handleChange: (value: AuthorFragFragment[]) => void;
   handleBlur: () => void;
   name: string;
-  value: AuthorFragFragment;
+  value: AuthorFragFragment[];
 }
 
 export class AuthorsControl extends React.Component<AuthorsControlProps> {
@@ -34,6 +33,7 @@ export class AuthorsControl extends React.Component<AuthorsControlProps> {
               placeholder="Select authors"
               options={authors}
               multi={true}
+              autoBlur={true}
               onChange={this.props.handleChange}
               onBlur={this.props.handleBlur}
               value={value}

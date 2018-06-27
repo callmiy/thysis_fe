@@ -8,11 +8,11 @@ import { Form } from "semantic-ui-react";
 import { Input } from "semantic-ui-react";
 import update from "immutability-helper";
 import isEqual from "lodash/isEqual";
+import isEmpty from "lodash/isEmpty";
 
 import { AuthorFragFragment } from "../../../graphql/gen.types";
 import QUOTES_QUERY from "../../../graphql/quotes-1.query";
 import { Quotes1QueryClientResult } from "../../../graphql/ops.types";
-import { SourceFullFragFragment } from "../../../graphql/gen.types";
 import { classes } from "./styles";
 import { rootStyle } from "./styles";
 import { quotesAccordion } from "./styles";
@@ -24,18 +24,10 @@ import { State } from "./utils";
 import { SourceAccordionIndex } from "./utils";
 import renderQuote from "../../../components/QuoteItem";
 import AuthorsControlComponent from "../../../components/AuthorsControl";
+import SOURCE_QUERY from "../../../graphql/source-full.query";
 
 export class SourceAccordion extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-    let { source } = props;
-    source = (source ? { ...source } : undefined) as SourceFullFragFragment;
-    this.state = update(initialState, {
-      editedSource: {
-        $set: source
-      }
-    });
-  }
+  state: State = initialState;
 
   getSnapshotBeforeUpdate(prevProps: Props, prevState: State) {
     // if we were editing and we change to view mode, then we cancel all
@@ -45,21 +37,21 @@ export class SourceAccordion extends React.Component<Props, State> {
       this.state.detailAction === DetailAction.VIEWING
     ) {
       const { source } = this.props;
-      const { editedSource } = prevState;
+      const editedSource = this.props.values;
 
       if (isEqual(source, editedSource)) {
         return null;
       }
 
-      return { editedSource: source };
+      return { resetForm: true };
     }
     return null;
   }
 
   // tslint:disable-next-line:no-any
   componentDidUpdate(prevProps: Props, prevState: State, snapshot: any) {
-    if (snapshot && snapshot.editedSource) {
-      this.props.setValues(snapshot.editedSource);
+    if (snapshot && snapshot.resetForm) {
+      this.props.resetForm();
     }
   }
 
@@ -104,19 +96,8 @@ export class SourceAccordion extends React.Component<Props, State> {
         className={classes.detailsAccordionContent}
         active={activeIndex === 0}
       >
-        {this.isEditing() ? (
-          <Icon
-            className={classes.editSourceIcon}
-            name="eye"
-            onClick={this.handleToggleEditView}
-          />
-        ) : (
-          <Icon
-            className={classes.editSourceIcon}
-            name="edit"
-            onClick={this.handleToggleEditView}
-          />
-        )}
+        {this.rendingUpdatingUI()}
+        {this.renderEditViewControls()}
 
         <div className={`source-type ${classes.root}`}>
           <div className={classes.labels}>Type</div>
@@ -153,8 +134,64 @@ export class SourceAccordion extends React.Component<Props, State> {
     );
   };
 
+  renderEditViewControls = () => {
+    if (this.isEditing()) {
+      const { errors, source, values } = this.props;
+
+      return (
+        <div className={classes.toggleEditView}>
+          <Icon
+            className="editing-icon"
+            name="remove"
+            color="red"
+            onClick={this.handleToggleEditView}
+          />
+
+          {!isEqual(source, values) &&
+            isEmpty(errors) && (
+              <Icon
+                className="editing-icon"
+                name="checkmark"
+                color="green"
+                onClick={this.submit}
+              />
+            )}
+        </div>
+      );
+    }
+
+    return (
+      <div className={classes.toggleEditView}>
+        <Icon
+          className="edit-icon"
+          name="edit"
+          onClick={this.handleToggleEditView}
+        />
+      </div>
+    );
+  };
+
   renderAuthor = ({ id, name }: AuthorFragFragment) => {
     return <div key={id}>{name}</div>;
+  };
+
+  rendingUpdatingUI = () => {
+    const { isSubmitting } = this.props;
+    const { updateSourceError } = this.state;
+
+    if (updateSourceError) {
+      return (
+        <pre style={{ whiteSpace: "pre-wrap" }}>
+          {JSON.stringify(updateSourceError, null, 2)}
+        </pre>
+      );
+    }
+
+    if (isSubmitting) {
+      return this.renderLoader("Updating...");
+    }
+
+    return undefined;
   };
 
   renderAccordionQuotes = (activeIndex: number) => {
@@ -181,17 +218,7 @@ export class SourceAccordion extends React.Component<Props, State> {
     }
 
     if (loadingQuotes) {
-      return (
-        <Dimmer
-          inverted={true}
-          className={`${classes.SourceRoot}`}
-          active={true}
-        >
-          <Loader inverted={true} size="medium">
-            Loading quotes...
-          </Loader>
-        </Dimmer>
-      );
+      return this.renderLoader("Loading quotes...");
     }
 
     const { quotes } = this.state;
@@ -209,6 +236,16 @@ export class SourceAccordion extends React.Component<Props, State> {
       <List divided={true} relaxed={true}>
         {quotes.map(renderQuote)}
       </List>
+    );
+  };
+
+  renderLoader = (label: string) => {
+    return (
+      <Dimmer inverted={true} className={`${classes.SourceRoot}`} active={true}>
+        <Loader inverted={true} size="medium">
+          {label}
+        </Loader>
+      </Dimmer>
     );
   };
 
@@ -270,6 +307,7 @@ export class SourceAccordion extends React.Component<Props, State> {
     return (
       <div className={classes.fieldWrapper}>
         <Form.Field
+          className={error ? classes.error : ""}
           control={Input}
           placeholder={name}
           fluid={true}
@@ -306,16 +344,6 @@ export class SourceAccordion extends React.Component<Props, State> {
   ) => {
     val = other ? other.value : val;
     this.props.setFieldValue(name, val);
-
-    this.setState(s =>
-      update(s, {
-        editedSource: {
-          [name]: {
-            $set: val
-          }
-        }
-      })
-    );
   };
 
   handleAccordionClick: AccordionTitleClickCb = (event, titleProps) => {
@@ -386,6 +414,76 @@ export class SourceAccordion extends React.Component<Props, State> {
           },
 
           fetchQuotesError: {
+            $set: error
+          }
+        })
+      );
+    }
+  };
+
+  private submit = async () => {
+    const { values, setSubmitting, updateSource, source } = this.props;
+    const {
+      sourceType: { id },
+      authors,
+      year,
+      topic,
+      publication,
+      url
+    } = values;
+
+    setSubmitting(true);
+
+    const previousAuthors = source.authors.map(a => a && a.id);
+    const authorIds = authors.map(a => a && a.id);
+
+    const updatedSource = {
+      id: values.id,
+      sourceTypeId: id,
+      authorIds: authorIds.filter(a => !previousAuthors.includes(a)),
+      deletedAuthors: previousAuthors.filter(a => !authorIds.includes(a)),
+      year,
+      topic,
+      publication,
+      url
+    };
+
+    try {
+      await updateSource({
+        variables: {
+          source: updatedSource
+        },
+
+        update: (client, { data: newData }) => {
+          if (!newData) {
+            return;
+          }
+
+          const newSource = newData.updateSource;
+
+          if (!newSource) {
+            return;
+          }
+
+          client.writeQuery({
+            query: SOURCE_QUERY,
+            variables: {
+              source: {
+                id: source.id
+              }
+            },
+            data: newSource
+          });
+        }
+      });
+
+      setSubmitting(false);
+    } catch (error) {
+      setSubmitting(false);
+
+      this.setState(s =>
+        update(s, {
+          updateSourceError: {
             $set: error
           }
         })

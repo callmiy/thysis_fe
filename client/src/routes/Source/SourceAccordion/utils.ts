@@ -5,6 +5,7 @@ import { InjectedFormikProps } from "formik";
 
 import { SourceFullFragFragment } from "../../../graphql/gen.types";
 import { Quote1FragFragment } from "../../../graphql/gen.types";
+import { UpdateSourceMutationFn } from "../../../graphql/ops.types";
 
 export enum DetailAction {
   EDITING = "editing",
@@ -16,8 +17,9 @@ export type AccordionTitleClickCb = (
   data: AccordionTitleProps
 ) => void;
 
-interface OwnProps {
+export interface OwnProps {
   source: SourceFullFragFragment;
+  updateSource: UpdateSourceMutationFn;
 }
 
 export type PropsWithApolloClient = WithApolloClient<OwnProps>;
@@ -35,7 +37,7 @@ export interface State {
   loadingQuotes?: boolean;
   quotes?: Quote1FragFragment[];
   fetchQuotesError?: ApolloError;
-  editedSource?: SourceFullFragFragment;
+  updateSourceError?: ApolloError;
 }
 
 export const initialState: State = {
