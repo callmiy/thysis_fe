@@ -25,6 +25,8 @@ import { SourceAccordionIndex } from "./utils";
 import renderQuote from "../../../components/QuoteItem";
 import AuthorsControlComponent from "../../../components/AuthorsControl";
 import SOURCE_QUERY from "../../../graphql/source-full.query";
+import SuccessModal from "./SuccessModal";
+import ErrorModal from "./ErrorModal";
 
 export class SourceAccordion extends React.Component<Props, State> {
   state: State = initialState;
@@ -177,13 +179,24 @@ export class SourceAccordion extends React.Component<Props, State> {
 
   rendingUpdatingUI = () => {
     const { isSubmitting } = this.props;
-    const { updateSourceError } = this.state;
+    const { updateSourceError, openUpdateSourceSuccessModal } = this.state;
 
     if (updateSourceError) {
       return (
-        <pre style={{ whiteSpace: "pre-wrap" }}>
-          {JSON.stringify(updateSourceError, null, 2)}
-        </pre>
+        <ErrorModal
+          error={updateSourceError}
+          open={!!updateSourceError}
+          dismiss={this.handleDismissErrorModal}
+        />
+      );
+    }
+
+    if (openUpdateSourceSuccessModal) {
+      return (
+        <SuccessModal
+          open={openUpdateSourceSuccessModal}
+          dismiss={this.handleDismissSuccessModal}
+        />
       );
     }
 
@@ -376,6 +389,30 @@ export class SourceAccordion extends React.Component<Props, State> {
     );
   };
 
+  handleDismissSuccessModal = () => {
+    this.setState(s =>
+      update(s, {
+        openUpdateSourceSuccessModal: {
+          $set: false
+        },
+
+        detailAction: {
+          $set: DetailAction.VIEWING
+        }
+      })
+    );
+  };
+
+  handleDismissErrorModal = () => {
+    this.setState(s =>
+      update(s, {
+        updateSourceError: {
+          $set: undefined
+        }
+      })
+    );
+  };
+
   private fetchQuotes = async () => {
     try {
       this.setState(s =>
@@ -478,6 +515,14 @@ export class SourceAccordion extends React.Component<Props, State> {
       });
 
       setSubmitting(false);
+
+      this.setState(s =>
+        update(s, {
+          openUpdateSourceSuccessModal: {
+            $set: true
+          }
+        })
+      );
     } catch (error) {
       setSubmitting(false);
 

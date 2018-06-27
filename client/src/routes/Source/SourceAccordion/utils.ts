@@ -38,11 +38,13 @@ export interface State {
   quotes?: Quote1FragFragment[];
   fetchQuotesError?: ApolloError;
   updateSourceError?: ApolloError;
+  openUpdateSourceSuccessModal: boolean;
 }
 
 export const initialState: State = {
   activeIndex: 0,
-  detailAction: DetailAction.VIEWING
+  detailAction: DetailAction.VIEWING,
+  openUpdateSourceSuccessModal: false
 };
 
 export enum SourceAccordionIndex {
