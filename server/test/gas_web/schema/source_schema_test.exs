@@ -164,7 +164,7 @@ defmodule GasWeb.SourceSchemaTest do
     test "create source does not insert duplicate author IDs" do
       id = insert(:author).id
 
-      author_params =
+      author_attrs =
         build_list(3, :author)
         |> Enum.map(&%{name: &1.name})
 
@@ -172,7 +172,7 @@ defmodule GasWeb.SourceSchemaTest do
         SourceFactory.params_with_assocs(
           :with_authors,
           author_ids: [id, id],
-          author_params: author_params
+          author_attrs: author_attrs
         )
 
       {_authors, source_input} = make_authors(source)
@@ -248,14 +248,14 @@ defmodule GasWeb.SourceSchemaTest do
         assert Enum.all?(author_ids, &Enum.member?(ids, &1))
     end
 
-    case Map.get(authors, "author_params") do
+    case Map.get(authors, "author_attrs") do
       nil ->
         :ok
 
-      author_params ->
-        author_params = Enum.map(author_params, & &1["name"])
+      author_attrs ->
+        author_attrs = Enum.map(author_attrs, & &1["name"])
         names = Enum.map(authors_graphql, & &1["name"])
-        assert Enum.all?(author_params, &Enum.member?(names, &1))
+        assert Enum.all?(author_attrs, &Enum.member?(names, &1))
     end
   end
 
@@ -274,13 +274,13 @@ defmodule GasWeb.SourceSchemaTest do
       end
 
     {authors, source} =
-      case {author_params, source} = Map.pop(source, :author_params) do
+      case {author_attrs, source} = Map.pop(source, :author_attrs) do
         {nil, source} ->
           {authors, source}
 
-        {author_params, source} ->
-          author_params = Enum.map(author_params, &MapHelpers.stringify_keys/1)
-          {Map.merge(authors, %{"author_params" => author_params}), source}
+        {author_attrs, source} ->
+          author_attrs = Enum.map(author_attrs, &MapHelpers.stringify_keys/1)
+          {Map.merge(authors, %{"author_attrs" => author_attrs}), source}
       end
 
     source =

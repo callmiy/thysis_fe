@@ -9,7 +9,7 @@ defmodule Gas.SourceTest do
     Factory.insert(attrs)
     |> Map.merge(%{
       author_ids: nil,
-      author_params: nil
+      author_attrs: nil
     })
   end
 
@@ -44,13 +44,13 @@ defmodule Gas.SourceTest do
       attrs =
       Factory.params_with_assocs(
         :source,
-        author_params: [params_for(:author)]
+        author_attrs: [params_for(:author)]
       )
 
     assert {:ok,
             %{
               source: %Source{} = source,
-              author_params: {1, [_]}
+              author_attrs: {1, [_]}
             }} = Api.create_(attrs)
 
     assert source.topic == topic
@@ -80,7 +80,7 @@ defmodule Gas.SourceTest do
            } =
              Factory.params_with_assocs(
                :with_authors,
-               author_params: [%{}, %{}]
+               author_attrs: [%{}, %{}]
              )
              |> Api.create_()
   end

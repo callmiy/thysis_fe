@@ -15,7 +15,7 @@ defmodule Gas.Source do
   ]
 
   schema "sources" do
-    field(:author_params, {:array, :map}, virtual: true)
+    field(:author_attrs, {:array, :map}, virtual: true)
     field(:author_ids, {:array, :id}, virtual: true)
     field(:author, :string)
     field(:topic, :string)
@@ -51,7 +51,7 @@ defmodule Gas.Source do
       :url,
       :source_type_id,
       :author_ids,
-      :author_params,
+      :author_attrs,
       :author
     ])
     |> validate_required([:topic, :source_type_id])
@@ -61,9 +61,9 @@ defmodule Gas.Source do
     case changes.valid? do
       true ->
         {author_ids, changes} = validate(changes, :author_ids)
-        {author_params, changes} = validate(changes, :author_params)
+        {author_attrs, changes} = validate(changes, :author_attrs)
 
-        case {author_ids, author_params} do
+        case {author_ids, author_attrs} do
           {nil, nil} ->
             add_error(
               changes,
@@ -117,8 +117,8 @@ defmodule Gas.Source do
     end
   end
 
-  defp validate(changes, :author_params) do
-    case fetch_field(changes, :author_params) |> get_data_or_error() do
+  defp validate(changes, :author_attrs) do
+    case fetch_field(changes, :author_attrs) |> get_data_or_error() do
       nil ->
         {nil, changes}
 

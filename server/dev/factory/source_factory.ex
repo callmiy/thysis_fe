@@ -95,7 +95,7 @@ defmodule Gas.Factory.Source do
 
   defp random_date, do: Faker.Date.between(@start_date, @end_date)
 
-  defp make_author_params(how_many \\ 5) when is_integer(how_many) do
+  defp make_author_attrs(how_many \\ 5) when is_integer(how_many) do
     1..Faker.random_between(1, how_many)
     |> Enum.map(fn _ -> Factory.params_for(:author) end)
   end
@@ -106,20 +106,20 @@ defmodule Gas.Factory.Source do
   end
 
   defp make_authors_map(%{} = attrs) do
-    case {Map.has_key?(attrs, :author_ids), Map.has_key?(attrs, :author_params)} do
+    case {Map.has_key?(attrs, :author_ids), Map.has_key?(attrs, :author_attrs)} do
       {false, false} ->
         make_authors_map(2)
 
       {true, false} ->
         %{
           author_ids: Map.get(attrs, :author_ids),
-          author_params: make_author_params()
+          author_attrs: make_author_attrs()
         }
 
       {false, true} ->
         %{
           author_ids: make_author_ids(),
-          author_params: Map.get(attrs, :author_params)
+          author_attrs: Map.get(attrs, :author_attrs)
         }
 
       _ ->
@@ -128,21 +128,21 @@ defmodule Gas.Factory.Source do
   end
 
   defp make_authors_map(2) do
-    {author_params, author_ids} =
-      case Enum.random([:author_params, :author_ids, 2]) do
-        :author_params ->
-          {make_author_params(), nil}
+    {author_attrs, author_ids} =
+      case Enum.random([:author_attrs, :author_ids, 2]) do
+        :author_attrs ->
+          {make_author_attrs(), nil}
 
         :author_ids ->
           {nil, make_author_ids()}
 
         2 ->
-          {make_author_params(), make_author_ids()}
+          {make_author_attrs(), make_author_ids()}
       end
 
     %{
       author_ids: author_ids,
-      author_params: author_params
+      author_attrs: author_attrs
     }
   end
 
