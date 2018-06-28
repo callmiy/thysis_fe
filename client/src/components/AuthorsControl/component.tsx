@@ -15,7 +15,7 @@ interface AuthorsControlProps {
 
 export class AuthorsControl extends React.Component<AuthorsControlProps> {
   render() {
-    const { name, value, selectError } = this.props;
+    const { name, value, selectError, handleChange, handleBlur } = this.props;
     return (
       <GetAllAuthorsQueryComponent query={AUTHORS_QUERY}>
         {({ data }) => {
@@ -34,8 +34,8 @@ export class AuthorsControl extends React.Component<AuthorsControlProps> {
               options={authors}
               multi={true}
               autoBlur={true}
-              onChange={this.props.handleChange}
-              onBlur={this.props.handleBlur}
+              onChange={handleChange}
+              onBlur={handleBlur}
               value={value}
               labelKey="name"
               valueKey="id"

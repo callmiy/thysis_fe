@@ -10,7 +10,10 @@ import update from "immutability-helper";
 import isEqual from "lodash/isEqual";
 import isEmpty from "lodash/isEmpty";
 
-import { AuthorFragFragment } from "../../../graphql/gen.types";
+import {
+  AuthorFragFragment,
+  SourceTypeFragFragment
+} from "../../../graphql/gen.types";
 import QUOTES_QUERY from "../../../graphql/quotes-1.query";
 import { Quotes1QueryClientResult } from "../../../graphql/ops.types";
 import { classes } from "./styles";
@@ -23,6 +26,7 @@ import { State } from "./utils";
 import { SourceAccordionIndex } from "./utils";
 import renderQuote from "../../../components/QuoteItem";
 import AuthorsControlComponent from "../../../components/AuthorsControl";
+import SourceTypeControlComponent from "../../../components/SourceTypeControl";
 import SOURCE_QUERY from "../../../graphql/source-full.query";
 import SuccessModal from "./SuccessModal";
 import ErrorModal from "./ErrorModal";
@@ -104,7 +108,9 @@ export class SourceAccordion extends React.Component<Props, State> {
         <div className={`source-type ${classes.root}`}>
           <div className={classes.labels}>Type</div>
 
-          <div className={classes.details}>{sourceType.name}</div>
+          <div className={classes.details}>
+            {this.renderSourceType(sourceType)}
+          </div>
         </div>
 
         <div className={`authors ${classes.root}`}>
@@ -302,6 +308,37 @@ export class SourceAccordion extends React.Component<Props, State> {
         {this.renderFieldError(booleanError && touched, error)}
       </div>
     );
+  };
+
+  renderSourceTypeControl = () => {
+    const name = "sourceType";
+    const error = this.props.errors[name];
+    const booleanError = !!error;
+    const touched = !!this.props.touched[name];
+
+    return (
+      <div className={classes.fieldWrapper}>
+        <Form.Field
+          control={SourceTypeControlComponent}
+          error={booleanError}
+          selectError={booleanError}
+          name={name}
+          value={this.props.values[name]}
+          handleBlur={this.handleFormControlBlur(name)}
+          handleChange={this.handleControlChange(name)}
+        />
+
+        {this.renderFieldError(booleanError && touched, error)}
+      </div>
+    );
+  };
+
+  renderSourceType = (sourceType: SourceTypeFragFragment) => {
+    if (this.isEditing()) {
+      return this.renderSourceTypeControl();
+    }
+
+    return sourceType.name;
   };
 
   renderTextControl = (name: string) => {

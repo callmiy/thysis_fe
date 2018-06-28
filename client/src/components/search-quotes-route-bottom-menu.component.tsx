@@ -8,7 +8,6 @@ import TagListModal from "./TagListModal";
 import { MenuItemNames } from "../constants";
 import { makeNewQuoteURL } from "../utils/route-urls.util";
 import { ROOT_URL } from "../utils/route-urls.util";
-import { Action as SourceModalAction } from "./SourceModal/utils";
 
 const styles = {
   container: {
@@ -81,7 +80,6 @@ class SearchQuotesMenu extends React.Component<{}, SearchQuotesMenuState> {
             open={this.state.modalOpened[MenuItemNames.NEW_SOURCE]}
             dismissModal={this.toggleModalOpen(MenuItemNames.NEW_SOURCE, false)}
             style={{ marginTop: 0 }}
-            action={SourceModalAction.NEW}
           />
         )}
 

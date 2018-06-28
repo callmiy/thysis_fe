@@ -1,33 +1,29 @@
 import Select from "react-select";
 import React from "react";
-import { FieldProps } from "formik";
 
 import { SourceTypeFragFragment } from "../../graphql/gen.types";
 import { SourceTypeQueryComponent } from "../../graphql/ops.types";
 import SOURCE_TYPE_QUERY from "../../graphql/source-types.query";
 
-type SourceTypes = SourceTypeFragFragment[];
-
-interface SourceTypeControlProps extends FieldProps {
+interface Props {
   selectError: boolean;
+  handleChange: (value: SourceTypeFragFragment[]) => void;
+  handleBlur: () => void;
+  name: string;
+  value: SourceTypeFragFragment[];
 }
 
-export class SourceTypeControlComponent extends React.Component<
-  SourceTypeControlProps
-> {
+export class SourceTypeControlComponent extends React.Component<Props> {
   render() {
-    const {
-      field: { name, value },
-      selectError
-    } = this.props;
+    const { name, value, selectError, handleChange, handleBlur } = this.props;
 
     return (
       <SourceTypeQueryComponent query={SOURCE_TYPE_QUERY}>
         {({ data }) => {
-          let sourceTypes = [] as SourceTypes;
+          let sourceTypes = [] as SourceTypeFragFragment[];
 
           if (data) {
-            sourceTypes = data.sourceTypes as SourceTypes;
+            sourceTypes = data.sourceTypes as SourceTypeFragFragment[];
           }
 
           return (
@@ -37,8 +33,8 @@ export class SourceTypeControlComponent extends React.Component<
               name={name}
               placeholder="Select source type"
               options={sourceTypes}
-              onChange={this.handleChange}
-              onBlur={this.handleBlur}
+              onChange={handleChange}
+              onBlur={handleBlur}
               value={value}
               labelKey="name"
               valueKey="id"
@@ -48,14 +44,6 @@ export class SourceTypeControlComponent extends React.Component<
       </SourceTypeQueryComponent>
     );
   }
-
-  handleChange = (value: SourceTypes) => {
-    this.props.form.setFieldValue(this.props.field.name, value);
-  };
-
-  handleBlur = () => {
-    this.props.form.setFieldTouched(this.props.field.name, true);
-  };
 }
 
 export default SourceTypeControlComponent;

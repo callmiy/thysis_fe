@@ -15,7 +15,6 @@ import SourceModal from "../../components/SourceModal";
 import NewAuthorModal from "../../components/NewAuthorModal";
 import styles from "./styles";
 import { classes } from "./styles";
-import { Action as SourceModalAction } from "../../components/SourceModal/utils";
 
 enum HomeEnum {
   TAG_LIST = "tagList",
@@ -147,7 +146,6 @@ export class Home extends React.Component<HomeProps, HomeState> {
             open={this.state.modalOpened[HomeEnum.NEW_SOURCE]}
             dismissModal={this.toggleModalOpen(HomeEnum.NEW_SOURCE, false)}
             style={{ marginTop: 0 }}
-            action={SourceModalAction.NEW}
           />
         )}
       </div>

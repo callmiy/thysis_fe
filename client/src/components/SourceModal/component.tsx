@@ -27,32 +27,13 @@ import { makeSourceURL } from "../../utils/route-urls.util";
 import { styles } from "./styles";
 import { classes } from "./styles";
 import { modalStyle } from "./styles";
-import { SourceModalProps } from "./utils";
-import { SourceModalState } from "./utils";
+import { Props } from "./utils";
+import { State } from "./utils";
 import { initialState } from "./utils";
 import { initialFormValues } from "./utils";
 import { FormValues } from "./utils";
-import { Action } from "./utils";
 
-export class SourceModal extends React.Component<
-  SourceModalProps,
-  SourceModalState
-> {
-  static getDerivedStateFromProps(
-    nextProps: SourceModalProps,
-    currentState: SourceModalState
-  ) {
-    if (!currentState.action && !nextProps.existingSource) {
-      return update(currentState, {
-        action: {
-          $set: Action.NEW
-        }
-      });
-    }
-
-    return null;
-  }
-
+export class SourceModal extends React.Component<Props, State> {
   state = initialState;
 
   render() {
@@ -264,7 +245,7 @@ export class SourceModal extends React.Component<
 
   renderSourceTypeControl = (formProps: FieldProps<FormValues>) => {
     const {
-      field: { name },
+      field: { name, value },
       form
     } = formProps;
     const error = form.errors[name];
@@ -278,8 +259,11 @@ export class SourceModal extends React.Component<
           label="Select source type"
           error={booleanError}
           selectError={booleanError}
+          name={name}
+          value={value}
           onFocus={this.handleFocus}
-          {...formProps}
+          handleBlur={this.handleFormControlBlur(name, form)}
+          handleChange={this.handleControlChange(name, form)}
         />
 
         {this.renderFieldError(booleanError && touched, error)}
@@ -405,6 +389,7 @@ export class SourceModal extends React.Component<
 
   goToSource = (id: string) => async () => {
     await this.setState(initialState);
+    this.props.dismissModal();
     this.props.history.push(makeSourceURL(id));
   };
 

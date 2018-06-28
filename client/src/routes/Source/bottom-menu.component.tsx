@@ -8,7 +8,6 @@ import SourceModal from "../../components/SourceModal";
 import TagListModal from "../../components/TagListModal";
 import { MenuItemNames } from "../../constants";
 import { ROOT_URL } from "../../utils/route-urls.util";
-import { Action as SourceModalAction } from "../../components/SourceModal/utils";
 
 const styles = {
   container: {
@@ -83,7 +82,6 @@ class SourceMenu extends React.Component<{}, SourceMenuState> {
             open={this.state.modalOpened[MenuItemNames.NEW_SOURCE]}
             dismissModal={this.toggleModalOpen(MenuItemNames.NEW_SOURCE, false)}
             style={{ marginTop: 0 }}
-            action={SourceModalAction.NEW}
           />
         )}
 

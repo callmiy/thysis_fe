@@ -28,14 +28,13 @@ export const initialFormValues: FormValues = {
   year: ""
 };
 
-export interface SourceModalState {
+export interface State {
   output: CreateSourceInput;
   source?: SourceFragFragment;
   formError?: ApolloError;
-  action?: Action;
 }
 
-export const initialState: SourceModalState = {
+export const initialState: State = {
   output: {
     sourceTypeId: "",
     topic: ""
@@ -46,22 +45,15 @@ export interface OwnProps extends RouteComponentProps<{}> {
   open: boolean;
   dismissModal: () => void;
   style?: React.CSSProperties;
-  action: Action;
   existingSource?: ExistingSourceProps;
   createSource: CreateSourceMutationFn;
 }
 
-export type SourceModalProps = ChildProps<
+export type Props = ChildProps<
   OwnProps,
   CreateSourceMutation,
   CreateSourceMutationVariables
 >;
-
-export enum Action {
-  VIEWING = "viewing",
-  EDITING = "editing",
-  NEW = "new"
-}
 
 export interface ExistingSourceProps {
   onSourceChanged?: OnSourceChangedCb;
