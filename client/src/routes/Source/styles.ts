@@ -46,6 +46,9 @@ export const styles = {
     bottom: 15,
     right: 15,
     color: "#01751c",
+    zIndex: 10,
+    fontWeight: 900,
+    fontSize: "1.3em",
 
     "&:hover": {
       color: "#01751c"
