@@ -14,8 +14,7 @@ import { AuthorFragFragment } from "../../../graphql/gen.types";
 import QUOTES_QUERY from "../../../graphql/quotes-1.query";
 import { Quotes1QueryClientResult } from "../../../graphql/ops.types";
 import { classes } from "./styles";
-import { rootStyle } from "./styles";
-import { quotesAccordion } from "./styles";
+import { accordionContentStyle } from "./styles";
 import { initialState } from "./utils";
 import { DetailAction } from "./utils";
 import { AccordionTitleClickCb } from "./utils";
@@ -62,6 +61,8 @@ export class SourceAccordion extends React.Component<Props, State> {
 
     return (
       <Accordion fluid={true} styled={true} className={classes.accordion}>
+        {this.renderEditViewControls()}
+
         <Accordion.Title
           active={activeIndex === SourceAccordionIndex.DETAIL}
           index={SourceAccordionIndex.DETAIL}
@@ -94,12 +95,11 @@ export class SourceAccordion extends React.Component<Props, State> {
 
     return (
       <Accordion.Content
-        style={rootStyle}
+        style={accordionContentStyle}
         className={classes.detailsAccordionContent}
         active={activeIndex === 0}
       >
         {this.rendingUpdatingUI()}
-        {this.renderEditViewControls()}
 
         <div className={`source-type ${classes.root}`}>
           <div className={classes.labels}>Type</div>
@@ -203,7 +203,7 @@ export class SourceAccordion extends React.Component<Props, State> {
     return (
       <Accordion.Content
         className={classes.quotesAccordion}
-        style={quotesAccordion}
+        style={accordionContentStyle}
         active={activeIndex === 1}
       >
         {this.renderAccordionContentQuotes()}

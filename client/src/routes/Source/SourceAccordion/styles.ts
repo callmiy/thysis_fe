@@ -10,11 +10,8 @@ const styles = {
   accordion: {
     height: "100%",
     display: "flex",
-    flexDirection: "column"
-  },
-
-  rootStyle: {
-    padding: ".5em 0.8em 1.5em"
+    flexDirection: "column",
+    position: "relative"
   },
 
   root: {
@@ -40,8 +37,6 @@ const styles = {
   },
 
   detailsAccordionContent: {
-    position: "relative",
-
     "&> div": {
       marginBottom: 15
     }
@@ -50,7 +45,7 @@ const styles = {
   toggleEditView: {
     position: "absolute",
     right: 0,
-    top: -40,
+    top: -3,
 
     "&>.icon": {
       width: "3em",
@@ -67,7 +62,7 @@ const styles = {
     }
   },
 
-  quotesAccordion: {
+  accordionContent: {
     overflowY: "auto",
     overflowX: "hidden",
     wordWrap: "break-word",
@@ -90,6 +85,5 @@ const styles = {
   }
 } as SimpleCss;
 
-export const rootStyle = styles.rootStyle;
-export const quotesAccordion = styles.quotesAccordion;
+export const accordionContentStyle = styles.accordionContent;
 export const { classes } = jss.createStyleSheet(styles).attach();
