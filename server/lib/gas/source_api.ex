@@ -137,6 +137,88 @@ defmodule Gas.SourceApi do
 
   def create_(attrs), do: create_source(nil, attrs)
 
+  @doc """
+  Updates a source.
+
+  ## Examples
+
+      iex> update_(source, %{field: new_value})
+      {:ok, %Source{}}
+
+      iex> update_(source, %{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+
+  def update_(%Source{} = source, attrs) do
+    changes = Source.changeset(source, attrs)
+
+    with {:ok, result} <-
+           Multi.new()
+           |> delete_authors_multi(attrs)
+           |> Multi.update(:source, changes)
+           |> create_authors_multi(:author_attrs, changes)
+           |> create_authors_multi(:author_ids, changes)
+           |> Repo.transaction() do
+      result = create_source_result(result) |> delete_authors()
+
+      {:ok, result}
+    end
+  end
+
+  @doc """
+  Deletes a Source.
+
+  ## Examples
+
+      iex> delete_(source)
+      {:ok, %Source{}}
+
+      iex> delete_(source)
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def delete_(%Source{} = source) do
+    source = Repo.preload(source, [:source_authors])
+    Enum.each(source.source_authors, &Repo.delete(&1))
+    Repo.delete(source)
+  end
+
+  @doc """
+  Returns a string that can be used to display the source (sort of to_string).
+  The fields that are important are joined together with " | ". Fields that are
+  `nil` are ignored
+  """
+  @spec display(source :: %Source{}) :: String.t()
+  def display(%Source{} = source) do
+    source
+    |> Map.take([:authors, :topic, :publication, :year, :url])
+    |> map_reduce()
+    |> Enum.join(" | ")
+  end
+
+  @doc """
+  Returns an `%Ecto.Changeset{}` for tracking source changes.
+
+  ## Examples
+
+      iex> change_(source, attrs)
+      %Ecto.Changeset{source: %Source{}}
+
+  """
+  def change_(source, attrs \\ %{})
+
+  def change_(%Source{} = source, %Source{} = attrs) do
+    Source.changeset(source, Map.from_struct(attrs))
+  end
+
+  def change_(%Source{} = source, attrs), do: Source.changeset(source, attrs)
+
+  def author_required_error_string, do: "author ids or map required"
+
+  def invalid_ids_error_string(ids) when is_list(ids),
+    do: ~s[Invalid author IDs: #{Enum.join(ids, ", ")}]
+
   defp create_source(source_type_multi, attrs) do
     {source_multi, changes} = create_source_multi(source_type_multi, attrs)
 
@@ -282,79 +364,6 @@ defmodule Gas.SourceApi do
     }
   end
 
-  @doc """
-  Updates a source.
-
-  ## Examples
-
-      iex> update_(source, %{field: new_value})
-      {:ok, %Source{}}
-
-      iex> update_(source, %{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
-
-  def update_(%Source{} = source, attrs) do
-    changes = Source.changeset(source, attrs)
-
-    with {:ok, result} <-
-           Multi.new()
-           |> delete_authors_multi(attrs)
-           |> Multi.update(:source, changes)
-           |> create_authors_multi(:author_attrs, changes)
-           |> create_authors_multi(:author_ids, changes)
-           |> Repo.transaction() do
-      result =
-        create_source_result(result)
-        |> delete_authors()
-
-      {:ok, result}
-    end
-  end
-
-  @doc """
-  Deletes a Source.
-
-  ## Examples
-
-      iex> delete_(source)
-      {:ok, %Source{}}
-
-      iex> delete_(source)
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def delete_(%Source{} = source) do
-    source = Repo.preload(source, [:source_authors])
-    Enum.each(source.source_authors, &Repo.delete(&1))
-    Repo.delete(source)
-  end
-
-  @doc """
-  Returns an `%Ecto.Changeset{}` for tracking source changes.
-
-  ## Examples
-
-      iex> change_(source)
-      %Ecto.Changeset{source: %Source{}}
-
-  """
-  def change_(source, attrs \\ %{})
-
-  def change_(%Source{} = source, %Source{} = attrs) do
-    Source.changeset(source, Map.from_struct(attrs))
-  end
-
-  def change_(%Source{} = source, attrs) do
-    Source.changeset(source, attrs)
-  end
-
-  def author_required_error_string, do: "author ids or map required"
-
-  def invalid_ids_error_string(ids) when is_list(ids),
-    do: ~s[Invalid author IDs: #{Enum.join(ids, ", ")}]
-
   defp delete_authors_multi(transaction, %{deleted_authors: ids}) when is_list(ids) do
     Multi.run(transaction, :delete_authors, fn _n ->
       {:ok, SourceAuthorApi.delete_(ids)}
@@ -377,4 +386,26 @@ defmodule Gas.SourceApi do
   end
 
   defp delete_authors(record), do: record
+
+  defp map_reduce(list) when is_list(list), do: Enum.map(list, &map_reduce/1)
+
+  defp map_reduce(%{} = map) do
+    Enum.reduce(map, [], fn
+      {:authors, authors}, acc ->
+        authors = Enum.map(authors, &Map.take(&1, [:name]))
+        Enum.concat(acc, map_reduce(authors))
+
+      {_, nil}, acc ->
+        acc
+
+      {_, val}, acc when is_list(val) or is_map(val) ->
+        Enum.concat(acc, map_reduce(val))
+
+      {_, v}, acc ->
+        [v | acc]
+    end)
+    |> Enum.reverse()
+  end
+
+  defp map_reduce(val), do: val
 end

@@ -26,46 +26,12 @@ defmodule GasWeb.SourceResolver do
   end
 
   @doc """
-  Returns a string that can be used to display the source (sort of to_string).
-  The fields that are important are joined together with "|". Fields that are
-  `nil` are ignored
+  Source.to_string
   """
   @spec display(%Source{}, any, any) :: {:ok, String.t()} | {:error, String.t()}
   def display(%Source{} = source, _, _) do
-    text =
-      source
-      |> Map.take([:authors, :topic, :publication, :year, :url])
-      |> map_reduce()
-      |> Enum.join(" | ")
-
-    {:ok, text}
+    {:ok, Api.display(source)}
   end
-
-  defp map_reduce(list) when is_list(list), do: Enum.map(list, &map_reduce/1)
-
-  defp map_reduce(%{} = map) do
-    Enum.reduce(map, [], fn
-      {:authors, authors}, acc ->
-        authors =
-          authors
-          # |> Map.from_struct()
-          |> Enum.map(&Map.take(&1, [:name]))
-
-        Enum.concat(acc, map_reduce(authors))
-
-      {_, nil}, acc ->
-        acc
-
-      {_, val}, acc when is_list(val) or is_map(val) ->
-        Enum.concat(acc, map_reduce(val))
-
-      {_, v}, acc ->
-        [v | acc]
-    end)
-    |> Enum.reverse()
-  end
-
-  defp map_reduce(val), do: val
 
   @doc """
   Create a source
