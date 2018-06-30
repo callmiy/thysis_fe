@@ -107,6 +107,63 @@
         "cwd": ".."
       },
       "problemMatcher": []
+    },
+    {
+      "label": "mix test file integration",
+      "type": "shell",
+      "command":
+        "cd ../client && yarn deploy && cd ${workspaceFolder} && mix test --only integration ${file}",
+      "options": {
+        "env": {
+          "GAS_PHOENIX_INTEGRATION_TEST_PORT": "4017",
+          "REACT_APP_API_URL": "http://localhost:4017/__api"
+        }
+      },
+      "problemMatcher": ["$mixCompileError", "$mixCompileWarning"],
+      "group": "test"
+    },
+
+    {
+      "label": "mix test integration",
+      "type": "shell",
+      "command":
+        "cd ../client && yarn deploy && cd ${workspaceFolder} && mix test --only integration",
+      "options": {
+        "env": {
+          "GAS_PHOENIX_INTEGRATION_TEST_PORT": "4017",
+          "REACT_APP_API_URL": "http://localhost:4017/__api"
+        }
+      },
+      "problemMatcher": ["$mixCompileError", "$mixCompileWarning"],
+      "group": "test"
+    },
+
+    {
+      "label": "mix test file integration no build file",
+      "type": "shell",
+      "command": "mix test --only integration ${file}",
+      "options": {
+        "env": {
+          "GAS_PHOENIX_INTEGRATION_TEST_PORT": "4017",
+          "REACT_APP_API_URL": "http://localhost:4017/__api"
+        }
+      },
+      "problemMatcher": ["$mixCompileError", "$mixCompileWarning"],
+      "group": "test"
+    },
+
+    {
+      "label": "mix test integration no build",
+      "type": "shell",
+      "command": "mix test --only integration",
+      "options": {
+        "env": {
+          "GAS_PHOENIX_INTEGRATION_TEST_PORT": "4017",
+          "REACT_APP_API_URL": "http://localhost:4017/__api"
+        }
+      },
+      "problemMatcher": ["$mixCompileError", "$mixCompileWarning"],
+      "group": "test"
     }
   ]
 }

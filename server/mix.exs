@@ -49,7 +49,8 @@ defmodule Gas.Mixfile do
       {:timex_ecto, "~> 3.3"},
       {:absinthe_plug, "~> 1.4"},
       {:faker, "~> 0.10.0", only: [:dev, :test]},
-      {:corsica, "~> 1.1"}
+      {:corsica, "~> 1.1"},
+      {:hound, "~> 1.0", only: [:test]}
     ]
   end
 
