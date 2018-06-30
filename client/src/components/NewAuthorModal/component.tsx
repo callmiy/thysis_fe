@@ -32,12 +32,13 @@ export class NewAuthorModal extends React.PureComponent<
         open={open}
         onClose={this.reset}
       >
-        <Header icon="quote left" content="Subject matter of quote" />
+        <Header icon="user" content="Name of author" />
 
         <Modal.Content>
           {this.renderErrorOrSuccess()}
 
           <Input
+            name="author"
             placeholder="Author name"
             fluid={true}
             onChange={this.handleChange}
@@ -53,6 +54,7 @@ export class NewAuthorModal extends React.PureComponent<
             }}
           >
             <Button
+              id="author-modal-close"
               basic={true}
               color="red"
               onClick={this.reset}
@@ -69,6 +71,7 @@ export class NewAuthorModal extends React.PureComponent<
               {createAuthor => {
                 return (
                   <Button
+                    id="author-modal-submit"
                     color="green"
                     inverted={true}
                     disabled={

@@ -28,8 +28,9 @@ export class TagListModal extends React.PureComponent<TagListModalProps> {
               onClose={this.resetModal}
             >
               <Modal.Content>
-                <div className={classes.content}>
+                <div id="tag-list-modal" className={classes.content}>
                   <div
+                    id="tag-list-modal-close"
                     className={classes.modalClose}
                     onClick={this.props.dismissModal}
                   >
@@ -66,7 +67,12 @@ export class TagListModal extends React.PureComponent<TagListModalProps> {
 
   renderTag = ({ id, text }: TagFragFragment) => {
     return (
-      <List.Item key={id} style={styles.listItem} onClick={this.navigateTo(id)}>
+      <List.Item
+        key={id}
+        style={styles.listItem}
+        id={id}
+        onClick={this.navigateTo(id)}
+      >
         <List.Content>{text}</List.Content>
       </List.Item>
     );

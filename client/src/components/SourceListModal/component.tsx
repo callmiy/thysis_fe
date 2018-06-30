@@ -14,7 +14,7 @@ export class SourceListModal extends React.PureComponent<SourceListModalProps> {
   render() {
     return (
       <Modal
-        id="source-list-modal-menu"
+        id="sources-modal"
         style={modalStyle}
         basic={true}
         open={this.props.open}
@@ -24,6 +24,7 @@ export class SourceListModal extends React.PureComponent<SourceListModalProps> {
         <Modal.Content>
           <div className={classes.content}>
             <div
+              id="sources-modal-close"
               className={classes.modalClose}
               onClick={this.props.dismissModal}
             >

@@ -148,6 +148,7 @@ export class SourceModal extends React.Component<Props, State> {
 
         <div className={classes.formButtonsContainer}>
           <Button
+            id="source-modal-close"
             basic={true}
             color="red"
             onClick={this.resetModal}
@@ -157,6 +158,7 @@ export class SourceModal extends React.Component<Props, State> {
           </Button>
 
           <Button
+            id="source-modal-submit"
             style={styles.submitButton}
             color="green"
             disabled={disableSubmit}

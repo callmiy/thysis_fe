@@ -1,30 +1,20 @@
 {
   "version": "2.0.0",
   "presentation": {
-    "reveal": "always",
-    "panel": "new"
+    "reveal": "always"
+    // "panel": "new"
   },
   "tasks": [
     {
-      "label": "start backend win",
+      "label": "start backend",
       "type": "shell",
-      "command": "iex --werl -S mix phx.server",
+      "command": "pg_ctl start && iex -S mix phx.server",
+      "windows": {
+        "command": "iex --werl -S mix phx.server"
+      },
       "options": {
         "env": {
           "GAS_PHOENIX_PORT": "4016"
-        }
-      },
-      "problemMatcher": ["$mixCompileError", "$mixCompileWarning"],
-      "group": "build"
-    },
-    {
-      "label": "start backend deb",
-      "type": "shell",
-      "command": "pg_ctl start && iex -S mix phx.server",
-      "options": {
-        "env": {
-          "GAS_PHOENIX_PORT": "4016",
-          "GCP_JSON_CREDENTIALS": ""
         }
       },
       "problemMatcher": ["$mixCompileError", "$mixCompileWarning"],
@@ -45,9 +35,12 @@
       "group": "test"
     },
     {
-      "label": "mix test unit deb",
+      "label": "mix test unit",
       "type": "shell",
       "command": "mix test",
+      "windows": {
+        "command": "dev.bat && mix test"
+      },
       "problemMatcher": ["$mixCompileError", "$mixCompileWarning"],
       "group": {
         "kind": "test",
@@ -55,43 +48,22 @@
       }
     },
     {
-      "label": "mix test unit win",
+      "label": "mix get compile",
       "type": "shell",
-      "command": "dev.bat && mix test",
-      "problemMatcher": ["$mixCompileError", "$mixCompileWarning"],
-      "group": {
-        "kind": "test",
-        "isDefault": true
-      }
-    },
-    {
-      "label": "mix get compile win",
-      "type": "shell",
-      "command": "dev.bat && mix do deps.get, compile",
+      "command": "mix do deps.get, compile",
+      "windows": {
+        "command": "dev.bat && mix do deps.get, compile"
+      },
       "problemMatcher": [],
       "group": "build"
     },
     {
-      "label": "mix get compile deb",
-      "type": "shell",
-      "command": "mix do deps.get, compile",
-      "problemMatcher": ["$mixCompileError", "$mixCompileWarning"],
-      "group": "build"
-    },
-    {
-      "label": "mix compile win",
-      "type": "shell",
-      "command": "dev.bat && mix compile",
-      "problemMatcher": ["$mixCompileError", "$mixCompileWarning"],
-      "group": {
-        "kind": "build",
-        "isDefault": true
-      }
-    },
-    {
-      "label": "mix compile deb",
+      "label": "mix compile",
       "type": "shell",
       "command": " mix compile",
+      "windows": {
+        "command": "dev.bat && mix compile"
+      },
       "problemMatcher": ["$mixCompileError", "$mixCompileWarning"],
       "group": {
         "kind": "build",
@@ -139,9 +111,9 @@
     },
 
     {
-      "label": "mix test file integration no build file",
+      "label": "mix test file integration no build",
       "type": "shell",
-      "command": "mix test --only integration ${file}",
+      "command": "mix test --trace --only integration ${file}",
       "options": {
         "env": {
           "GAS_PHOENIX_INTEGRATION_TEST_PORT": "4017",
@@ -151,7 +123,6 @@
       "problemMatcher": ["$mixCompileError", "$mixCompileWarning"],
       "group": "test"
     },
-
     {
       "label": "mix test integration no build",
       "type": "shell",

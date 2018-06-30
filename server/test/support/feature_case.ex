@@ -20,6 +20,9 @@ defmodule Gas.FeatureCase do
 
       alias Gas.Repo
       alias Gas.Factory.Source, as: SourceFactory
+      alias Gas.SourceApi, as: SourceApi
+      alias Gas.Author
+      alias Gas.Tag
 
       import Ecto
       import Ecto.Changeset
@@ -35,15 +38,16 @@ defmodule Gas.FeatureCase do
       Ecto.Adapters.SQL.Sandbox.mode(Gas.Repo, {:shared, self()})
     end
 
-    metadata = Phoenix.Ecto.SQL.Sandbox.metadata_for(Iclog.Repo, self())
+    # metadata = Phoenix.Ecto.SQL.Sandbox.metadata_for(Gas.Repo, self())
 
-    user_agent =
-      Hound.Browser.user_agent(:chrome)
-      |> Hound.Metadata.append(metadata)
+    # user_agent =
+    #   Hound.Browser.user_agent(:chrome)
+    #   |> Hound.Metadata.append(metadata)
 
     chrome_args = [
-      "--user-agent=#{user_agent}",
-      "--disable-gpu"
+      # "--user-agent=#{user_agent}"
+      # "--disable-gpu"
+      ~s(--window-size=#{tags[:window_size] || "360,500"})
     ]
 
     chrome_args =
@@ -58,7 +62,7 @@ defmodule Gas.FeatureCase do
     }
 
     Hound.start_session(
-      metadata: metadata,
+      # metadata: metadata,
       additional_capabilities: additional_capabilities
     )
 
@@ -83,4 +87,34 @@ defmodule Gas.FeatureCase do
       end)
     end)
   end
+
+  @doc """
+  Execute the function repeatedly until either the condition is met or number
+  of trials is reached.
+
+      assert await(true, fn  -> 1 == 1 end, 5_000 )
+  """
+  def await(condition, fun, times \\ 5)
+  def await(_condition, fun, 0), do: fun.()
+
+  def await(condition, fun, times) when times > 0 do
+    case condition == fun.() do
+      true ->
+        condition
+
+      _ ->
+        await(condition, fun, times - 1)
+    end
+  end
+
+  # defp loop_wait(condition, fun, timeout, stop) do
+  #   new_condition = fun.()
+  #   now = System.monotonic_time(:millisecond)
+
+  #   if condition == new_condition || now - stop >= timeout do
+  #     new_condition
+  #   else
+  #     loop_wait(condition, fun, timeout, stop)
+  #   end
+  # end
 end

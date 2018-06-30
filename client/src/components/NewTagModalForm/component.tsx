@@ -38,6 +38,7 @@ export class NewTagModalForm extends React.PureComponent<
           {this.renderErrorOrSuccess()}
 
           <Input
+            name="tag"
             placeholder="Tag text"
             fluid={true}
             onChange={this.handleChange}
@@ -53,6 +54,7 @@ export class NewTagModalForm extends React.PureComponent<
             }}
           >
             <Button
+              id="tag-modal-close"
               basic={true}
               color="red"
               onClick={this.reset}
@@ -69,6 +71,7 @@ export class NewTagModalForm extends React.PureComponent<
               {createTag => {
                 return (
                   <Button
+                    id="tag-modal-submit"
                     color="green"
                     inverted={true}
                     disabled={

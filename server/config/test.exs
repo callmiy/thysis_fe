@@ -19,13 +19,14 @@ config :gas, Gas.Repo,
   database: "gas_test",
   hostname: "localhost",
   pool: Ecto.Adapters.SQL.Sandbox,
-  timeout: 60_000,
-  pool_timeout: 60_000,
-  ownership_timeout: 60_000
+  timeout: 600_000,
+  pool_timeout: 600_000,
+  ownership_timeout: 600_000
 
 config :hound,
   driver: "chrome_driver",
+  # driver: "phantomjs",
   app_host: "http://localhost",
   app_port: app_port,
   retry_time: 5_000,
-  genserver_timeout: 480_000
+  genserver_timeout: 600_000

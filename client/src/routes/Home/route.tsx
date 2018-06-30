@@ -50,6 +50,7 @@ export class Home extends React.Component<HomeProps, HomeState> {
             compact={true}
             icon="labeled"
             style={styles.menu}
+            id="menu-items"
           >
             <Menu.Item
               style={styles.menuAnchor}
