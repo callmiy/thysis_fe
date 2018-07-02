@@ -1,22 +1,9 @@
 defmodule Gas.FeatureCase do
-  @moduledoc """
-  This module defines the setup for tests requiring
-  access to the application's data layer.
-
-  You may define functions here to be used as helpers in
-  your tests.
-
-  Finally, if the test case interacts with the database,
-  it cannot be async. For this reason, every test runs
-  inside a transaction which is reset at the beginning
-  of the test unless the test case is marked as async.
-  """
-
   use ExUnit.CaseTemplate
 
   using do
     quote do
-      use Hound.Helpers
+      use Wallaby.DSL
 
       alias Gas.Repo
       alias Gas.Factory.Source, as: SourceFactory
@@ -27,7 +14,7 @@ defmodule Gas.FeatureCase do
       import Ecto
       import Ecto.Changeset
       import Gas.Factory
-      import Gas.FeatureCase
+      import Wallaby.Query, only: [css: 2]
     end
   end
 
@@ -38,38 +25,9 @@ defmodule Gas.FeatureCase do
       Ecto.Adapters.SQL.Sandbox.mode(Gas.Repo, {:shared, self()})
     end
 
-    # metadata = Phoenix.Ecto.SQL.Sandbox.metadata_for(Gas.Repo, self())
-
-    # user_agent =
-    #   Hound.Browser.user_agent(:chrome)
-    #   |> Hound.Metadata.append(metadata)
-
-    chrome_args = [
-      # "--user-agent=#{user_agent}"
-      # "--disable-gpu"
-      ~s(--window-size=#{tags[:window_size] || "360,500"})
-    ]
-
-    chrome_args =
-      unless tags[:no_headless] do
-        ["--headless" | chrome_args]
-      else
-        chrome_args
-      end
-
-    additional_capabilities = %{
-      chromeOptions: %{"args" => chrome_args}
-    }
-
-    Hound.start_session(
-      # metadata: metadata,
-      additional_capabilities: additional_capabilities
-    )
-
-    parent = self()
-    on_exit(fn -> Hound.end_session(parent) end)
-
-    :ok
+    metadata = Phoenix.Ecto.SQL.Sandbox.metadata_for(Gas.Repo, self())
+    {:ok, session} = Wallaby.start_session(metadata: metadata)
+    {:ok, session: session}
   end
 
   @doc """
@@ -87,34 +45,4 @@ defmodule Gas.FeatureCase do
       end)
     end)
   end
-
-  @doc """
-  Execute the function repeatedly until either the condition is met or number
-  of trials is reached.
-
-      assert await(true, fn  -> 1 == 1 end, 5_000 )
-  """
-  def await(condition, fun, times \\ 5)
-  def await(_condition, fun, 0), do: fun.()
-
-  def await(condition, fun, times) when times > 0 do
-    case condition == fun.() do
-      true ->
-        condition
-
-      _ ->
-        await(condition, fun, times - 1)
-    end
-  end
-
-  # defp loop_wait(condition, fun, timeout, stop) do
-  #   new_condition = fun.()
-  #   now = System.monotonic_time(:millisecond)
-
-  #   if condition == new_condition || now - stop >= timeout do
-  #     new_condition
-  #   else
-  #     loop_wait(condition, fun, timeout, stop)
-  #   end
-  # end
 end

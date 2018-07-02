@@ -1,6 +1,10 @@
 defmodule GasWeb.Endpoint do
   use Phoenix.Endpoint, otp_app: :gas
 
+  if Application.get_env(:gas, :sql_sandbox) do
+    plug(Phoenix.Ecto.SQL.Sandbox)
+  end
+
   socket("/socket", GasWeb.UserSocket)
 
   # Serve frontend at /index.html (root path). Static files will be served from
