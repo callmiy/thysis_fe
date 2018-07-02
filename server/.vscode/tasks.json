@@ -99,7 +99,11 @@
       "label": "mix test integration",
       "type": "shell",
       "command":
-        "cd ../client && yarn deploy && cd ${workspaceFolder} && mix test --only integration",
+        "cd ../client && yarn deploy && cd ${workspaceFolder} && pg_ctl start && mix test --only integration",
+      "windows": {
+        "command":
+          "cd ../client && yarn deploy && cd ${workspaceFolder} && mix test --only integration"
+      },
       "options": {
         "env": {
           "GAS_PHOENIX_INTEGRATION_TEST_PORT": "4017",
@@ -126,7 +130,10 @@
     {
       "label": "mix test integration no build",
       "type": "shell",
-      "command": "mix test --only integration",
+      "command": "pg_ctl start && mix test --only integration",
+      "windows": {
+        "command": "mix test --only integration"
+      },
       "options": {
         "env": {
           "GAS_PHOENIX_INTEGRATION_TEST_PORT": "4017",
