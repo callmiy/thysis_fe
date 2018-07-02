@@ -10,11 +10,18 @@ defmodule Gas.FeatureCase do
       alias Gas.SourceApi, as: SourceApi
       alias Gas.Author
       alias Gas.Tag
+      alias Wallaby.Element, as: El
 
+      import Gas.FeatureCase
       import Ecto
       import Ecto.Changeset
       import Gas.Factory
-      import Wallaby.Query, only: [css: 2]
+
+      import Wallaby.Query,
+        only: [
+          css: 1,
+          css: 2
+        ]
     end
   end
 
@@ -44,5 +51,15 @@ defmodule Gas.FeatureCase do
         String.replace(acc, "%{#{key}}", to_string(value))
       end)
     end)
+  end
+
+  def await(condition, fun, trials \\ 0)
+  def await(_condition, fun, 0), do: fun.()
+
+  def await(condition, fun, trials) when trials > 0 do
+    case condition == fun.() do
+      true -> condition
+      _ -> await(condition, fun, trials - 1)
+    end
   end
 end

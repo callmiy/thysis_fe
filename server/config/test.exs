@@ -25,3 +25,9 @@ config :gas, Gas.Repo,
   timeout: 600_000,
   pool_timeout: 600_000,
   ownership_timeout: 600_000
+
+config :wallaby,
+  driver: Wallaby.Experimental.Chrome,
+  chrome: [
+    # headless: false
+  ]
