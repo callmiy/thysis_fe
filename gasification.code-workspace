@@ -26,6 +26,19 @@
       "**/server/**/web-client/**": true,
       "**/client/**/build/**": true
     },
-    "typescript.tsdk": "client\\node_modules\\typescript\\lib"
+    "typescript.tsdk": "client\\node_modules\\typescript\\lib",
+    "advancedNewFile.exclude": {
+      "node_modules": true,
+      "node_modules_electron": true,
+      "rls": true,
+      "target": true,
+      "dist": true,
+      "__pycache__": true,
+      "bower_components": true,
+      "deps": true,
+      "_build": true,
+      "build": true,
+      ".elixir_ls": true
+    }
   }
 }
