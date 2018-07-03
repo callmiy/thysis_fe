@@ -15,16 +15,6 @@ defmodule GasWeb.HomePageFeatureTest do
   # @source_modal_close_id "source-modal-close"
   @source_modal_submit_id "source-modal-submit"
 
-  @menu_item_texts [
-    "Search Quotes",
-    "New Quote",
-    "List Tags",
-    "List Sources",
-    "New Author",
-    "New Tag",
-    "New Source"
-  ]
-
   # @tag :no_headless
   test "home page" do
     # Given there are 2 tags in the database
@@ -56,9 +46,7 @@ defmodule GasWeb.HomePageFeatureTest do
              new_author_link,
              new_tag_link,
              new_source_link
-           ] = links = find_all_elements(:css, @menu_items_selector)
-
-    assert Enum.map(links, &inner_text/1) == @menu_item_texts
+           ] = find_all_elements(:css, @menu_items_selector)
 
     # and we see no tags visible on the page
     refute element?(:id, @tags_modal_id)
