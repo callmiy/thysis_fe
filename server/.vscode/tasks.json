@@ -30,7 +30,7 @@
     {
       "label": "mix test file unit trace",
       "type": "shell",
-      "command": "mix test ${file} --trace",
+      "command": "mix test ${file}",
       "problemMatcher": ["$mixCompileError", "$mixCompileWarning"],
       "group": "test"
     },
@@ -84,7 +84,7 @@
       "label": "mix test file integration",
       "type": "shell",
       "command":
-        "cd ../client && yarn deploy && cd ${workspaceFolder} && mix test --only integration ${file}",
+        "cd ../client && yarn deploy && cd ${workspaceFolder} && (bash priv/chrome.sh &) && mix test --only integration ${file}",
       "options": {
         "env": {
           "GAS_PHOENIX_INTEGRATION_TEST_PORT": "4017",
@@ -99,7 +99,7 @@
       "label": "mix test integration",
       "type": "shell",
       "command":
-        "cd ../client && yarn deploy && cd ${workspaceFolder} && pg_ctl start && mix test --only integration",
+        "cd ../client && yarn deploy && cd ${workspaceFolder} && (bash priv/chrome.sh &) && (mix test --only integration)",
       "windows": {
         "command":
           "cd ../client && yarn deploy && cd ${workspaceFolder} && mix test --only integration"
@@ -117,7 +117,11 @@
     {
       "label": "mix test file integration no build",
       "type": "shell",
-      "command": "mix test --trace --only integration ${file}",
+      "command":
+        "(bash priv/chrome.sh &) && mix test --only integration ${file}",
+      "windows": {
+        "command": "mix test --only integration ${file}"
+      },
       "options": {
         "env": {
           "GAS_PHOENIX_INTEGRATION_TEST_PORT": "4017",
@@ -130,7 +134,7 @@
     {
       "label": "mix test integration no build",
       "type": "shell",
-      "command": "pg_ctl start && mix test --only integration",
+      "command": "(bash priv/chrome.sh &) && mix test --only integration",
       "windows": {
         "command": "mix test --only integration"
       },

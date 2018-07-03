@@ -2,12 +2,9 @@ use Mix.Config
 
 app_port = System.get_env("GAS_PHOENIX_INTEGRATION_TEST_PORT") || 4017
 
-config :gas, :sql_sandbox, true
-
 # We don't run a server during test. If one is required,
 # you can enable the server option below.
 config :gas, GasWeb.Endpoint,
-  url: [host: "localhost"],
   http: [port: app_port],
   server: true
 
@@ -26,8 +23,10 @@ config :gas, Gas.Repo,
   pool_timeout: 600_000,
   ownership_timeout: 600_000
 
-config :wallaby,
-  driver: Wallaby.Experimental.Chrome,
-  chrome: [
-    # headless: false
-  ]
+config :hound,
+  driver: "chrome_driver",
+  # driver: "phantomjs",
+  app_host: "http://localhost",
+  app_port: app_port,
+  retry_time: 5_000,
+  genserver_timeout: 600_000
