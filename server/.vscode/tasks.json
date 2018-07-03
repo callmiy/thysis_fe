@@ -85,10 +85,6 @@
       "type": "shell",
       "command":
         "cd ../client && yarn deploy && cd ${workspaceFolder} && (bash priv/chrome.sh &) && mix test --only integration ${file}",
-      "windows": {
-        "command":
-          "cd ../client && yarn deploy && cd ${workspaceFolder} && (priv\\chrome.bat) && mix test --only integration ${file}"
-      },
       "options": {
         "env": {
           "GAS_PHOENIX_INTEGRATION_TEST_PORT": "4017",
@@ -106,7 +102,7 @@
         "cd ../client && yarn deploy && cd ${workspaceFolder} && (bash priv/chrome.sh &) && (mix test --only integration)",
       "windows": {
         "command":
-          "cd ../client && yarn deploy && cd ${workspaceFolder} && (priv\\chrome.bat) && mix test --only integration"
+          "cd ../client && yarn deploy && cd ${workspaceFolder} && mix test --only integration"
       },
       "options": {
         "env": {
@@ -124,7 +120,7 @@
       "command":
         "(bash priv/chrome.sh &) && mix test --only integration ${file}",
       "windows": {
-        "command": "(priv\\chrome.bat) && mix test --only integration ${file}"
+        "command": "mix test --only integration ${file}"
       },
       "options": {
         "env": {
@@ -140,7 +136,7 @@
       "type": "shell",
       "command": "(bash priv/chrome.sh &) && mix test --only integration",
       "windows": {
-        "command": "(priv\\chrome.bat) && mix test --only integration"
+        "command": "mix test --only integration"
       },
       "options": {
         "env": {
