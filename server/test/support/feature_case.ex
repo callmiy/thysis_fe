@@ -47,12 +47,7 @@ defmodule Gas.FeatureCase do
     #   Hound.Browser.user_agent(:chrome)
     #   |> Hound.Metadata.append(metadata)
 
-    session_opts =
-      setup_browser(
-        tags,
-        Application.get_env(:hound, :driver)
-      )
-
+    session_opts = setup_browser(tags, @chrome_driver)
     _session_id = Hound.start_session(session_opts)
 
     on_exit(fn ->
@@ -100,8 +95,8 @@ defmodule Gas.FeatureCase do
   defp setup_browser(tags, @chrome_driver) do
     chrome_args = [
       # "--user-agent=#{user_agent}"
-      # "--disable-gpu"
-      ~s(--window-size=#{tags[:window_size] || "360,500"})
+      "--disable-gpu"
+      # ~s(--window-size=#{tags[:window_size] || "360,500"})
     ]
 
     chrome_args =
