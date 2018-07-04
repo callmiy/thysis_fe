@@ -7,6 +7,7 @@ import { Input } from "semantic-ui-react";
 import { List } from "semantic-ui-react";
 import { Message } from "semantic-ui-react";
 import { Icon } from "semantic-ui-react";
+import { NavLink } from "react-router-dom";
 
 import { AllMatchingTextsQuery } from "../../graphql/gen.types";
 import { SearchQuotesState } from "./utils";
@@ -17,6 +18,8 @@ import ErrorBoundary from "../../containers/error-boundary.container";
 import { SemanticOnInputChangeFunc } from "./utils";
 import { TextSearchResultFragFragment } from "../../graphql/gen.types";
 import { TextSearchRowFragFragment } from "../../graphql/gen.types";
+import { makeSourceURL } from "../../utils/route-urls.util";
+import { makeTagURL } from "../../utils/route-urls.util";
 
 export class SearchQuotesComponent extends React.Component<
   SearchQuotesProps,
@@ -206,6 +209,8 @@ export class SearchQuotesComponent extends React.Component<
     }
 
     const header = data[0].source;
+    const methodName = header[0] + header.slice(1, -1).toLowerCase();
+    const render = this[`renderRow${methodName}`] || this.renderRow;
 
     return (
       <div className={classes.result} key={header}>
@@ -213,7 +218,7 @@ export class SearchQuotesComponent extends React.Component<
           <span className={classes.resultRowHeader}>{header}</span>
         </div>
 
-        <List divided={true}>{data.map(this.renderRow)}</List>
+        <List divided={true}>{data.map(render)}</List>
       </div>
     );
   };
@@ -221,6 +226,32 @@ export class SearchQuotesComponent extends React.Component<
   renderRow = ({ text, tid, column }: TextSearchRowFragFragment) => {
     return (
       <List.Item key={tid + column} className={classes.resultRowItem}>
+        <List.Content>{text}</List.Content>
+      </List.Item>
+    );
+  };
+
+  renderRowSource = ({ text, tid, column }: TextSearchRowFragFragment) => {
+    return (
+      <List.Item
+        key={tid + column}
+        className={classes.resultRowItem}
+        as={NavLink}
+        to={makeSourceURL(tid.toString())}
+      >
+        <List.Content>{text}</List.Content>
+      </List.Item>
+    );
+  };
+
+  renderRowTag = ({ text, tid, column }: TextSearchRowFragFragment) => {
+    return (
+      <List.Item
+        key={tid + column}
+        className={classes.resultRowItem}
+        as={NavLink}
+        to={makeTagURL(tid.toString())}
+      >
         <List.Content>{text}</List.Content>
       </List.Item>
     );

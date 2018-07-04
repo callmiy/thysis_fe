@@ -34,6 +34,9 @@ export const styles = {
     marginTop: "15px;",
     "&.first-of-type": {
       marginTop: "0;"
+    },
+    "& .ui.list>a.item": {
+      color: "initial"
     }
   },
 
@@ -54,6 +57,6 @@ export const styles = {
   }
 } as SimpleCss;
 
-export default styles
+export default styles;
 
 export const { classes } = jss.createStyleSheet(styles).attach();
