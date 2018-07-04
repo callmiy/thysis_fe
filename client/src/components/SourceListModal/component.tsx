@@ -10,7 +10,7 @@ import { modalStyle } from "./styles";
 import { classes } from "./styles";
 import { SourceListModalProps } from "./utils";
 
-export class SourceListModal extends React.PureComponent<SourceListModalProps> {
+export class SourcesModal extends React.PureComponent<SourceListModalProps> {
   render() {
     return (
       <Modal
@@ -39,6 +39,16 @@ export class SourceListModal extends React.PureComponent<SourceListModalProps> {
   }
 
   renderSources = () => {
+    const { error, dismissModal } = this.props;
+
+    if (error) {
+      return (
+        <div className={classes.errorContainer} onClick={dismissModal}>
+          {error.message}
+        </div>
+      );
+    }
+
     if (this.props.loading) {
       return <Loader active={true} />;
     }
@@ -74,4 +84,4 @@ export class SourceListModal extends React.PureComponent<SourceListModalProps> {
   };
 }
 
-export default SourceListModal;
+export default SourcesModal;

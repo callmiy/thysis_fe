@@ -2,13 +2,14 @@ import jss from "jss";
 import preset from "jss-preset-default";
 
 import { SimpleCss } from "../../constants";
+import errorContainer from "../../utils/simple-error-styles.util";
 
 jss.setup(preset());
 
 export const styles = {
   modal: {
     overflow: "hidden",
-    marginTop: '-100px'
+    marginTop: "-100px"
   },
 
   content: {
@@ -38,10 +39,14 @@ export const styles = {
 
   listItem: {
     cursor: "pointer"
+  },
+
+  errorContainer: {
+    ...errorContainer
   }
 } as SimpleCss;
 
-export default styles
+export default styles;
 
 export const modalStyle = styles.modal as React.CSSProperties;
 

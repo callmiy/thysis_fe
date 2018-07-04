@@ -1,7 +1,7 @@
 import { withRouter } from "react-router-dom";
-import {  graphql } from "react-apollo";
+import { graphql } from "react-apollo";
 
-import { SourceListModal } from "./component";
+import SourcesModal from "./component";
 import SOURCES_QUERY from "../../graphql/sources-1.query";
 import { SourceFragFragment } from "../../graphql/gen.types";
 import { OwnProps } from "./utils";
@@ -46,4 +46,4 @@ const sourcesGraphQl = graphql<OwnProps, Sources1Query, {}, ComponentDataProps>(
   }
 );
 
-export default withRouter(sourcesGraphQl(SourceListModal));
+export default withRouter(sourcesGraphQl(SourcesModal));
