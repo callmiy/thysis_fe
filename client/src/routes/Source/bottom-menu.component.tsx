@@ -5,7 +5,7 @@ import { NavLink } from "react-router-dom";
 
 import NewTagModalForm from "../../components/NewTagModalForm";
 import SourceModal from "../../components/SourceModal";
-import TagListModal from "../../components/TagListModal";
+import TagsModal from "../../components/TagListModal";
 import { MenuItemNames } from "../../constants";
 import { ROOT_URL } from "../../utils/route-urls.util";
 
@@ -94,7 +94,7 @@ class SourceMenu extends React.Component<{}, SourceMenuState> {
         )}
 
         {this.state.modalOpened[MenuItemNames.TAG_LIST] && (
-          <TagListModal
+          <TagsModal
             open={this.state.modalOpened[MenuItemNames.TAG_LIST]}
             dismissModal={this.toggleModalOpen(MenuItemNames.TAG_LIST, false)}
           />

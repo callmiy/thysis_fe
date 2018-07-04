@@ -8,7 +8,7 @@ import update from "immutability-helper";
 import Header from "../../components/header.component";
 import { makeNewQuoteURL } from "../../utils/route-urls.util";
 import { SEARCH_QUOTES_URL } from "../../utils/route-urls.util";
-import TagListModal from "../../components/TagListModal";
+import TagsModal from "../../components/TagListModal";
 import SourceListModal from "../../components/SourceListModal";
 import NewTagModalForm from "../../components/NewTagModalForm";
 import SourceModal from "../../components/SourceModal";
@@ -113,7 +113,7 @@ export class Home extends React.Component<HomeProps, HomeState> {
         </div>
 
         {this.state.modalOpened[HomeEnum.TAG_LIST] && (
-          <TagListModal
+          <TagsModal
             open={this.state.modalOpened[HomeEnum.TAG_LIST]}
             dismissModal={this.toggleModalOpen(HomeEnum.TAG_LIST, false)}
           />

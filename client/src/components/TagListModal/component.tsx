@@ -12,7 +12,7 @@ import { modalStyle } from "../SourceListModal/styles";
 import { classes } from "../SourceListModal/styles";
 import { TagListModalProps } from "./utils";
 
-export class TagListModal extends React.PureComponent<TagListModalProps> {
+export class TagsModal extends React.PureComponent<TagListModalProps> {
   render() {
     const { open } = this.props;
 
@@ -47,7 +47,18 @@ export class TagListModal extends React.PureComponent<TagListModalProps> {
     );
   }
 
-  renderTags = ({ loading, data }: TagsMinimalQueryResult) => {
+  renderTags = ({ loading, data, error }: TagsMinimalQueryResult) => {
+    if (error) {
+      return (
+        <div
+          className={classes.errorContainer}
+          onClick={this.props.dismissModal}
+        >
+          {error.message}
+        </div>
+      );
+    }
+
     if (loading) {
       return <Loader active={true} />;
     }
@@ -88,4 +99,4 @@ export class TagListModal extends React.PureComponent<TagListModalProps> {
   };
 }
 
-export default TagListModal;
+export default TagsModal;

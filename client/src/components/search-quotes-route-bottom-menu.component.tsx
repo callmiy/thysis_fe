@@ -4,7 +4,7 @@ import update from "immutability-helper";
 import { NavLink } from "react-router-dom";
 
 import SourceModal from "./SourceModal";
-import TagListModal from "./TagListModal";
+import TagsModal from "./TagListModal";
 import { MenuItemNames } from "../constants";
 import { makeNewQuoteURL } from "../utils/route-urls.util";
 import { ROOT_URL } from "../utils/route-urls.util";
@@ -84,7 +84,7 @@ class SearchQuotesMenu extends React.Component<{}, SearchQuotesMenuState> {
         )}
 
         {this.state.modalOpened[MenuItemNames.TAG_LIST] && (
-          <TagListModal
+          <TagsModal
             open={this.state.modalOpened[MenuItemNames.TAG_LIST]}
             dismissModal={this.toggleModalOpen(MenuItemNames.TAG_LIST, false)}
           />
