@@ -42,7 +42,15 @@ export class Source extends React.Component<SourceProps, SourceState> {
   }
 
   renderMainOrLoading = () => {
-    const { loading, source } = this.props;
+    const { loading, source, error } = this.props;
+
+    if (error) {
+      return (
+        <div className={`${classes.sourceMain} ${classes.errorContainer}`}>
+          {error.message}
+        </div>
+      );
+    }
 
     if (loading || !source) {
       return (

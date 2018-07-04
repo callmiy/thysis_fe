@@ -2,6 +2,7 @@ import jss from "jss";
 import preset from "jss-preset-default";
 
 import { SimpleCss } from "../../constants";
+import errorContainer from "../../utils/simple-error-styles.util";
 
 jss.setup(preset());
 
@@ -53,6 +54,10 @@ export const styles = {
     "&:hover": {
       color: "#01751c"
     }
+  },
+
+  errorContainer: {
+    ...errorContainer
   }
 } as SimpleCss;
 
