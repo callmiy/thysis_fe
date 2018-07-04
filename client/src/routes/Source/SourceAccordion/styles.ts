@@ -19,12 +19,7 @@ const styles = {
     gridTemplateAreas: `
       "labels details"
     `,
-    gridTemplateColumns: "1fr 3fr",
-    overflow: "hidden",
-
-    "&.authors": {
-      overflow: "initial"
-    }
+    gridTemplateColumns: "1fr 3fr"
   },
 
   labels: {
