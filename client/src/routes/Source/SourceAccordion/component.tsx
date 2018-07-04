@@ -35,20 +35,15 @@ export class SourceAccordion extends React.Component<Props, State> {
   state: State = initialState;
 
   getSnapshotBeforeUpdate(prevProps: Props, prevState: State) {
-    // if we were editing and we change to view mode, then we cancel all
+    // if we were editing and we change view, then we cancel all
     // editing changes
     if (
       prevState.detailAction === DetailAction.EDITING &&
       this.state.detailAction === DetailAction.VIEWING
     ) {
-      const { source } = this.props;
-      const editedSource = this.props.values;
-
-      if (isEqual(source, editedSource)) {
-        return null;
+      if (this.shouldResetEditSourceForm()) {
+        return { resetForm: true };
       }
-
-      return { resetForm: true };
     }
     return null;
   }
@@ -135,6 +130,10 @@ export class SourceAccordion extends React.Component<Props, State> {
   };
 
   renderEditViewControls = () => {
+    if (this.state.activeIndex !== SourceAccordionIndex.DETAIL) {
+      return undefined;
+    }
+
     if (this.isEditing()) {
       const { errors, source, values } = this.props;
 
@@ -400,7 +399,8 @@ export class SourceAccordion extends React.Component<Props, State> {
       update(s, {
         activeIndex: {
           $set: activeIndex === index ? -1 : index
-        }
+        },
+        ...this.getNewDetailState(index as number)
       })
     );
   };
@@ -565,7 +565,32 @@ export class SourceAccordion extends React.Component<Props, State> {
     }
   };
 
-  private isEditing = () => this.state.detailAction === DetailAction.EDITING;
+  private isEditing = () =>
+    this.state.activeIndex === SourceAccordionIndex.DETAIL &&
+    this.state.detailAction === DetailAction.EDITING;
+
+  private shouldResetEditSourceForm = () => {
+    const { source } = this.props;
+    const editedSource = this.props.values;
+
+    return !isEqual(source, editedSource);
+  };
+
+  private getNewDetailState = (index: number) => {
+    if (index !== SourceAccordionIndex.DETAIL) {
+      return {};
+    }
+
+    if (this.state.detailAction === DetailAction.VIEWING) {
+      return {};
+    }
+
+    return {
+      detailAction: {
+        $set: DetailAction.VIEWING
+      }
+    };
+  };
 }
 
 export default SourceAccordion;

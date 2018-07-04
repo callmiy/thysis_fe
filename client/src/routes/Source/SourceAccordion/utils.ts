@@ -8,8 +8,8 @@ import { Quote1FragFragment } from "../../../graphql/gen.types";
 import { UpdateSourceMutationFn } from "../../../graphql/ops.types";
 
 export enum DetailAction {
-  EDITING = "editing",
-  VIEWING = "viewing"
+  EDITING = "editing", // when we are editing source
+  VIEWING = "viewing" // when we are viewing source
 }
 
 export type AccordionTitleClickCb = (
@@ -32,7 +32,7 @@ export type PropsWithFormikProps = InjectedFormikProps<
 export type Props = PropsWithFormikProps;
 
 export interface State {
-  activeIndex: number;
+  activeIndex: SourceAccordionIndex;
   detailAction: DetailAction;
   loadingQuotes?: boolean;
   quotes?: Quote1FragFragment[];
