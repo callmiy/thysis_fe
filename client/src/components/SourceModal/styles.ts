@@ -21,11 +21,12 @@ export const styles: SimpleCss = {
   },
 
   fieldWrapper: {
-    marginBottom: '1em'
+    marginBottom: "1em"
   },
 
   formButtonsContainer: {
-    display: "flex"
+    display: "flex",
+    marginBottom: "15px"
   },
 
   submitButton: {
