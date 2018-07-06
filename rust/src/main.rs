@@ -2,7 +2,6 @@ extern crate gasification;
 extern crate structopt;
 
 use gasification::config_args::{Config, Opt};
-use std::sync::Arc;
 use structopt::StructOpt;
 
 fn main() {
@@ -11,11 +10,9 @@ fn main() {
     std::process::exit(1);
   });
 
-  let exp_path_string = Arc::clone(&config.exp_path_string);
-
-  match gasification::exp_readings_to_english(exp_path_string) {
-    Ok(_) => {
-      println!("Success");
+  match gasification::exp_readings_to_english(config.exp_path_string) {
+    Ok(processed_files) => {
+      println!("\nSuccess:\n{:#?}", processed_files);
     }
 
     Err(e) => {

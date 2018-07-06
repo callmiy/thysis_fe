@@ -1,7 +1,6 @@
 extern crate structopt;
 
 use std::path::PathBuf;
-use std::sync::Arc;
 
 #[derive(Debug, StructOpt)]
 #[structopt(name = "gasification experiment")]
@@ -24,7 +23,7 @@ pub struct Opt {
 
 #[derive(Debug)]
 pub struct Config {
-  pub exp_path_string: Arc<String>,
+  pub exp_path_string: String,
 }
 
 impl Config {
@@ -46,15 +45,13 @@ impl Config {
       ));
     };
 
-    let exp_path = match path.into_os_string().into_string() {
+    let exp_path_string = match path.into_os_string().into_string() {
       Ok(val) => val,
       Err(e) => {
         return Err(format!("Invalid experiment directory: {:?}", e));
       }
     };
 
-    Ok(Config {
-      exp_path_string: Arc::new(exp_path),
-    })
+    Ok(Config { exp_path_string })
   }
 }
