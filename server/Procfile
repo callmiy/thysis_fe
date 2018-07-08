@@ -1,1 +1,1 @@
-web: MIX_ENV=prod iex --sname gas -S mix phx.server
+web: MIX_ENV=prod iex --sname gas --dot-iex "" -S mix phx.server
