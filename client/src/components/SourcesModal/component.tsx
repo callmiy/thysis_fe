@@ -8,9 +8,9 @@ import { makeSourceURL } from "../../utils/route-urls.util";
 import { styles } from "./styles";
 import { modalStyle } from "./styles";
 import { classes } from "./styles";
-import { SourceListModalProps } from "./utils";
+import { Props } from "./utils";
 
-export class SourcesModal extends React.PureComponent<SourceListModalProps> {
+export class SourcesModal extends React.PureComponent<Props> {
   render() {
     return (
       <Modal

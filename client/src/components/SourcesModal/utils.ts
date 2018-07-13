@@ -10,4 +10,4 @@ export type OwnProps = RouteComponentProps<{}> & {
 
 export type ComponentDataProps = GraphqlQueryControls & Sources1Query;
 
-export type SourceListModalProps = OwnProps & ComponentDataProps;
+export type Props = OwnProps & ComponentDataProps;

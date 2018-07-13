@@ -7,7 +7,7 @@ import { withRouter, RouteComponentProps } from "react-router-dom";
 import NewTagModalForm from "./NewTagModalForm";
 import SourceModal from "./SourceModal";
 import TagsModal from "./TagListModal";
-import SourceListModal from "./SourceListModal";
+import SourcesModal from "./SourcesModal";
 
 // import { SimpleCss } from "../constants";
 
@@ -75,7 +75,7 @@ const menus: Menus = {
   },
 
   [MenuItem.SOURCE_LIST]: {
-    component: SourceListModal,
+    component: SourcesModal,
     icon: "numbered list",
     label: "Sources",
     action: MenuAction.MODAL

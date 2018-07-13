@@ -7,9 +7,9 @@ import { TagsMinimalQueryResult } from "../../graphql/ops.types";
 import { TagFragFragment } from "../../graphql/gen.types";
 import TAGS_QUERY from "../../graphql/tags-mini.query";
 import { makeTagURL } from "../../utils/route-urls.util";
-import { styles } from "../SourceListModal/styles";
-import { modalStyle } from "../SourceListModal/styles";
-import { classes } from "../SourceListModal/styles";
+import { styles } from "../SourcesModal/styles";
+import { modalStyle } from "../SourcesModal/styles";
+import { classes } from "../SourcesModal/styles";
 import { TagListModalProps } from "./utils";
 
 export class TagsModal extends React.PureComponent<TagListModalProps> {

@@ -9,7 +9,7 @@ import Header from "../../components/header.component";
 import { makeNewQuoteURL } from "../../utils/route-urls.util";
 import { SEARCH_QUOTES_URL } from "../../utils/route-urls.util";
 import TagsModal from "../../components/TagListModal";
-import SourceListModal from "../../components/SourceListModal";
+import SourcesModal from "../../components/SourcesModal";
 import NewTagModalForm from "../../components/NewTagModalForm";
 import SourceModal from "../../components/SourceModal";
 import NewAuthorModal from "../../components/NewAuthorModal";
@@ -120,7 +120,7 @@ export class Home extends React.Component<HomeProps, HomeState> {
         )}
 
         {this.state.modalOpened[HomeEnum.SOURCE_LIST] && (
-          <SourceListModal
+          <SourcesModal
             open={this.state.modalOpened[HomeEnum.SOURCE_LIST]}
             dismissModal={this.toggleModalOpen(HomeEnum.SOURCE_LIST, false)}
           />
