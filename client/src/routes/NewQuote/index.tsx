@@ -1,10 +1,10 @@
-import {graphql,} from "react-apollo";
-import {withApollo,} from "react-apollo";
+import { graphql } from "react-apollo";
+import { withApollo } from "react-apollo";
 
-import  NewQuote  from "./route";
+import NewQuote from "./route";
 import { NewQuoteProps } from "./utils";
 import TAGS_QUERY from "../../graphql/tags-mini.query";
-import {TagsMinimalQuery} from "../../graphql/gen.types";
+import { TagsMinimal as TagsMinimalQuery } from "../../graphql/gen.types";
 
 const tagsGraphQl = graphql<NewQuoteProps, TagsMinimalQuery, {}, {}>(
   TAGS_QUERY,

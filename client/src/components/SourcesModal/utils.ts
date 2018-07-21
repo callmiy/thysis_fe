@@ -1,6 +1,6 @@
 import { RouteComponentProps } from "react-router-dom";
 import { GraphqlQueryControls } from "react-apollo";
-import { Sources1Query } from "../../graphql/gen.types";
+import { Sources1 as Sources1Query } from "../../graphql/gen.types";
 
 export type OwnProps = RouteComponentProps<{}> & {
   open: boolean;

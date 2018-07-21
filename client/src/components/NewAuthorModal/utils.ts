@@ -1,9 +1,9 @@
 import React from "react";
 import { ApolloError } from "apollo-client";
 
-import { AuthorFragFragment } from "../../graphql/gen.types";
+import { AuthorFrag } from "../../graphql/gen.types";
 
-type AuthorModalCreatedCb = (tag: AuthorFragFragment) => void;
+type AuthorModalCreatedCb = (tag: AuthorFrag) => void;
 
 export interface NewAuthorModalProps {
   open: boolean;

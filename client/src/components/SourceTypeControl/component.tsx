@@ -1,16 +1,16 @@
 import Select from "react-select";
 import React from "react";
 
-import { SourceTypeFragFragment } from "../../graphql/gen.types";
+import { SourceTypeFrag } from "../../graphql/gen.types";
 import { SourceTypeQueryComponent } from "../../graphql/ops.types";
 import SOURCE_TYPE_QUERY from "../../graphql/source-types.query";
 
 interface Props {
   selectError: boolean;
-  handleChange: (value: SourceTypeFragFragment[]) => void;
+  handleChange: (value: SourceTypeFrag[]) => void;
   handleBlur: () => void;
   name: string;
-  value: SourceTypeFragFragment[];
+  value: SourceTypeFrag[];
 }
 
 export class SourceTypeControlComponent extends React.Component<Props> {
@@ -20,10 +20,10 @@ export class SourceTypeControlComponent extends React.Component<Props> {
     return (
       <SourceTypeQueryComponent query={SOURCE_TYPE_QUERY}>
         {({ data }) => {
-          let sourceTypes = [] as SourceTypeFragFragment[];
+          let sourceTypes = [] as SourceTypeFrag[];
 
           if (data) {
-            sourceTypes = data.sourceTypes as SourceTypeFragFragment[];
+            sourceTypes = data.sourceTypes as SourceTypeFrag[];
           }
 
           return (

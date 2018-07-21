@@ -10,10 +10,7 @@ import update from "immutability-helper";
 import isEqual from "lodash/isEqual";
 import isEmpty from "lodash/isEmpty";
 
-import {
-  AuthorFragFragment,
-  SourceTypeFragFragment
-} from "../../../graphql/gen.types";
+import { AuthorFrag, SourceTypeFrag } from "../../../graphql/gen.types";
 import QUOTES_QUERY from "../../../graphql/quotes-1.query";
 import { Quotes1QueryClientResult } from "../../../graphql/ops.types";
 import { classes } from "./styles";
@@ -170,7 +167,7 @@ export class SourceAccordion extends React.Component<Props, State> {
     );
   };
 
-  renderAuthor = ({ id, name }: AuthorFragFragment) => {
+  renderAuthor = ({ id, name }: AuthorFrag) => {
     return <div key={id}>{name}</div>;
   };
 
@@ -332,7 +329,7 @@ export class SourceAccordion extends React.Component<Props, State> {
     );
   };
 
-  renderSourceType = (sourceType: SourceTypeFragFragment) => {
+  renderSourceType = (sourceType: SourceTypeFrag) => {
     if (this.isEditing()) {
       return this.renderSourceTypeControl();
     }
@@ -500,14 +497,16 @@ export class SourceAccordion extends React.Component<Props, State> {
 
     setSubmitting(true);
 
-    const previousAuthors = source.authors.map(a => a && a.id);
-    const authorIds = authors.map(a => a && a.id);
+    const previousAuthors = source.authors.map((a: AuthorFrag) => a && a.id);
+    const authorIds = authors.map((a: AuthorFrag) => a && a.id);
 
     const updatedSource = {
       id: values.id,
       sourceTypeId: id,
-      authorIds: authorIds.filter(a => !previousAuthors.includes(a)),
-      deletedAuthors: previousAuthors.filter(a => !authorIds.includes(a)),
+      authorIds: authorIds.filter((a: string) => !previousAuthors.includes(a)),
+      deletedAuthors: previousAuthors.filter(
+        (a: string) => !authorIds.includes(a)
+      ),
       year,
       topic,
       publication,

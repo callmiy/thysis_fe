@@ -6,8 +6,8 @@ import update from "immutability-helper";
 
 import CREATE_AUTHOR_MUTATION from "../../graphql/create-author.mutation";
 import { CreateAuthorFn, CreateAuthorUpdateFn } from "../../graphql/ops.types";
-import { GetAllAuthorsQuery } from "../../graphql/gen.types";
-import { AuthorFragFragment } from "../../graphql/gen.types";
+import { GetAllAuthors as GetAllAuthorsQuery } from "../../graphql/gen.types";
+import { AuthorFrag } from "../../graphql/gen.types";
 import AUTHORS_QUERY from "../../graphql/authors.query";
 import { initalStateNewTagModalFormState } from "./utils";
 import { NewAuthorModalProps } from "./utils";
@@ -198,7 +198,7 @@ export class NewAuthorModal extends React.PureComponent<
       return;
     }
 
-    const author = createAuthor.createAuthor as AuthorFragFragment;
+    const author = createAuthor.createAuthor as AuthorFrag;
 
     if (this.props.onAuthorCreated) {
       this.props.onAuthorCreated(author);
@@ -219,7 +219,7 @@ export class NewAuthorModal extends React.PureComponent<
         query: AUTHORS_QUERY
       }) as GetAllAuthorsQuery;
 
-      const authors = authorsQuery.authors as AuthorFragFragment[];
+      const authors = authorsQuery.authors as AuthorFrag[];
 
       if (authors) {
         cache.writeQuery({

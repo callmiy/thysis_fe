@@ -3,8 +3,8 @@ import { WithApolloClient } from "react-apollo";
 import { ApolloError } from "apollo-client/errors/ApolloError";
 import { InputOnChangeData } from "semantic-ui-react/dist/commonjs/elements/Input/Input";
 
-import { AllMatchingTextsQueryVariables } from "../../graphql/gen.types";
-import { TextSearchResultFragFragment } from "../../graphql/gen.types";
+import { AllMatchingTextsVariables } from "../../graphql/gen.types";
+import { TextSearchResultFrag } from "../../graphql/gen.types";
 
 export type SemanticOnInputChangeFunc = (
   e: React.ChangeEvent<HTMLInputElement>,
@@ -14,7 +14,7 @@ export type SemanticOnInputChangeFunc = (
 export interface SearchQuotesState {
   searchText: "";
   searchLoading: boolean;
-  result?: TextSearchResultFragFragment;
+  result?: TextSearchResultFrag;
   searchError?: ApolloError;
 }
 
@@ -23,5 +23,5 @@ export interface OwnProps {
 }
 
 export type SearchQuotesProps = OwnProps &
-  GraphqlQueryControls<AllMatchingTextsQueryVariables> &
+  GraphqlQueryControls<AllMatchingTextsVariables> &
   WithApolloClient<OwnProps>;

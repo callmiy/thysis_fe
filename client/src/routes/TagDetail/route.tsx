@@ -8,7 +8,7 @@ import { List } from "semantic-ui-react";
 import RootHeader from "../../components/header.component";
 import { TagQuoteQueryComponent } from "../../graphql/ops.types";
 import TAG_QUOTE_QUERY from "../../graphql/tag-with-quotes.query";
-import { TagQuoteQuery } from "../../graphql/gen.types";
+import { TagQuote as TagQuoteQuery } from "../../graphql/gen.types";
 import MobileBottomMenu from "../../components/mobile-bottom-menu.component";
 import { MenuItem } from "../../components/mobile-bottom-menu.component";
 import renderQuote from "../../components/QuoteItem";

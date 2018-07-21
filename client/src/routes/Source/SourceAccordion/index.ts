@@ -6,14 +6,14 @@ import { graphql } from "react-apollo";
 import { config } from "./formik.config";
 import { OwnProps } from "./utils";
 import UPDATE_SOURCE_MUTATION from "../../../graphql/update-source.mutation";
-import { UpdateSourceMutation } from "../../../graphql/gen.types";
-import { UpdateSourceMutationVariables } from "../../../graphql/gen.types";
+import { UpdateSource as UpdateSourceMutation } from "../../../graphql/gen.types";
+import { UpdateSourceVariables } from "../../../graphql/gen.types";
 import SourceAccordion from "./component";
 
 const updateSourceGraphql = graphql<
   OwnProps,
   UpdateSourceMutation,
-  UpdateSourceMutationVariables,
+  UpdateSourceVariables,
   {} // graphql props such as data, mutate, loading etc.
 >(UPDATE_SOURCE_MUTATION, {
   props: ({ mutate, ownProps }) => {

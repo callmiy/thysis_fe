@@ -1,16 +1,16 @@
 import Select from "react-select";
 import React from "react";
 
-import { AuthorFragFragment } from "../../graphql/gen.types";
+import { AuthorFrag } from "../../graphql/gen.types";
 import { GetAllAuthorsQueryComponent } from "../../graphql/ops.types";
 import AUTHORS_QUERY from "../../graphql/authors.query";
 
 interface AuthorsControlProps {
   selectError: boolean;
-  handleChange: (value: AuthorFragFragment[]) => void;
+  handleChange: (value: AuthorFrag[]) => void;
   handleBlur: () => void;
   name: string;
-  value: AuthorFragFragment[];
+  value: AuthorFrag[];
 }
 
 export class AuthorsControl extends React.Component<AuthorsControlProps> {
@@ -19,10 +19,10 @@ export class AuthorsControl extends React.Component<AuthorsControlProps> {
     return (
       <GetAllAuthorsQueryComponent query={AUTHORS_QUERY}>
         {({ data }) => {
-          let authors = [] as AuthorFragFragment[];
+          let authors = [] as AuthorFrag[];
 
           if (data && data.authors) {
-            authors = data.authors as AuthorFragFragment[];
+            authors = data.authors as AuthorFrag[];
           }
 
           return (

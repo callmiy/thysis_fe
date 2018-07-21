@@ -19,11 +19,11 @@ import update from "immutability-helper";
 import { Mutation } from "react-apollo";
 import { NavLink } from "react-router-dom";
 
-import { Quotes1Query } from "../../graphql/gen.types";
-import { TagFragFragment } from "../../graphql/gen.types";
-import { SourceFragFragment } from "../../graphql/gen.types";
-import { Sources1Query } from "../../graphql/gen.types";
-import { Source1Query } from "../../graphql/gen.types";
+import { Quotes1 as Quotes1Query } from "../../graphql/gen.types";
+import { TagFrag } from "../../graphql/gen.types";
+import { SourceFrag } from "../../graphql/gen.types";
+import { Sources1 as Sources1Query } from "../../graphql/gen.types";
+import { Source1 as Source1Query } from "../../graphql/gen.types";
 import TagControl from "./form-tag-control.component";
 import SourceControl from "./form-source-control.component";
 import Date from "./date.component";
@@ -419,7 +419,7 @@ export class NewQuote extends React.Component<NewQuoteProps, NewQuoteState> {
     }
   };
 
-  onTagCreated = (tag: TagFragFragment) => {
+  onTagCreated = (tag: TagFrag) => {
     this.setState(s =>
       update(s, {
         initialFormValues: {
@@ -439,7 +439,7 @@ export class NewQuote extends React.Component<NewQuoteProps, NewQuoteState> {
     const error = form.errors[name];
     const booleanError = !!error;
     const touched = form.touched[name];
-    const tags = this.props.tags as TagFragFragment[];
+    const tags = this.props.tags as TagFrag[];
 
     return (
       <div className={classes.tagsField}>
@@ -461,7 +461,7 @@ export class NewQuote extends React.Component<NewQuoteProps, NewQuoteState> {
   };
 
   onTagSelected = ({ form, field }: FieldProps<FormValues>) => (
-    value: TagFragFragment[]
+    value: TagFrag[]
   ) => {
     form.setFieldValue(field.name, value);
     this.setState(s =>
@@ -481,7 +481,7 @@ export class NewQuote extends React.Component<NewQuoteProps, NewQuoteState> {
   };
 
   handleControlChange = (name: string, form: FormikProps<FormValues>) => (
-    val: undefined | VolumeIssueType | SourceFragFragment | PageType | DateType
+    val: undefined | VolumeIssueType | SourceFrag | PageType | DateType
   ) => form.setFieldValue(name, val);
 
   renderQuoteControl = (formProps: FieldProps<FormValues>) => {
@@ -602,13 +602,13 @@ export class NewQuote extends React.Component<NewQuoteProps, NewQuoteState> {
   getSources = () => {
     const { queryResult } = this.state;
     if (!queryResult) {
-      return [] as SourceFragFragment[];
+      return [] as SourceFrag[];
     }
 
     const { data } = queryResult;
 
     if (!data) {
-      return [] as SourceFragFragment[];
+      return [] as SourceFrag[];
     }
 
     if (data.source) {
@@ -656,7 +656,7 @@ export class NewQuote extends React.Component<NewQuoteProps, NewQuoteState> {
     return "";
   };
 
-  validatesource = (source: SourceFragFragment | null) => {
+  validatesource = (source: SourceFrag | null) => {
     const error = "Select a source";
 
     if (!source) {
@@ -676,7 +676,7 @@ export class NewQuote extends React.Component<NewQuoteProps, NewQuoteState> {
     return "";
   };
 
-  validatetags = (tags: TagFragFragment[] | null) => {
+  validatetags = (tags: TagFrag[] | null) => {
     const error = "Select at least one tag";
 
     if (!tags || !tags.length) {

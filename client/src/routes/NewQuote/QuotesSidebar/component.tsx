@@ -10,9 +10,9 @@ import { RouteComponentProps } from "react-router-dom";
 
 import { messageIconStyle } from "./styles";
 import { classes } from "./styles";
-import { Quote1FragFragment } from "../../../graphql/gen.types";
-import { TagFragFragment } from "../../../graphql/gen.types";
-import { SourceFragFragment } from "../../../graphql/gen.types";
+import { Quote1Frag } from "../../../graphql/gen.types";
+import { TagFrag } from "../../../graphql/gen.types";
+import { SourceFrag } from "../../../graphql/gen.types";
 import { Quotes1QueryClientResult } from "../../../graphql/ops.types";
 import { TagsMinimalQueryClientResult } from "../../../graphql/ops.types";
 import { Sources1QueryClientResult } from "../../../graphql/ops.types";
@@ -29,9 +29,7 @@ enum ResourceName {
   SOURCES = "sources"
 }
 
-type Resources = Array<
-  Quote1FragFragment | TagFragFragment | SourceFragFragment
->;
+type Resources = Array<Quote1Frag | TagFrag | SourceFrag>;
 
 interface OwnProps extends RouteComponentProps<{}> {
   className?: string;
@@ -40,9 +38,9 @@ interface OwnProps extends RouteComponentProps<{}> {
 type QuotesSidebarProps = WithApolloClient<OwnProps>;
 
 interface QuotesSidebarState {
-  quotes?: Quote1FragFragment[];
-  tags?: TagFragFragment[];
-  sources?: SourceFragFragment[];
+  quotes?: Quote1Frag[];
+  tags?: TagFrag[];
+  sources?: SourceFrag[];
   loading?: boolean;
   graphQlError?: ApolloError;
 }
@@ -154,7 +152,7 @@ export class QuotesSidebar extends React.Component<
     };
   };
 
-  renderquote = ({ id, text }: Quote1FragFragment) => {
+  renderquote = ({ id, text }: Quote1Frag) => {
     return (
       <List.Item key={id}>
         <List.Content>{text}</List.Content>
@@ -177,7 +175,7 @@ export class QuotesSidebar extends React.Component<
     };
   };
 
-  rendertag = ({ id, text }: TagFragFragment) => {
+  rendertag = ({ id, text }: TagFrag) => {
     return (
       <List.Item
         key={id}
@@ -204,7 +202,7 @@ export class QuotesSidebar extends React.Component<
     };
   };
 
-  rendersource = ({ id, display }: SourceFragFragment) => {
+  rendersource = ({ id, display }: SourceFrag) => {
     return (
       <List.Item
         key={id}
@@ -243,7 +241,7 @@ export class QuotesSidebar extends React.Component<
           }
         }
       })) as Quotes1QueryClientResult;
-      const data = result.data.quotes as Quote1FragFragment[];
+      const data = result.data.quotes as Quote1Frag[];
       this.fetching(ResourceName.QUOTES, data);
     } catch (error) {
       this.fetching(undefined, undefined, error);
@@ -258,7 +256,7 @@ export class QuotesSidebar extends React.Component<
         query: TAGS_QUERY
       })) as TagsMinimalQueryClientResult;
 
-      const data = result.data.tags as TagFragFragment[];
+      const data = result.data.tags as TagFrag[];
       this.fetching(ResourceName.TAGS, data);
     } catch (error) {
       this.fetching(undefined, undefined, error);
@@ -273,7 +271,7 @@ export class QuotesSidebar extends React.Component<
         query: SOURCES_QUERY
       })) as Sources1QueryClientResult;
 
-      const data = result.data.sources as SourceFragFragment[];
+      const data = result.data.sources as SourceFrag[];
       this.fetching(ResourceName.SOURCES, data);
     } catch (error) {
       this.fetching(undefined, undefined, error);
@@ -282,7 +280,7 @@ export class QuotesSidebar extends React.Component<
 
   fetching = (
     resource?: ResourceName,
-    result?: Quote1FragFragment[] | TagFragFragment[] | SourceFragFragment[],
+    result?: Quote1Frag[] | TagFrag[] | SourceFrag[],
     error?: ApolloError
   ) => {
     if (error) {

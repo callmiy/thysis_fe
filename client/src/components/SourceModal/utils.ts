@@ -2,17 +2,17 @@ import { RouteComponentProps } from "react-router-dom";
 import { ApolloError } from "apollo-client";
 import { ChildProps } from "react-apollo";
 
-import { SourceFragFragment } from "../../graphql/gen.types";
+import { SourceFrag } from "../../graphql/gen.types";
 import { CreateSourceInput } from "../../graphql/gen.types";
-import { SourceTypeFragFragment } from "../../graphql/gen.types";
-import { AuthorFragFragment } from "../../graphql/gen.types";
-import { CreateSourceMutation } from "../../graphql/gen.types";
-import { CreateSourceMutationVariables } from "../../graphql/gen.types";
+import { SourceTypeFrag } from "../../graphql/gen.types";
+import { AuthorFrag } from "../../graphql/gen.types";
+import { CreateSource as CreateSourceMutation } from "../../graphql/gen.types";
+import { CreateSourceVariables } from "../../graphql/gen.types";
 import { CreateSourceMutationFn } from "../../graphql/ops.types";
 
 export interface FormValues {
-  sourceType: SourceTypeFragFragment | null;
-  authors: AuthorFragFragment[];
+  sourceType: SourceTypeFrag | null;
+  authors: AuthorFrag[];
   topic: string;
   publication: string;
   url: string;
@@ -30,7 +30,7 @@ export const initialFormValues: FormValues = {
 
 export interface State {
   output: CreateSourceInput;
-  source?: SourceFragFragment;
+  source?: SourceFrag;
   formError?: ApolloError;
 }
 
@@ -52,12 +52,12 @@ export interface OwnProps extends RouteComponentProps<{}> {
 export type Props = ChildProps<
   OwnProps,
   CreateSourceMutation,
-  CreateSourceMutationVariables
+  CreateSourceVariables
 >;
 
 export interface ExistingSourceProps {
   onSourceChanged?: OnSourceChangedCb;
-  source: SourceFragFragment;
+  source: SourceFrag;
 }
 
-export type OnSourceChangedCb = (source: SourceFragFragment) => void;
+export type OnSourceChangedCb = (source: SourceFrag) => void;

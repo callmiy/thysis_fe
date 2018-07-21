@@ -1,9 +1,9 @@
 import { WithFormikConfig } from "formik";
 
-import { SourceFullFragFragment } from "../../../graphql/gen.types";
+import { SourceFullFrag } from "../../../graphql/gen.types";
 import { Props } from "./utils";
 
-export const config: WithFormikConfig<Props, SourceFullFragFragment> = {
+export const config: WithFormikConfig<Props, SourceFullFrag> = {
   handleSubmit: async values => null,
 
   mapPropsToValues: ({ source }) => source,

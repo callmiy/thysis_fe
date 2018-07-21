@@ -6,8 +6,8 @@ import update from "immutability-helper";
 
 import TAG_MUTATION from "../../graphql/tag.mutation";
 import { CreateTagFn, CreateTagUpdateFn } from "../../graphql/ops.types";
-import { TagsMinimalQuery } from "../../graphql/gen.types";
-import { TagFragFragment } from "../../graphql/gen.types";
+import { TagsMinimal as TagsMinimalQuery } from "../../graphql/gen.types";
+import { TagFrag } from "../../graphql/gen.types";
 import TAGS_QUERY from "../../graphql/tags-mini.query";
 import { initalStateNewTagModalFormState } from "./utils";
 import { NewTagModalFormProps } from "./utils";
@@ -197,7 +197,7 @@ export class NewTagModalForm extends React.PureComponent<
       return;
     }
 
-    const tag = createTag.createTag as TagFragFragment;
+    const tag = createTag.createTag as TagFrag;
 
     if (this.props.onTagCreated) {
       this.props.onTagCreated(tag);
@@ -218,7 +218,7 @@ export class NewTagModalForm extends React.PureComponent<
         query: TAGS_QUERY
       }) as TagsMinimalQuery;
 
-      const tags = tagsQuery.tags as TagFragFragment[];
+      const tags = tagsQuery.tags as TagFrag[];
 
       if (tags) {
         cache.writeQuery({

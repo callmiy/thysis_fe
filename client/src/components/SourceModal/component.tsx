@@ -17,10 +17,10 @@ import isEmpty from "lodash/isEmpty";
 
 import SOURCES_QUERY from "../../graphql/sources-1.query";
 import { CreateSourceUpdateFn } from "../../graphql/ops.types";
-import { SourceTypeFragFragment } from "../../graphql/gen.types";
-import { SourceFragFragment } from "../../graphql/gen.types";
-import { Sources1Query } from "../../graphql/gen.types";
-import { AuthorFragFragment } from "../../graphql/gen.types";
+import { SourceTypeFrag } from "../../graphql/gen.types";
+import { SourceFrag } from "../../graphql/gen.types";
+import { Sources1 as Sources1Query } from "../../graphql/gen.types";
+import { AuthorFrag } from "../../graphql/gen.types";
 import SourceTypeControlComponent from "../SourceTypeControl";
 import AuthorsControlComponent from "../AuthorsControl";
 import { makeSourceURL } from "../../utils/route-urls.util";
@@ -356,7 +356,7 @@ export class SourceModal extends React.Component<Props, State> {
   };
 
   handleControlChange = (name: string, form: FormikProps<FormValues>) => (
-    val: undefined | AuthorFragFragment
+    val: undefined | AuthorFrag
   ) => form.setFieldValue(name, val);
 
   writeSourcesToCache: CreateSourceUpdateFn = (
@@ -379,7 +379,7 @@ export class SourceModal extends React.Component<Props, State> {
       query: SOURCES_QUERY
     }) as Sources1Query;
 
-    const sources = sourcesQuery.sources as SourceFragFragment[];
+    const sources = sourcesQuery.sources as SourceFrag[];
 
     cache.writeQuery({
       query: SOURCES_QUERY,
@@ -395,7 +395,7 @@ export class SourceModal extends React.Component<Props, State> {
     this.props.history.push(makeSourceURL(id));
   };
 
-  validatesourceType = (sourceType: SourceTypeFragFragment | null) => {
+  validatesourceType = (sourceType: SourceTypeFrag | null) => {
     if (!sourceType) {
       return "Select a source type";
     }
@@ -413,7 +413,7 @@ export class SourceModal extends React.Component<Props, State> {
     return "";
   };
 
-  validateauthors = (authors: AuthorFragFragment[]) => {
+  validateauthors = (authors: AuthorFrag[]) => {
     if (!authors || !authors.length) {
       return "Select at least one author";
     }

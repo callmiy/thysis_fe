@@ -4,6 +4,7 @@ export const tagFrag = gql`
   fragment TagFrag on Tag {
     id
     text
+    question
   }
 `;
 

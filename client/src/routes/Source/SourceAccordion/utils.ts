@@ -3,8 +3,8 @@ import { WithApolloClient } from "react-apollo";
 import { ApolloError } from "apollo-client";
 import { InjectedFormikProps } from "formik";
 
-import { SourceFullFragFragment } from "../../../graphql/gen.types";
-import { Quote1FragFragment } from "../../../graphql/gen.types";
+import { SourceFullFrag } from "../../../graphql/gen.types";
+import { Quote1Frag } from "../../../graphql/gen.types";
 import { UpdateSourceMutationFn } from "../../../graphql/ops.types";
 
 export enum DetailAction {
@@ -18,7 +18,7 @@ export type AccordionTitleClickCb = (
 ) => void;
 
 export interface OwnProps {
-  source: SourceFullFragFragment;
+  source: SourceFullFrag;
   updateSource: UpdateSourceMutationFn;
 }
 
@@ -26,7 +26,7 @@ export type PropsWithApolloClient = WithApolloClient<OwnProps>;
 
 export type PropsWithFormikProps = InjectedFormikProps<
   PropsWithApolloClient,
-  SourceFullFragFragment
+  SourceFullFrag
 >;
 
 export type Props = PropsWithFormikProps;
@@ -35,7 +35,7 @@ export interface State {
   activeIndex: SourceAccordionIndex;
   detailAction: DetailAction;
   loadingQuotes?: boolean;
-  quotes?: Quote1FragFragment[];
+  quotes?: Quote1Frag[];
   fetchQuotesError?: ApolloError;
   updateSourceError?: ApolloError;
   openUpdateSourceSuccessModal: boolean;

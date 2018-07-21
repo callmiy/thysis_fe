@@ -9,15 +9,15 @@ import { Message } from "semantic-ui-react";
 import { Icon } from "semantic-ui-react";
 import { NavLink } from "react-router-dom";
 
-import { AllMatchingTextsQuery } from "../../graphql/gen.types";
+import { AllMatchingTexts as AllMatchingTextsQuery } from "../../graphql/gen.types";
 import { SearchQuotesState } from "./utils";
 import { SearchQuotesProps } from "./utils";
 import ALL_MATCHING_TEXT_QUERY from "../../graphql/text-search.query";
 import { classes } from "./styles";
 import ErrorBoundary from "../../containers/error-boundary.container";
 import { SemanticOnInputChangeFunc } from "./utils";
-import { TextSearchResultFragFragment } from "../../graphql/gen.types";
-import { TextSearchRowFragFragment } from "../../graphql/gen.types";
+import { TextSearchResultFrag } from "../../graphql/gen.types";
+import { TextSearchRowFrag } from "../../graphql/gen.types";
 import { makeSourceURL } from "../../utils/route-urls.util";
 import { makeTagURL } from "../../utils/route-urls.util";
 
@@ -179,7 +179,7 @@ export class SearchQuotesComponent extends React.Component<
     authors,
     sources,
     sourceTypes
-  }: TextSearchResultFragFragment) => {
+  }: TextSearchResultFrag) => {
     return authors || quotes || sources || sourceTypes || tags ? (
       <div className={classes.resultContainer}>
         {[quotes, tags, authors, sources, sourceTypes].map(this.renderCategory)}
@@ -203,7 +203,7 @@ export class SearchQuotesComponent extends React.Component<
     );
   };
 
-  renderCategory = (data: TextSearchRowFragFragment[]) => {
+  renderCategory = (data: TextSearchRowFrag[]) => {
     if (!data) {
       return;
     }
@@ -223,7 +223,7 @@ export class SearchQuotesComponent extends React.Component<
     );
   };
 
-  renderRow = ({ text, tid, column }: TextSearchRowFragFragment) => {
+  renderRow = ({ text, tid, column }: TextSearchRowFrag) => {
     return (
       <List.Item key={tid + column} className={classes.resultRowItem}>
         <List.Content>{text}</List.Content>
@@ -231,7 +231,7 @@ export class SearchQuotesComponent extends React.Component<
     );
   };
 
-  renderRowSource = ({ text, tid, column }: TextSearchRowFragFragment) => {
+  renderRowSource = ({ text, tid, column }: TextSearchRowFrag) => {
     return (
       <List.Item
         key={tid + column}
@@ -244,7 +244,7 @@ export class SearchQuotesComponent extends React.Component<
     );
   };
 
-  renderRowTag = ({ text, tid, column }: TextSearchRowFragFragment) => {
+  renderRowTag = ({ text, tid, column }: TextSearchRowFrag) => {
     return (
       <List.Item
         key={tid + column}

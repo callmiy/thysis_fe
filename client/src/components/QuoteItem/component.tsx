@@ -3,7 +3,7 @@ import jss from "jss";
 import preset from "jss-preset-default";
 import { List } from "semantic-ui-react";
 
-import { QuoteFromtagFragFragment } from "../../graphql/gen.types";
+import { QuoteFromtagFrag } from "../../graphql/gen.types";
 import { SimpleCss } from "../../constants";
 
 jss.setup(preset());
@@ -34,7 +34,7 @@ const styles = {
 
 const { classes } = jss.createStyleSheet(styles).attach();
 
-type Props = QuoteFromtagFragFragment;
+type Props = QuoteFromtagFrag;
 
 export class QuoteItem extends React.PureComponent<Props> {
   render() {
@@ -55,6 +55,6 @@ export class QuoteItem extends React.PureComponent<Props> {
   }
 }
 
-export default (quote: QuoteFromtagFragFragment, index: number) => (
+export default (quote: QuoteFromtagFrag, index: number) => (
   <QuoteItem key={quote.id} {...quote} />
 );

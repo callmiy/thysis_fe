@@ -1,15 +1,15 @@
 import Select from "react-select";
 import * as React from "react";
 
-import { TagFragFragment } from "../../graphql/gen.types";
+import { TagFrag } from "../../graphql/gen.types";
 
 interface TagControlProps {
-  tags: TagFragFragment[];
+  tags: TagFrag[];
   selectError: boolean;
-  handleChange: (value: TagFragFragment[]) => void;
+  handleChange: (value: TagFrag[]) => void;
   handleBlur: () => void;
   name: string;
-  value: TagFragFragment;
+  value: TagFrag;
 }
 
 export default class TagControl extends React.Component<TagControlProps> {

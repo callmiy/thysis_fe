@@ -4,7 +4,7 @@ import { Loader } from "semantic-ui-react";
 
 import { TagsMinimalQueryComponent } from "../../graphql/ops.types";
 import { TagsMinimalQueryResult } from "../../graphql/ops.types";
-import { TagFragFragment } from "../../graphql/gen.types";
+import { TagFrag } from "../../graphql/gen.types";
 import TAGS_QUERY from "../../graphql/tags-mini.query";
 import { makeTagURL } from "../../utils/route-urls.util";
 import { styles } from "../SourcesModal/styles";
@@ -76,7 +76,7 @@ export class TagsModal extends React.PureComponent<TagListModalProps> {
     return undefined;
   };
 
-  renderTag = ({ id, text }: TagFragFragment) => {
+  renderTag = ({ id, text }: TagFrag) => {
     return (
       <List.Item
         key={id}
