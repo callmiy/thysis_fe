@@ -7,7 +7,7 @@ defmodule GasWeb.TagSchemaTest do
 
   describe "query" do
     test "get tag by id" do
-      %Tag{id: id} = make_tag()
+      %Tag{id: id} = insert(:tag)
       id = Integer.to_string(id)
 
       assert {:ok,
@@ -16,6 +16,7 @@ defmodule GasWeb.TagSchemaTest do
                   "tag" => %{
                     "id" => ^id,
                     "text" => _,
+                    "question" => _,
                     "insertedAt" => _,
                     "updatedAt" => _
                   }
@@ -33,7 +34,7 @@ defmodule GasWeb.TagSchemaTest do
     end
 
     test "get tag by text" do
-      %Tag{text: text} = make_tag()
+      %Tag{text: text} = insert(:tag)
 
       assert {:ok,
               %{
@@ -58,7 +59,7 @@ defmodule GasWeb.TagSchemaTest do
     end
 
     test "get tag by id and text" do
-      %Tag{id: id, text: text} = make_tag()
+      %Tag{id: id, text: text} = insert(:tag)
       id = Integer.to_string(id)
 
       assert {:ok,
@@ -86,10 +87,10 @@ defmodule GasWeb.TagSchemaTest do
 
     test "get all tags succeeds" do
       # first tag
-      make_tag()
+      insert(:tag)
 
       # 2nd tag
-      %{text: text, id: id} = make_tag()
+      %{text: text, id: id} = insert(:tag)
       id = inspect(id)
 
       assert {:ok,

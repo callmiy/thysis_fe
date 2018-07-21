@@ -10,6 +10,7 @@ defmodule Gas.Factory do
 
   @start_date ~D[1998-01-01]
   @end_date ~D[2018-12-31]
+  @nil_other [nil, 1]
 
   def source_type_factory do
     %SourceType{
@@ -19,17 +20,17 @@ defmodule Gas.Factory do
 
   def quote_factory do
     page_start =
-      Enum.random([
-        Faker.random_between(1, 100),
-        nil
-      ])
+      case Enum.random(@nil_other) do
+        nil -> nil
+        _ -> Faker.random_between(1, 100)
+      end
 
     page_end =
       if page_start do
-        Enum.random([
-          page_start + Faker.random_between(2, 100),
-          nil
-        ])
+        case Enum.random(@nil_other) do
+          nil -> nil
+          _ -> page_start + Faker.random_between(2, 100)
+        end
       else
         nil
       end
@@ -47,8 +48,15 @@ defmodule Gas.Factory do
   end
 
   def tag_factory do
+    question =
+      case Enum.random(@nil_other) do
+        nil -> nil
+        1 -> Faker.String.base64(Faker.random_between(5, 15))
+      end
+
     %Tag{
-      text: Faker.String.base64(Faker.random_between(5, 15))
+      text: Faker.String.base64(Faker.random_between(5, 15)),
+      question: question
     }
   end
 

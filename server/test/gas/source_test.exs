@@ -32,20 +32,20 @@ defmodule Gas.SourceTest do
            end)
   end
 
-  # @tag :norun
+  # @tag :skip
   test "list/1 returns all sources" do
     source = make_source()
     [list] = Api.list(:authors)
     assert_source_equal(source, list)
   end
 
-  # @tag :norun
+  # @tag :skip
   test "get/1 returns the source with given id" do
     source = make_source()
     assert_source_equal(Api.get(source.id), source)
   end
 
-  # @tag :norun
+  # @tag :skip
   test "create_/1 with valid data creates a source" do
     %{topic: topic} =
       attrs =
@@ -63,14 +63,14 @@ defmodule Gas.SourceTest do
     assert source.topic == topic
   end
 
-  # @tag :norun
+  # @tag :skip
   test "create_/1 with no authors error" do
     assert {:error, :source, %Ecto.Changeset{errors: [authors: _]}, %{}} =
              Factory.params_with_assocs()
              |> Api.create_()
   end
 
-  # @tag :norun
+  # @tag :skip
   test "create_/1 invalid author attributes error" do
     assert {
              :error,
@@ -92,20 +92,20 @@ defmodule Gas.SourceTest do
              |> Api.create_()
   end
 
-  # @tag :norun
+  # @tag :skip
   test "create_/1 with invalid data returns error changeset" do
     assert {:error, :source, %Ecto.Changeset{}, %{}} =
              Factory.params_with_assocs(:source, topic: nil) |> Api.create_()
   end
 
-  # @tag :norun
+  # @tag :skip
   test "create_/1 with no source type returns error changeset" do
     assert {:error, :source, %Ecto.Changeset{}, %{}} =
              Factory.params_for(:with_authors, source_type: nil)
              |> Api.create_()
   end
 
-  # @tag :norun
+  # @tag :skip
   test "update_/2 with valid data updates the source" do
     source = make_source()
     topic = "sss73bsbddj"
@@ -113,7 +113,7 @@ defmodule Gas.SourceTest do
     assert {:ok, %{source: %Source{topic: ^topic}}} = Api.update_(source, %{topic: topic})
   end
 
-  # @tag :norun
+  # @tag :skip
   test "update_/2 with deleted authors succeed" do
     author_ids = insert_list(3, :author) |> Enum.map(& &1.id)
     taken = Enum.take(author_ids, 2)
@@ -132,7 +132,7 @@ defmodule Gas.SourceTest do
     refute Enum.all?(taken, &Enum.member?(authors, &1))
   end
 
-  # @tag :norun
+  # @tag :skip
   test "update_/2 with inserted authors succeed" do
     author_id = insert(:author).id
     %{authors: source_authors} = source = make_source()
@@ -150,7 +150,7 @@ defmodule Gas.SourceTest do
     refute Enum.member?(source_authors, author_id)
   end
 
-  # @tag :norun
+  # @tag :skip
   test "update_/2 with invalid data returns error changeset" do
     source = make_source()
 
@@ -164,14 +164,14 @@ defmodule Gas.SourceTest do
     assert_source_equal(source, Api.get(source.id))
   end
 
-  # @tag :norun
+  # @tag :skip
   test "delete_/1 deletes the source" do
     source = make_source()
     assert {:ok, %Source{}} = Api.delete_(source)
     assert_raise Ecto.NoResultsError, fn -> Api.get!(source.id) end
   end
 
-  # @tag :norun
+  # @tag :skip
   test "change_/1 returns a source changeset" do
     assert %Ecto.Changeset{} = make_source() |> Api.change_()
   end

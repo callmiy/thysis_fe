@@ -6,6 +6,7 @@ defmodule Gas.Tag do
 
   schema "tags" do
     field(:text, :string)
+    field(:question, :string)
     many_to_many(:quotes, Quote, join_through: "quote_tags")
 
     timestamps()
@@ -14,7 +15,7 @@ defmodule Gas.Tag do
   @doc false
   def changeset(tag, attrs \\ %{}) do
     tag
-    |> cast(attrs, [:text])
+    |> cast(attrs, [:text, :question])
     |> validate_required([:text])
     |> unique_constraint(:text, name: :tags_text)
   end

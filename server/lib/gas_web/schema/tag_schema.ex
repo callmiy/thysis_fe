@@ -12,6 +12,7 @@ defmodule GasWeb.TagSchema do
   object :tag do
     field(:id, non_null(:id))
     field(:text, non_null(:string))
+    field(:question, :string)
     field(:inserted_at, non_null(:iso_datetime))
     field(:updated_at, non_null(:iso_datetime))
     field(:quotes, list_of(:quote), resolve: assoc(:quotes))

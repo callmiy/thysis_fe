@@ -3,7 +3,7 @@ defmodule Gas.TagsTest do
 
   alias Gas.Tag
   alias Gas.TagApi, as: Api
-  alias Gas.QuoteTagApi, as: TagApi
+  alias Gas.QuoteTagApi
 
   test "list/0 returns all tags" do
     tag = make_tag()
@@ -33,7 +33,7 @@ defmodule Gas.TagsTest do
     assert tag.text == "yeah"
   end
 
-  @tag :norun
+  @tag :skip
   test "update_/2 with invalid data returns error changeset" do
     tag = make_tag()
     invalid_attrs = params_for(:tag, text: nil)
@@ -57,7 +57,7 @@ defmodule Gas.TagsTest do
     %Tag{id: tag_id} = tag = make_tag()
 
     insert_list(5, :quote)
-    |> Enum.each(&TagApi.create_(%{quote_id: &1.id, tag_id: tag_id}))
+    |> Enum.each(&QuoteTagApi.create_(%{quote_id: &1.id, tag_id: tag_id}))
 
     assert %Tag{quotes: quotes} = Repo.preload(tag, [:quotes])
     assert length(quotes) == 5
@@ -67,7 +67,7 @@ defmodule Gas.TagsTest do
     qt = insert(:quote_tag)
     quote_tag_attrs = %{tag_id: qt.tag_id, quote_id: qt.quote_id}
 
-    assert {:error, %Ecto.Changeset{}} = TagApi.create_(quote_tag_attrs)
+    assert {:error, %Ecto.Changeset{}} = QuoteTagApi.create_(quote_tag_attrs)
     assert(%Tag{quotes: quotes} = Repo.preload(qt.tag, [:quotes]))
     assert length(quotes) == 1
   end
@@ -75,7 +75,7 @@ defmodule Gas.TagsTest do
   test "gets tag by id and text returns Tag" do
     %Tag{id: tag_id, text: text} = make_tag()
 
-    assert %Tag{} = Api.get_tag_by(%{id: tag_id, text: text})
+    assert %Tag{} = %{id: tag_id, text: text} |> Api.get_tag_by()
   end
 
   test "gets tag by id and text returns nil for wrong text" do
@@ -84,7 +84,7 @@ defmodule Gas.TagsTest do
     assert nil == Api.get_tag_by(%{id: tag_id, text: "lovely text1"})
   end
 
-  test "gets tag by id and text returns nil for id" do
+  test "get tag by id and text returns nil for invalid id" do
     %Tag{id: tag_id, text: text} = make_tag()
 
     assert nil == Api.get_tag_by(%{id: tag_id + 1, text: text})
@@ -95,8 +95,16 @@ defmodule Gas.TagsTest do
     insert(:tag, text: text)
 
     assert {:error, %Ecto.Changeset{}} =
-             Api.create_(%{
-               text: String.upcase(text)
-             })
+             %{text: String.upcase(text)}
+             |> Api.create_()
+  end
+
+  defp make_tag(attrs \\ %{}) do
+    {:ok, tag} =
+      :tag
+      |> params_for(attrs)
+      |> Api.create_()
+
+    tag
   end
 end

@@ -6,7 +6,7 @@ defmodule Gas.QuoteSchemaTest do
   alias GasWeb.QuoteQueries, as: Queries
   alias Gas.Factory.Source, as: SourceFactory
 
-  # @tag :norun
+  # @tag :skip
   describe "mutation" do
     test "create quote succeeds" do
       %{
@@ -44,9 +44,9 @@ defmodule Gas.QuoteSchemaTest do
     end
   end
 
-  # @tag :norun
+  # @tag :skip
   describe "query" do
-    # @tag :norun
+    # @tag :skip
     test "get all quotes with no variables succeeds" do
       insert_list(3, :quote)
 
@@ -64,7 +64,7 @@ defmodule Gas.QuoteSchemaTest do
       assert length(quotes) == 3
     end
 
-    # @tag :norun
+    # @tag :skip
     test "get quotes by source id succeeds" do
       [source1, source2] = SourceFactory.insert_list(2)
       %{id: source1_quote_id} = insert(:quote, source: source1)
@@ -129,7 +129,7 @@ defmodule Gas.QuoteSchemaTest do
     end
   end
 
-  # @tag :norun
+  # @tag :skip
   describe "full text search" do
     test "full text search across source_types table" do
       search_text = Faker.String.base64(4)

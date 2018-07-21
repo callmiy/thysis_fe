@@ -4,7 +4,7 @@ defmodule Gas.Factory.Source do
   alias Gas.Factory
   alias Gas.Source
   alias Gas.SourceApi
-  alias ExMachina.Ecto, as: ExEcto
+  alias ExMachina.Ecto, as: ExMachinaEcto
 
   @name __MODULE__
 
@@ -65,7 +65,7 @@ defmodule Gas.Factory.Source do
 
   def params(attrs \\ %{}),
     do:
-      ExEcto.params_for(
+      ExMachinaEcto.params_for(
         @name,
         :source,
         attrs
