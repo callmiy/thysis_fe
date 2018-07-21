@@ -6,9 +6,9 @@ defmodule GasWeb.SourceSchemaTest do
   alias Gas.MapHelpers
   alias Gas.SourceApi
 
-  # @tag :norun
+  # @tag :skip
   describe "query" do
-    # @tag :norun
+    # @tag :skip
     test "get all sources succeeds" do
       # first source
       SourceFactory.insert()
@@ -45,7 +45,7 @@ defmodule GasWeb.SourceSchemaTest do
       assert_display(authors_, display)
     end
 
-    # @tag :norun
+    # @tag :skip
     test "get one source succeeds" do
       %Source{
         id: id,
@@ -84,9 +84,9 @@ defmodule GasWeb.SourceSchemaTest do
     end
   end
 
-  # @tag :norun
+  # @tag :skip
   describe "create mutatation" do
-    # @tag :norun
+    # @tag :skip
     test "create source with author names only" do
       %{id: source_type_id, name: name} = source_type = insert(:source_type)
 
@@ -131,7 +131,7 @@ defmodule GasWeb.SourceSchemaTest do
       assert_authors(authors, authors_)
     end
 
-    # @tag :norun
+    # @tag :skip
     test "create source without author names or IDs errors" do
       {_, source} =
         SourceFactory.params_with_assocs()
@@ -160,7 +160,7 @@ defmodule GasWeb.SourceSchemaTest do
                )
     end
 
-    # @tag :norun
+    # @tag :skip
     test "create source does not insert duplicate author IDs" do
       id = insert(:author).id
 
@@ -198,7 +198,7 @@ defmodule GasWeb.SourceSchemaTest do
       assert length(authors) == 4
     end
 
-    # @tag :norun
+    # @tag :skip
     test "create source with invalid author IDs errors" do
       id = insert(:author).id
 
@@ -231,7 +231,7 @@ defmodule GasWeb.SourceSchemaTest do
     end
   end
 
-  # @tag :norun
+  # @tag :skip
   describe "update mutatation" do
     test "update source with author ids succeeds" do
       %{authors: authors, id: id} = SourceFactory.insert()
@@ -305,12 +305,14 @@ defmodule GasWeb.SourceSchemaTest do
       assert Enum.all?(author_attrs, &Enum.member?(authors_graphQl, &1["name"]))
     end
 
-    test "update source without author attrs and ids succeeds" do
+    test "update source without author attrs and author ids succeeds" do
       %{authors: authors, id: id} = source = SourceFactory.insert()
       id = Integer.to_string(id)
 
       attrs =
         SourceFactory.params()
+        |> Enum.reject(fn {k, v} -> Map.get(source, k) == v end)
+        |> Enum.into(%{})
         |> MapHelpers.stringify_keys()
 
       variables = %{
