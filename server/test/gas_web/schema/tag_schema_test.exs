@@ -3,7 +3,7 @@ defmodule GasWeb.TagSchemaTest do
   alias GasWeb.Schema
   alias GasWeb.TagQueries, as: Queries
   alias Gas.Tag
-  # alias Gas.MapHelpers
+  alias Gas.MapHelpers
 
   describe "query" do
     test "get tag by id" do
@@ -107,14 +107,16 @@ defmodule GasWeb.TagSchemaTest do
 
   describe "mutation" do
     test "create tag succeeds" do
-      text = "Awesome tag"
+      %{text: text} = attrs = params_for(:tag)
+      question = Map.get(attrs, :question)
 
       assert {:ok,
               %{
                 data: %{
                   "createTag" => %{
                     "id" => _,
-                    "text" => ^text
+                    "text" => ^text,
+                    "question" => ^question
                   }
                 }
               }} =
@@ -122,9 +124,7 @@ defmodule GasWeb.TagSchemaTest do
                  Queries.mutation(:tag),
                  Schema,
                  variables: %{
-                   "tag" => %{
-                     "text" => text
-                   }
+                   "tag" => MapHelpers.stringify_keys(attrs)
                  }
                )
     end

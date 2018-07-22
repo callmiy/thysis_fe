@@ -27,6 +27,7 @@ defmodule GasWeb.TagSchema do
   @desc "Input for creating a tag"
   input_object :create_tag_input do
     field(:text, non_null(:string))
+    field(:question, :string)
   end
 
   @desc "Queries allowed on the Tag object"
