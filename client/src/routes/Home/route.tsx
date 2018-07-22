@@ -8,7 +8,7 @@ import update from "immutability-helper";
 import Header from "../../components/header.component";
 import { makeNewQuoteURL } from "../../utils/route-urls.util";
 import { SEARCH_QUOTES_URL } from "../../utils/route-urls.util";
-import TagsModal from "../../components/TagListModal";
+import TagsModal from "../../components/TagsModal";
 import SourcesModal from "../../components/SourcesModal";
 import NewTagModalForm from "../../components/NewTagModalForm";
 import SourceModal from "../../components/SourceModal";

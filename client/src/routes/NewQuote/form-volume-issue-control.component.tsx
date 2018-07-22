@@ -45,7 +45,7 @@ interface VolumeIssueProps {
   onBlur?: () => void;
 }
 
-export default class VolumeIssue extends React.PureComponent<
+export default class VolumeIssue extends React.Component<
   VolumeIssueProps,
   State
 > {

@@ -13,7 +13,7 @@ import { initalStateNewTagModalFormState } from "./utils";
 import { NewAuthorModalProps } from "./utils";
 import { NewAuthorModalState } from "./utils";
 
-export class NewAuthorModal extends React.PureComponent<
+export class NewAuthorModal extends React.Component<
   NewAuthorModalProps,
   NewAuthorModalState
 > {

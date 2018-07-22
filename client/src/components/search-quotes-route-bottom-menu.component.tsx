@@ -4,7 +4,7 @@ import update from "immutability-helper";
 import { NavLink } from "react-router-dom";
 
 import SourceModal from "./SourceModal";
-import TagsModal from "./TagListModal";
+import TagsModal from "./TagsModal";
 import { MenuItemNames } from "../constants";
 import { makeNewQuoteURL } from "../utils/route-urls.util";
 import { ROOT_URL } from "../utils/route-urls.util";

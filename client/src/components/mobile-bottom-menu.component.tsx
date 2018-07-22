@@ -6,7 +6,7 @@ import { withRouter, RouteComponentProps } from "react-router-dom";
 
 import NewTagModalForm from "./NewTagModalForm";
 import SourceModal from "./SourceModal";
-import TagsModal from "./TagListModal";
+import TagsModal from "./TagsModal";
 import SourcesModal from "./SourcesModal";
 
 // import { SimpleCss } from "../constants";

@@ -36,7 +36,7 @@ const { classes } = jss.createStyleSheet(styles).attach();
 
 type Props = QuoteFromtagFrag;
 
-export class QuoteItem extends React.PureComponent<Props> {
+export class QuoteItem extends React.Component<Props> {
   render() {
     const { id, text, date, source } = this.props;
     return (

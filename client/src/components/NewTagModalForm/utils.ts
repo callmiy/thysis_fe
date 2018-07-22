@@ -5,21 +5,22 @@ import { TagFrag } from "../../graphql/gen.types";
 
 export type TagModalCreatedCb = (tag: TagFrag) => void;
 
-export interface NewTagModalFormProps {
+export interface Props {
   open: boolean;
   dismissModal: () => void;
   style: React.CSSProperties;
   onTagCreated?: TagModalCreatedCb;
 }
 
-export interface NewTagModalFormState {
+export interface State {
   text: string;
+  question?: string;
   formError?: ApolloError;
   submitting: boolean;
   submitSuccess: boolean;
 }
 
-export const initalStateNewTagModalFormState: NewTagModalFormState = {
+export const initalState: State = {
   text: "",
   formError: undefined,
   submitting: false,

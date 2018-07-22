@@ -51,7 +51,7 @@ interface DateProps {
   onBlur?: () => void;
 }
 
-export default class Date extends React.PureComponent<DateProps, State> {
+export default class Date extends React.Component<DateProps, State> {
   static getDerivedStateFromProps(nextProps: DateProps, nextState: State) {
     // The value was reset by user of component so we sync the state
     if (!nextProps.value) {

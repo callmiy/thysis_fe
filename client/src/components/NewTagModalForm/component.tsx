@@ -1,5 +1,11 @@
 import React from "react";
-import { Icon, Button, Modal, Input, Header, Message } from "semantic-ui-react";
+import { Form } from "semantic-ui-react";
+import { Icon } from "semantic-ui-react";
+import { Button } from "semantic-ui-react";
+import { Modal } from "semantic-ui-react";
+import { Input } from "semantic-ui-react";
+import { Header } from "semantic-ui-react";
+import { Message } from "semantic-ui-react";
 
 import { Mutation } from "react-apollo";
 import update from "immutability-helper";
@@ -9,19 +15,16 @@ import { CreateTagFn, CreateTagUpdateFn } from "../../graphql/ops.types";
 import { TagsMinimal as TagsMinimalQuery } from "../../graphql/gen.types";
 import { TagFrag } from "../../graphql/gen.types";
 import TAGS_QUERY from "../../graphql/tags-mini.query";
-import { initalStateNewTagModalFormState } from "./utils";
-import { NewTagModalFormProps } from "./utils";
-import { NewTagModalFormState } from "./utils";
+import { initalState } from "./utils";
+import { Props } from "./utils";
+import { State } from "./utils";
 
-export class NewTagModalForm extends React.PureComponent<
-  NewTagModalFormProps,
-  NewTagModalFormState
-> {
-  state = initalStateNewTagModalFormState;
+export class NewTagModalForm extends React.Component<Props, State> {
+  state = initalState;
 
   render() {
     const { open, style } = this.props;
-    const { text, formError, submitting, submitSuccess } = this.state;
+    const { text, question, formError, submitting, submitSuccess } = this.state;
 
     return (
       <Modal
@@ -37,14 +40,29 @@ export class NewTagModalForm extends React.PureComponent<
         <Modal.Content>
           {this.renderErrorOrSuccess()}
 
-          <Input
-            name="tag"
-            placeholder="Tag text"
-            fluid={true}
-            onChange={this.handleChange}
-            onFocus={this.handleFocus}
-            error={!!formError}
-          />
+          <Form>
+            <Form.Field
+              control={Input}
+              name="tag"
+              placeholder="Tag text"
+              label="Tag text"
+              fluid={true}
+              onChange={this.handleChange("text")}
+              onFocus={this.handleFocus}
+              error={!!formError}
+            />
+
+            <Form.Field
+              control={Input}
+              name="question"
+              placeholder="Question"
+              label="Question"
+              fluid={true}
+              onChange={this.handleChange("question")}
+              onFocus={this.handleFocus}
+              error={!!formError}
+            />
+          </Form>
 
           <div
             style={{
@@ -65,7 +83,7 @@ export class NewTagModalForm extends React.PureComponent<
 
             <Mutation
               mutation={TAG_MUTATION}
-              variables={{ tag: { text } }}
+              variables={{ tag: { text, question } }}
               update={this.writeTagsToCache}
             >
               {createTag => {
@@ -143,11 +161,11 @@ export class NewTagModalForm extends React.PureComponent<
       })
     );
 
-  handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  handleChange = (name: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
     const { target } = e;
     this.setState(s =>
       update(s, {
-        text: {
+        [name]: {
           $set: target.value
         }
       })

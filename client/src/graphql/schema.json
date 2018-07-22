@@ -334,6 +334,16 @@
           "inputFields": [
             {
               "type": {
+                "ofType": null,
+                "name": "String",
+                "kind": "SCALAR"
+              },
+              "name": "question",
+              "description": null,
+              "defaultValue": null
+            },
+            {
+              "type": {
                 "ofType": {
                   "ofType": null,
                   "name": "String",

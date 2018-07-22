@@ -683,11 +683,12 @@ export interface GetTagInput {
 
 // Input for creating a tag
 export interface CreateTagInput {
+  question?: string | null;
   text: string;
 }
 
 // Input for full text search on quotes, their sources, tags and source
-//   types
+// types;
 export interface QuoteFullSearchInput {
   text: string;
 }

@@ -10,7 +10,7 @@ import { modalStyle } from "./styles";
 import { classes } from "./styles";
 import { Props } from "./utils";
 
-export class SourcesModal extends React.PureComponent<Props> {
+export class SourcesModal extends React.Component<Props> {
   render() {
     return (
       <Modal

@@ -67,17 +67,29 @@ export class TagDetail extends React.Component<TagDetailProps> {
       return undefined;
     }
 
-    const tag = data.tag;
+    const { text, question, quotes } = data.tag;
 
     return (
       <div className={`${classes.tagDetailRoot}`}>
         <Header style={styles.tagText} as="h3" dividing={true}>
-          {tag.text}
+          {text}
+          {question && (
+            <div
+              style={{
+                paddingLeft: "10%",
+                fontStyle: "italic",
+                fontWeight: 100,
+                fontSize: "0.8em"
+              }}
+            >
+              {question}
+            </div>
+          )}
         </Header>
 
         <div className={`${classes.tagDetailMain}`}>
           <List divided={true} relaxed={true}>
-            {tag.quotes && tag.quotes.map(renderQuote)}
+            {quotes && quotes.map(renderQuote)}
           </List>
         </div>
       </div>

@@ -46,7 +46,7 @@ interface PageProps {
   onBlur?: () => void;
 }
 
-export default class Page extends React.PureComponent<PageProps, State> {
+export default class Page extends React.Component<PageProps, State> {
   static getDerivedStateFromProps(next: PageProps, currentState: State) {
     // The value was reset by user of component so we sync the state
     if (!next.value) {

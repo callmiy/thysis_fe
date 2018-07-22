@@ -5,7 +5,7 @@ import { NavLink } from "react-router-dom";
 
 import NewTagModalForm from "../../components/NewTagModalForm";
 import SourceModal from "../../components/SourceModal";
-import TagsModal from "../../components/TagListModal";
+import TagsModal from "../../components/TagsModal";
 import { MenuItemNames } from "../../constants";
 import { ROOT_URL } from "../../utils/route-urls.util";
 

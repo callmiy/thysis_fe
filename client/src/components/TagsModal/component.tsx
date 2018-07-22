@@ -10,9 +10,9 @@ import { makeTagURL } from "../../utils/route-urls.util";
 import { styles } from "../SourcesModal/styles";
 import { modalStyle } from "../SourcesModal/styles";
 import { classes } from "../SourcesModal/styles";
-import { TagListModalProps } from "./utils";
+import { Props } from "./utils";
 
-export class TagsModal extends React.PureComponent<TagListModalProps> {
+export class TagsModal extends React.Component<Props> {
   render() {
     const { open } = this.props;
 
@@ -76,7 +76,7 @@ export class TagsModal extends React.PureComponent<TagListModalProps> {
     return undefined;
   };
 
-  renderTag = ({ id, text }: TagFrag) => {
+  renderTag = ({ id, text, question }: TagFrag) => {
     return (
       <List.Item
         key={id}
@@ -84,7 +84,19 @@ export class TagsModal extends React.PureComponent<TagListModalProps> {
         id={id}
         onClick={this.navigateTo(id)}
       >
-        <List.Content>{text}</List.Content>
+        <List.Content>
+          <div>{text}</div>
+          {question && (
+            <div
+              style={{
+                paddingLeft: "10%",
+                fontStyle: "italic"
+              }}
+            >
+              {question}
+            </div>
+          )}
+        </List.Content>
       </List.Item>
     );
   };
