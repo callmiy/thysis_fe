@@ -17,18 +17,22 @@ defmodule GasWeb.HomePageFeatureTest do
 
   # @tag :no_headless
   test "home page" do
-    # Given there are 2 tags in the database
-    tags =
+    db_data =
       Task.async(fn ->
-        insert_list(2, :tag)
-        |> Enum.map(&Regex.compile!(&1.text))
-      end)
+        # Given there are 2 tags in the database
+        tags =
+          insert_list(2, :tag)
+          |> Enum.map(&Regex.compile!(&1.text))
 
-    # and there are 2 sources in the database
-    sources =
-      Task.async(fn ->
-        SourceFactory.insert_list(2)
-        |> Enum.map(&Regex.compile!(SourceApi.display(&1)))
+        # and there are 2 sources in the database
+        sources =
+          SourceFactory.insert_list(2)
+          |> Enum.map(&Regex.compile!(SourceApi.display(&1)))
+
+        %{
+          tags: tags,
+          sources: sources
+        }
       end)
 
     # when we visit the home page
@@ -69,7 +73,7 @@ defmodule GasWeb.HomePageFeatureTest do
     # tags become visible on page
     assert element?(:id, @tags_modal_id)
 
-    tags = Task.await(tags)
+    %{tags: tags, sources: sources} = Task.await(db_data)
 
     assert await(
              true,
@@ -90,8 +94,6 @@ defmodule GasWeb.HomePageFeatureTest do
 
     # sources become visible on page
     assert element?(:id, @sources_modal_id)
-
-    sources = Task.await(sources)
 
     assert await(
              true,
