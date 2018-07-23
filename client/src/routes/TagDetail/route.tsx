@@ -38,19 +38,33 @@ export class TagDetail extends React.Component<TagDetailProps> {
           query={TAG_QUOTE_QUERY}
           variables={{ tag: { id } }}
         >
-          {({ data, loading }) => {
+          {({ data, loading, error }) => {
+            if (error) {
+              return (
+                <div
+                  className={`${classes.tagDetailMain} ${
+                    classes.errorContainer
+                  }`}
+                >
+                  {error.message}
+                </div>
+              );
+            }
+
+            if (loading) {
+              return (
+                <Dimmer
+                  className={`${classes.tagDetailRoot}`}
+                  active={true}
+                  inverted={true}
+                >
+                  <Loader size="mini">Loading</Loader>
+                </Dimmer>
+              );
+            }
+
             return (
               <div className={`${classes.tagDetailRoot}`}>
-                {(loading || !data) && (
-                  <Dimmer
-                    className={`${classes.tagDetailRoot}`}
-                    active={true}
-                    inverted={true}
-                  >
-                    <Loader size="mini">Loading</Loader>
-                  </Dimmer>
-                )}
-
                 {this.renderMain(data)}
               </div>
             );
