@@ -12,7 +12,7 @@ defmodule Gas.Author do
   end
 
   @doc false
-  def changeset(author, attrs) do
+  def changeset(author, attrs \\ %{}) do
     author
     |> cast(attrs, [:name])
     |> validate_required([:name])
