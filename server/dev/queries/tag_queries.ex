@@ -1,43 +1,39 @@
 defmodule GasWeb.TagQueries do
-  @all_fields_fragment """
-  fragment TAG_FIELDS_FRAGMENT on Tag {
-    id
-    text
-    question
-    insertedAt
-    updatedAt
-  }
-  """
-
   def query(:tag) do
+    {frag_name, frag} = all_fields_fragment()
+
     """
     query Tag($tag: GetTagInput!) {
       tag(tag: $tag) {
-        ...TAG_FIELDS_FRAGMENT
+        ...#{frag_name}
       }
     }
 
-    #{@all_fields_fragment}
+    #{frag}
     """
   end
 
   def query(:tags) do
+    {frag_name, frag} = all_fields_fragment()
+
     """
     query Tags {
       tags {
-        ...TAG_FIELDS_FRAGMENT
+        ...#{frag_name}
       }
     }
 
-    #{@all_fields_fragment}
+    #{frag}
     """
   end
 
   def mutation(:tag) do
+    {frag_name, frag} = all_fields_fragment()
+
     """
     mutation CreateTag($tag: CreateTagInput!) {
       createTag(tag: $tag) {
-        ...TAG_FIELDS_FRAGMENT
+        ...#{frag_name}
         quotes {
           id
           text
@@ -45,7 +41,23 @@ defmodule GasWeb.TagQueries do
       }
     }
 
-    #{@all_fields_fragment}
+    #{frag}
     """
+  end
+
+  def all_fields_fragment do
+    name = "TAG_FIELDS_FRAGMENT"
+
+    fragment = """
+      fragment #{name}  on Tag {
+        id
+        text
+        question
+        insertedAt
+        updatedAt
+      }
+    """
+
+    {name, fragment}
   end
 end

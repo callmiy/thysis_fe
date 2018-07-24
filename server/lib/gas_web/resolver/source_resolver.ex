@@ -2,6 +2,9 @@ defmodule GasWeb.SourceResolver do
   @moduledoc """
   A resolver for the source schema
   """
+
+  import Absinthe.Resolution.Helpers, only: [on_load: 2]
+
   alias Gas.Source
   alias Gas.SourceApi, as: Api
   alias GasWeb.ResolversUtil
@@ -11,7 +14,7 @@ defmodule GasWeb.SourceResolver do
   """
   @spec sources(any, any, any) :: {:ok, [%Source{}]}
   def sources(_root, _args, _info) do
-    {:ok, Api.list(:authors)}
+    {:ok, Api.list()}
   end
 
   @doc """
@@ -28,9 +31,21 @@ defmodule GasWeb.SourceResolver do
   @doc """
   Source.to_string
   """
-  @spec display(%Source{}, any, any) :: {:ok, String.t()} | {:error, String.t()}
-  def display(%Source{} = source, _, _) do
-    {:ok, Api.display(source)}
+  @spec display(%Source{}, any, any) :: any
+  def display(%Source{} = source, _, %{context: %{loader: loader}}) do
+    loader
+    |> Dataloader.load(Api, :authors, source)
+    |> on_load(fn loader ->
+      authors =
+        loader
+        |> Dataloader.get(Api, :authors, source)
+
+      display = %{source | authors: authors} |> Api.display()
+
+      {:ok, display}
+    end)
+
+    # {:ok, Api.display(source)}
   end
 
   @doc """

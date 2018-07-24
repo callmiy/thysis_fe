@@ -4,9 +4,8 @@ defmodule GasWeb.AuthorSchema do
   """
 
   use Absinthe.Schema.Notation
-  use Absinthe.Ecto, repo: Gas.Repo
 
-  alias alias GasWeb.AuthorResolver
+  alias GasWeb.AuthorResolver
 
   @desc "An Author"
   object :author do

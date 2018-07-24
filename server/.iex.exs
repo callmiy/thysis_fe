@@ -17,4 +17,8 @@ alias Gas.Author
 alias Gas.AuthorApi
 alias Gas.Factory.Source, as: SourceFactory
 alias Gas.Factory.SourceStrategy, as: SourceStrategy
-
+alias GasWeb.QuoteQueries
+alias GasWeb.AuthorQueries
+alias GasWeb.SourceQueries
+alias GasWeb.SourceTypeQueries
+alias GasWeb.TagQueries

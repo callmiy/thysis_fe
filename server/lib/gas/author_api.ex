@@ -113,4 +113,12 @@ defmodule Gas.AuthorApi do
   def get_author_by(params) do
     Repo.get_by(Author, params)
   end
+
+  def data() do
+    Dataloader.Ecto.new(Repo, query: &query/2)
+  end
+
+  def query(queryable, _params) do
+    queryable
+  end
 end

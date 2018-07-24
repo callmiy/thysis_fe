@@ -4,9 +4,10 @@ defmodule GasWeb.SourceSchema do
   """
 
   use Absinthe.Schema.Notation
-  use Absinthe.Ecto, repo: Gas.Repo
 
-  alias alias GasWeb.SourceResolver
+  import Absinthe.Resolution.Helpers, only: [dataloader: 1]
+
+  alias GasWeb.SourceResolver
 
   @desc "A source"
   object :source do
@@ -17,11 +18,27 @@ defmodule GasWeb.SourceSchema do
     field(:url, :string)
     field(:inserted_at, non_null(:iso_datetime))
     field(:updated_at, non_null(:iso_datetime))
-    field(:authors, list_of(:author) |> non_null())
-    field(:source_type, non_null(:source_type), resolve: assoc(:source_type))
-    field(:quotes, list_of(:quote), resolve: assoc(:quotes))
 
-    field(:display, :string, do: resolve(&SourceResolver.display/3))
+    field(
+      :authors,
+      list_of(:author) |> non_null(),
+      resolve: dataloader(Gas.AuthorApi)
+    )
+
+    field(
+      :source_type,
+      non_null(:source_type),
+      resolve: dataloader(Gas.SourceTypeApi)
+    )
+
+    field(:quotes, list_of(:quote), resolve: dataloader(Gas.QuoteApi))
+
+    # field(:display, :string, do: resolve(&SourceResolver.display/3))
+    field(
+      :display,
+      :string,
+      do: resolve(&SourceResolver.display/3)
+    )
   end
 
   # MUTATION INPUTS
@@ -96,6 +113,7 @@ defmodule GasWeb.SourceSchema do
     @dec "Query for a source"
     field :source, type: :source do
       arg(:source, non_null(:get_source_input))
+
       resolve(&SourceResolver.source/3)
     end
   end

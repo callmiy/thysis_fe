@@ -230,4 +230,12 @@ defmodule Gas.QuoteApi do
   @spec get_quotes_by(atom, any, String.t()) :: {%Ecto.Query{}, true}
   def get_quotes_by(:source, query, id),
     do: {join(query, :inner, [q], s in assoc(q, :source), s.id == ^id), true}
+
+  def data() do
+    Dataloader.Ecto.new(Repo, query: &query/2)
+  end
+
+  def query(queryable, _params) do
+    queryable
+  end
 end

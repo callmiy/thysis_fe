@@ -26,13 +26,6 @@ defmodule Gas.SourceApi do
     Repo.all(Source)
   end
 
-  def list(:authors) do
-    Source
-    |> join(:inner, [s], a in assoc(s, :authors))
-    |> preload([s, a], authors: a)
-    |> Repo.all()
-  end
-
   @doc """
   Gets a single source.
 
@@ -40,22 +33,14 @@ defmodule Gas.SourceApi do
 
   ## Examples
 
-      iex> get!(123)
+      iex> get(123)
       %Source{}
 
-      iex> get!(456)
-      ** (Ecto.NoResultsError)
+      iex> get(456)
+      ** nil
 
   """
-  def get!(id), do: Repo.get!(Source, id)
-
-  def get(id) do
-    Source
-    |> where([s], s.id == ^id)
-    |> join(:inner, [s], a in assoc(s, :authors))
-    |> preload([s, a], authors: a)
-    |> Repo.one()
-  end
+  def get(id), do: Repo.get(Source, id)
 
   @doc """
   Creates a source.
@@ -218,6 +203,17 @@ defmodule Gas.SourceApi do
 
   def invalid_ids_error_string(ids) when is_list(ids),
     do: ~s[Invalid author IDs: #{Enum.join(ids, ", ")}]
+
+  # ABSINTHE DATALOADER
+  def data() do
+    Dataloader.Ecto.new(Repo, query: &query/2)
+  end
+
+  def query(queryable, _params) do
+    queryable
+  end
+
+  # END ABSINTHE DATALOADER
 
   defp create_source(source_type_multi, attrs) do
     {source_multi, changes} = create_source_multi(source_type_multi, attrs)

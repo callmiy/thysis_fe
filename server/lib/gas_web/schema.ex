@@ -9,6 +9,12 @@ defmodule GasWeb.Schema do
   import_types(GasWeb.QuoteSchema)
   import_types(GasWeb.AuthorSchema)
 
+  alias Gas.QuoteApi
+  alias Gas.TagApi
+  alias Gas.SourceApi
+  alias Gas.AuthorApi
+  alias Gas.SourceTypeApi
+
   query do
     import_fields(:tag_query)
     import_fields(:source_type_query)
@@ -22,5 +28,21 @@ defmodule GasWeb.Schema do
     import_fields(:tag_mutation)
     import_fields(:author_mutation)
     import_fields(:source_mutation)
+  end
+
+  def context(ctx) do
+    loader =
+      Dataloader.new()
+      |> Dataloader.add_source(QuoteApi, QuoteApi.data())
+      |> Dataloader.add_source(TagApi, TagApi.data())
+      |> Dataloader.add_source(SourceApi, SourceApi.data())
+      |> Dataloader.add_source(AuthorApi, AuthorApi.data())
+      |> Dataloader.add_source(SourceTypeApi, SourceTypeApi.data())
+
+    Map.put(ctx, :loader, loader)
+  end
+
+  def plugins do
+    [Absinthe.Middleware.Dataloader] ++ Absinthe.Plugin.defaults()
   end
 end

@@ -4,7 +4,8 @@ defmodule GasWeb.QuoteSchema do
   """
 
   use Absinthe.Schema.Notation
-  use Absinthe.Ecto, repo: Gas.Repo
+
+  import Absinthe.Resolution.Helpers, only: [dataloader: 1]
 
   alias GasWeb.QuoteResolver, as: Resolver
 
@@ -21,8 +22,8 @@ defmodule GasWeb.QuoteSchema do
     field(:inserted_at, non_null(:iso_datetime))
     field(:updated_at, non_null(:iso_datetime))
 
-    field(:source, :source, do: resolve(&Resolver.author/3))
-    field(:tag, list_of(:tag), resolve: assoc(:tag))
+    field(:source, :source, resolve: dataloader(Gas.SourceApi))
+    field(:tags, list_of(:tag), resolve: dataloader(Gas.TagApi))
   end
 
   @desc "When we do full text search, the result returned will contain name of

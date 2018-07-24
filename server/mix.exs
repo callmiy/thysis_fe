@@ -42,7 +42,6 @@ defmodule Gas.Mixfile do
       {:gettext, "~> 0.13.1"},
       {:cowboy, "~> 1.0"},
       {:absinthe, "~> 1.4"},
-      {:absinthe_ecto, "~> 0.1.3"},
       {:ex_machina, "~> 2.2", only: [:dev, :test]},
       {:ex_admin, github: "smpallen99/ex_admin"},
       {:timex, "~> 3.3"},
@@ -50,7 +49,8 @@ defmodule Gas.Mixfile do
       {:absinthe_plug, "~> 1.4"},
       {:faker, "~> 0.10.0", only: [:dev, :test]},
       {:corsica, "~> 1.1"},
-      {:hound, "~> 1.0", only: [:test]}
+      {:hound, "~> 1.0", only: [:test]},
+      {:dataloader, "~> 1.0"}
     ]
   end
 

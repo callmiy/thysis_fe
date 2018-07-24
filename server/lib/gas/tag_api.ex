@@ -130,4 +130,12 @@ defmodule Gas.TagApi do
   def get_tag_by(params) do
     Repo.get_by(Tag, params)
   end
+
+  def data() do
+    Dataloader.Ecto.new(Gas.Repo, query: &query/2)
+  end
+
+  def query(queryable, _params) do
+    queryable
+  end
 end

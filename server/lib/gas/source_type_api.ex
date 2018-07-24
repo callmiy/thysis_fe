@@ -136,4 +136,12 @@ defmodule Gas.SourceTypeApi do
   def get_source_type_by(params) do
     Repo.get_by(SourceType, params)
   end
+
+  def data() do
+    Dataloader.Ecto.new(Repo, query: &query/2)
+  end
+
+  def query(queryable, _params) do
+    queryable
+  end
 end

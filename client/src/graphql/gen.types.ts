@@ -688,7 +688,7 @@ export interface CreateTagInput {
 }
 
 // Input for full text search on quotes, their sources, tags and source
-// types;
+//  types
 export interface QuoteFullSearchInput {
   text: string;
 }

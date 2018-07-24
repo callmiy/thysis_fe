@@ -39,9 +39,9 @@ defmodule GasWeb.QuoteResolver do
     {:ok, Api.full_text_search(text)}
   end
 
-  @spec author(%Quote{source_id: Integer.t()}, any, any) ::
+  @spec source(%Quote{source_id: Integer.t()}, any, any) ::
           {:ok, [%Source{}]} | {:error, String.t()}
-  def author(%Quote{source_id: id}, _, _) do
+  def source(%Quote{source_id: id}, _, _) do
     case SourceApi.get(id) do
       nil -> {:error, "No quote source with ID: #{id}"}
       source -> {:ok, source}

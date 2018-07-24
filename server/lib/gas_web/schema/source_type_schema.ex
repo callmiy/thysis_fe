@@ -4,9 +4,8 @@ defmodule GasWeb.SourceTypeSchema do
   """
 
   use Absinthe.Schema.Notation
-  use Absinthe.Ecto, repo: Gas.Repo
 
-  alias alias GasWeb.SourceTypeResolver
+  alias GasWeb.SourceTypeResolver
 
   @desc "A source type"
   object :source_type do

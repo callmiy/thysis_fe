@@ -1,95 +1,103 @@
 defmodule GasWeb.QuoteQueries do
+  alias GasWeb.TagQueries
+  alias GasWeb.SourceQueries
+  alias GasWeb.AuthorQueries
+
+  def all_fields_fragment do
+    name = "QuoteAllFieldsFragment"
+
+    fragment = """
+    fragment #{name} on Quote {
+      id
+      text
+      date
+      pageStart
+      pageEnd
+      volume
+      issue
+      extras
+      insertedAt
+      updatedAt
+    }
+    """
+
+    {name, fragment}
+  end
+
   def mutation(:create_quote) do
+    {frag_name, frag} = all_fields_fragment()
+    {tag_frag_name, tag_frag} = TagQueries.all_fields_fragment()
+    {source_frag_name, source_frag} = SourceQueries.all_fields_fragment()
+    {author_frag_name, author_frag} = AuthorQueries.all_fields_fragment()
+
     """
       mutation createQuote($quote: CreateQuoteInput!) {
         createQuote(quote: $quote) {
-          id
-          text
-          date
-          pageStart
-          pageEnd
-          volume
-          issue
-          extras
-          insertedAt
-          updatedAt
+          ...#{frag_name}
 
           source {
-            ...SourceFragment
+            ...#{source_frag_name}
+
+            authors {
+              ...#{author_frag_name}
+            }
           }
 
-          tag {
-            id
-            text
+          tags {
+            ...#{tag_frag_name}
           }
         }
       }
 
-      fragment SourceFragment on Source {
-        id
-        topic
-        authors {
-          ...AuthorFragment
-        }
-        __typename
-      }
-
-      fragment AuthorFragment on Author {
-        id
-        name
-      }
+      #{frag}
+      #{tag_frag}
+      #{source_frag}
+      #{author_frag}
     """
   end
 
   def mutation() do
+    {frag_name, frag} = all_fields_fragment()
+    {source_frag_name, source_frag} = SourceQueries.all_fields_fragment()
+
     """
     mutation createQuote($quote: CreateQuoteInput!) {
       createQuote(quote: $quote) {
-        id
-        text
-        date
+        ...#{frag_name}
         source {
-          ...SourceMiniFrag
-          __typename
+          ...#{source_frag_name}
         }
-        __typename
       }
     }
 
-    fragment SourceMiniFrag on Source {
-      id
-      display
-      sourceType {
-        ...SourceTypeFrag
-        __typename
-      }
-      __typename
-    }
-
-    fragment SourceTypeFrag on SourceType {
-      id
-      name
-      __typename
-    }
-
+    #{frag}
+    #{source_frag}
     """
   end
 
   def query(:quotes) do
+    {frag_name, frag} = all_fields_fragment()
+    {source_frag_name, source_frag} = SourceQueries.all_fields_fragment()
+    {author_frag_name, author_frag} = AuthorQueries.all_fields_fragment()
+
     """
     query GetQuotesQuery($quote: GetQuotes) {
       quotes(quote: $quote) {
-        id
-        text
-        __typename
+        ...#{frag_name}
 
         source {
-          ...SourceFragment
+          ...#{source_frag_name}
+
+          authors {
+            ...#{author_frag_name}
+          }
         }
       }
     }
 
-    #{source_fragment()}
+    #{frag}
+    #{source_frag}
+    #{author_frag}
     """
   end
 
@@ -130,24 +138,4 @@ defmodule GasWeb.QuoteQueries do
       }
     }
   end
-
-  defp source_fragment, do: ~s(
-    fragment SourceFragment on Source {
-      id
-      __typename
-
-      authors {
-        ...AuthorFragment
-      }
-    }
-
-    #{author_fragment()}
-
-  )
-
-  defp author_fragment, do: ~s(
-    fragment AuthorFragment on Author {
-      id
-      name
-  })
 end

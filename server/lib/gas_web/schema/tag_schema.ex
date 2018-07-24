@@ -4,9 +4,10 @@ defmodule GasWeb.TagSchema do
   """
 
   use Absinthe.Schema.Notation
-  use Absinthe.Ecto, repo: Gas.Repo
 
-  alias alias GasWeb.TagResolver
+  import Absinthe.Resolution.Helpers, only: [dataloader: 1]
+
+  alias GasWeb.TagResolver
 
   @desc "A Tag"
   object :tag do
@@ -15,7 +16,7 @@ defmodule GasWeb.TagSchema do
     field(:question, :string)
     field(:inserted_at, non_null(:iso_datetime))
     field(:updated_at, non_null(:iso_datetime))
-    field(:quotes, list_of(:quote), resolve: assoc(:quotes))
+    field(:quotes, list_of(:quote), resolve: dataloader(Gas.QuoteApi))
   end
 
   @desc "Get tag input"
