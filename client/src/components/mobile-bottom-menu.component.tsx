@@ -8,6 +8,7 @@ import NewTagModalForm from "./NewTagModalForm";
 import SourceModal from "./SourceModal";
 import TagsModal from "./TagsModal";
 import SourcesModal from "./SourcesModal";
+import { SEARCH_QUOTES_URL } from "../routes/util";
 
 // import { SimpleCss } from "../constants";
 
@@ -28,11 +29,13 @@ export enum MenuItem {
   NEW_TAG = "newTag",
   NEW_SOURCE = "newSource",
   TAG_LIST = "tagList",
-  SOURCE_LIST = "sourceList"
+  SOURCE_LIST = "sourceList",
+  SEARCH = "SEARCH"
 }
 
 enum MenuAction {
-  NAVIGATE = "navigate",
+  NAVIGATE_HOME = "navigate_home",
+  NAVIGATE_TO_SEARCH = "NAVIGATE_TO_SEARCH",
   MODAL = "modal"
 }
 
@@ -71,7 +74,7 @@ const menus: Menus = {
   [MenuItem.HOME]: {
     icon: "home",
     label: "Home",
-    action: MenuAction.NAVIGATE
+    action: MenuAction.NAVIGATE_HOME
   },
 
   [MenuItem.SOURCE_LIST]: {
@@ -79,6 +82,12 @@ const menus: Menus = {
     icon: "numbered list",
     label: "Sources",
     action: MenuAction.MODAL
+  },
+
+  [MenuItem.SEARCH]: {
+    icon: "search",
+    label: "Search",
+    action: MenuAction.NAVIGATE_TO_SEARCH
   }
 };
 
@@ -157,8 +166,12 @@ class MobileBottomMenu extends React.Component<
         action = this.toggleModalOpen(name, true);
         break;
 
-      case MenuAction.NAVIGATE:
+      case MenuAction.NAVIGATE_HOME:
         action = this.navigateTo("/");
+        break;
+
+      case MenuAction.NAVIGATE_TO_SEARCH:
+        action = this.navigateTo(SEARCH_QUOTES_URL);
         break;
 
       default:

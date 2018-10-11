@@ -30,7 +30,7 @@ export class Quote extends React.Component<Props, State> {
 
         {this.renderMainOrLoading()}
 
-        <MobileBottomMenu items={[MenuItem.HOME, MenuItem.TAG_LIST]} />
+        <MobileBottomMenu items={[MenuItem.HOME, MenuItem.SEARCH]} />
       </div>
     );
   }
