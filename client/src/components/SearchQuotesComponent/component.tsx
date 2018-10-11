@@ -20,6 +20,13 @@ import { TextSearchResultFrag } from "../../graphql/gen.types";
 import { TextSearchRowFrag } from "../../graphql/gen.types";
 import { makeSourceURL } from "../../routes/util";
 import { makeTagURL } from "../../routes/util";
+import { makeQuoteURL } from "../../routes/util";
+
+const RENDER_ROW_PROPS = {
+  SOURCES: makeSourceURL,
+  TAGS: makeTagURL,
+  QUOTES: makeQuoteURL
+};
 
 export class SearchQuotesComponent extends React.Component<
   SearchQuotesProps,
@@ -209,8 +216,6 @@ export class SearchQuotesComponent extends React.Component<
     }
 
     const header = data[0].source;
-    const methodName = header[0] + header.slice(1, -1).toLowerCase();
-    const render = this[`renderRow${methodName}`] || this.renderRow;
 
     return (
       <div className={classes.result} key={header}>
@@ -218,39 +223,29 @@ export class SearchQuotesComponent extends React.Component<
           <span className={classes.resultRowHeader}>{header}</span>
         </div>
 
-        <List divided={true}>{data.map(render)}</List>
+        <List divided={true}>{data.map(this.renderRow(header))}</List>
       </div>
     );
   };
 
-  renderRow = ({ text, tid, column }: TextSearchRowFrag) => {
-    return (
-      <List.Item key={tid + column} className={classes.resultRowItem}>
-        <List.Content>{text}</List.Content>
-      </List.Item>
-    );
-  };
+  renderRow = (header: string) => ({
+    text,
+    tid,
+    column
+  }: TextSearchRowFrag) => {
+    const rowProps = RENDER_ROW_PROPS[header];
+    const otherProps = rowProps
+      ? {
+          as: NavLink,
+          to: rowProps(tid.toString())
+        }
+      : {};
 
-  renderRowSource = ({ text, tid, column }: TextSearchRowFrag) => {
     return (
       <List.Item
         key={tid + column}
         className={classes.resultRowItem}
-        as={NavLink}
-        to={makeSourceURL(tid.toString())}
-      >
-        <List.Content>{text}</List.Content>
-      </List.Item>
-    );
-  };
-
-  renderRowTag = ({ text, tid, column }: TextSearchRowFrag) => {
-    return (
-      <List.Item
-        key={tid + column}
-        className={classes.resultRowItem}
-        as={NavLink}
-        to={makeTagURL(tid.toString())}
+        {...otherProps}
       >
         <List.Content>{text}</List.Content>
       </List.Item>

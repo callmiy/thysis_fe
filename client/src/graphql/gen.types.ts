@@ -38,6 +38,44 @@ export interface CreateAuthorVariables {
 // This file was automatically generated and should not be edited.
 
 // ====================================================
+// GraphQL query operation: QuoteFull
+// ====================================================
+
+export interface QuoteFull_quote_source {
+  id: string;
+  display: string | null;
+}
+
+export interface QuoteFull_quote_tags {
+  id: string;
+  text: string;
+}
+
+export interface QuoteFull_quote {
+  id: string;
+  text: string;
+  date: any | null;
+  extras: string | null;
+  issue: string | null;
+  pageStart: number | null;
+  pageEnd: number | null;
+  volume: string | null;
+  source: QuoteFull_quote_source | null;
+  tags: (QuoteFull_quote_tags | null)[] | null;
+}
+
+export interface QuoteFull {
+  quote: QuoteFull_quote | null;
+}
+
+export interface QuoteFullVariables {
+  quote: GetQuoteInput;
+}
+
+/* tslint:disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
 // GraphQL mutation operation: CreateQuote
 // ====================================================
 
@@ -251,6 +289,7 @@ export interface Sources1 {
 // ====================================================
 
 export interface TagQuote_tag_quotes_source {
+  id: string;
   display: string | null;
 }
 
@@ -442,6 +481,7 @@ export interface Quote1Frag {
 // ====================================================
 
 export interface QuoteFromtagFrag_source {
+  id: string;
   display: string | null;
 }
 
@@ -450,6 +490,36 @@ export interface QuoteFromtagFrag {
   text: string;
   date: any | null;
   source: QuoteFromtagFrag_source | null;
+}
+
+/* tslint:disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL fragment: QuoteFullFrag
+// ====================================================
+
+export interface QuoteFullFrag_source {
+  id: string;
+  display: string | null;
+}
+
+export interface QuoteFullFrag_tags {
+  id: string;
+  text: string;
+}
+
+export interface QuoteFullFrag {
+  id: string;
+  text: string;
+  date: any | null;
+  extras: string | null;
+  issue: string | null;
+  pageStart: number | null;
+  pageEnd: number | null;
+  volume: string | null;
+  source: QuoteFullFrag_source | null;
+  tags: (QuoteFullFrag_tags | null)[] | null;
 }
 
 /* tslint:disable */
@@ -539,6 +609,7 @@ export interface TagFrag {
 // ====================================================
 
 export interface TagQuotesFrag_quotes_source {
+  id: string;
   display: string | null;
 }
 
@@ -639,6 +710,11 @@ export enum QuoteFullSearchTable {
 // Input for creating an author
 export interface CreateAuthorInput {
   name: string;
+}
+
+// Inputs for getting a single quote
+export interface GetQuoteInput {
+  id: string;
 }
 
 // Inputs for creating a Quote object

@@ -11,6 +11,11 @@ export const makeSourceURL = (id: string) => {
   return SOURCE_URL.replace(":id", id);
 };
 
+export const QUOTE_URL = "/quotes/:id";
+export const makeQuoteURL = (id: string) => {
+  return QUOTE_URL.replace(":id", id);
+};
+
 export const NEW_QUOTE_URL = "/new-quote/:sourceId?";
 export const makeNewQuoteURL = (id?: string) => {
   return NEW_QUOTE_URL.replace(":sourceId?", id || "");

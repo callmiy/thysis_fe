@@ -1,0 +1,14 @@
+.item.quote-item {
+  word-break: break-all; }
+  .item.quote-item:first-of-type {
+    margin-top: 10px; }
+  .item.quote-item a.header.quote-text {
+    color: initial !important; }
+  .item.quote-item a.source-display {
+    color: initial;
+    font-style: italic;
+    font-size: 0.9em;
+    margin-top: 10px; }
+  .item.quote-item div.description.quote-date {
+    display: flex;
+    flex-direction: row-reverse; }

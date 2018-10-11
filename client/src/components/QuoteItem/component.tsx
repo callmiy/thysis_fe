@@ -1,38 +1,11 @@
 import React from "react";
-import jss from "jss";
-import preset from "jss-preset-default";
 import { List } from "semantic-ui-react";
+import { NavLink } from "react-router-dom";
 
+import "./quote-item.css";
 import { QuoteFromtagFrag } from "../../graphql/gen.types";
-import { SimpleCss } from "../../constants";
-
-jss.setup(preset());
-
-const styles = {
-  quoteItem: {
-    wordBreak: "break-all",
-    "&:first-of-type": {
-      marginTop: "10px"
-    }
-  },
-
-  quoteText: {
-    cursor: "pointer"
-  },
-
-  quoteDate: {
-    display: "flex",
-    flexDirection: "row-reverse"
-  },
-
-  sourceDisplay: {
-    fontStyle: "italic",
-    fontSize: "0.9em",
-    marginTop: "10px"
-  }
-} as SimpleCss;
-
-const { classes } = jss.createStyleSheet(styles).attach();
+import { makeQuoteURL } from "../../routes/util";
+import { makeSourceURL } from "../../routes/util";
 
 type Props = QuoteFromtagFrag;
 
@@ -40,15 +13,23 @@ export class QuoteItem extends React.Component<Props> {
   render() {
     const { id, text, date, source } = this.props;
     return (
-      <List.Item key={id} className={`${classes.quoteItem}`}>
+      <List.Item key={id} className="quote-item">
         <List.Content>
-          <List.Header className={`${classes.quoteText}`}>{text}</List.Header>
+          <List.Header
+            as={NavLink}
+            to={makeQuoteURL(id)}
+            className="quote-text"
+          >
+            {text}
+          </List.Header>
 
           {source && (
-            <div className={`${classes.sourceDisplay}`}>{source.display}</div>
+            <NavLink to={makeSourceURL(source.id)} className="source-display">
+              {source.display}
+            </NavLink>
           )}
 
-          <List.Description style={styles.quoteDate}>{date}</List.Description>
+          <List.Description className="quote-date">{date}</List.Description>
         </List.Content>
       </List.Item>
     );

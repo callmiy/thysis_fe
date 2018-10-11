@@ -6,6 +6,7 @@ export const quoteFromTagFrag = gql`
     text
     date
     source {
+      id
       display
     }
   }

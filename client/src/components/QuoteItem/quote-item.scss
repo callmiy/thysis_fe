@@ -1,0 +1,23 @@
+.item.quote-item {
+  word-break: break-all;
+
+  &:first-of-type {
+    margin-top: 10px;
+  }
+
+  a.header.quote-text {
+    color: initial !important;
+  }
+
+  a.source-display {
+    color: initial;
+    font-style: italic;
+    font-size: 0.9em;
+    margin-top: 10px;
+  }
+
+  div.description.quote-date {
+    display: flex;
+    flex-direction: row-reverse;
+  }
+}

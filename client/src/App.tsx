@@ -12,6 +12,7 @@ import { TAG_URL } from "./routes/util";
 import { SOURCE_URL } from "./routes/util";
 import { NEW_QUOTE_URL } from "./routes/util";
 import { SEARCH_QUOTES_URL } from "./routes/util";
+import { QUOTE_URL } from "./routes/util";
 
 jss.setup(preset());
 
@@ -63,12 +64,18 @@ const SearchQuotes = Loadable({
   loader: () => import("./routes/SearchQuotes")
 });
 
+const Quote = Loadable({
+  loading: Loading,
+  loader: () => import("./routes/Quote")
+});
+
 class App extends React.Component {
   render() {
     return (
       <BrowserRouter>
         <Switch>
           <Route exact={true} path={SOURCE_URL} component={Source} />
+          <Route exact={true} path={QUOTE_URL} component={Quote} />
           <Route
             exact={true}
             path={SEARCH_QUOTES_URL}
