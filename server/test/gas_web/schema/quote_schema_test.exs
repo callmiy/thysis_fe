@@ -127,6 +127,29 @@ defmodule Gas.QuoteSchemaTest do
       assert raw_quotes_id == quotes_ids
       refute Enum.member?(quotes_ids, Integer.to_string(source1_quote_id))
     end
+
+    test "get a quote by id succeeds for existing quote" do
+      %{id: id} = insert(:quote)
+      id_binary = Integer.to_string(id)
+
+      assert {:ok,
+              %{
+                data: %{
+                  "quote" => %{
+                    "id" => ^id_binary
+                  }
+                }
+              }} =
+               Absinthe.run(
+                 Queries.get_quote(),
+                 Schema,
+                 variables: %{
+                   "quote" => %{
+                     "id" => id_binary
+                   }
+                 }
+               )
+    end
   end
 
   # @tag :skip

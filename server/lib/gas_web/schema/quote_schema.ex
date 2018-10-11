@@ -107,6 +107,12 @@ defmodule GasWeb.QuoteSchema do
     field(:source, :id)
   end
 
+  @desc "Inputs for getting a single quote"
+  input_object :get_quote_input do
+    @desc "ID of quote"
+    field(:id, non_null(:id))
+  end
+
   @desc "Input for full text search on quotes, their sources, tags and source
    types"
   input_object :quote_full_search_input do
@@ -127,6 +133,13 @@ defmodule GasWeb.QuoteSchema do
     field :quote_full_search, type: :quote_full_search_result do
       arg(:text, non_null(:quote_full_search_input))
       resolve(&Resolver.full_text_search/3)
+    end
+
+    @dec "Query for a quote"
+    field :quote, type: :quote do
+      arg(:quote, non_null(:get_quote_input))
+
+      resolve(&Resolver.quote/3)
     end
   end
 

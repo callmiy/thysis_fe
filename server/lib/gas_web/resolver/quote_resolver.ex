@@ -34,6 +34,13 @@ defmodule GasWeb.QuoteResolver do
     {:ok, Api.get_quotes_by(Map.get(args, :quote))}
   end
 
+  def quote(_roots, %{quote: %{id: id}}, _info) do
+    case Api.get(id) do
+      nil -> {:error, "No quote exists for id: #{id}"}
+      quote_ -> {:ok, quote_}
+    end
+  end
+
   @spec full_text_search(any, %{text: %{text: String.t()}}, any) :: {:ok, %{}}
   def full_text_search(_root, %{text: %{text: text}}, _info) do
     {:ok, Api.full_text_search(text)}

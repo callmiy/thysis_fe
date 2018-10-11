@@ -124,6 +124,33 @@ defmodule GasWeb.QuoteQueries do
     """
   end
 
+  @doc "get_quote"
+  def get_quote() do
+    {frag_name, frag} = all_fields_fragment()
+    {source_frag_name, source_frag} = SourceQueries.all_fields_fragment()
+    {author_frag_name, author_frag} = AuthorQueries.all_fields_fragment()
+
+    """
+    query GetQuoteQuery($quote: GetQuoteInput!) {
+      quote(quote: $quote) {
+        ...#{frag_name}
+
+        source {
+          ...#{source_frag_name}
+
+          authors {
+            ...#{author_frag_name}
+          }
+        }
+      }
+    }
+
+    #{frag}
+    #{source_frag}
+    #{author_frag}
+    """
+  end
+
   def variables do
     %{
       "quote" => %{

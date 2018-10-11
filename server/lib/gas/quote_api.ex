@@ -26,18 +26,18 @@ defmodule Gas.QuoteApi do
   @doc """
   Gets a single quote.
 
-  Raises `Ecto.NoResultsError` if the Quote does not exist.
+  Returns nil if the Quote does not exist.
 
   ## Examples
 
-      iex> get!(123)
+      iex> get(123)
       %Quote{}
 
-      iex> get!(456)
-      ** (Ecto.NoResultsError)
+      iex> get(456)
+      ** nil
 
   """
-  def get!(id), do: Repo.get!(Quote, id)
+  def get(id), do: Repo.get(Quote, id)
 
   @doc """
   Creates a quote.

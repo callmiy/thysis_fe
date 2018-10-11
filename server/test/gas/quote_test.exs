@@ -18,9 +18,9 @@ defmodule Gas.QuotesTest do
     assert Api.list() == [quote_]
   end
 
-  test "get!/1 returns the quote with given id" do
+  test "get/1 returns the quote with given id" do
     quote_ = make_quote()
-    assert Api.get!(quote_.id) == quote_
+    assert Api.get(quote_.id) == quote_
   end
 
   test "create_/1 with valid data creates a quote" do
@@ -55,13 +55,13 @@ defmodule Gas.QuotesTest do
   test "update_/2 with invalid data returns error changeset" do
     quote_ = make_quote()
     assert {:error, %Ecto.Changeset{}} = Api.update_(quote_, %{text: nil})
-    assert quote_ == Api.get!(quote_.id)
+    assert quote_ == Api.get(quote_.id)
   end
 
   test "delete_/1 deletes the quote" do
     quote_ = make_quote()
     assert {:ok, %Quote{}} = Api.delete_(quote_)
-    assert_raise Ecto.NoResultsError, fn -> Api.get!(quote_.id) end
+    assert nil == Api.get(quote_.id)
   end
 
   test "change_/1 returns a quote changeset" do
