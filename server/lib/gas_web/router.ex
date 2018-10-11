@@ -31,7 +31,7 @@ defmodule GasWeb.Router do
 
     if Mix.env() == :dev do
       forward(
-        "/__graphiql",
+        "/__graphql",
         Absinthe.Plug.GraphiQL,
         schema: GasWeb.Schema,
         context: %{pubsub: GasWeb.Endpoint}
