@@ -5,8 +5,8 @@ import { Icon } from "semantic-ui-react";
 import { NavLink } from "react-router-dom";
 
 import RootHeader from "../../components/header.component";
-import { setTitle } from "../../utils/route-urls.util";
-import { makeNewQuoteURL } from "../../utils/route-urls.util";
+import { setTitle } from "../../routes/util";
+import { makeNewQuoteURL } from "../../routes/util";
 import { classes } from "./styles";
 import { SourceProps } from "./utils";
 import { SourceState } from "./utils";

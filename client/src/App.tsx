@@ -7,11 +7,11 @@ import { Dimmer, Loader } from "semantic-ui-react";
 
 import { ROOT_CONTAINER_STYLE } from "./constants";
 import { SimpleCss } from "./constants";
-import { ROOT_URL } from "./utils/route-urls.util";
-import { TAG_URL } from "./utils/route-urls.util";
-import { SOURCE_URL } from "./utils/route-urls.util";
-import { NEW_QUOTE_URL } from "./utils/route-urls.util";
-import { SEARCH_QUOTES_URL } from "./utils/route-urls.util";
+import { ROOT_URL } from "./routes/util";
+import { TAG_URL } from "./routes/util";
+import { SOURCE_URL } from "./routes/util";
+import { NEW_QUOTE_URL } from "./routes/util";
+import { SEARCH_QUOTES_URL } from "./routes/util";
 
 jss.setup(preset());
 

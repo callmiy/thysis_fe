@@ -2,7 +2,7 @@ import * as React from "react";
 
 import RootHeader from "../../components/header.component";
 import SearchQuotesMenu from "../../components/search-quotes-route-bottom-menu.component";
-import { setTitle } from "../../utils/route-urls.util";
+import { setTitle } from "../../routes/util";
 import { classes } from "./styles";
 import SearchQuotesComponent from "../../components/SearchQuotesComponent";
 

@@ -23,7 +23,7 @@ import { Sources1 as Sources1Query } from "../../graphql/gen.types";
 import { AuthorFrag } from "../../graphql/gen.types";
 import SourceTypeControlComponent from "../SourceTypeControl";
 import AuthorsControlComponent from "../AuthorsControl";
-import { makeSourceURL } from "../../utils/route-urls.util";
+import { makeSourceURL } from "../../routes/util";
 import { styles } from "./styles";
 import { classes } from "./styles";
 import { modalStyle } from "./styles";

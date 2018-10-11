@@ -18,8 +18,8 @@ import ErrorBoundary from "../../containers/error-boundary.container";
 import { SemanticOnInputChangeFunc } from "./utils";
 import { TextSearchResultFrag } from "../../graphql/gen.types";
 import { TextSearchRowFrag } from "../../graphql/gen.types";
-import { makeSourceURL } from "../../utils/route-urls.util";
-import { makeTagURL } from "../../utils/route-urls.util";
+import { makeSourceURL } from "../../routes/util";
+import { makeTagURL } from "../../routes/util";
 
 export class SearchQuotesComponent extends React.Component<
   SearchQuotesProps,

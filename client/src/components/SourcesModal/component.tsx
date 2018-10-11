@@ -4,7 +4,7 @@ import { List } from "semantic-ui-react";
 import { Loader } from "semantic-ui-react";
 
 import { SourceFrag } from "../../graphql/gen.types";
-import { makeSourceURL } from "../../utils/route-urls.util";
+import { makeSourceURL } from "../../routes/util";
 import { styles } from "./styles";
 import { modalStyle } from "./styles";
 import { classes } from "./styles";

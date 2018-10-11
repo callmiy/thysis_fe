@@ -8,8 +8,8 @@ import { TagModalCreatedCb } from "../../components/NewTagModalForm/utils";
 import SourceModal from "../../components/SourceModal";
 import TagsModal from "../../components/TagsModal";
 import { MenuItemNames } from "../../constants";
-import { SEARCH_QUOTES_URL } from "../../utils/route-urls.util";
-import { ROOT_URL } from "../../utils/route-urls.util";
+import { SEARCH_QUOTES_URL } from "../../routes/util";
+import { ROOT_URL } from "../../routes/util";
 
 const styles = {
   container: {

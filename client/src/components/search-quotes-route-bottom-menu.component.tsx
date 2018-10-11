@@ -6,8 +6,8 @@ import { NavLink } from "react-router-dom";
 import SourceModal from "./SourceModal";
 import TagsModal from "./TagsModal";
 import { MenuItemNames } from "../constants";
-import { makeNewQuoteURL } from "../utils/route-urls.util";
-import { ROOT_URL } from "../utils/route-urls.util";
+import { makeNewQuoteURL } from "../routes/util";
+import { ROOT_URL } from "../routes/util";
 
 const styles = {
   container: {

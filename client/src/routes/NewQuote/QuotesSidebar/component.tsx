@@ -20,8 +20,8 @@ import QUOTES_QUERY from "../../../graphql/quotes-1.query";
 import TAGS_QUERY from "../../../graphql/tags-mini.query";
 import SOURCES_QUERY from "../../../graphql/sources-1.query";
 import SearchQuotesComponent from "../../../components/SearchQuotesComponent";
-import { makeSourceURL } from "../../../utils/route-urls.util";
-import { makeTagURL } from "../../../utils/route-urls.util";
+import { makeSourceURL } from "../../../routes/util";
+import { makeTagURL } from "../../../routes/util";
 
 enum ResourceName {
   QUOTES = "quotes",

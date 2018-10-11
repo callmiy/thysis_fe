@@ -6,7 +6,7 @@ import { TagsMinimalQueryComponent } from "../../graphql/ops.types";
 import { TagsMinimalQueryResult } from "../../graphql/ops.types";
 import { TagFrag } from "../../graphql/gen.types";
 import TAGS_QUERY from "../../graphql/tags-mini.query";
-import { makeTagURL } from "../../utils/route-urls.util";
+import { makeTagURL } from "../../routes/util";
 import { styles } from "../SourcesModal/styles";
 import { modalStyle } from "../SourcesModal/styles";
 import { classes } from "../SourcesModal/styles";

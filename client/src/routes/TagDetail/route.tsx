@@ -12,7 +12,7 @@ import { TagQuote as TagQuoteQuery } from "../../graphql/gen.types";
 import MobileBottomMenu from "../../components/mobile-bottom-menu.component";
 import { MenuItem } from "../../components/mobile-bottom-menu.component";
 import renderQuote from "../../components/QuoteItem";
-import { setTitle } from "../../utils/route-urls.util";
+import { setTitle } from "../../routes/util";
 import { styles } from "./styles";
 import { classes } from "./styles";
 
