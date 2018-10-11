@@ -70,21 +70,11 @@
         "isDefault": true
       }
     },
-    {
-      "label": "deploy to heroku",
-      "type": "shell",
-      "command":
-        "git subtree push --prefix=server heroku master && heroku run \"POOL_SIZE=2 mix ecto.migrate\"",
-      "options": {
-        "cwd": ".."
-      },
-      "problemMatcher": []
-    },
+
     {
       "label": "mix test file integration",
       "type": "shell",
-      "command":
-        "cd ../client && yarn deploy && cd ${workspaceFolder} && (bash priv/chrome.sh &) && mix test --only integration ${file}",
+      "command": "cd ../client && yarn deploy && cd ${workspaceFolder} && (bash priv/chrome.sh &) && mix test --only integration ${file}",
       "options": {
         "env": {
           "GAS_PHOENIX_INTEGRATION_TEST_PORT": "4017",
@@ -98,11 +88,9 @@
     {
       "label": "mix test all integration",
       "type": "shell",
-      "command":
-        "cd ../client && yarn deploy && cd ${workspaceFolder} && (bash priv/chrome.sh &) && (mix test --only integration)",
+      "command": "cd ../client && yarn deploy && cd ${workspaceFolder} && (bash priv/chrome.sh &) && (mix test --only integration)",
       "windows": {
-        "command":
-          "cd ../client && yarn deploy && cd ${workspaceFolder} && mix test --only integration"
+        "command": "cd ../client && yarn deploy && cd ${workspaceFolder} && mix test --only integration"
       },
       "options": {
         "env": {
@@ -117,8 +105,7 @@
     {
       "label": "mix test file integration no build",
       "type": "shell",
-      "command":
-        "(bash priv/chrome.sh &) && mix test --only integration ${file}",
+      "command": "(bash priv/chrome.sh &) && mix test --only integration ${file}",
       "windows": {
         "command": "mix test --only integration ${file}"
       },

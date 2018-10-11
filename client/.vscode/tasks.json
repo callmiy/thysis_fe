@@ -53,6 +53,7 @@
       "group": "build",
       "problemMatcher": []
     },
+
     {
       "label": "build front end prod",
       "type": "shell",
@@ -63,6 +64,18 @@
         }
       },
       "group": "build",
+      "problemMatcher": []
+    },
+
+    {
+      "label": "deploy to heroku",
+      "type": "shell",
+      "command": "yarn deploy && cd .. && git add . && git cm -m \"Production build\" && git co master && git merge dev && git subtree push --prefix=server heroku master && heroku run \"POOL_SIZE=2 mix ecto.migrate\" && git co dev",
+      "options": {
+        "env": {
+          "REACT_APP_API_URL": "https://gasification.herokuapp.com/__api"
+        }
+      },
       "problemMatcher": []
     },
 
