@@ -16,20 +16,23 @@
       "group": "build",
       "problemMatcher": []
     },
+
     {
       "label": "start front end js only",
       "type": "shell",
-      "command": "yarn start",
-      "options": {
-        "env": {
-          "PORT": "3016",
-          "BROWSER": "none",
-          "REACT_APP_API_URL": "http://localhost:4016/__api"
-        }
-      },
+      "command": "launch_with_cmder.bat \"npm start\" && launch_with_cmder.bat \"npm run watch-css\"",
       "group": "build",
       "problemMatcher": []
     },
+
+    {
+      "label": "watch css",
+      "type": "shell",
+      "command": "launch_with_cmder.bat \"npm run watch-css\"",
+      "group": "build",
+      "problemMatcher": []
+    },
+
     {
       "label": "build front end dev",
       "type": "shell",
@@ -57,15 +60,13 @@
     {
       "label": "Apollo code gen",
       "type": "shell",
-      "command":
-        "apollo-codegen generate src/graphql/*.ts --schema src/graphql/schema.json --target typescript --output src/graphql/gen.types.ts",
+      "command": "apollo-codegen generate src/graphql/*.ts --schema src/graphql/schema.json --target typescript --output src/graphql/gen.types.ts",
       "problemMatcher": []
     },
     {
       "label": "introspect-schema",
       "type": "shell",
-      "command":
-        "apollo-codegen introspect-schema http://localhost:4016/__api --output src/graphql/schema.json",
+      "command": "apollo-codegen introspect-schema http://localhost:4016/__api --output src/graphql/schema.json",
       "problemMatcher": []
     }
   ]
