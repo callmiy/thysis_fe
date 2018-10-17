@@ -2,6 +2,32 @@
 // This file was automatically generated and should not be edited.
 
 // ====================================================
+// GraphQL query operation: AuthorRouteQuery
+// ====================================================
+
+export interface AuthorRouteQuery_author_sources {
+  id: string;
+  display: string | null;
+}
+
+export interface AuthorRouteQuery_author {
+  id: string;
+  name: string;
+  sources: (AuthorRouteQuery_author_sources | null)[];
+}
+
+export interface AuthorRouteQuery {
+  author: AuthorRouteQuery_author | null; // Get a single author
+}
+
+export interface AuthorRouteQueryVariables {
+  author: GetAuthorInput;
+}
+
+/* tslint:disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
 // GraphQL query operation: GetAllAuthors
 // ====================================================
 
@@ -452,6 +478,24 @@ export interface UpdateSourceVariables {
 // This file was automatically generated and should not be edited.
 
 // ====================================================
+// GraphQL fragment: AuthorRouteFrag
+// ====================================================
+
+export interface AuthorRouteFrag_sources {
+  id: string;
+  display: string | null;
+}
+
+export interface AuthorRouteFrag {
+  id: string;
+  name: string;
+  sources: (AuthorRouteFrag_sources | null)[];
+}
+
+/* tslint:disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
 // GraphQL fragment: AuthorFrag
 // ====================================================
 
@@ -707,6 +751,12 @@ export enum QuoteFullSearchTable {
   TAGS = "TAGS"
 }
 
+// Get author input
+export interface GetAuthorInput {
+  id?: string | null;
+  name?: string | null;
+}
+
 // Input for creating an author
 export interface CreateAuthorInput {
   name: string;
@@ -763,8 +813,7 @@ export interface CreateTagInput {
   text: string;
 }
 
-// Input for full text search on quotes, their sources, tags and source
-//  types
+// Input for full text search on quotes, their sources, tags and source types
 export interface QuoteFullSearchInput {
   text: string;
 }

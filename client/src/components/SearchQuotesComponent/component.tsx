@@ -21,11 +21,13 @@ import { TextSearchRowFrag } from "../../graphql/gen.types";
 import { makeSourceURL } from "../../routes/util";
 import { makeTagURL } from "../../routes/util";
 import { makeQuoteURL } from "../../routes/util";
+import { makeAuthorRouteURL } from "../../routes/util";
 
 const RENDER_ROW_PROPS = {
   SOURCES: makeSourceURL,
   TAGS: makeTagURL,
-  QUOTES: makeQuoteURL
+  QUOTES: makeQuoteURL,
+  AUTHORS: makeAuthorRouteURL
 };
 
 export class SearchQuotesComponent extends React.Component<

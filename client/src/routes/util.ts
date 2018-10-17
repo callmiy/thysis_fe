@@ -16,6 +16,11 @@ export const makeQuoteURL = (id: string) => {
   return QUOTE_URL.replace(":id", id);
 };
 
+export const AUTHOR_ROUTE_URL = "/authors/:id";
+export const makeAuthorRouteURL = (id: string) => {
+  return AUTHOR_ROUTE_URL.replace(":id", id);
+};
+
 export const NEW_QUOTE_URL = "/new-quote/:sourceId?";
 export const makeNewQuoteURL = (id?: string) => {
   return NEW_QUOTE_URL.replace(":sourceId?", id || "");
@@ -33,6 +38,6 @@ export const setTitle = (title?: string) => {
   }
 
   if (titleEl) {
-    titleEl.innerText = title ? `Gasifier - ${title}` : "Gasifier";
+    titleEl.innerText = title ? `Gasifier | ${title}` : "Gasifier";
   }
 };

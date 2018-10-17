@@ -13,6 +13,7 @@ import { SOURCE_URL } from "./routes/util";
 import { NEW_QUOTE_URL } from "./routes/util";
 import { SEARCH_QUOTES_URL } from "./routes/util";
 import { QUOTE_URL } from "./routes/util";
+import { AUTHOR_ROUTE_URL } from "./routes/util";
 
 jss.setup(preset());
 
@@ -69,6 +70,11 @@ const Quote = Loadable({
   loader: () => import("./routes/Quote")
 });
 
+const AuthorRoute = Loadable({
+  loading: Loading,
+  loader: () => import("./routes/Author")
+});
+
 class App extends React.Component {
   render() {
     return (
@@ -76,6 +82,7 @@ class App extends React.Component {
         <Switch>
           <Route exact={true} path={SOURCE_URL} component={Source} />
           <Route exact={true} path={QUOTE_URL} component={Quote} />
+          <Route exact={true} path={AUTHOR_ROUTE_URL} component={AuthorRoute} />
           <Route
             exact={true}
             path={SEARCH_QUOTES_URL}

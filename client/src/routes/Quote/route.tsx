@@ -1,6 +1,7 @@
 import * as React from "react";
 import { Dimmer } from "semantic-ui-react";
 import { Loader } from "semantic-ui-react";
+import { List } from "semantic-ui-react";
 import { NavLink } from "react-router-dom";
 
 import "./quote-route.css";
@@ -86,7 +87,7 @@ export class Quote extends React.Component<Props, State> {
           <div>
             <h4>Tags</h4>
 
-            {quote.tags.map(this.renderTag)}
+            <List divided={true}>{quote.tags.map(this.renderTag)}</List>
           </div>
         )}
       </div>
@@ -95,9 +96,14 @@ export class Quote extends React.Component<Props, State> {
 
   private renderTag = ({ id, text }: QuoteFull_quote_tags) => {
     return (
-      <NavLink to={makeTagURL(id)} key={id} className="quote-text">
+      <List.Item
+        as={NavLink}
+        to={makeTagURL(id)}
+        key={id}
+        className="quote-text"
+      >
         <div>{text}</div>
-      </NavLink>
+      </List.Item>
     );
   };
 }
