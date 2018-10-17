@@ -5,6 +5,8 @@ defmodule GasWeb.AuthorSchema do
 
   use Absinthe.Schema.Notation
 
+  import Absinthe.Resolution.Helpers, only: [dataloader: 1]
+
   alias GasWeb.AuthorResolver
 
   @desc "An Author"
@@ -13,6 +15,12 @@ defmodule GasWeb.AuthorSchema do
     field(:name, non_null(:string))
     field(:inserted_at, non_null(:iso_datetime))
     field(:updated_at, non_null(:iso_datetime))
+
+    field(
+      :sources,
+      list_of(:source) |> non_null(),
+      resolve: dataloader(Gas.SourceApi)
+    )
   end
 
   @desc "Get author input"
