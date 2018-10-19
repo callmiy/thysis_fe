@@ -1,18 +1,32 @@
 import { WithFormikConfig } from "formik";
+import { FormikErrors } from "formik";
 
-import { SourceFullFrag } from "../../../graphql/gen.types";
+import { AuthorFrag } from "../../../graphql/gen.types";
+import { authorFullName } from "../../../graphql/utils";
+import { AuthorWithFullName } from "../../../graphql/utils";
 import { Props } from "./utils";
+import { FormOutput } from "./utils";
 
-export const config: WithFormikConfig<Props, SourceFullFrag> = {
+export const config: WithFormikConfig<Props, FormOutput> = {
   handleSubmit: async values => null,
 
-  mapPropsToValues: ({ source }) => source,
+  mapPropsToValues: ({ source }) => {
+    let authors = [] as AuthorWithFullName[];
+
+    if (source.authors) {
+      authors = source.authors.map((a: AuthorFrag) => ({
+        ...a,
+        fullName: authorFullName(a)
+      })) as AuthorWithFullName[];
+    }
+
+    return { ...source, authors };
+  },
 
   enableReinitialize: true,
 
   validate: ({ authors, topic }) => {
-    // tslint:disable-next-line:no-any
-    const errors = {} as any;
+    const errors: FormikErrors<FormOutput> = {};
 
     if (!authors || !authors.length) {
       errors.authors = "Select at least one author";

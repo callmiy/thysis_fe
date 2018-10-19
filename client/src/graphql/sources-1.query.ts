@@ -1,15 +1,15 @@
 import gql from "graphql-tag";
 
-import sourceFrag from "./source.fragment";
+import { sourceFullFrag } from "./source-full.fragment";
 
 export const sources1Query = gql`
   query Sources1 {
     sources {
-      ...SourceFrag
+      ...SourceFullFrag
     }
   }
 
-  ${sourceFrag}
+  ${sourceFullFrag}
 `;
 
 export default sources1Query;

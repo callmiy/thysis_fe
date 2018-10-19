@@ -5,6 +5,7 @@ defmodule GasWeb.SourceSchemaTest do
   alias Gas.Source
   alias Gas.MapHelpers
   alias Gas.SourceApi
+  alias Gas.Factory.Author, as: AuthorFactory
 
   # @tag :skip
   describe "query" do
@@ -35,14 +36,11 @@ defmodule GasWeb.SourceSchemaTest do
 
       assert %{
                "id" => ^id,
-               "display" => display,
                "sourceType" => %{
                  "id" => ^source_type_id
                },
                "authors" => authors_
              } = List.last(sources)
-
-      assert_display(authors_, display)
     end
 
     # @tag :skip
@@ -62,11 +60,10 @@ defmodule GasWeb.SourceSchemaTest do
                   "source" => %{
                     "id" => ^id,
                     "year" => ^year,
-                    "display" => display,
                     "sourceType" => %{
                       "id" => ^source_type_id
                     },
-                    "authors" => authors_
+                    "authors" => _
                   }
                 }
               }} =
@@ -79,40 +76,28 @@ defmodule GasWeb.SourceSchemaTest do
                    }
                  }
                )
-
-      assert_display(authors_, display)
     end
   end
 
-  # @tag :skip
-  describe "create mutatation" do
+  describe "create mutation" do
     # @tag :skip
     test "create source with author names only" do
-      %{id: source_type_id, name: name} = source_type = insert(:source_type)
+      %{id: source_type_id, name: name} = insert(:source_type)
 
-      source_type_id = Integer.to_string(source_type_id)
-
-      %{year: year} =
-        source =
-        SourceFactory.params_for(
-          :with_authors,
-          source_type: source_type,
+      source =
+        SourceFactory.params(
+          source_type_id: source_type_id,
           year: "2016"
         )
 
-      {authors, source_input} = make_authors(source)
-
-      variables = %{
-        "source" => source_input
-      }
+      source_type_id = Integer.to_string(source_type_id)
 
       assert {:ok,
               %{
                 data: %{
                   "createSource" => %{
                     "id" => _,
-                    "year" => ^year,
-                    "display" => display,
+                    "year" => "2016",
                     "sourceType" => %{
                       "id" => ^source_type_id,
                       "name" => ^name
@@ -124,22 +109,19 @@ defmodule GasWeb.SourceSchemaTest do
                Absinthe.run(
                  Queries.mutation(:source),
                  Schema,
-                 variables: variables
+                 variables: %{
+                   "source" => SourceFactory.stringify(source)
+                 }
                )
 
-      assert_display(authors_, display)
-      assert_authors(authors, authors_)
+      assert_authors(source, authors_)
     end
 
     # @tag :skip
     test "create source without author names or IDs errors" do
-      {_, source} =
-        SourceFactory.params_with_assocs()
-        |> make_authors()
-
-      variables = %{"source" => source}
-
       error = "{name: source, error: [authors: #{SourceApi.author_required_error_string()}]}"
+
+      source_type = insert(:source_type)
 
       assert {:ok,
               %{
@@ -156,30 +138,36 @@ defmodule GasWeb.SourceSchemaTest do
                Absinthe.run(
                  Queries.mutation(:source),
                  Schema,
-                 variables: variables
+                 variables: %{
+                   "source" =>
+                     SourceFactory.params_no_authors(%{
+                       source_type_id: source_type.id
+                     })
+                     |> SourceFactory.stringify()
+                 }
                )
     end
 
     # @tag :skip
     test "create source does not insert duplicate author IDs" do
-      id = insert(:author).id
+      id = AuthorFactory.insert().id
 
       author_attrs =
-        build_list(3, :author)
-        |> Enum.map(&%{name: &1.name})
+        3
+        |> AuthorFactory.params_list()
+        |> Enum.map(&%{last_name: &1.last_name})
 
       source =
-        SourceFactory.params_with_assocs(
-          :with_authors,
+        SourceFactory.params_no_authors(%{
+          source_type_id: insert(:source_type).id
+        })
+        |> Map.merge(%{
+          # 2 author ids
           author_ids: [id, id],
+          # 3 author attrs
           author_attrs: author_attrs
-        )
-
-      {_authors, source_input} = make_authors(source)
-
-      variables = %{
-        "source" => source_input
-      }
+        })
+        |> SourceFactory.stringify()
 
       assert {:ok,
               %{
@@ -192,7 +180,9 @@ defmodule GasWeb.SourceSchemaTest do
                Absinthe.run(
                  Queries.mutation(:source),
                  Schema,
-                 variables: variables
+                 variables: %{
+                   "source" => source
+                 }
                )
 
       assert length(authors) == 4
@@ -200,13 +190,14 @@ defmodule GasWeb.SourceSchemaTest do
 
     # @tag :skip
     test "create source with invalid author IDs errors" do
-      id = insert(:author).id
+      id = AuthorFactory.insert().id
 
-      {_, source} =
-        SourceFactory.params_with_assocs(nil, author_ids: [id, id + 1])
-        |> make_authors()
-
-      variables = %{"source" => source}
+      source =
+        SourceFactory.params_no_authors(%{
+          source_type_id: insert(:source_type).id
+        })
+        |> Map.merge(%{author_ids: [id, id + 1]})
+        |> SourceFactory.stringify()
 
       error =
         "{name: source, error: [author_ids: #{SourceApi.invalid_ids_error_string([id + 1])}]}"
@@ -226,27 +217,22 @@ defmodule GasWeb.SourceSchemaTest do
                Absinthe.run(
                  Queries.mutation(:source),
                  Schema,
-                 variables: variables
+                 variables: %{"source" => source}
                )
     end
   end
 
-  # @tag :skip
-  describe "update mutatation" do
+  describe "update mutation" do
+    # @tag :skip
     test "update source with author ids succeeds" do
       %{authors: authors, id: id} = SourceFactory.insert()
       id = Integer.to_string(id)
 
       ids =
-        insert_list(Faker.random_between(1, 3), :author)
+        1..3
+        |> Enum.random()
+        |> AuthorFactory.insert_list()
         |> Enum.map(&Integer.to_string(&1.id))
-
-      variables = %{
-        "source" => %{
-          "id" => id,
-          "author_ids" => ids
-        }
-      }
 
       assert {:ok,
               %{
@@ -260,30 +246,31 @@ defmodule GasWeb.SourceSchemaTest do
                Absinthe.run(
                  Queries.mutation(:update_source),
                  Schema,
-                 variables: variables
+                 variables: %{
+                   "source" => %{
+                     "id" => id,
+                     "author_ids" => ids
+                   }
+                 }
                )
 
       assert length(authors_graphQl) == length(authors) + length(ids)
-      authors_graphQl = Enum.map(authors_graphQl, & &1["id"])
-      assert Enum.all?(ids, &Enum.member?(authors_graphQl, &1))
+      authors_graphQl_ids = Enum.map(authors_graphQl, & &1["id"])
+      assert Enum.all?(ids, &Enum.member?(authors_graphQl_ids, &1))
     end
 
+    # @tag :skip
     test "update source with author attrs succeeds" do
       %{authors: authors, id: id} = SourceFactory.insert()
       id = Integer.to_string(id)
 
       author_attrs =
-        build_list(Faker.random_between(1, 3), :author)
-        |> Enum.map(fn %{name: name} ->
-          %{"name" => name}
+        1..3
+        |> Enum.random()
+        |> AuthorFactory.insert_list()
+        |> Enum.map(fn a ->
+          %{"lastName" => a.last_name}
         end)
-
-      variables = %{
-        "source" => %{
-          "id" => id,
-          "author_attrs" => author_attrs
-        }
-      }
 
       assert {:ok,
               %{
@@ -297,27 +284,34 @@ defmodule GasWeb.SourceSchemaTest do
                Absinthe.run(
                  Queries.mutation(:update_source),
                  Schema,
-                 variables: variables
+                 variables: %{
+                   "source" => %{
+                     "id" => id,
+                     "author_attrs" => author_attrs
+                   }
+                 }
                )
 
       assert length(authors_graphQl) == length(authors) + length(author_attrs)
-      authors_graphQl = Enum.map(authors_graphQl, & &1["name"])
-      assert Enum.all?(author_attrs, &Enum.member?(authors_graphQl, &1["name"]))
+      authors_graphQl_names = Enum.map(authors_graphQl, & &1["lastName"])
+
+      assert Enum.all?(
+               author_attrs,
+               &Enum.member?(authors_graphQl_names, &1["lastName"])
+             )
     end
 
+    # @tag :skip
     test "update source without author attrs and author ids succeeds" do
       %{authors: authors, id: id} = source = SourceFactory.insert()
       id = Integer.to_string(id)
 
       attrs =
-        SourceFactory.params()
+        SourceFactory.params_no_authors()
         |> Enum.reject(fn {k, v} -> Map.get(source, k) == v end)
         |> Enum.into(%{})
-        |> MapHelpers.stringify_keys()
-
-      variables = %{
-        "source" => Map.merge(attrs, %{"id" => id})
-      }
+        |> SourceFactory.stringify()
+        |> Map.drop(["sourceType", "sourceTypeId"])
 
       assert {:ok,
               %{
@@ -332,25 +326,37 @@ defmodule GasWeb.SourceSchemaTest do
                Absinthe.run(
                  Queries.mutation(:update_source),
                  Schema,
-                 variables: variables
+                 variables: %{
+                   "source" => attrs |> Map.merge(%{"id" => id})
+                 }
                )
 
       assert length(authors_graphQl) == length(authors)
 
+      source_stringified =
+        source
+        |> Map.from_struct()
+        |> Map.drop([:author_ids, :author_attrs])
+        |> SourceFactory.stringify()
+
       assert Enum.all?(attrs, fn {key, val} ->
-               key_ = String.to_existing_atom(key)
-               source_graphQl[key] == val && Map.get(source, key_) != val
+               source_graphQl[key] == val && Map.get(source_stringified, key) != val
              end)
     end
 
+    # @tag :skip
     test "update source with deleted authors succeeds" do
       author_ids =
-        insert_list(3, :author)
+        AuthorFactory.insert_list(3)
         |> Enum.map(&Integer.to_string(&1.id))
 
       taken = Enum.take(author_ids, 2)
 
-      %{id: id} = SourceFactory.insert(author_ids: author_ids, author_attrs: nil)
+      %{id: id} =
+        SourceFactory.insert(
+          author_ids: author_ids,
+          author_attrs: nil
+        )
 
       id = Integer.to_string(id)
 
@@ -366,7 +372,7 @@ defmodule GasWeb.SourceSchemaTest do
                 data: %{
                   "updateSource" => %{
                     "id" => ^id,
-                    "authors" => authors_graphQl
+                    "authors" => [author_graphQl]
                   }
                 }
               }} =
@@ -376,71 +382,40 @@ defmodule GasWeb.SourceSchemaTest do
                  variables: variables
                )
 
-      assert length(authors_graphQl) == 1
-      authors_graphQl = Enum.map(authors_graphQl, & &1["id"])
-      refute Enum.all?(taken, &Enum.member?(authors_graphQl, &1))
+      refute Enum.member?(taken, author_graphQl["id"])
     end
   end
 
-  defp assert_authors(authors, authors_graphql) do
-    authors_length =
-      Map.values(authors)
+  defp assert_authors(%{} = source, authors_graphql) do
+    authors =
+      source
+      |> Map.take([:author_ids, :author_attrs])
+      |> Map.values()
+      |> Enum.reject(&(&1 == nil))
       |> Enum.concat()
-      |> length()
+
+    authors_length = length(authors)
 
     assert authors_length == length(authors_graphql)
 
-    case Map.get(authors, "author_ids") do
+    case Map.get(source, :author_ids) do
       nil ->
         :ok
 
       author_ids ->
-        ids = Enum.map(authors_graphql, & &1["id"])
-        assert Enum.all?(author_ids, &Enum.member?(ids, &1))
+        all_ids = Enum.map(authors_graphql, & &1["id"])
+        author_ids = Enum.map(author_ids, &Integer.to_string/1)
+        assert Enum.all?(author_ids, &Enum.member?(all_ids, &1))
     end
 
-    case Map.get(authors, "author_attrs") do
+    case Map.get(source, :author_attrs) do
       nil ->
         :ok
 
       author_attrs ->
-        author_attrs = Enum.map(author_attrs, & &1["name"])
-        names = Enum.map(authors_graphql, & &1["name"])
+        author_attrs = Enum.map(author_attrs, & &1.last_name)
+        names = Enum.map(authors_graphql, & &1["lastName"])
         assert Enum.all?(author_attrs, &Enum.member?(names, &1))
     end
-  end
-
-  defp assert_display(authors, display),
-    do: assert(Enum.all?(authors, &String.contains?(display, &1["name"])))
-
-  defp make_authors(source) do
-    {authors, source} =
-      case Map.pop(source, :author_ids) do
-        {nil, source} ->
-          {%{}, source}
-
-        {author_ids, source} ->
-          author_ids = Enum.map(author_ids, &Integer.to_string/1)
-          {%{"author_ids" => author_ids}, source}
-      end
-
-    {authors, source} =
-      case {author_attrs, source} = Map.pop(source, :author_attrs) do
-        {nil, source} ->
-          {authors, source}
-
-        {author_attrs, source} ->
-          author_attrs = Enum.map(author_attrs, &MapHelpers.stringify_keys/1)
-          {Map.merge(authors, %{"author_attrs" => author_attrs}), source}
-      end
-
-    source =
-      source
-      |> MapHelpers.stringify_keys()
-      |> Map.merge(%{
-        "sourceTypeId" => Integer.to_string(source.source_type_id)
-      })
-
-    {authors, Map.merge(source, authors)}
   end
 end

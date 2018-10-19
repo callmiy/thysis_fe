@@ -13,6 +13,7 @@ import { State } from "./utils";
 import MobileBottomMenu from "../../components/mobile-bottom-menu.component";
 import { MenuItem } from "../../components/mobile-bottom-menu.component";
 import { AuthorRouteFrag_sources } from "../../graphql/gen.types";
+import { authorFullName } from "../../graphql/utils";
 
 export class Author extends React.Component<Props, State> {
   componentDidMount() {
@@ -52,16 +53,18 @@ export class Author extends React.Component<Props, State> {
 
     return (
       <div className="main">
-        <div className="text">{author.name}</div>
+        <div className="text">{authorFullName(author)}</div>
 
         <hr />
 
-        {author.sources && (
+        {author.sources && author.sources.length ? (
           <div>
             <h4>Sources</h4>
 
             <List divided={true}>{author.sources.map(this.renderSource)}</List>
           </div>
+        ) : (
+          undefined
         )}
       </div>
     );

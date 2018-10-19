@@ -37,7 +37,8 @@ defmodule GasWeb.SourceSchema do
     field(
       :display,
       :string,
-      do: resolve(&SourceResolver.display/3)
+      deprecate: "Client should handle display",
+      resolve: &SourceResolver.display/3
     )
   end
 

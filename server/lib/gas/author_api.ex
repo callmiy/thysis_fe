@@ -55,6 +55,14 @@ defmodule Gas.AuthorApi do
 
   """
   def create_(attrs \\ %{}) do
+    attrs =
+      attrs
+      |> Enum.map(fn
+        {k, nil} -> {k, nil}
+        {k, v} -> {k, String.capitalize(v)}
+      end)
+      |> Enum.into(%{})
+
     %Author{}
     |> Author.changeset(attrs)
     |> Repo.insert()

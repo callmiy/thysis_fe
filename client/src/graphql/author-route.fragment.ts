@@ -3,7 +3,9 @@ import gql from "graphql-tag";
 export const authorRouteFrag = gql`
   fragment AuthorRouteFrag on Author {
     id
-    name
+    lastName
+    firstName
+    middleName
     sources {
       id
       display

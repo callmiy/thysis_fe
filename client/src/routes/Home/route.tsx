@@ -58,7 +58,7 @@ export class Home extends React.Component<HomeProps, HomeState> {
               to={SEARCH_QUOTES_URL}
             >
               <Icon name="search" />
-              Search Quotes
+              Search
             </Menu.Item>
 
             <Menu.Item

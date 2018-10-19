@@ -13,6 +13,12 @@ defmodule Gas.Factory.Author do
     }
   end
 
+  def params_list(how_many, attrs \\ %{}),
+    do: Enum.map(1..how_many, fn _ -> params(attrs) end)
+
+  def insert_list(how_many),
+    do: Enum.map(1..how_many, fn _ -> insert() end)
+
   def insert(attrs \\ %{})
   def insert(attrs) when is_list(attrs), do: Map.new(attrs)
 
@@ -26,11 +32,16 @@ defmodule Gas.Factory.Author do
   end
 
   def stringify(%{} = attrs),
-    do: %{
-      "firstName" => attrs.first_name,
-      "lastName" => attrs.last_name,
-      "middleName" => attrs.middle_name
-    }
+    do:
+      attrs
+      |> Enum.map(fn
+        {_, nil} -> nil
+        {:last_name, v} -> {"lastName", v}
+        {:first_name, v} -> {"firstName", v}
+        {:middle_name, v} -> {"middleName", v}
+      end)
+      |> Enum.reject(&(&1 == nil))
+      |> Enum.into(%{})
 
   defp first_name(%{first_name: name}), do: name
   defp first_name(_), do: Enum.random([Faker.Name.first_name(), nil])

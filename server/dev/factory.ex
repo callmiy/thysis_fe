@@ -1,6 +1,8 @@
 defmodule Gas.Factory do
   use ExMachina.Ecto, repo: Gas.Repo
 
+  @dialyzer {:no_return, [fields_for: 1] }
+
   alias Gas.SourceType
   alias Gas.Quote
   alias Gas.Tag
@@ -43,7 +45,7 @@ defmodule Gas.Factory do
       volume: Enum.random([get_random_string_integer(), nil]),
       issue: Enum.random([get_random_string_integer(), nil]),
       extras: Enum.random([Faker.String.base64(), nil]),
-      source: SourceFactory.with_authors()
+      source: SourceFactory.params()
     }
   end
 
@@ -78,7 +80,6 @@ defmodule Gas.Factory do
       end
 
     %Author{
-      name: Faker.Name.name(),
       first_name: Enum.random([Faker.Name.first_name(), nil]),
       last_name: Faker.Name.last_name(),
       middle_name: middle_name
@@ -87,7 +88,7 @@ defmodule Gas.Factory do
 
   def map(built), do: Map.from_struct(built)
 
-  defp random_date, do: Faker.Date.between(@start_date, @end_date)
+  def random_date, do: Faker.Date.between(@start_date, @end_date)
 
   defp get_random_string_integer, do: Integer.to_string(Faker.random_between(2, 100))
 end

@@ -10,13 +10,13 @@ import { TagFrag } from "../../graphql/gen.types";
 import { VolumeIssueType } from "./form-volume-issue-control.component";
 import { PageType } from "./form-page-start-end-control.component";
 import { DateType } from "./date.component";
-import { SourceFrag } from "../../graphql/gen.types";
+import { SourceFullFrag } from "../../graphql/gen.types";
 import { Sources1 as Sources1Query } from "../../graphql/gen.types";
 import { Source1 as Source1Query } from "../../graphql/gen.types";
 
 export interface FormValues {
   tags: TagFrag[];
-  source: SourceFrag | null;
+  source: SourceFullFrag | null;
   quote: string;
   date: DateType | null;
   page: PageType | null;

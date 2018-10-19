@@ -13,6 +13,8 @@ import isEmpty from "lodash/isEmpty";
 import { AuthorFrag, SourceTypeFrag } from "../../../graphql/gen.types";
 import QUOTES_QUERY from "../../../graphql/quotes-1.query";
 import { Quotes1QueryClientResult } from "../../../graphql/ops.types";
+import { authorDisplay } from "../../../graphql/utils";
+import { authorFullName } from "../../../graphql/utils";
 import { classes } from "./styles";
 import { accordionContentStyle } from "./styles";
 import { initialState } from "./utils";
@@ -95,7 +97,7 @@ export class SourceAccordion extends React.Component<Props, State> {
         className={classes.detailsAccordionContent}
         active={activeIndex === 0}
       >
-        {this.rendingUpdatingUI()}
+        {this.renderUpdatingUI()}
 
         <div className={`source-type ${classes.root}`}>
           <div className={classes.labels}>Type</div>
@@ -167,11 +169,15 @@ export class SourceAccordion extends React.Component<Props, State> {
     );
   };
 
-  renderAuthor = ({ id, name }: AuthorFrag) => {
-    return <div key={id}>{name}</div>;
+  renderAuthor = (author: AuthorFrag) => {
+    return (
+      <div key={author.id}>
+        {authorFullName(author)} ({authorDisplay(author)})
+      </div>
+    );
   };
 
-  rendingUpdatingUI = () => {
+  renderUpdatingUI = () => {
     const { isSubmitting } = this.props;
     const { updateSourceError, openUpdateSourceSuccessModal } = this.state;
 

@@ -3,7 +3,8 @@ import { Modal } from "semantic-ui-react";
 import { List } from "semantic-ui-react";
 import { Loader } from "semantic-ui-react";
 
-import { SourceFrag } from "../../graphql/gen.types";
+import { SourceFullFrag } from "../../graphql/gen.types";
+import { sourceDisplay } from "../../graphql/utils";
 import { makeSourceURL } from "../../routes/util";
 import { styles } from "./styles";
 import { modalStyle } from "./styles";
@@ -66,10 +67,14 @@ export class SourcesModal extends React.Component<Props> {
     return undefined;
   };
 
-  renderSource = ({ id, display }: SourceFrag) => {
+  renderSource = (source: SourceFullFrag) => {
     return (
-      <List.Item key={id} style={styles.listItem} onClick={this.navigateTo(id)}>
-        <List.Content>{display}</List.Content>
+      <List.Item
+        key={source.id}
+        style={styles.listItem}
+        onClick={this.navigateTo(source.id)}
+      >
+        <List.Content>{sourceDisplay(source)}</List.Content>
       </List.Item>
     );
   };

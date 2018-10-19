@@ -6,10 +6,15 @@ import { InjectedFormikProps } from "formik";
 import { SourceFullFrag } from "../../../graphql/gen.types";
 import { Quote1Frag } from "../../../graphql/gen.types";
 import { UpdateSourceMutationFn } from "../../../graphql/ops.types";
+import { AuthorWithFullName } from "../../../graphql/utils";
 
 export enum DetailAction {
   EDITING = "editing", // when we are editing source
   VIEWING = "viewing" // when we are viewing source
+}
+
+export interface FormOutput extends SourceFullFrag {
+  authors: AuthorWithFullName[];
 }
 
 export type AccordionTitleClickCb = (
@@ -26,7 +31,7 @@ export type PropsWithApolloClient = WithApolloClient<OwnProps>;
 
 export type PropsWithFormikProps = InjectedFormikProps<
   PropsWithApolloClient,
-  SourceFullFrag
+  FormOutput
 >;
 
 export type Props = PropsWithFormikProps;

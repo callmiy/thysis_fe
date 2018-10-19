@@ -7,6 +7,7 @@ defmodule GasWeb.AuthorSchemaTest do
   # alias Gas.MapHelpers
 
   describe "query" do
+    # @tag :skip
     test "get author by id" do
       %Author{id: id} = AuthorFactory.insert()
       id = Integer.to_string(id)
@@ -33,6 +34,7 @@ defmodule GasWeb.AuthorSchemaTest do
                )
     end
 
+    # @tag :skip
     test "get all authors succeeds" do
       # first author
       AuthorFactory.insert()
@@ -54,6 +56,7 @@ defmodule GasWeb.AuthorSchemaTest do
   end
 
   describe "mutation" do
+    # @tag :skip
     test "create author succeeds" do
       attrs =
         AuthorFactory.params()

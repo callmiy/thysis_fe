@@ -21,9 +21,10 @@ import { NavLink } from "react-router-dom";
 
 import { Quotes1 as Quotes1Query } from "../../graphql/gen.types";
 import { TagFrag } from "../../graphql/gen.types";
-import { SourceFrag } from "../../graphql/gen.types";
+import { SourceFullFrag } from "../../graphql/gen.types";
 import { Sources1 as Sources1Query } from "../../graphql/gen.types";
 import { Source1 as Source1Query } from "../../graphql/gen.types";
+import { sourceDisplay } from "../../graphql/utils";
 import TagControl from "./form-tag-control.component";
 import SourceControl from "./form-source-control.component";
 import Date from "./date.component";
@@ -237,7 +238,7 @@ export class NewQuote extends React.Component<NewQuoteProps, NewQuoteState> {
             </div>
 
             <div className={`${classes.quoteSourceDisplay}`}>
-              {source.display}
+              {sourceDisplay(source)}
             </div>
           </NavLink>
         )}
@@ -318,7 +319,9 @@ export class NewQuote extends React.Component<NewQuoteProps, NewQuoteState> {
     const errors: FormikErrors<FormValues> = {};
 
     for (const key of Object.keys(values)) {
-      const error = this[`validate${key}`](values[key]);
+      const error = this[
+        `validate${key.charAt(0).toUpperCase()}${key.slice(1)}`
+      ](values[key]);
 
       if (error) {
         errors[key] = error;
@@ -481,7 +484,7 @@ export class NewQuote extends React.Component<NewQuoteProps, NewQuoteState> {
   };
 
   handleControlChange = (name: string, form: FormikProps<FormValues>) => (
-    val: undefined | VolumeIssueType | SourceFrag | PageType | DateType
+    val: undefined | VolumeIssueType | SourceFullFrag | PageType | DateType
   ) => form.setFieldValue(name, val);
 
   renderQuoteControl = (formProps: FieldProps<FormValues>) => {
@@ -602,13 +605,13 @@ export class NewQuote extends React.Component<NewQuoteProps, NewQuoteState> {
   getSources = () => {
     const { queryResult } = this.state;
     if (!queryResult) {
-      return [] as SourceFrag[];
+      return [] as SourceFullFrag[];
     }
 
     const { data } = queryResult;
 
     if (!data) {
-      return [] as SourceFrag[];
+      return [] as SourceFullFrag[];
     }
 
     if (data.source) {
@@ -618,7 +621,7 @@ export class NewQuote extends React.Component<NewQuoteProps, NewQuoteState> {
     return data.sources;
   };
 
-  validatequote = (quote: string | null) => {
+  validateQuote = (quote: string | null) => {
     const error = "Enter a quote";
 
     if (!quote) {
@@ -638,7 +641,7 @@ export class NewQuote extends React.Component<NewQuoteProps, NewQuoteState> {
     return "";
   };
 
-  validateextras = (extras: string | null) => {
+  validateExtras = (extras: string | null) => {
     if (!extras) {
       return "";
     }
@@ -656,7 +659,7 @@ export class NewQuote extends React.Component<NewQuoteProps, NewQuoteState> {
     return "";
   };
 
-  validatesource = (source: SourceFrag | null) => {
+  validateSource = (source: SourceFullFrag | null) => {
     const error = "Select a source";
 
     if (!source) {
@@ -676,7 +679,7 @@ export class NewQuote extends React.Component<NewQuoteProps, NewQuoteState> {
     return "";
   };
 
-  validatetags = (tags: TagFrag[] | null) => {
+  validateTags = (tags: TagFrag[] | null) => {
     const error = "Select at least one tag";
 
     if (!tags || !tags.length) {
@@ -696,7 +699,7 @@ export class NewQuote extends React.Component<NewQuoteProps, NewQuoteState> {
     return "";
   };
 
-  validatedate = (date: DateType | null) => {
+  validateDate = (date: DateType | null) => {
     const error = "Enter a valid date";
 
     if (!date) {
@@ -753,7 +756,7 @@ export class NewQuote extends React.Component<NewQuoteProps, NewQuoteState> {
     return isValid ? "" : error;
   };
 
-  validatepage = (page: PageType | null) => {
+  validatePage = (page: PageType | null) => {
     if (!page) {
       return "";
     }
@@ -777,7 +780,7 @@ export class NewQuote extends React.Component<NewQuoteProps, NewQuoteState> {
     return "";
   };
 
-  validatevolumeIssue = (volumeIssue: VolumeIssueType | null) => {
+  validateVolumeIssue = (volumeIssue: VolumeIssueType | null) => {
     if (!volumeIssue) {
       return "";
     }

@@ -12,7 +12,9 @@ export interface AuthorRouteQuery_author_sources {
 
 export interface AuthorRouteQuery_author {
   id: string;
-  name: string;
+  lastName: string;
+  firstName: string | null;
+  middleName: string | null;
   sources: (AuthorRouteQuery_author_sources | null)[];
 }
 
@@ -33,7 +35,9 @@ export interface AuthorRouteQueryVariables {
 
 export interface GetAllAuthors_authors {
   id: string;
-  name: string;
+  firstName: string | null;
+  lastName: string;
+  middleName: string | null;
 }
 
 export interface GetAllAuthors {
@@ -49,7 +53,9 @@ export interface GetAllAuthors {
 
 export interface CreateAuthor_createAuthor {
   id: string;
-  name: string;
+  firstName: string | null;
+  lastName: string;
+  middleName: string | null;
 }
 
 export interface CreateAuthor {
@@ -107,7 +113,9 @@ export interface QuoteFullVariables {
 
 export interface CreateQuote_createQuote_source_authors {
   id: string;
-  name: string;
+  firstName: string | null;
+  lastName: string;
+  middleName: string | null;
 }
 
 export interface CreateQuote_createQuote_source_sourceType {
@@ -117,8 +125,11 @@ export interface CreateQuote_createQuote_source_sourceType {
 
 export interface CreateQuote_createQuote_source {
   id: string;
-  display: string | null;
   year: string | null;
+  topic: string;
+  publication: string | null;
+  url: string | null;
+  insertedAt: any;
   authors: (CreateQuote_createQuote_source_authors | null)[];
   sourceType: CreateQuote_createQuote_source_sourceType;
 }
@@ -168,7 +179,9 @@ export interface Quotes1Variables {
 
 export interface SourceFull_source_authors {
   id: string;
-  name: string;
+  firstName: string | null;
+  lastName: string;
+  middleName: string | null;
 }
 
 export interface SourceFull_source_sourceType {
@@ -178,14 +191,13 @@ export interface SourceFull_source_sourceType {
 
 export interface SourceFull_source {
   id: string;
-  display: string | null;
   year: string | null;
-  authors: (SourceFull_source_authors | null)[];
-  sourceType: SourceFull_source_sourceType;
   topic: string;
   publication: string | null;
   url: string | null;
   insertedAt: any;
+  authors: (SourceFull_source_authors | null)[];
+  sourceType: SourceFull_source_sourceType;
 }
 
 export interface SourceFull {
@@ -221,7 +233,9 @@ export interface SourceTypes {
 
 export interface CreateSource_createSource_authors {
   id: string;
-  name: string;
+  firstName: string | null;
+  lastName: string;
+  middleName: string | null;
 }
 
 export interface CreateSource_createSource_sourceType {
@@ -231,8 +245,11 @@ export interface CreateSource_createSource_sourceType {
 
 export interface CreateSource_createSource {
   id: string;
-  display: string | null;
   year: string | null;
+  topic: string;
+  publication: string | null;
+  url: string | null;
+  insertedAt: any;
   authors: (CreateSource_createSource_authors | null)[];
   sourceType: CreateSource_createSource_sourceType;
 }
@@ -254,7 +271,9 @@ export interface CreateSourceVariables {
 
 export interface Source1_source_authors {
   id: string;
-  name: string;
+  firstName: string | null;
+  lastName: string;
+  middleName: string | null;
 }
 
 export interface Source1_source_sourceType {
@@ -264,8 +283,11 @@ export interface Source1_source_sourceType {
 
 export interface Source1_source {
   id: string;
-  display: string | null;
   year: string | null;
+  topic: string;
+  publication: string | null;
+  url: string | null;
+  insertedAt: any;
   authors: (Source1_source_authors | null)[];
   sourceType: Source1_source_sourceType;
 }
@@ -287,7 +309,9 @@ export interface Source1Variables {
 
 export interface Sources1_sources_authors {
   id: string;
-  name: string;
+  firstName: string | null;
+  lastName: string;
+  middleName: string | null;
 }
 
 export interface Sources1_sources_sourceType {
@@ -297,8 +321,11 @@ export interface Sources1_sources_sourceType {
 
 export interface Sources1_sources {
   id: string;
-  display: string | null;
   year: string | null;
+  topic: string;
+  publication: string | null;
+  url: string | null;
+  insertedAt: any;
   authors: (Sources1_sources_authors | null)[];
   sourceType: Sources1_sources_sourceType;
 }
@@ -446,7 +473,9 @@ export interface AllMatchingTextsVariables {
 
 export interface UpdateSource_updateSource_authors {
   id: string;
-  name: string;
+  firstName: string | null;
+  lastName: string;
+  middleName: string | null;
 }
 
 export interface UpdateSource_updateSource_sourceType {
@@ -456,14 +485,13 @@ export interface UpdateSource_updateSource_sourceType {
 
 export interface UpdateSource_updateSource {
   id: string;
-  display: string | null;
   year: string | null;
-  authors: (UpdateSource_updateSource_authors | null)[];
-  sourceType: UpdateSource_updateSource_sourceType;
   topic: string;
   publication: string | null;
   url: string | null;
   insertedAt: any;
+  authors: (UpdateSource_updateSource_authors | null)[];
+  sourceType: UpdateSource_updateSource_sourceType;
 }
 
 export interface UpdateSource {
@@ -488,7 +516,9 @@ export interface AuthorRouteFrag_sources {
 
 export interface AuthorRouteFrag {
   id: string;
-  name: string;
+  lastName: string;
+  firstName: string | null;
+  middleName: string | null;
   sources: (AuthorRouteFrag_sources | null)[];
 }
 
@@ -501,7 +531,9 @@ export interface AuthorRouteFrag {
 
 export interface AuthorFrag {
   id: string;
-  name: string;
+  firstName: string | null;
+  lastName: string;
+  middleName: string | null;
 }
 
 /* tslint:disable */
@@ -575,7 +607,9 @@ export interface QuoteFullFrag {
 
 export interface SourceFullFrag_authors {
   id: string;
-  name: string;
+  firstName: string | null;
+  lastName: string;
+  middleName: string | null;
 }
 
 export interface SourceFullFrag_sourceType {
@@ -585,14 +619,13 @@ export interface SourceFullFrag_sourceType {
 
 export interface SourceFullFrag {
   id: string;
-  display: string | null;
   year: string | null;
-  authors: (SourceFullFrag_authors | null)[];
-  sourceType: SourceFullFrag_sourceType;
   topic: string;
   publication: string | null;
   url: string | null;
   insertedAt: any;
+  authors: (SourceFullFrag_authors | null)[];
+  sourceType: SourceFullFrag_sourceType;
 }
 
 /* tslint:disable */
@@ -605,31 +638,6 @@ export interface SourceFullFrag {
 export interface SourceTypeFrag {
   id: string;
   name: string | null;
-}
-
-/* tslint:disable */
-// This file was automatically generated and should not be edited.
-
-// ====================================================
-// GraphQL fragment: SourceFrag
-// ====================================================
-
-export interface SourceFrag_authors {
-  id: string;
-  name: string;
-}
-
-export interface SourceFrag_sourceType {
-  id: string;
-  name: string | null;
-}
-
-export interface SourceFrag {
-  id: string;
-  display: string | null;
-  year: string | null;
-  authors: (SourceFrag_authors | null)[];
-  sourceType: SourceFrag_sourceType;
 }
 
 /* tslint:disable */
@@ -753,13 +761,14 @@ export enum QuoteFullSearchTable {
 
 // Get author input
 export interface GetAuthorInput {
-  id?: string | null;
-  name?: string | null;
+  id: string;
 }
 
 // Input for creating an author
 export interface CreateAuthorInput {
-  name: string;
+  firstName?: string | null;
+  lastName: string;
+  middleName?: string | null;
 }
 
 // Inputs for getting a single quote
@@ -813,7 +822,8 @@ export interface CreateTagInput {
   text: string;
 }
 
-// Input for full text search on quotes, their sources, tags and source types
+// Input for full text search on quotes, their sources, tags and source
+
 export interface QuoteFullSearchInput {
   text: string;
 }

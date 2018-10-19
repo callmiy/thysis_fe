@@ -5,7 +5,6 @@ defmodule Gas.Author do
   alias Gas.Source
 
   schema "authors" do
-    field(:name, :string)
     field(:first_name, :string)
     field(:last_name, :string)
     field(:middle_name, :string)
@@ -17,7 +16,7 @@ defmodule Gas.Author do
   @doc false
   def changeset(author, attrs \\ %{}) do
     author
-    |> cast(attrs, [:name, :first_name, :last_name, :middle_name])
+    |> cast(attrs, [:first_name, :last_name, :middle_name])
     |> validate_required([:last_name])
   end
 end

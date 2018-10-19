@@ -98,13 +98,13 @@ defmodule Gas.SourceApi do
            %{
              source: %Source{authors: [%Author{}]},
              source_type: %SourceType{} | nil,
-             soure_author_ids: {Integer.t(), nil} | nil,
-             soure_author_params: {Integer.t(), nil} | nil,
+             source_author_ids: {Integer.t(), nil} | nil,
+             source_author_params: {Integer.t(), nil} | nil,
              author_attrs: {Integer.t(), [%Author{id: Integer.t()}]} | nil
            }}
           | {:error, Multi.name(), any(), %{optional(Multi.name()) => any()}}
 
-  def create_(%{source_type_id: nil, source_type: %{id: nil} = source_type} = attrs) do
+  def create_(%{source_type_id: nil, source_type: %{} = source_type} = attrs) do
     source_type_multi =
       Multi.new()
       |> Multi.insert(

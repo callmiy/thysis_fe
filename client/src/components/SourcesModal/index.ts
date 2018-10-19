@@ -3,25 +3,28 @@ import { graphql } from "react-apollo";
 
 import SourcesModal from "./component";
 import SOURCES_QUERY from "../../graphql/sources-1.query";
-import { SourceFrag } from "../../graphql/gen.types";
+import { SourceFullFrag } from "../../graphql/gen.types";
+import { sourceDisplay } from "../../graphql/utils";
 import { OwnProps } from "./utils";
 import { ComponentDataProps } from "./utils";
 import { Sources1 as Sources1Query } from "../../graphql/gen.types";
 
-const reshapeSource = (s: SourceFrag | null) => {
+const reshapeSource = (s: SourceFullFrag | null) => {
   if (!s) {
-    return {} as SourceFrag;
+    return {} as SourceFullFrag;
   }
 
   return {
     ...s,
-    display: `${s.display} | ${s.sourceType.name}`
-  } as SourceFrag;
+    display: `${sourceDisplay(s)} | ${s.sourceType.name}`
+  } as SourceFullFrag;
 };
 
-export const reshapeSources = (sources: SourceFrag[] | null): SourceFrag[] => {
+export const reshapeSources = (
+  sources: SourceFullFrag[] | null
+): SourceFullFrag[] => {
   if (!sources) {
-    return [] as SourceFrag[];
+    return [] as SourceFullFrag[];
   }
 
   return sources.map(reshapeSource);
@@ -35,7 +38,7 @@ const sourcesGraphQl = graphql<OwnProps, Sources1Query, {}, ComponentDataProps>(
         return data as ComponentDataProps;
       }
 
-      const sources = data.sources as SourceFrag[];
+      const sources = data.sources as SourceFullFrag[];
       return {
         ...data,
         sources: reshapeSources(sources)

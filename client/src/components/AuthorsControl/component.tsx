@@ -4,6 +4,8 @@ import React from "react";
 import { AuthorFrag } from "../../graphql/gen.types";
 import { GetAllAuthorsQueryComponent } from "../../graphql/ops.types";
 import AUTHORS_QUERY from "../../graphql/authors.query";
+import { authorFullName } from "../../graphql/utils";
+import { AuthorWithFullName } from "../../graphql/utils";
 
 interface AuthorsControlProps {
   selectError: boolean;
@@ -19,10 +21,13 @@ export class AuthorsControl extends React.Component<AuthorsControlProps> {
     return (
       <GetAllAuthorsQueryComponent query={AUTHORS_QUERY}>
         {({ data }) => {
-          let authors = [] as AuthorFrag[];
+          let authors = [] as AuthorWithFullName[];
 
           if (data && data.authors) {
-            authors = data.authors as AuthorFrag[];
+            authors = data.authors.map((a: AuthorWithFullName) => {
+              // a.fullName = authorFullName(a);
+              return { ...a, fullName: authorFullName(a) };
+            }) as AuthorWithFullName[];
           }
 
           return (
@@ -37,7 +42,7 @@ export class AuthorsControl extends React.Component<AuthorsControlProps> {
               onChange={handleChange}
               onBlur={handleBlur}
               value={value}
-              labelKey="name"
+              labelKey="fullName"
               valueKey="id"
             />
           );

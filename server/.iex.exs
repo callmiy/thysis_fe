@@ -22,3 +22,4 @@ alias GasWeb.AuthorQueries
 alias GasWeb.SourceQueries
 alias GasWeb.SourceTypeQueries
 alias GasWeb.TagQueries
+alias Gas.Factory.Author, as: AuthorFactory

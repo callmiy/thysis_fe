@@ -2,7 +2,7 @@ import { RouteComponentProps } from "react-router-dom";
 import { ApolloError } from "apollo-client";
 import { ChildProps } from "react-apollo";
 
-import { SourceFrag } from "../../graphql/gen.types";
+import { SourceFullFrag } from "../../graphql/gen.types";
 import { CreateSourceInput } from "../../graphql/gen.types";
 import { SourceTypeFrag } from "../../graphql/gen.types";
 import { AuthorFrag } from "../../graphql/gen.types";
@@ -30,7 +30,7 @@ export const initialFormValues: FormValues = {
 
 export interface State {
   output: CreateSourceInput;
-  source?: SourceFrag;
+  source?: SourceFullFrag;
   formError?: ApolloError;
 }
 
@@ -57,7 +57,7 @@ export type Props = ChildProps<
 
 export interface ExistingSourceProps {
   onSourceChanged?: OnSourceChangedCb;
-  source: SourceFrag;
+  source: SourceFullFrag;
 }
 
-export type OnSourceChangedCb = (source: SourceFrag) => void;
+export type OnSourceChangedCb = (source: SourceFullFrag) => void;

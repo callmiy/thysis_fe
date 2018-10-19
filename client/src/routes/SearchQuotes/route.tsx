@@ -4,7 +4,7 @@ import RootHeader from "../../components/header.component";
 import SearchQuotesMenu from "../../components/search-quotes-route-bottom-menu.component";
 import { setTitle } from "../../routes/util";
 import { classes } from "./styles";
-import SearchQuotesComponent from "../../components/SearchQuotesComponent";
+import SearchQuotesComponent from "../../components/SearchComponent";
 
 export class SearchQuotes extends React.Component {
   componentDidMount() {

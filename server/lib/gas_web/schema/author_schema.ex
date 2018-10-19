@@ -12,7 +12,6 @@ defmodule GasWeb.AuthorSchema do
   @desc "An Author"
   object :author do
     field(:id, non_null(:id))
-    field(:name, :string)
     field(:first_name, :string)
     field(:last_name, non_null(:string))
     field(:middle_name, :string)

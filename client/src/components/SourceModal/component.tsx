@@ -18,9 +18,10 @@ import isEmpty from "lodash/isEmpty";
 import SOURCES_QUERY from "../../graphql/sources-1.query";
 import { CreateSourceUpdateFn } from "../../graphql/ops.types";
 import { SourceTypeFrag } from "../../graphql/gen.types";
-import { SourceFrag } from "../../graphql/gen.types";
+import { SourceFullFrag } from "../../graphql/gen.types";
 import { Sources1 as Sources1Query } from "../../graphql/gen.types";
 import { AuthorFrag } from "../../graphql/gen.types";
+import { sourceDisplay } from "../../graphql/utils";
 import SourceTypeControlComponent from "../SourceTypeControl";
 import AuthorsControlComponent from "../AuthorsControl";
 import { makeSourceURL } from "../../routes/util";
@@ -208,7 +209,7 @@ export class SourceModal extends React.Component<Props, State> {
           <Card.Content>
             <Card.Header style={{ color: "#a3c293" }}>Success</Card.Header>
 
-            <Card.Description>{source.display}</Card.Description>
+            <Card.Description>{sourceDisplay(source)}</Card.Description>
 
             <Card.Content extra={true}>
               <div className="ui two buttons">
@@ -379,7 +380,7 @@ export class SourceModal extends React.Component<Props, State> {
       query: SOURCES_QUERY
     }) as Sources1Query;
 
-    const sources = sourcesQuery.sources as SourceFrag[];
+    const sources = sourcesQuery.sources as SourceFullFrag[];
 
     cache.writeQuery({
       query: SOURCES_QUERY,

@@ -162,17 +162,17 @@ defmodule Gas.QuoteApi do
   quote.issue, quote.extras, source.source_type.name, source.publication,
   source.url
   """
-  @spec full_text_search(String.t()) :: %{}
+  @spec full_text_search(String.t()) :: Map.t()
   def full_text_search(text) when is_binary(text) do
-    params = ["%#{text}%"]
+    param = "%#{text}%"
+    params = [param]
 
     sql =
       %{
         "quotes" => ["text", "volume", "issue", "extras"],
         "sources" => ["topic", "publication", "url"],
         "tags" => ["text"],
-        "source_types" => ["name"],
-        "authors" => ["name"]
+        "source_types" => ["name"]
       }
       |> Enum.flat_map(fn {source, data} ->
         Enum.map(
@@ -209,7 +209,33 @@ defmodule Gas.QuoteApi do
       end)
       |> Enum.group_by(& &1.source)
 
-    result
+    authors =
+      Gas.Author
+      |> where([a], ilike(a.last_name, ^param))
+      |> or_where([a], ilike(a.first_name, ^param))
+      |> or_where([a], ilike(a.middle_name, ^param))
+      |> select([a], %{
+        l: a.last_name,
+        f: a.first_name,
+        m: a.middle_name,
+        id: a.id
+      })
+      |> Repo.all()
+      |> Enum.map(fn a ->
+        full_name =
+          [a.l, a.f, a.m]
+          |> Enum.reject(&(&1 == nil))
+          |> Enum.join(" ")
+
+        %{
+          text: full_name,
+          tid: a.id,
+          column: "full_name",
+          source: :authors
+        }
+      end)
+
+    Map.put(result, :authors, authors)
   end
 
   def get_quotes_by(nil), do: Repo.all(Quote)

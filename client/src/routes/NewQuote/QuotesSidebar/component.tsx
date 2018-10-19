@@ -12,14 +12,15 @@ import { messageIconStyle } from "./styles";
 import { classes } from "./styles";
 import { Quote1Frag } from "../../../graphql/gen.types";
 import { TagFrag } from "../../../graphql/gen.types";
-import { SourceFrag } from "../../../graphql/gen.types";
+import { SourceFullFrag } from "../../../graphql/gen.types";
 import { Quotes1QueryClientResult } from "../../../graphql/ops.types";
 import { TagsMinimalQueryClientResult } from "../../../graphql/ops.types";
 import { Sources1QueryClientResult } from "../../../graphql/ops.types";
 import QUOTES_QUERY from "../../../graphql/quotes-1.query";
 import TAGS_QUERY from "../../../graphql/tags-mini.query";
 import SOURCES_QUERY from "../../../graphql/sources-1.query";
-import SearchQuotesComponent from "../../../components/SearchQuotesComponent";
+import { sourceDisplay } from "../../../graphql/utils";
+import SearchQuotesComponent from "../../../components/SearchComponent";
 import { makeSourceURL } from "../../../routes/util";
 import { makeTagURL } from "../../../routes/util";
 
@@ -29,7 +30,7 @@ enum ResourceName {
   SOURCES = "sources"
 }
 
-type Resources = Array<Quote1Frag | TagFrag | SourceFrag>;
+type Resources = Array<Quote1Frag | TagFrag | SourceFullFrag>;
 
 interface OwnProps extends RouteComponentProps<{}> {
   className?: string;
@@ -40,7 +41,7 @@ type QuotesSidebarProps = WithApolloClient<OwnProps>;
 interface QuotesSidebarState {
   quotes?: Quote1Frag[];
   tags?: TagFrag[];
-  sources?: SourceFrag[];
+  sources?: SourceFullFrag[];
   loading?: boolean;
   graphQlError?: ApolloError;
 }
@@ -202,7 +203,9 @@ export class QuotesSidebar extends React.Component<
     };
   };
 
-  rendersource = ({ id, display }: SourceFrag) => {
+  rendersource = (source: SourceFullFrag) => {
+    const { id } = source;
+    const display = sourceDisplay(source);
     return (
       <List.Item
         key={id}
@@ -271,7 +274,7 @@ export class QuotesSidebar extends React.Component<
         query: SOURCES_QUERY
       })) as Sources1QueryClientResult;
 
-      const data = result.data.sources as SourceFrag[];
+      const data = result.data.sources as SourceFullFrag[];
       this.fetching(ResourceName.SOURCES, data);
     } catch (error) {
       this.fetching(undefined, undefined, error);
@@ -280,7 +283,7 @@ export class QuotesSidebar extends React.Component<
 
   fetching = (
     resource?: ResourceName,
-    result?: Quote1Frag[] | TagFrag[] | SourceFrag[],
+    result?: Quote1Frag[] | TagFrag[] | SourceFullFrag[],
     error?: ApolloError
   ) => {
     if (error) {

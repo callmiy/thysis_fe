@@ -1,15 +1,15 @@
 import Select from "react-select";
 import * as React from "react";
 
-import { SourceFrag } from "../../graphql/gen.types";
+import { SourceFullFrag } from "../../graphql/gen.types";
 
 interface SourceControlProps {
   selectError: boolean;
-  sources: SourceFrag[];
-  handleChange: (value: SourceFrag[]) => void;
+  sources: SourceFullFrag[];
+  handleChange: (value: SourceFullFrag[]) => void;
   handleBlur: () => void;
   name: string;
-  value: SourceFrag;
+  value: SourceFullFrag;
 }
 
 export default class SourceControl extends React.Component<SourceControlProps> {
