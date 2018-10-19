@@ -36,9 +36,7 @@ defmodule GasWeb.SourceResolver do
     loader
     |> Dataloader.load(Api, :authors, source)
     |> on_load(fn loader ->
-      authors =
-        loader
-        |> Dataloader.get(Api, :authors, source)
+      authors = Dataloader.get(loader, Api, :authors, source)
 
       display = %{source | authors: authors} |> Api.display()
 

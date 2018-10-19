@@ -57,10 +57,17 @@ defmodule Gas.Factory.Source do
   end
 
   def params_with_assocs(_any, %{} = attrs) do
-    %{id: id} = Factory.insert(:source_type)
+    source_type =
+      case Map.get(attrs, :source_type) do
+        nil -> Factory.insert(:source_type)
+        source_type -> source_type
+      end
 
     params(attrs)
-    |> Map.put(:source_type_id, id)
+    |> Map.merge(%{
+      source_type_id: source_type.id,
+      source_type: source_type
+    })
   end
 
   def params(attrs \\ %{}),

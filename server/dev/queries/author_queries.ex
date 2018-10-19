@@ -5,7 +5,9 @@ defmodule GasWeb.AuthorQueries do
     fragment = """
       fragment #{name} on Author {
         id
-        name
+        firstName
+        lastName
+        middleName
         insertedAt
         updatedAt
       }

@@ -34,7 +34,7 @@ alias Gas.Factory.Source, as: SourceFactory
 Repo.transaction(fn ->
   tags = insert_list(8, :tag)
 
-  ["Journal", "Book", "Oral discussion"]
+  ["Journal", "Book", "Oral discussion", "Website"]
   |> Enum.map(&insert(:source_type, name: &1))
   |> Enum.flat_map(
     &SourceFactory.insert_list(

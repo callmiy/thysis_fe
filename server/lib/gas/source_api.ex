@@ -388,8 +388,30 @@ defmodule Gas.SourceApi do
   defp map_reduce(%{} = map) do
     Enum.reduce(map, [], fn
       {:authors, authors}, acc ->
-        authors = Enum.map(authors, &Map.take(&1, [:name]))
-        Enum.concat(acc, map_reduce(authors))
+        authors =
+          Enum.map(authors, fn author ->
+            initials =
+              [author.first_name, author.middle_name]
+              |> Enum.reject(&(&1 == nil))
+              |> Enum.map(fn s ->
+                s
+                |> String.split(" ")
+                |> Enum.map(fn name ->
+                  name |> String.first() |> String.upcase()
+                end)
+                |> Enum.join("")
+              end)
+              |> Enum.join("")
+
+            case initials do
+              "" -> author.last_name
+              initials -> "#{author.last_name} #{initials}"
+            end
+          end)
+          |> Enum.join(", ")
+          |> Kernel.<>(".")
+
+        [authors | acc]
 
       {_, nil}, acc ->
         acc

@@ -12,7 +12,10 @@ defmodule GasWeb.AuthorSchema do
   @desc "An Author"
   object :author do
     field(:id, non_null(:id))
-    field(:name, non_null(:string))
+    field(:name, :string)
+    field(:first_name, :string)
+    field(:last_name, non_null(:string))
+    field(:middle_name, :string)
     field(:inserted_at, non_null(:iso_datetime))
     field(:updated_at, non_null(:iso_datetime))
 
@@ -25,13 +28,14 @@ defmodule GasWeb.AuthorSchema do
 
   @desc "Get author input"
   input_object :get_author_input do
-    field(:id, :id)
-    field(:name, :string)
+    field(:id, :id |> non_null())
   end
 
   @desc "Input for creating an author"
   input_object :create_author_input do
-    field(:name, non_null(:string))
+    field(:first_name, :string)
+    field(:last_name, :string |> non_null())
+    field(:middle_name, :string)
   end
 
   @desc "Queries allowed on the Author object"

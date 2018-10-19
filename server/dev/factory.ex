@@ -68,8 +68,20 @@ defmodule Gas.Factory do
   end
 
   def author_factory do
+    middle_name =
+      case Enum.random([
+             nil,
+             Faker.String.base64(Enum.random(1..5))
+           ]) do
+        nil -> nil
+        name -> String.capitalize(name)
+      end
+
     %Author{
-      name: Faker.Name.name()
+      name: Faker.Name.name(),
+      first_name: Enum.random([Faker.Name.first_name(), nil]),
+      last_name: Faker.Name.last_name(),
+      middle_name: middle_name
     }
   end
 
