@@ -1,3 +1,5 @@
+
+
 /* tslint:disable */
 // This file was automatically generated and should not be edited.
 
@@ -19,12 +21,13 @@ export interface AuthorRouteQuery_author {
 }
 
 export interface AuthorRouteQuery {
-  author: AuthorRouteQuery_author | null; // Get a single author
+  author: AuthorRouteQuery_author | null;  // Get a single author
 }
 
 export interface AuthorRouteQueryVariables {
   author: GetAuthorInput;
 }
+
 
 /* tslint:disable */
 // This file was automatically generated and should not be edited.
@@ -44,6 +47,7 @@ export interface GetAllAuthors {
   authors: (GetAllAuthors_authors | null)[] | null;
 }
 
+
 /* tslint:disable */
 // This file was automatically generated and should not be edited.
 
@@ -59,12 +63,13 @@ export interface CreateAuthor_createAuthor {
 }
 
 export interface CreateAuthor {
-  createAuthor: CreateAuthor_createAuthor | null; // Create an author
+  createAuthor: CreateAuthor_createAuthor | null;  // Create an author
 }
 
 export interface CreateAuthorVariables {
   author: CreateAuthorInput;
 }
+
 
 /* tslint:disable */
 // This file was automatically generated and should not be edited.
@@ -104,6 +109,7 @@ export interface QuoteFullVariables {
   quote: GetQuoteInput;
 }
 
+
 /* tslint:disable */
 // This file was automatically generated and should not be edited.
 
@@ -142,12 +148,13 @@ export interface CreateQuote_createQuote {
 }
 
 export interface CreateQuote {
-  createQuote: CreateQuote_createQuote | null; // Create a quote
+  createQuote: CreateQuote_createQuote | null;  // Create a quote
 }
 
 export interface CreateQuoteVariables {
   quote: CreateQuoteInput;
 }
+
 
 /* tslint:disable */
 // This file was automatically generated and should not be edited.
@@ -163,12 +170,13 @@ export interface Quotes1_quotes {
 }
 
 export interface Quotes1 {
-  quotes: (Quotes1_quotes | null)[] | null; // Query list of quotes - everything, or filter by source
+  quotes: (Quotes1_quotes | null)[] | null;  // Query list of quotes - everything, or filter by source
 }
 
 export interface Quotes1Variables {
   quote?: GetQuotes | null;
 }
+
 
 /* tslint:disable */
 // This file was automatically generated and should not be edited.
@@ -208,6 +216,7 @@ export interface SourceFullVariables {
   source: GetSourceInput;
 }
 
+
 /* tslint:disable */
 // This file was automatically generated and should not be edited.
 
@@ -223,6 +232,7 @@ export interface SourceTypes_sourceTypes {
 export interface SourceTypes {
   sourceTypes: (SourceTypes_sourceTypes | null)[] | null;
 }
+
 
 /* tslint:disable */
 // This file was automatically generated and should not be edited.
@@ -255,12 +265,13 @@ export interface CreateSource_createSource {
 }
 
 export interface CreateSource {
-  createSource: CreateSource_createSource | null; // create source mutation
+  createSource: CreateSource_createSource | null;  // create source mutation
 }
 
 export interface CreateSourceVariables {
   source: CreateSourceInput;
 }
+
 
 /* tslint:disable */
 // This file was automatically generated and should not be edited.
@@ -300,6 +311,7 @@ export interface Source1Variables {
   source: GetSourceInput;
 }
 
+
 /* tslint:disable */
 // This file was automatically generated and should not be edited.
 
@@ -331,8 +343,9 @@ export interface Sources1_sources {
 }
 
 export interface Sources1 {
-  sources: (Sources1_sources | null)[] | null; // Query for all sources
+  sources: (Sources1_sources | null)[] | null;  // Query for all sources
 }
+
 
 /* tslint:disable */
 // This file was automatically generated and should not be edited.
@@ -361,12 +374,13 @@ export interface TagQuote_tag {
 }
 
 export interface TagQuote {
-  tag: TagQuote_tag | null; // Get a single tag
+  tag: TagQuote_tag | null;  // Get a single tag
 }
 
 export interface TagQuoteVariables {
   tag: GetTagInput;
 }
+
 
 /* tslint:disable */
 // This file was automatically generated and should not be edited.
@@ -382,12 +396,13 @@ export interface CreateTag_createTag {
 }
 
 export interface CreateTag {
-  createTag: CreateTag_createTag | null; // Create a tag
+  createTag: CreateTag_createTag | null;  // Create a tag
 }
 
 export interface CreateTagVariables {
   tag: CreateTagInput;
 }
+
 
 /* tslint:disable */
 // This file was automatically generated and should not be edited.
@@ -406,6 +421,7 @@ export interface TagsMinimal {
   tags: (TagsMinimal_tags | null)[] | null;
 }
 
+
 /* tslint:disable */
 // This file was automatically generated and should not be edited.
 
@@ -414,55 +430,56 @@ export interface TagsMinimal {
 // ====================================================
 
 export interface AllMatchingTexts_quoteFullSearch_quotes {
-  tid: number; // The ID of the row from which the search was obtained
-  text: string; // The matched search text
-  source: QuoteFullSearchTable; // The table name from which the sarch was obtained
-  column: string; // The column name of the table from which the search was obtained
+  tid: number;                   // The ID of the row from which the search was obtained
+  text: string;                  // The matched search text
+  source: QuoteFullSearchTable;  // The table name from which the sarch was obtained
+  column: string;                // The column name of the table from which the search was obtained
 }
 
 export interface AllMatchingTexts_quoteFullSearch_sources {
-  tid: number; // The ID of the row from which the search was obtained
-  text: string; // The matched search text
-  source: QuoteFullSearchTable; // The table name from which the sarch was obtained
-  column: string; // The column name of the table from which the search was obtained
+  tid: number;                   // The ID of the row from which the search was obtained
+  text: string;                  // The matched search text
+  source: QuoteFullSearchTable;  // The table name from which the sarch was obtained
+  column: string;                // The column name of the table from which the search was obtained
 }
 
 export interface AllMatchingTexts_quoteFullSearch_tags {
-  tid: number; // The ID of the row from which the search was obtained
-  text: string; // The matched search text
-  source: QuoteFullSearchTable; // The table name from which the sarch was obtained
-  column: string; // The column name of the table from which the search was obtained
+  tid: number;                   // The ID of the row from which the search was obtained
+  text: string;                  // The matched search text
+  source: QuoteFullSearchTable;  // The table name from which the sarch was obtained
+  column: string;                // The column name of the table from which the search was obtained
 }
 
 export interface AllMatchingTexts_quoteFullSearch_authors {
-  tid: number; // The ID of the row from which the search was obtained
-  text: string; // The matched search text
-  source: QuoteFullSearchTable; // The table name from which the sarch was obtained
-  column: string; // The column name of the table from which the search was obtained
+  tid: number;                   // The ID of the row from which the search was obtained
+  text: string;                  // The matched search text
+  source: QuoteFullSearchTable;  // The table name from which the sarch was obtained
+  column: string;                // The column name of the table from which the search was obtained
 }
 
 export interface AllMatchingTexts_quoteFullSearch_sourceTypes {
-  tid: number; // The ID of the row from which the search was obtained
-  text: string; // The matched search text
-  source: QuoteFullSearchTable; // The table name from which the sarch was obtained
-  column: string; // The column name of the table from which the search was obtained
+  tid: number;                   // The ID of the row from which the search was obtained
+  text: string;                  // The matched search text
+  source: QuoteFullSearchTable;  // The table name from which the sarch was obtained
+  column: string;                // The column name of the table from which the search was obtained
 }
 
 export interface AllMatchingTexts_quoteFullSearch {
-  quotes: (AllMatchingTexts_quoteFullSearch_quotes | null)[] | null; // A search result from quotes table
-  sources: (AllMatchingTexts_quoteFullSearch_sources | null)[] | null; // A search result from sources table
-  tags: (AllMatchingTexts_quoteFullSearch_tags | null)[] | null; // A search result from tags table
-  authors: (AllMatchingTexts_quoteFullSearch_authors | null)[] | null; // A search result from authors table
-  sourceTypes: (AllMatchingTexts_quoteFullSearch_sourceTypes | null)[] | null; // A search result from source types table
+  quotes: (AllMatchingTexts_quoteFullSearch_quotes | null)[] | null;            // A search result from quotes table
+  sources: (AllMatchingTexts_quoteFullSearch_sources | null)[] | null;          // A search result from sources table
+  tags: (AllMatchingTexts_quoteFullSearch_tags | null)[] | null;                // A search result from tags table
+  authors: (AllMatchingTexts_quoteFullSearch_authors | null)[] | null;          // A search result from authors table
+  sourceTypes: (AllMatchingTexts_quoteFullSearch_sourceTypes | null)[] | null;  // A search result from source types table
 }
 
 export interface AllMatchingTexts {
-  quoteFullSearch: AllMatchingTexts_quoteFullSearch | null; // Specify any text to get queries or tags, or sources or     source types matching the text
+  quoteFullSearch: AllMatchingTexts_quoteFullSearch | null;  // Specify any text to get queries or tags, or sources or     source types matching the text
 }
 
 export interface AllMatchingTextsVariables {
   text: QuoteFullSearchInput;
 }
+
 
 /* tslint:disable */
 // This file was automatically generated and should not be edited.
@@ -495,12 +512,13 @@ export interface UpdateSource_updateSource {
 }
 
 export interface UpdateSource {
-  updateSource: UpdateSource_updateSource | null; // update source mutation
+  updateSource: UpdateSource_updateSource | null;  // update source mutation
 }
 
 export interface UpdateSourceVariables {
   source: UpdateSourceInput;
 }
+
 
 /* tslint:disable */
 // This file was automatically generated and should not be edited.
@@ -522,6 +540,7 @@ export interface AuthorRouteFrag {
   sources: (AuthorRouteFrag_sources | null)[];
 }
 
+
 /* tslint:disable */
 // This file was automatically generated and should not be edited.
 
@@ -536,6 +555,7 @@ export interface AuthorFrag {
   middleName: string | null;
 }
 
+
 /* tslint:disable */
 // This file was automatically generated and should not be edited.
 
@@ -548,6 +568,7 @@ export interface Quote1Frag {
   text: string;
   date: any | null;
 }
+
 
 /* tslint:disable */
 // This file was automatically generated and should not be edited.
@@ -567,6 +588,7 @@ export interface QuoteFromtagFrag {
   date: any | null;
   source: QuoteFromtagFrag_source | null;
 }
+
 
 /* tslint:disable */
 // This file was automatically generated and should not be edited.
@@ -598,6 +620,7 @@ export interface QuoteFullFrag {
   tags: (QuoteFullFrag_tags | null)[] | null;
 }
 
+
 /* tslint:disable */
 // This file was automatically generated and should not be edited.
 
@@ -628,6 +651,7 @@ export interface SourceFullFrag {
   sourceType: SourceFullFrag_sourceType;
 }
 
+
 /* tslint:disable */
 // This file was automatically generated and should not be edited.
 
@@ -639,6 +663,7 @@ export interface SourceTypeFrag {
   id: string;
   name: string | null;
 }
+
 
 /* tslint:disable */
 // This file was automatically generated and should not be edited.
@@ -652,6 +677,7 @@ export interface TagFrag {
   text: string;
   question: string | null;
 }
+
 
 /* tslint:disable */
 // This file was automatically generated and should not be edited.
@@ -679,6 +705,7 @@ export interface TagQuotesFrag {
   quotes: (TagQuotesFrag_quotes | null)[] | null;
 }
 
+
 /* tslint:disable */
 // This file was automatically generated and should not be edited.
 
@@ -687,47 +714,48 @@ export interface TagQuotesFrag {
 // ====================================================
 
 export interface TextSearchResultFrag_quotes {
-  tid: number; // The ID of the row from which the search was obtained
-  text: string; // The matched search text
-  source: QuoteFullSearchTable; // The table name from which the sarch was obtained
-  column: string; // The column name of the table from which the search was obtained
+  tid: number;                   // The ID of the row from which the search was obtained
+  text: string;                  // The matched search text
+  source: QuoteFullSearchTable;  // The table name from which the sarch was obtained
+  column: string;                // The column name of the table from which the search was obtained
 }
 
 export interface TextSearchResultFrag_sources {
-  tid: number; // The ID of the row from which the search was obtained
-  text: string; // The matched search text
-  source: QuoteFullSearchTable; // The table name from which the sarch was obtained
-  column: string; // The column name of the table from which the search was obtained
+  tid: number;                   // The ID of the row from which the search was obtained
+  text: string;                  // The matched search text
+  source: QuoteFullSearchTable;  // The table name from which the sarch was obtained
+  column: string;                // The column name of the table from which the search was obtained
 }
 
 export interface TextSearchResultFrag_tags {
-  tid: number; // The ID of the row from which the search was obtained
-  text: string; // The matched search text
-  source: QuoteFullSearchTable; // The table name from which the sarch was obtained
-  column: string; // The column name of the table from which the search was obtained
+  tid: number;                   // The ID of the row from which the search was obtained
+  text: string;                  // The matched search text
+  source: QuoteFullSearchTable;  // The table name from which the sarch was obtained
+  column: string;                // The column name of the table from which the search was obtained
 }
 
 export interface TextSearchResultFrag_authors {
-  tid: number; // The ID of the row from which the search was obtained
-  text: string; // The matched search text
-  source: QuoteFullSearchTable; // The table name from which the sarch was obtained
-  column: string; // The column name of the table from which the search was obtained
+  tid: number;                   // The ID of the row from which the search was obtained
+  text: string;                  // The matched search text
+  source: QuoteFullSearchTable;  // The table name from which the sarch was obtained
+  column: string;                // The column name of the table from which the search was obtained
 }
 
 export interface TextSearchResultFrag_sourceTypes {
-  tid: number; // The ID of the row from which the search was obtained
-  text: string; // The matched search text
-  source: QuoteFullSearchTable; // The table name from which the sarch was obtained
-  column: string; // The column name of the table from which the search was obtained
+  tid: number;                   // The ID of the row from which the search was obtained
+  text: string;                  // The matched search text
+  source: QuoteFullSearchTable;  // The table name from which the sarch was obtained
+  column: string;                // The column name of the table from which the search was obtained
 }
 
 export interface TextSearchResultFrag {
-  quotes: (TextSearchResultFrag_quotes | null)[] | null; // A search result from quotes table
-  sources: (TextSearchResultFrag_sources | null)[] | null; // A search result from sources table
-  tags: (TextSearchResultFrag_tags | null)[] | null; // A search result from tags table
-  authors: (TextSearchResultFrag_authors | null)[] | null; // A search result from authors table
-  sourceTypes: (TextSearchResultFrag_sourceTypes | null)[] | null; // A search result from source types table
+  quotes: (TextSearchResultFrag_quotes | null)[] | null;            // A search result from quotes table
+  sources: (TextSearchResultFrag_sources | null)[] | null;          // A search result from sources table
+  tags: (TextSearchResultFrag_tags | null)[] | null;                // A search result from tags table
+  authors: (TextSearchResultFrag_authors | null)[] | null;          // A search result from authors table
+  sourceTypes: (TextSearchResultFrag_sourceTypes | null)[] | null;  // A search result from source types table
 }
+
 
 /* tslint:disable */
 // This file was automatically generated and should not be edited.
@@ -737,10 +765,10 @@ export interface TextSearchResultFrag {
 // ====================================================
 
 export interface TextSearchRowFrag {
-  tid: number; // The ID of the row from which the search was obtained
-  text: string; // The matched search text
-  source: QuoteFullSearchTable; // The table name from which the sarch was obtained
-  column: string; // The column name of the table from which the search was obtained
+  tid: number;                   // The ID of the row from which the search was obtained
+  text: string;                  // The matched search text
+  source: QuoteFullSearchTable;  // The table name from which the sarch was obtained
+  column: string;                // The column name of the table from which the search was obtained
 }
 
 /* tslint:disable */
@@ -756,7 +784,7 @@ export enum QuoteFullSearchTable {
   QUOTES = "QUOTES",
   SOURCES = "SOURCES",
   SOURCE_TYPES = "SOURCE_TYPES",
-  TAGS = "TAGS"
+  TAGS = "TAGS",
 }
 
 // Get author input
@@ -822,8 +850,7 @@ export interface CreateTagInput {
   text: string;
 }
 
-// Input for full text search on quotes, their sources, tags and source
-
+//  types
 export interface QuoteFullSearchInput {
   text: string;
 }

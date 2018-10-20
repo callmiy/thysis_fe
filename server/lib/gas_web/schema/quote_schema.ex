@@ -113,8 +113,8 @@ defmodule GasWeb.QuoteSchema do
     field(:id, non_null(:id))
   end
 
-  @desc "Input for full text search on quotes, their sources, tags and source
-   types"
+  @desc "Input for full text search on quotes, their sources, tags and source"
+  @desc " types"
   input_object :quote_full_search_input do
     field(:text, non_null(:string))
   end
