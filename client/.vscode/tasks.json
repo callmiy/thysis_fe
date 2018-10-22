@@ -68,13 +68,23 @@
     },
 
     {
-      "label": "deploy to heroku",
+      "label": "deploy to heroku client + server",
       "type": "shell",
       "command": "yarn deploy && cd .. && git add . && git cm -m \"Production build\" && git co master && git merge dev && git subtree push --prefix=server heroku master && heroku run \"POOL_SIZE=2 mix ecto.migrate\" && git co dev",
       "options": {
         "env": {
           "REACT_APP_API_URL": "https://gasification.herokuapp.com/__api"
         }
+      },
+      "problemMatcher": []
+    },
+
+    {
+      "label": "deploy to heroku server only",
+      "type": "shell",
+      "command": "git co master && git merge dev && git subtree push --prefix=server heroku master && heroku run \"POOL_SIZE=2 mix ecto.migrate\" && git co dev",
+      "options": {
+        "cwd": ".."
       },
       "problemMatcher": []
     },
