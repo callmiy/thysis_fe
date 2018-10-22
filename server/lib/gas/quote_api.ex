@@ -235,7 +235,7 @@ defmodule Gas.QuoteApi do
         }
       end)
 
-    Map.put(result, :authors, authors)
+    Map.put(result, :authors, if(authors == [], do: nil, else: authors))
   end
 
   def get_quotes_by(nil), do: Repo.all(Quote)
