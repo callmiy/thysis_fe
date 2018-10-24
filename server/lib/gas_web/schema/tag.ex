@@ -1,4 +1,4 @@
-defmodule GasWeb.TagSchema do
+defmodule GasWeb.Schema.Tag do
   @moduledoc """
   Schema types for Tag
   """

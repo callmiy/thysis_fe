@@ -1,4 +1,4 @@
-defmodule GasWeb.SourceTypeSchema do
+defmodule GasWeb.Schema.SourceType do
   @moduledoc """
   Schema types for source_type
   """

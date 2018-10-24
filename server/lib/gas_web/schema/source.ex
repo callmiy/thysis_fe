@@ -1,4 +1,4 @@
-defmodule GasWeb.SourceSchema do
+defmodule GasWeb.Schema.Source do
   @moduledoc """
   Schema for source
   """

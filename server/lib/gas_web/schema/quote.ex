@@ -1,4 +1,4 @@
-defmodule GasWeb.QuoteSchema do
+defmodule GasWeb.Schema.Quote do
   @moduledoc """
   Schema definition for Quote resource
   """

@@ -1,4 +1,4 @@
-defmodule GasWeb.AuthorSchema do
+defmodule GasWeb.Schema.Author do
   @moduledoc """
   Schema types for Author
   """
