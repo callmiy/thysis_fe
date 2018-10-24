@@ -12,6 +12,8 @@ defmodule GasWeb.Router do
 
   pipeline :api do
     plug(:accepts, ["json"])
+    plug(GasWeb.Auth.AccessPipeline)
+    plug(GasWeb.Plug.AuthContexts)
   end
 
   scope "/__admin", ExAdmin do

@@ -1,0 +1,142 @@
+defmodule GasWeb.Schema.ProjectTest do
+  use Gas.DataCase, async: false
+
+  alias Gas.Factory.Project, as: Factory
+  alias GasWeb.Schema
+  alias GasWeb.Query.Project, as: Query
+
+  describe "Mutation" do
+    test "creating a project succeeds" do
+      %{user: user} = attrs = Factory.params_with_user()
+      user_id_str = Integer.to_string(user.id)
+
+      queryMap = Query.create()
+
+      query = """
+        mutation CreateProject(#{queryMap.parameters}) {
+          #{queryMap.query}
+        }
+
+        #{queryMap.fragments}
+      """
+
+      assert {:ok,
+              %{
+                data: %{
+                  "project" => %{
+                    "projectId" => _,
+                    "title" => _,
+                    "schemaType" => _,
+                    "_id" => _,
+                    "user" => %{
+                      "userId" => ^user_id_str
+                    }
+                  }
+                }
+              }} =
+               Absinthe.run(query, Schema,
+                 variables: %{
+                   "project" => Factory.stringify(attrs)
+                 }
+               )
+    end
+
+    test "creating a project with non existent user fails" do
+      attrs =
+        Factory.params_with_user(user_id: 0)
+        |> Factory.stringify()
+
+      queryMap = Query.create()
+
+      query = """
+        mutation CreateProject(#{queryMap.parameters}) {
+          #{queryMap.query}
+        }
+
+        #{queryMap.fragments}
+      """
+
+      assert {:ok,
+              %{
+                errors: [
+                  %{
+                    message: "{\"user\":\"does not exist\"}"
+                  }
+                ]
+              }} =
+               Absinthe.run(query, Schema,
+                 variables: %{
+                   "project" => attrs
+                 }
+               )
+    end
+  end
+
+  describe "query" do
+    test "Get projects for authenticated user succeeds" do
+      %{user: user} = project1 = Factory.params_with_user()
+      project1 = Factory.insert(project1)
+      project2 = Factory.insert(user_id: user.id)
+
+      ids =
+        [project1, project2]
+        |> Enum.map(&Integer.to_string(&1.id))
+        |> Enum.sort()
+
+      queryMap = Query.list()
+
+      query = """
+        query ListUserProjects {
+          #{queryMap.query}
+        }
+
+        #{queryMap.fragments}
+      """
+
+      assert {:ok,
+              %{
+                data: %{
+                  "projects" => projects
+                }
+              }} = Absinthe.run(query, Schema, context: %{current_user: user})
+
+      assert projects
+             |> Enum.map(& &1["projectId"])
+             |> Enum.sort()
+             |> Kernel.==(ids)
+    end
+
+    test "Get project for authenticated user succeeds" do
+      %{user: user} = attrs = Factory.params_with_user()
+      user_id = Integer.to_string(user.id)
+      %{id: id} = Factory.insert(attrs)
+      id = Integer.to_string(id)
+
+      queryMap = Query.get()
+
+      query = """
+        query GetUserProject(#{queryMap.parameters}) {
+          #{queryMap.query}
+        }
+
+        #{queryMap.fragments}
+      """
+
+      assert {:ok,
+              %{
+                data: %{
+                  "project" => %{
+                    "projectId" => ^id,
+                    "user" => %{
+                      "userId" => ^user_id
+                    }
+                  }
+                }
+              }} =
+               Absinthe.run(query, Schema,
+                 variables: %{"project" => %{"id" => id}},
+                 context: %{current_user: user}
+               )
+    end
+  end
+end

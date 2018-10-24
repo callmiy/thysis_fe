@@ -34,3 +34,6 @@ alias Gas.Accounts.Credential
 alias Gas.Accounts.Registration
 alias Gas.Accounts.UserApi
 alias Gas.Accounts.User
+alias Gas.Factory.Project, as: ProjectFactory
+alias Gas.Projects, as: ProjectApi
+alias Gas.Projects.Project

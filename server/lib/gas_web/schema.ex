@@ -10,6 +10,7 @@ defmodule GasWeb.Schema do
   import_types(GasWeb.AuthorSchema)
   import_types(GasWeb.Schema.Credential)
   import_types(GasWeb.Schema.User)
+  import_types(GasWeb.Schema.Project)
 
   alias Gas.QuoteApi
   alias Gas.TagApi
@@ -18,6 +19,7 @@ defmodule GasWeb.Schema do
   alias Gas.SourceTypeApi
   alias Gas.Accounts.CredentialApi
   alias Gas.Accounts.UserApi
+  alias Gas.Projects
 
   query do
     import_fields(:tag_query)
@@ -25,6 +27,7 @@ defmodule GasWeb.Schema do
     import_fields(:source_query)
     import_fields(:quote_query)
     import_fields(:author_query)
+    import_fields(:project_query)
   end
 
   mutation do
@@ -33,6 +36,7 @@ defmodule GasWeb.Schema do
     import_fields(:author_mutation)
     import_fields(:source_mutation)
     import_fields(:user_mutation)
+    import_fields(:project_mutation)
   end
 
   def context(ctx) do
@@ -45,6 +49,7 @@ defmodule GasWeb.Schema do
       |> Dataloader.add_source(SourceTypeApi, SourceTypeApi.data())
       |> Dataloader.add_source(CredentialApi, CredentialApi.data())
       |> Dataloader.add_source(UserApi, UserApi.data())
+      |> Dataloader.add_source(Projects, Projects.data())
 
     Map.put(ctx, :loader, loader)
   end

@@ -6,6 +6,7 @@ defmodule Gas.Accounts.User do
 
   alias Ecto.Changeset
   alias Gas.Accounts.Credential
+  alias Gas.Projects.Project
 
   schema "users" do
     field(:_rev, :string)
@@ -13,6 +14,7 @@ defmodule Gas.Accounts.User do
     field(:name, :string)
 
     has_one(:credential, Credential)
+    has_many(:projects, Project)
     timestamps()
   end
 

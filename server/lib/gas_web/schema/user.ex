@@ -1,8 +1,11 @@
 defmodule GasWeb.Schema.User do
   use Absinthe.Schema.Notation
 
+  import Absinthe.Resolution.Helpers, only: [dataloader: 1]
+
   alias GasWeb.Schema
   alias GasWeb.UserResolver, as: Resolver
+  alias Gas.Projects
 
   @desc "A User"
   object :user do
@@ -31,6 +34,7 @@ defmodule GasWeb.Schema.User do
 
     field(:inserted_at, non_null(:iso_datetime))
     field(:updated_at, non_null(:iso_datetime))
+    field(:projects, list_of(:project), resolve: dataloader(Projects))
   end
 
   @desc "Variables for creating User and credential"

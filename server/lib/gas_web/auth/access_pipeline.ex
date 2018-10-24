@@ -1,5 +1,5 @@
 defmodule GasWeb.Auth.AccessPipeline do
-  use Guardian.Plug.Pipeline, otp_app: :my_exp
+  use Guardian.Plug.Pipeline, otp_app: :gas
 
   plug(Guardian.Plug.VerifyHeader, realm: "Bearer")
   plug(Guardian.Plug.LoadResource, allow_blank: true)

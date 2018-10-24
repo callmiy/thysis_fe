@@ -13,7 +13,6 @@ defmodule Gas.Factory.Registration do
     registration
   end
 
-  @doc "params"
   def params(attrs \\ %{})
 
   def params(attrs) when is_list(attrs),
@@ -56,7 +55,4 @@ defmodule Gas.Factory.Registration do
 
   defp password_confirmation(%{password: password} = attrs),
     do: Map.put(attrs, :password_confirmation, password)
-
-  defp password_confirmation(attrs),
-    do: Map.put(attrs, :password_confirmation, Faker.String.base64())
 end

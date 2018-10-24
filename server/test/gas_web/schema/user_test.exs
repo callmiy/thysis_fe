@@ -1,5 +1,5 @@
 defmodule Gas.Schema.UserTest do
-  use Gas.DataCase, async: true
+  use Gas.DataCase, async: false
 
   alias GasWeb.Schema
   alias Gas.Query.Registration, as: RegQuery
