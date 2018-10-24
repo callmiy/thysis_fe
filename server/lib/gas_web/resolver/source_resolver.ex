@@ -7,7 +7,7 @@ defmodule GasWeb.SourceResolver do
 
   alias Gas.Source
   alias Gas.SourceApi, as: Api
-  alias GasWeb.ResolversUtil
+  alias GasWeb.Resolver
 
   @doc """
   Get all sources.
@@ -58,7 +58,7 @@ defmodule GasWeb.SourceResolver do
       {:error, failed_operation, changeset, _success} ->
         {
           :error,
-          ResolversUtil.transaction_errors_to_string(
+          Resolver.transaction_errors_to_string(
             changeset,
             failed_operation
           )
@@ -84,7 +84,7 @@ defmodule GasWeb.SourceResolver do
           {:error, failed_operation, changeset, _success} ->
             {
               :error,
-              ResolversUtil.transaction_errors_to_string(
+              Resolver.transaction_errors_to_string(
                 changeset,
                 failed_operation
               )

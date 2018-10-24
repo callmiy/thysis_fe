@@ -4,7 +4,7 @@ defmodule GasWeb.AuthorResolver do
   """
   alias Gas.Author
   alias Gas.AuthorApi, as: Api
-  alias GasWeb.ResolversUtil
+  alias GasWeb.Resolver
 
   @doc """
   Get a single author either by author name or id or both.
@@ -37,7 +37,7 @@ defmodule GasWeb.AuthorResolver do
         {:ok, author}
 
       {:error, changeset} ->
-        {:error, ResolversUtil.changeset_errors_to_string(changeset)}
+        {:error, Resolver.changeset_errors_to_string(changeset)}
     end
   end
 end

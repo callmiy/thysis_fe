@@ -23,3 +23,14 @@ alias GasWeb.SourceQueries
 alias GasWeb.SourceTypeQueries
 alias GasWeb.TagQueries
 alias Gas.Factory.Author, as: AuthorFactory
+alias Gas.Factory.User, as: UserFactory
+alias Gas.Query.Registration, as: RegistrationQuery
+alias Gas.Factory.Registration, as: RegistrationFactory
+alias GasWeb.Query.User, as: UserQuery
+alias GasWeb.Auth.Guardian, as: GuardianApp
+alias Gas.Accounts
+alias Gas.Accounts.CredentialApi
+alias Gas.Accounts.Credential
+alias Gas.Accounts.Registration
+alias Gas.Accounts.UserApi
+alias Gas.Accounts.User

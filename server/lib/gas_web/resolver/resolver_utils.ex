@@ -1,27 +1,11 @@
-defmodule GasWeb.ResolversUtil do
+defmodule GasWeb.Resolver do
   @moduledoc """
   Helper utilities for resolvers
   """
-  alias Phoenix.View
-  alias GasWeb.ChangesetView
 
   @unauthorized "Unauthorized"
 
-  @doc """
-  Takes a changeset error and converts it to a string
-  """
-  @spec changeset_errors_to_string(%Ecto.Changeset{}) :: String.t()
-  def changeset_errors_to_string(%Ecto.Changeset{} = changeset) do
-    Enum.map_join(
-      View.render(ChangesetView, "error.json", changeset: changeset)[:errors],
-      " | ",
-      fn {k, v} ->
-        value = Enum.join(v, ",")
-        "[#{k}: #{value}]"
-      end
-    )
-  end
-
+  @spec unauthorized() :: {:error, [{:message, <<_::96>>}, ...]}
   def unauthorized do
     {:error, message: @unauthorized}
   end
@@ -31,8 +15,42 @@ defmodule GasWeb.ResolversUtil do
   operation and return a string representation.
   """
   @spec transaction_errors_to_string(%Ecto.Changeset{}, Multi.name()) :: String.t()
+  def transaction_errors_to_string({:error, changeset}, failed_operation),
+    do: transaction_errors_to_string(changeset, failed_operation)
+
   def transaction_errors_to_string(%Ecto.Changeset{} = changeset, failed_operation) do
-    changeset_string = changeset_errors_to_string(changeset)
-    "{name: #{failed_operation}, error: #{changeset_string}}"
+    %{
+      name: failed_operation,
+      error: changeset_errors_to_map(changeset)
+    }
+    |> Poison.encode!()
+  end
+
+  def changeset_errors_to_string(errors),
+    do:
+      errors
+      |> changeset_errors_to_map()
+      |> Poison.encode!()
+
+  defp changeset_errors_to_map(%Ecto.Changeset{errors: errors}),
+    do:
+      errors
+      |> Enum.map(fn
+        {k, {v, opts}} ->
+          {k, error_value(v, opts)}
+
+        kv ->
+          kv
+      end)
+      |> Enum.into(%{})
+
+  defp error_value(v, opts) do
+    case(Keyword.fetch(opts, :count)) do
+      :error ->
+        v
+
+      {:ok, count} ->
+        String.replace(v, "%{count}", to_string(count))
+    end
   end
 end

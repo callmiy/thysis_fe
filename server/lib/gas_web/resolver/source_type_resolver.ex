@@ -4,7 +4,7 @@ defmodule GasWeb.SourceTypeResolver do
   """
   alias Gas.SourceType
   alias Gas.SourceTypeApi, as: Api
-  # alias GasWeb.ResolversUtil
+  # alias GasWeb.Resolver
 
   @doc """
   Get a single source_type either by source_type name or id or both.

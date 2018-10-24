@@ -4,7 +4,7 @@ defmodule GasWeb.TagResolver do
   """
   alias Gas.Tag
   alias Gas.TagApi, as: Api
-  alias GasWeb.ResolversUtil
+  alias GasWeb.Resolver
 
   @doc """
   Get a single tag either by tag text or id or both.
@@ -36,7 +36,7 @@ defmodule GasWeb.TagResolver do
         {:ok, tag}
 
       {:error, changeset} ->
-        {:error, ResolversUtil.changeset_errors_to_string(changeset)}
+        {:error, Resolver.changeset_errors_to_string(changeset)}
     end
   end
 end

@@ -35,6 +35,14 @@ config :ex_admin,
     GasWeb.ExAdmin.Author
   ]
 
+config :gas, GasWeb.Auth.Guardian,
+  issuer: "gas",
+  secret_key: "18mCuUrkr04Qd3hwHrLGAVzs6cxVZT3tNXtmkH8MvFJUOUD2LFh6sajhuFtPlvhm"
+
+config :gas, GasWeb.Auth.AccessPipeline,
+  module: GasWeb.Auth.Guardian,
+  error_handler: GasWeb.Auth.Guardian
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{Mix.env()}.exs"

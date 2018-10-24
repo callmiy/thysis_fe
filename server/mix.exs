@@ -50,7 +50,10 @@ defmodule Gas.Mixfile do
       {:faker, "~> 0.10.0", only: [:dev, :test]},
       {:corsica, "~> 1.1"},
       {:hound, "~> 1.0", only: [:test]},
-      {:dataloader, "~> 1.0"}
+      {:dataloader, "~> 1.0"},
+      {:guardian, "~> 1.1"},
+      {:bcrypt_elixir, "~> 1.1"},
+      {:comeonin, "~> 4.1"}
     ]
   end
 

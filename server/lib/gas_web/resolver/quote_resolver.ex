@@ -5,7 +5,7 @@ defmodule GasWeb.QuoteResolver do
 
   alias Gas.Quote
   alias Gas.QuoteApi, as: Api
-  alias GasWeb.ResolversUtil
+  alias GasWeb.Resolver
   alias Gas.SourceApi
   alias Gas.Source
 
@@ -21,7 +21,7 @@ defmodule GasWeb.QuoteResolver do
       {:error, failed_operation, changeset, _success} ->
         {
           :error,
-          ResolversUtil.transaction_errors_to_string(
+          Resolver.transaction_errors_to_string(
             changeset,
             failed_operation
           )
@@ -41,7 +41,6 @@ defmodule GasWeb.QuoteResolver do
     end
   end
 
-  @spec full_text_search(any, %{text: %{text: String.t()}}, any) :: {:ok, %{}}
   def full_text_search(_root, %{text: %{text: text}}, _info) do
     {:ok, Api.full_text_search(text)}
   end
