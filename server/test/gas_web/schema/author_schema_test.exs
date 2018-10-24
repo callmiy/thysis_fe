@@ -1,7 +1,7 @@
 defmodule GasWeb.AuthorSchemaTest do
   use Gas.DataCase
   alias GasWeb.Schema
-  alias GasWeb.AuthorQueries, as: Queries
+  alias GasWeb.Query.Author, as: AuthorQuery, as: Queries
   alias Gas.Author
   alias Gas.Factory.Author, as: AuthorFactory
   # alias Gas.MapHelpers

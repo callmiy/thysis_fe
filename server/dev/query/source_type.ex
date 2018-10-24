@@ -1,4 +1,4 @@
-defmodule GasWeb.SourceTypeQueries do
+defmodule GasWeb.Query.SourceType do
   def all_fields_fragment do
     name = "SourceTypeFieldsFragment"
 

@@ -1,7 +1,7 @@
-defmodule GasWeb.QuoteQueries do
-  alias GasWeb.TagQueries
-  alias GasWeb.SourceQueries
-  alias GasWeb.AuthorQueries
+defmodule GasWeb.Query.Quote do
+  alias GasWeb.Query.Tag, as: TagQuery
+  alias GasWeb.Query.Source, as: SourceQuery
+  alias GasWeb.Query.Author, as: AuthorQuery
 
   def all_fields_fragment do
     name = "QuoteAllFieldsFragment"
@@ -26,9 +26,9 @@ defmodule GasWeb.QuoteQueries do
 
   def mutation(:create_quote) do
     {frag_name, frag} = all_fields_fragment()
-    {tag_frag_name, tag_frag} = TagQueries.all_fields_fragment()
-    {source_frag_name, source_frag} = SourceQueries.all_fields_fragment()
-    {author_frag_name, author_frag} = AuthorQueries.all_fields_fragment()
+    {tag_frag_name, tag_frag} = TagQuery.all_fields_fragment()
+    {source_frag_name, source_frag} = SourceQuery.all_fields_fragment()
+    {author_frag_name, author_frag} = AuthorQuery.all_fields_fragment()
 
     """
       mutation createQuote($quote: CreateQuoteInput!) {
@@ -58,7 +58,7 @@ defmodule GasWeb.QuoteQueries do
 
   def mutation() do
     {frag_name, frag} = all_fields_fragment()
-    {source_frag_name, source_frag} = SourceQueries.all_fields_fragment()
+    {source_frag_name, source_frag} = SourceQuery.all_fields_fragment()
 
     """
     mutation createQuote($quote: CreateQuoteInput!) {
@@ -77,8 +77,8 @@ defmodule GasWeb.QuoteQueries do
 
   def query(:quotes) do
     {frag_name, frag} = all_fields_fragment()
-    {source_frag_name, source_frag} = SourceQueries.all_fields_fragment()
-    {author_frag_name, author_frag} = AuthorQueries.all_fields_fragment()
+    {source_frag_name, source_frag} = SourceQuery.all_fields_fragment()
+    {author_frag_name, author_frag} = AuthorQuery.all_fields_fragment()
 
     """
     query GetQuotesQuery($quote: GetQuotes) {
@@ -127,8 +127,8 @@ defmodule GasWeb.QuoteQueries do
   @doc "get_quote"
   def get_quote() do
     {frag_name, frag} = all_fields_fragment()
-    {source_frag_name, source_frag} = SourceQueries.all_fields_fragment()
-    {author_frag_name, author_frag} = AuthorQueries.all_fields_fragment()
+    {source_frag_name, source_frag} = SourceQuery.all_fields_fragment()
+    {author_frag_name, author_frag} = AuthorQuery.all_fields_fragment()
 
     """
     query GetQuoteQuery($quote: GetQuoteInput!) {

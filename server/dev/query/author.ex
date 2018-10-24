@@ -1,4 +1,4 @@
-defmodule GasWeb.AuthorQueries do
+defmodule GasWeb.Query.Author do
   def all_fields_fragment do
     name = "Author_Fields_Fragment"
 

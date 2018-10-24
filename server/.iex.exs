@@ -17,11 +17,11 @@ alias Gas.Author
 alias Gas.AuthorApi
 alias Gas.Factory.Source, as: SourceFactory
 alias Gas.Factory.SourceStrategy, as: SourceStrategy
-alias GasWeb.QuoteQueries
-alias GasWeb.AuthorQueries
-alias GasWeb.SourceQueries
-alias GasWeb.SourceTypeQueries
-alias GasWeb.TagQueries
+alias GasWeb.Query.Quote, as: QuoteQuery
+alias GasWeb.Query.Author, as: AuthorQuery
+alias GasWeb.Query.Source, as: SourceQuery
+alias GasWeb.Query.SourceType, as: SourceTypeQuery
+alias GasWeb.Query.Tag, as: TagQuery
 alias Gas.Factory.Author, as: AuthorFactory
 alias Gas.Factory.User, as: UserFactory
 alias Gas.Query.Registration, as: RegistrationQuery

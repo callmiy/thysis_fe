@@ -1,7 +1,7 @@
-defmodule GasWeb.SourceQueries do
-  alias GasWeb.AuthorQueries
-  alias GasWeb.SourceTypeQueries
-  alias GasWeb.QuoteQueries
+defmodule GasWeb.Query.Source do
+  alias GasWeb.Query.Author, as: AuthorQuery
+  alias GasWeb.Query.SourceType, as: SourceTypeQuery
+  alias GasWeb.Query.Quote, as: QuoteQuery
 
   def all_fields_fragment do
     name = "SourceAllFieldsFragment"
@@ -24,9 +24,9 @@ defmodule GasWeb.SourceQueries do
 
   defp fragment do
     {frag_name, frag} = all_fields_fragment()
-    {author_frag_name, author_frag} = AuthorQueries.all_fields_fragment()
-    {st_frag_name, st_frag} = SourceTypeQueries.all_fields_fragment()
-    {quote_frag_name, quote_frag} = QuoteQueries.all_fields_fragment()
+    {author_frag_name, author_frag} = AuthorQuery.all_fields_fragment()
+    {st_frag_name, st_frag} = SourceTypeQuery.all_fields_fragment()
+    {quote_frag_name, quote_frag} = QuoteQuery.all_fields_fragment()
 
     fields = """
     ...#{frag_name}

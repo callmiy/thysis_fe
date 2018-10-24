@@ -3,7 +3,7 @@ defmodule Gas.QuoteSchemaTest do
 
   alias GasWeb.Schema
   alias Gas.MapHelpers
-  alias GasWeb.QuoteQueries, as: Queries
+  alias GasWeb.Query.Quote, as: QuoteQuery, as: Queries
   alias Gas.Factory.Source, as: SourceFactory
 
   # @tag :skip

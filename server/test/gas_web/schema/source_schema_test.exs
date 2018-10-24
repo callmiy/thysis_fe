@@ -1,7 +1,7 @@
 defmodule GasWeb.SourceSchemaTest do
   use Gas.DataCase
   alias GasWeb.Schema
-  alias GasWeb.SourceQueries, as: Queries
+  alias GasWeb.Query.Source, as: SourceQuery, as: Queries
   alias Gas.Source
   alias Gas.MapHelpers
   alias Gas.SourceApi

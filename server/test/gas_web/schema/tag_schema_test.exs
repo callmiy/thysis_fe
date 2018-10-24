@@ -1,7 +1,7 @@
 defmodule GasWeb.TagSchemaTest do
   use Gas.DataCase
   alias GasWeb.Schema
-  alias GasWeb.TagQueries, as: Queries
+  alias GasWeb.Query.Tag, as: TagQuery, as: Queries
   alias Gas.Tag
   alias Gas.MapHelpers
 

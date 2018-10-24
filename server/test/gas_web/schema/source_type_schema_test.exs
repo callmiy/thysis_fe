@@ -1,7 +1,7 @@
 defmodule GasWeb.SourceTypeSchemaTest do
   use Gas.DataCase
   alias GasWeb.Schema
-  alias GasWeb.SourceTypeQueries
+  alias GasWeb.Query.SourceType, as: SourceTypeQuery
   alias Gas.SourceType
 
   describe "query" do
@@ -19,7 +19,7 @@ defmodule GasWeb.SourceTypeSchemaTest do
                 }
               }} =
                Absinthe.run(
-                 SourceTypeQueries.query(:source_type),
+                 SourceTypeQuery.query(:source_type),
                  Schema,
                  variables: %{
                    "sourceType" => %{
@@ -42,7 +42,7 @@ defmodule GasWeb.SourceTypeSchemaTest do
                 }
               }} =
                Absinthe.run(
-                 SourceTypeQueries.query(:source_type),
+                 SourceTypeQuery.query(:source_type),
                  Schema,
                  variables: %{
                    "sourceType" => %{
@@ -66,7 +66,7 @@ defmodule GasWeb.SourceTypeSchemaTest do
                 }
               }} =
                Absinthe.run(
-                 SourceTypeQueries.query(:source_type),
+                 SourceTypeQuery.query(:source_type),
                  Schema,
                  variables: %{
                    "sourceType" => %{
@@ -90,7 +90,7 @@ defmodule GasWeb.SourceTypeSchemaTest do
                 data: %{
                   "sourceTypes" => source_types
                 }
-              }} = Absinthe.run(SourceTypeQueries.query(:source_types), Schema)
+              }} = Absinthe.run(SourceTypeQuery.query(:source_types), Schema)
 
       assert length(source_types) == 2
       assert %{"id" => ^id, "name" => ^name} = List.last(source_types)
