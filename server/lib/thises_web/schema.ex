@@ -14,7 +14,7 @@ defmodule ThisesWeb.Schema do
 
   alias Thises.QuoteApi
   alias Thises.TagApi
-  alias Thises.SourceApi
+  alias Thises.Sources
   alias Thises.AuthorApi
   alias Thises.SourceTypeApi
   alias Thises.Accounts.CredentialApi
@@ -45,7 +45,7 @@ defmodule ThisesWeb.Schema do
       Dataloader.new()
       |> Dataloader.add_source(QuoteApi, QuoteApi.data())
       |> Dataloader.add_source(TagApi, TagApi.data())
-      |> Dataloader.add_source(SourceApi, SourceApi.data())
+      |> Dataloader.add_source(Sources, Sources.data())
       |> Dataloader.add_source(AuthorApi, AuthorApi.data())
       |> Dataloader.add_source(SourceTypeApi, SourceTypeApi.data())
       |> Dataloader.add_source(CredentialApi, CredentialApi.data())

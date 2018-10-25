@@ -1,4 +1,4 @@
-defmodule Thises.SourceApi do
+defmodule Thises.Sources do
   @moduledoc """
   The Sources context.
   """
@@ -6,7 +6,7 @@ defmodule Thises.SourceApi do
   import Ecto.Query, warn: false
   alias Ecto.Multi
   alias Thises.Repo
-  alias Thises.Source
+  alias Thises.Sources.Source
   alias Thises.SourceAuthor
   alias Thises.Author
   alias Thises.SourceType
@@ -26,6 +26,24 @@ defmodule Thises.SourceApi do
     Repo.all(Source)
   end
 
+  def list(%{project_id: project_id}, _user_id) do
+    Source
+    |> where([s], s.project_id == ^project_id)
+    |> Repo.all()
+  end
+
+  def list(_, user_id) do
+    user_id
+    |> sources_for_user()
+    |> Repo.all()
+  end
+
+  defp sources_for_user(user_id),
+    do:
+      Source
+      |> join(:inner, [s], p in assoc(s, :project))
+      |> where([s, p], p.user_id == ^user_id)
+
   @doc """
   Gets a single source.
 
@@ -42,57 +60,22 @@ defmodule Thises.SourceApi do
   """
   def get(id), do: Repo.get(Source, id)
 
-  @doc """
-  Creates a source.
+  def get(source_id, user_id) do
+    user_id
+    |> sources_for_user()
+    |> where([s], s.id == ^source_id)
+    |> Repo.one()
+  end
 
-  ## Examples
-
-      iex> create_(%{
-          source: %{topic: "topic", ..},
-          author_attrs: [
-            %{name: "author 1"}, %{name: "author 2"}
-          ]
-        })
-      {:ok, %{source: %Source{}, author_attrs: {2, [%Author{}, %Author{}]} }}
-
-      iex> create_(%{
-          source: %{topic: "topic", ..},
-          author_ids: [1, 2, 3, 4]
-        })
-      {:ok, %{source: %Source{}, author_ids: {4, nil}}}
-
-      iex> create_(%{
-          source: %{topic: "topic", ..},
-          author_ids: [1, 2, 3, 4],
-          author_attrs: [
-            %{name: "author 1"}, %{name: "author 2"}
-          ]
-        })
-      {:ok, %{
-        source: %Source{},
-        author_ids: {4, nil},
-        author_attrs: [%Author{}, %Author{}]
-      }}
-
-      iex> create_(%{
-          source: %{topic: "topic", ..}
-      })
-      {:error, :no_authors}
-
-      iex> create_(%{
-          source: %{topic: nil}
-      })
-      {:error, field_operations_names, changeset, successful_operations}
-
-  """
   @spec create_(
           %{
+            project_id: binary() | integer(),
             topic: String.t() | nil,
             source_type_id: Integer.t() | String.t() | nil,
             author_attrs: [Map.t()] | nil,
             author_ids: [Integer.t() | String.t()] | nil
           }
-          | %{}
+          | map()
         ) ::
           {:ok,
            %{
@@ -103,7 +86,6 @@ defmodule Thises.SourceApi do
              author_attrs: {Integer.t(), [%Author{id: Integer.t()}]} | nil
            }}
           | {:error, Multi.name(), any(), %{optional(Multi.name()) => any()}}
-
   def create_(%{source_type_id: nil, source_type: %{} = source_type} = attrs) do
     source_type_multi =
       Multi.new()
@@ -121,99 +103,6 @@ defmodule Thises.SourceApi do
   end
 
   def create_(attrs), do: create_source(nil, attrs)
-
-  @doc """
-  Updates a source.
-
-  ## Examples
-
-      iex> update_(source, %{field: new_value})
-      {:ok, %Source{}}
-
-      iex> update_(source, %{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
-
-  def update_(%Source{} = source, attrs) do
-    changes = Source.changeset(source, attrs)
-
-    with {:ok, result} <-
-           Multi.new()
-           |> delete_authors_multi(attrs)
-           |> Multi.update(:source, changes)
-           |> create_authors_multi(:author_attrs, changes)
-           |> create_authors_multi(:author_ids, changes)
-           |> Repo.transaction() do
-      result = create_source_result(result) |> delete_authors()
-
-      {:ok, result}
-    end
-  end
-
-  @doc """
-  Deletes a Source.
-
-  ## Examples
-
-      iex> delete_(source)
-      {:ok, %Source{}}
-
-      iex> delete_(source)
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def delete_(%Source{} = source) do
-    source = Repo.preload(source, [:source_authors])
-    Enum.each(source.source_authors, &Repo.delete(&1))
-    Repo.delete(source)
-  end
-
-  @doc """
-  Returns a string that can be used to display the source (sort of to_string).
-  The fields that are important are joined together with " | ". Fields that are
-  `nil` are ignored
-  """
-  @spec display(source :: %Source{}) :: String.t()
-  def display(%Source{} = source) do
-    source
-    |> Map.take([:authors, :topic, :publication, :year, :url])
-    |> map_reduce()
-    |> Enum.join(" | ")
-  end
-
-  @doc """
-  Returns an `%Ecto.Changeset{}` for tracking source changes.
-
-  ## Examples
-
-      iex> change_(source, attrs)
-      %Ecto.Changeset{source: %Source{}}
-
-  """
-  def change_(source, attrs \\ %{})
-
-  def change_(%Source{} = source, %Source{} = attrs) do
-    Source.changeset(source, Map.from_struct(attrs))
-  end
-
-  def change_(%Source{} = source, attrs), do: Source.changeset(source, attrs)
-
-  def author_required_error_string, do: "author ids or map required"
-
-  def invalid_ids_error_string(ids) when is_list(ids),
-    do: ~s[Invalid author IDs: #{Enum.join(ids, ", ")}]
-
-  # ABSINTHE DATALOADER
-  def data() do
-    Dataloader.Ecto.new(Repo, query: &query/2)
-  end
-
-  def query(queryable, _params) do
-    queryable
-  end
-
-  # END ABSINTHE DATALOADER
 
   defp create_source(source_type_multi, attrs) do
     {source_multi, changes} = create_source_multi(source_type_multi, attrs)
@@ -359,6 +248,99 @@ defmodule Thises.SourceApi do
         }
     }
   end
+
+  @doc """
+  Updates a source.
+
+  ## Examples
+
+      iex> update_(source, %{field: new_value})
+      {:ok, %Source{}}
+
+      iex> update_(source, %{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+
+  def update_(%Source{} = source, attrs) do
+    changes = Source.changeset(source, attrs)
+
+    with {:ok, result} <-
+           Multi.new()
+           |> delete_authors_multi(attrs)
+           |> Multi.update(:source, changes)
+           |> create_authors_multi(:author_attrs, changes)
+           |> create_authors_multi(:author_ids, changes)
+           |> Repo.transaction() do
+      result = create_source_result(result) |> delete_authors()
+
+      {:ok, result}
+    end
+  end
+
+  @doc """
+  Deletes a Source.
+
+  ## Examples
+
+      iex> delete_(source)
+      {:ok, %Source{}}
+
+      iex> delete_(source)
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def delete_(%Source{} = source) do
+    source = Repo.preload(source, [:source_authors])
+    Enum.each(source.source_authors, &Repo.delete(&1))
+    Repo.delete(source)
+  end
+
+  @doc """
+  Returns a string that can be used to display the source (sort of to_string).
+  The fields that are important are joined together with " | ". Fields that are
+  `nil` are ignored
+  """
+  @spec display(source :: %Source{}) :: String.t()
+  def display(%Source{} = source) do
+    source
+    |> Map.take([:authors, :topic, :publication, :year, :url])
+    |> map_reduce()
+    |> Enum.join(" | ")
+  end
+
+  @doc """
+  Returns an `%Ecto.Changeset{}` for tracking source changes.
+
+  ## Examples
+
+      iex> change_(source, attrs)
+      %Ecto.Changeset{source: %Source{}}
+
+  """
+  def change_(source, attrs \\ %{})
+
+  def change_(%Source{} = source, %Source{} = attrs) do
+    Source.changeset(source, Map.from_struct(attrs))
+  end
+
+  def change_(%Source{} = source, attrs), do: Source.changeset(source, attrs)
+
+  def author_required_error_string, do: "author ids or map required"
+
+  def invalid_ids_error_string(ids) when is_list(ids),
+    do: ~s[Invalid author IDs: #{Enum.join(ids, ", ")}]
+
+  # ABSINTHE DATALOADER
+  def data() do
+    Dataloader.Ecto.new(Repo, query: &query/2)
+  end
+
+  def query(queryable, _params) do
+    queryable
+  end
+
+  # END ABSINTHE DATALOADER
 
   defp delete_authors_multi(transaction, %{deleted_authors: ids}) when is_list(ids) do
     Multi.run(transaction, :delete_authors, fn _n ->

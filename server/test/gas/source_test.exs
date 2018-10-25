@@ -1,8 +1,8 @@
 defmodule Thises.SourceTest do
   use Thises.DataCase
 
-  alias Thises.Source
-  alias Thises.SourceApi, as: Api
+  alias Thises.Sources.Source
+  alias Thises.Sources
   alias Thises.Factory.Source, as: Factory
 
   defp make_source(attrs \\ %{})
@@ -42,14 +42,14 @@ defmodule Thises.SourceTest do
   # @tag :skip
   test "list/1 returns all sources" do
     source = make_source()
-    [list] = Api.list()
+    [list] = Sources.list()
     assert_source_equal(source, list)
   end
 
   # @tag :skip
   test "get/1 returns the source with given id" do
     source = make_source()
-    assert_source_equal(Api.get(source.id), source)
+    assert_source_equal(Sources.get(source.id), source)
   end
 
   # @tag :skip
@@ -65,7 +65,7 @@ defmodule Thises.SourceTest do
             %{
               source: %Source{} = source,
               author_attrs: {1, [_]}
-            }} = Api.create_(attrs)
+            }} = Sources.create_(attrs)
 
     assert source.topic == topic
   end
@@ -74,7 +74,7 @@ defmodule Thises.SourceTest do
   test "create_/1 with no authors error" do
     assert {:error, :source, %Ecto.Changeset{errors: [authors: _]}, %{}} =
              Factory.params_with_assocs()
-             |> Api.create_()
+             |> Sources.create_()
   end
 
   # @tag :skip
@@ -96,20 +96,20 @@ defmodule Thises.SourceTest do
                :with_authors,
                author_attrs: [%{}, %{}]
              )
-             |> Api.create_()
+             |> Sources.create_()
   end
 
   # @tag :skip
   test "create_/1 with invalid data returns error changeset" do
     assert {:error, :source, %Ecto.Changeset{}, %{}} =
-             Factory.params_with_assocs(:source, topic: nil) |> Api.create_()
+             Factory.params_with_assocs(:source, topic: nil) |> Sources.create_()
   end
 
   # @tag :skip
   test "create_/1 with no source type returns error changeset" do
     assert {:error, :source, %Ecto.Changeset{}, %{}} =
              Factory.params_for(:with_authors, source_type: nil)
-             |> Api.create_()
+             |> Sources.create_()
   end
 
   # @tag :skip
@@ -117,7 +117,7 @@ defmodule Thises.SourceTest do
     source = make_source()
     topic = "sss73bsbddj"
 
-    assert {:ok, %{source: %Source{topic: ^topic}}} = Api.update_(source, %{topic: topic})
+    assert {:ok, %{source: %Source{topic: ^topic}}} = Sources.update_(source, %{topic: topic})
   end
 
   # @tag :skip
@@ -129,7 +129,7 @@ defmodule Thises.SourceTest do
 
     assert {:ok, %{source: %Source{authors: authors, topic: ^topic}}} =
              source
-             |> Api.update_(%{
+             |> Sources.update_(%{
                topic: topic,
                deleted_authors: taken
              })
@@ -146,7 +146,7 @@ defmodule Thises.SourceTest do
 
     assert {:ok, %{source: %Source{authors: authors}}} =
              source
-             |> Api.update_(%{
+             |> Sources.update_(%{
                author_ids: [author_id]
              })
 
@@ -166,20 +166,20 @@ defmodule Thises.SourceTest do
              :source,
              %Ecto.Changeset{},
              _success
-           } = Api.update_(source, %{topic: nil})
+           } = Sources.update_(source, %{topic: nil})
 
-    assert_source_equal(source, Api.get(source.id))
+    assert_source_equal(source, Sources.get(source.id))
   end
 
   # @tag :skip
   test "delete_/1 deletes the source" do
     source = make_source()
-    assert {:ok, %Source{}} = Api.delete_(source)
-    assert Api.get(source.id) == nil
+    assert {:ok, %Source{}} = Sources.delete_(source)
+    assert Sources.get(source.id) == nil
   end
 
   # @tag :skip
   test "change_/1 returns a source changeset" do
-    assert %Ecto.Changeset{} = make_source() |> Api.change_()
+    assert %Ecto.Changeset{} = make_source() |> Sources.change_()
   end
 end

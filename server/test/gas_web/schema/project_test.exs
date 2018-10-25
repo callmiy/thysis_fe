@@ -7,7 +7,7 @@ defmodule ThisesWeb.Schema.ProjectTest do
 
   describe "Mutation" do
     test "creating a project succeeds" do
-      %{user: user} = attrs = Factory.params_with_user()
+      %{user: user} = attrs = Factory.params_with_assoc()
       user_id_str = Integer.to_string(user.id)
 
       queryMap = Query.create()
@@ -43,7 +43,7 @@ defmodule ThisesWeb.Schema.ProjectTest do
 
     test "creating a project with non existent user fails" do
       attrs =
-        Factory.params_with_user(user_id: 0)
+        Factory.params_with_assoc(user_id: 0)
         |> Factory.stringify()
 
       queryMap = Query.create()
@@ -74,7 +74,7 @@ defmodule ThisesWeb.Schema.ProjectTest do
 
   describe "query" do
     test "Get projects for authenticated user succeeds" do
-      %{user: user} = project1 = Factory.params_with_user()
+      %{user: user} = project1 = Factory.params_with_assoc()
       project1 = Factory.insert(project1)
       project2 = Factory.insert(user_id: user.id)
 
@@ -107,7 +107,7 @@ defmodule ThisesWeb.Schema.ProjectTest do
     end
 
     test "Get project for authenticated user succeeds" do
-      %{user: user} = attrs = Factory.params_with_user()
+      %{user: user} = attrs = Factory.params_with_assoc()
       user_id = Integer.to_string(user.id)
       %{id: id} = Factory.insert(attrs)
       id = Integer.to_string(id)

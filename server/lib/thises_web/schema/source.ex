@@ -7,7 +7,7 @@ defmodule ThisesWeb.Schema.Source do
 
   import Absinthe.Resolution.Helpers, only: [dataloader: 1]
 
-  alias ThisesWeb.SourceResolver
+  alias ThisesWeb.Resolver.Source, as: Resolver
 
   @desc "A source"
   object :source do
@@ -33,19 +33,22 @@ defmodule ThisesWeb.Schema.Source do
 
     field(:quotes, list_of(:quote), resolve: dataloader(Thises.QuoteApi))
 
-    # field(:display, :string, do: resolve(&SourceResolver.display/3))
+    # field(:display, :string, do: resolve(&Resolver.display/3))
     field(
       :display,
       :string,
       deprecate: "Client should handle display",
-      resolve: &SourceResolver.display/3
+      resolve: &Resolver.display/3
     )
   end
 
   # MUTATION INPUTS
   @desc "Inputs for creating a source with authors"
   input_object :create_source_input do
-    @desc "The topic of the work, as given by authours - mandatory"
+    @desc "ID of project to which source belongs"
+    field(:project_id, non_null(:id))
+
+    @desc "The topic of the work, as given by authors - mandatory"
     field(:topic, non_null(:string))
 
     @desc "The source type i.e. book, journal etc. - mandatory"
@@ -71,7 +74,7 @@ defmodule ThisesWeb.Schema.Source do
     @desc "ID of source to be updated"
     field(:id, non_null(:id))
 
-    @desc "The topic of the work, as given by authours"
+    @desc "The topic of the work, as given by authors"
     field(:topic, :string)
 
     @desc "The source type i.e. book, journal etc. - if needed to be changed"
@@ -103,19 +106,26 @@ defmodule ThisesWeb.Schema.Source do
     field(:id, non_null(:id))
   end
 
+  @desc "Input for getting a sources belonging to a project or user"
+  input_object :get_sources_input do
+    @desc "ID of project"
+    field(:project_id, :id)
+  end
+
   # QUERIES
   @desc "Queries allowed on the source object"
   object :source_query do
     @desc "Query for all sources"
     field :sources, type: list_of(:source) do
-      resolve(&SourceResolver.sources/3)
+      arg(:source, :get_sources_input)
+      resolve(&Resolver.sources/3)
     end
 
     @dec "Query for a source"
     field :source, type: :source do
       arg(:source, non_null(:get_source_input))
 
-      resolve(&SourceResolver.source/3)
+      resolve(&Resolver.source/3)
     end
   end
 
@@ -125,13 +135,13 @@ defmodule ThisesWeb.Schema.Source do
     @desc "create source mutation"
     field :create_source, type: :source do
       arg(:source, non_null(:create_source_input))
-      resolve(&SourceResolver.create/3)
+      resolve(&Resolver.create/3)
     end
 
     @desc "update source mutation"
     field :update_source, type: :source do
       arg(:source, non_null(:update_source_input))
-      resolve(&SourceResolver.update/3)
+      resolve(&Resolver.update/3)
     end
   end
 end

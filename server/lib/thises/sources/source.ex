@@ -1,4 +1,4 @@
-defmodule Thises.Source do
+defmodule Thises.Sources.Source do
   use Ecto.Schema
   import Ecto.Changeset
 
@@ -7,7 +7,9 @@ defmodule Thises.Source do
   alias Thises.Author
   alias Thises.AuthorApi
   alias Thises.SourceAuthor
-  alias Thises.SourceApi
+  alias Thises.Sources
+  alias Thises.Projects.Project
+  alias Thises.Accounts.User
 
   @timestamps_opts [
     type: Timex.Ecto.DateTime,
@@ -23,6 +25,8 @@ defmodule Thises.Source do
     field(:publication, :string)
     field(:url, :string)
     belongs_to(:source_type, SourceType)
+    belongs_to(:project, Project)
+    belongs_to(:user, User)
     has_many(:quotes, Quote)
     has_many(:source_authors, SourceAuthor)
     many_to_many(:authors, Author, join_through: "source_authors")
@@ -54,9 +58,12 @@ defmodule Thises.Source do
         :source_type_id,
         :author_ids,
         :author_attrs,
-        :deleted_authors
+        :deleted_authors,
+        :project_id,
+        :user_id
       ])
-      |> validate_required([:topic, :source_type_id])
+      |> validate_required([:topic, :source_type_id, :project_id, :user_id])
+      |> foreign_key_constraint(:project, name: "sources_project_id_user_id_fk")
 
     {author_ids, changes} = validate_author_ids(changes)
     {author_attrs, changes} = validate_author_attrs(changes)
@@ -70,7 +77,7 @@ defmodule Thises.Source do
       add_error(
         changes,
         :authors,
-        SourceApi.author_required_error_string()
+        Sources.author_required_error_string()
       )
 
   defp validate_authors(_, _, changes), do: changes
@@ -104,7 +111,7 @@ defmodule Thises.Source do
               add_error(
                 changes,
                 :author_ids,
-                SourceApi.invalid_ids_error_string(invalid_ids)
+                Sources.invalid_ids_error_string(invalid_ids)
               )
 
             {ids, changes}

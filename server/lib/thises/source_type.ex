@@ -2,7 +2,8 @@ defmodule Thises.SourceType do
   use Ecto.Schema
   import Ecto.Changeset
 
-  alias Thises.Source
+  alias Thises.Sources.Source
+  alias Thises.Accounts.User
 
   @timestamps_opts [
     type: Timex.Ecto.DateTime,
@@ -12,12 +13,15 @@ defmodule Thises.SourceType do
   schema "source_types" do
     field(:name, :string)
     has_many(:sources, Source)
+    belongs_to(:user, User)
   end
 
-  @doc false
+  @doc "changeset"
   def changeset(source_type, attrs \\ %{}) do
     source_type
-    |> cast(attrs, [:name])
-    |> validate_required([:name])
+    |> cast(attrs, [:name, :user_id])
+    |> validate_required([:name, :user_id])
+    |> assoc_constraint(:user)
+    |> unique_constraint(:name, name: :source_types_name_user_id)
   end
 end

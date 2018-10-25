@@ -5,7 +5,7 @@ defmodule ThisesWeb.Schema.SourceType do
 
   use Absinthe.Schema.Notation
 
-  alias ThisesWeb.SourceTypeResolver
+  alias ThisesWeb.Resolver.SourceType, as: Resolver
 
   @desc "A source type"
   object :source_type do
@@ -25,11 +25,11 @@ defmodule ThisesWeb.Schema.SourceType do
     field :source_type, type: :source_type do
       arg(:source_type, non_null(:get_source_type_input))
 
-      resolve(&SourceTypeResolver.source_type/3)
+      resolve(&Resolver.source_type/3)
     end
 
     field :source_types, type: list_of(:source_type) do
-      resolve(&SourceTypeResolver.source_types/3)
+      resolve(&Resolver.source_types/3)
     end
   end
 end

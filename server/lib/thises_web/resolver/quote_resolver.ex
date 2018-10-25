@@ -6,8 +6,8 @@ defmodule ThisesWeb.QuoteResolver do
   alias Thises.Quote
   alias Thises.QuoteApi, as: Api
   alias ThisesWeb.Resolver
-  alias Thises.SourceApi
-  alias Thises.Source
+  alias Thises.Sources
+  alias Thises.Sources.Source
 
   @doc """
   Create a quote
@@ -48,7 +48,7 @@ defmodule ThisesWeb.QuoteResolver do
   @spec source(%Quote{source_id: Integer.t()}, any, any) ::
           {:ok, [%Source{}]} | {:error, String.t()}
   def source(%Quote{source_id: id}, _, _) do
-    case SourceApi.get(id) do
+    case Sources.get(id) do
       nil -> {:error, "No quote source with ID: #{id}"}
       source -> {:ok, source}
     end

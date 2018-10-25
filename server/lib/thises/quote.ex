@@ -2,7 +2,7 @@ defmodule Thises.Quote do
   use Ecto.Schema
   import Ecto.Changeset
 
-  alias Thises.Source
+  alias Thises.Sources.Source
   alias Thises.Tag
 
   @timestamps_opts [
@@ -40,5 +40,6 @@ defmodule Thises.Quote do
     quote
     |> cast(attrs, @cast_attrs)
     |> validate_required([:text, :source_id])
+    |> assoc_constraint(:source)
   end
 end

@@ -1,13 +1,13 @@
 defmodule ThisesWeb.Query.Source do
+  @frag_name "SourceAllFieldsFragment"
+
   alias ThisesWeb.Query.Author, as: AuthorQuery
   alias ThisesWeb.Query.SourceType, as: SourceTypeQuery
   alias ThisesWeb.Query.Quote, as: QuoteQuery
 
   def all_fields_fragment do
-    name = "SourceAllFieldsFragment"
-
     fragment = """
-      fragment #{name} on Source {
+      fragment #{@frag_name} on Source {
         id
         topic
         year
@@ -19,7 +19,7 @@ defmodule ThisesWeb.Query.Source do
       }
     """
 
-    {name, fragment}
+    {@frag_name, fragment}
   end
 
   defp fragment do
@@ -47,20 +47,6 @@ defmodule ThisesWeb.Query.Source do
     frags = "#{frag} #{author_frag} #{st_frag} #{quote_frag}"
 
     {fields, frags}
-  end
-
-  def query(:sources) do
-    {fields, frags} = fragment()
-
-    """
-    query Sources {
-      sources {
-        #{fields}
-      }
-    }
-
-    #{frags}
-    """
   end
 
   def query(:source) do
@@ -103,5 +89,21 @@ defmodule ThisesWeb.Query.Source do
 
     #{frags}
     """
+  end
+
+  def sources do
+    {fields, frags} = fragment()
+
+    query = """
+      sources(source: $source) {
+        #{fields}
+    }
+    """
+
+    %{
+      query: query,
+      params: "$source: GetSourcesInput",
+      fragments: frags
+    }
   end
 end

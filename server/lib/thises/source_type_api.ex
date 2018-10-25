@@ -17,9 +17,13 @@ defmodule Thises.SourceTypeApi do
       [%SourceType{}, ...]
 
   """
-  def list do
-    Repo.all(SourceType)
+  def list(user_id) do
+    SourceType
+    |> where([s], s.user_id == ^user_id)
+    |> Repo.all()
   end
+
+  def list, do: Repo.all(SourceType)
 
   @doc """
   Gets a single source_type.
@@ -128,14 +132,19 @@ defmodule Thises.SourceTypeApi do
       nil
 
   """
-  @spec get_source_type_by(
-          %{id: String.t() | integer}
-          | %{name: String.t()}
-          | %{id: String.t() | integer, name: String.t()}
-        ) :: %SourceType{} | nil
-  def get_source_type_by(params) do
-    Repo.get_by(SourceType, params)
+
+  def get_source_type_by(params, user_id) do
+    SourceType
+    |> where([s], s.user_id == ^user_id)
+    |> where_by(params)
+    |> Repo.one()
   end
+
+  defp where_by(query, %{id: id}),
+    do: where(query, [s], s.id == ^id)
+
+  defp where_by(query, %{name: name}),
+    do: where(query, [s], s.name == ^name)
 
   def data() do
     Dataloader.Ecto.new(Repo, query: &query/2)

@@ -2,7 +2,7 @@ defmodule Thises.Author do
   use Ecto.Schema
   import Ecto.Changeset
 
-  alias Thises.Source
+  alias Thises.Sources.Source
 
   schema "authors" do
     field(:first_name, :string)

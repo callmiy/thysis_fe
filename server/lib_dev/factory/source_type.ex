@@ -1,8 +1,7 @@
-defmodule Thises.Factory.Project do
+defmodule Thises.Factory.SourceType do
   alias Thises.Accounts.User
   alias Thises.Factory.Registration, as: RegFactory
-  alias Thises.Projects
-  alias Thises.Projects.Project
+  alias Thises.SourceTypeApi
 
   def insert_list(how_many, attrs \\ %{}) when how_many > 0,
     do:
@@ -18,12 +17,12 @@ defmodule Thises.Factory.Project do
       |> insert()
 
   def insert(attrs) do
-    {:ok, project} =
+    {:ok, source_type} =
       attrs
       |> params_with_assoc()
-      |> Projects.create_()
+      |> SourceTypeApi.create_()
 
-    project
+    source_type
   end
 
   def params(attrs \\ %{})
@@ -36,7 +35,7 @@ defmodule Thises.Factory.Project do
 
   def params(attrs) do
     attrs
-    |> title()
+    |> name()
   end
 
   def params_with_assoc(attrs \\ %{}),
@@ -45,33 +44,20 @@ defmodule Thises.Factory.Project do
       |> params()
       |> user()
 
-  def stringify(%Project{} = project),
-    do:
-      project
-      |> Map.from_struct()
-      |> stringify()
-
   def stringify(%{} = attrs),
     do:
       attrs
       |> Map.delete(:user)
       |> Enum.map(fn
-        {:user_id, id} ->
-          {"userId", id}
-
-        {k, v} when k in [:id, :title] ->
-          {Atom.to_string(k), v}
-
-        _ ->
-          nil
+        {:user_id, id} -> {"userId", id}
+        {k, v} -> {Atom.to_string(k), v}
       end)
-      |> Enum.reject(&(&1 == nil))
       |> Enum.into(%{})
 
-  defp title(%{title: _} = attrs), do: attrs
+  defp name(%{name: _} = attrs), do: attrs
 
-  defp title(attrs),
-    do: Map.put(attrs, :title, 3..12 |> Enum.random() |> Faker.String.base64())
+  defp name(attrs),
+    do: Map.put(attrs, :name, 3..12 |> Enum.random() |> Faker.String.base64())
 
   defp user(%{user_id: _} = attrs), do: attrs
 

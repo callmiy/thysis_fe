@@ -34,7 +34,7 @@ defmodule Thises.Accounts.User do
   defp validate(%Changeset{} = changes) do
     changes
     |> validate_required([:name, :email])
-    |> validate_length(:name, min: 3, max: 20)
+    |> validate_length(:name, min: 2, max: 20)
     |> validate_format(:email, ~r/@/)
     |> unique_constraint(:email)
   end
