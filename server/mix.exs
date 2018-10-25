@@ -1,9 +1,9 @@
-defmodule Gas.Mixfile do
+defmodule Thises.Mixfile do
   use Mix.Project
 
   def project do
     [
-      app: :gas,
+      app: :thises,
       version: "0.0.1",
       elixir: "~> 1.7",
       elixirc_paths: elixirc_paths(Mix.env()),
@@ -19,13 +19,13 @@ defmodule Gas.Mixfile do
   # Type `mix help compile.app` for more information.
   def application do
     [
-      mod: {Gas.Application, []},
+      mod: {Thises.Application, []},
       extra_applications: [:logger, :runtime_tools]
     ]
   end
 
   # Specifies which paths to compile per environment.
-  defp elixirc_paths(:dev), do: ["lib", "dev"]
+  defp elixirc_paths(:dev), do: ["lib", "lib_dev"]
   defp elixirc_paths(:test), do: elixirc_paths(:dev) ++ ["test/support"]
   defp elixirc_paths(_), do: ["lib"]
 

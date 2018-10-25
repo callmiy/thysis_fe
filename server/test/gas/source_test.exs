@@ -1,9 +1,9 @@
-defmodule Gas.SourceTest do
-  use Gas.DataCase
+defmodule Thises.SourceTest do
+  use Thises.DataCase
 
-  alias Gas.Source
-  alias Gas.SourceApi, as: Api
-  alias Gas.Factory.Source, as: Factory
+  alias Thises.Source
+  alias Thises.SourceApi, as: Api
+  alias Thises.Factory.Source, as: Factory
 
   defp make_source(attrs \\ %{})
 

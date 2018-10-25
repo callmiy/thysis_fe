@@ -1,7 +1,7 @@
-# Gas
+# Thises
 
 set environment variable:
-GAS_PHOENIX_PORT=4000
+THISES_PHOENIX_PORT=4000
 
 start server:
 `mix phx.server`

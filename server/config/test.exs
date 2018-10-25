@@ -1,10 +1,10 @@
 use Mix.Config
 
-app_port = System.get_env("GAS_PHOENIX_INTEGRATION_TEST_PORT") || 4017
+app_port = System.get_env("THISES_PHOENIX_INTEGRATION_TEST_PORT") || 4017
 
 # We don't run a server during test. If one is required,
 # you can enable the server option below.
-config :gas, GasWeb.Endpoint,
+config :thises, ThisesWeb.Endpoint,
   http: [port: app_port],
   server: true
 
@@ -12,11 +12,11 @@ config :gas, GasWeb.Endpoint,
 config :logger, level: :warn
 
 # Configure your database
-config :gas, Gas.Repo,
+config :thises, Thises.Repo,
   adapter: Ecto.Adapters.Postgres,
   username: "postgres",
   password: "postgres",
-  database: "gas_test",
+  database: "thises_test",
   hostname: "localhost",
   pool: Ecto.Adapters.SQL.Sandbox,
   timeout: 600_000,

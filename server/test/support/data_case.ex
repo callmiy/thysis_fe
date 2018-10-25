@@ -1,4 +1,4 @@
-defmodule Gas.DataCase do
+defmodule Thises.DataCase do
   @moduledoc """
   This module defines the setup for tests requiring
   access to the application's data layer.
@@ -16,22 +16,22 @@ defmodule Gas.DataCase do
 
   using do
     quote do
-      alias Gas.Repo
-      alias Gas.Factory.Source, as: SourceFactory
+      alias Thises.Repo
+      alias Thises.Factory.Source, as: SourceFactory
 
       import Ecto
       import Ecto.Changeset
       import Ecto.Query
-      import Gas.Factory
-      import Gas.DataCase
+      import Thises.Factory
+      import Thises.DataCase
     end
   end
 
   setup tags do
-    :ok = Ecto.Adapters.SQL.Sandbox.checkout(Gas.Repo)
+    :ok = Ecto.Adapters.SQL.Sandbox.checkout(Thises.Repo)
 
     unless tags[:async] do
-      Ecto.Adapters.SQL.Sandbox.mode(Gas.Repo, {:shared, self()})
+      Ecto.Adapters.SQL.Sandbox.mode(Thises.Repo, {:shared, self()})
     end
 
     :ok

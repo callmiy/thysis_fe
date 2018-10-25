@@ -1,4 +1,4 @@
-defmodule Gas.Repo.Migrations.CreateSources do
+defmodule Thises.Repo.Migrations.CreateSources do
   use Ecto.Migration
 
   def change do

@@ -1,4 +1,4 @@
-defmodule Gas.Repo.Migrations.CreateTags do
+defmodule Thises.Repo.Migrations.CreateTags do
   use Ecto.Migration
 
   def change do

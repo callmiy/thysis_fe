@@ -1,9 +1,9 @@
-defmodule GasWeb.TagSchemaTest do
-  use Gas.DataCase
-  alias GasWeb.Schema
-  alias GasWeb.Query.Tag, as: TagQuery, as: Queries
-  alias Gas.Tag
-  alias Gas.MapHelpers
+defmodule ThisesWeb.TagSchemaTest do
+  use Thises.DataCase
+  alias ThisesWeb.Schema
+  alias ThisesWeb.Query.Tag, as: TagQuery, as: Queries
+  alias Thises.Tag
+  alias Thises.MapHelpers
 
   describe "query" do
     test "get tag by id" do

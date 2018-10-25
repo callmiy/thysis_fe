@@ -1,4 +1,4 @@
-defmodule GasWeb.ChannelCase do
+defmodule ThisesWeb.ChannelCase do
   @moduledoc """
   This module defines the test case to be used by
   channel tests.
@@ -21,15 +21,15 @@ defmodule GasWeb.ChannelCase do
       use Phoenix.ChannelTest
 
       # The default endpoint for testing
-      @endpoint GasWeb.Endpoint
+      @endpoint ThisesWeb.Endpoint
     end
   end
 
 
   setup tags do
-    :ok = Ecto.Adapters.SQL.Sandbox.checkout(Gas.Repo)
+    :ok = Ecto.Adapters.SQL.Sandbox.checkout(Thises.Repo)
     unless tags[:async] do
-      Ecto.Adapters.SQL.Sandbox.mode(Gas.Repo, {:shared, self()})
+      Ecto.Adapters.SQL.Sandbox.mode(Thises.Repo, {:shared, self()})
     end
     :ok
   end

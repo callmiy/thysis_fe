@@ -1,4 +1,4 @@
-defmodule Gas.Repo.Migrations.QuotesAddFieldsVolumIssueExtras do
+defmodule Thises.Repo.Migrations.QuotesAddFieldsVolumIssueExtras do
   use Ecto.Migration
 
   def change do

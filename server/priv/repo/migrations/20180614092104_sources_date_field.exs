@@ -1,4 +1,4 @@
-defmodule Gas.Repo.Migrations.SourcesDateField do
+defmodule Thises.Repo.Migrations.SourcesDateField do
   use Ecto.Migration
 
   def change do

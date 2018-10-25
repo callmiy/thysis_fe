@@ -1,11 +1,11 @@
-defmodule GasWeb.SourceSchemaTest do
-  use Gas.DataCase
-  alias GasWeb.Schema
-  alias GasWeb.Query.Source, as: SourceQuery, as: Queries
-  alias Gas.Source
-  alias Gas.MapHelpers
-  alias Gas.SourceApi
-  alias Gas.Factory.Author, as: AuthorFactory
+defmodule ThisesWeb.SourceSchemaTest do
+  use Thises.DataCase
+  alias ThisesWeb.Schema
+  alias ThisesWeb.Query.Source, as: SourceQuery, as: Queries
+  alias Thises.Source
+  alias Thises.MapHelpers
+  alias Thises.SourceApi
+  alias Thises.Factory.Author, as: AuthorFactory
 
   # @tag :skip
   describe "query" do

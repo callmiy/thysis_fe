@@ -1,9 +1,9 @@
-defmodule Gas.TagsTest do
-  use Gas.DataCase
+defmodule Thises.TagsTest do
+  use Thises.DataCase
 
-  alias Gas.Tag
-  alias Gas.TagApi, as: Api
-  alias Gas.QuoteTagApi
+  alias Thises.Tag
+  alias Thises.TagApi, as: Api
+  alias Thises.QuoteTagApi
 
   test "list/0 returns all tags" do
     tag = make_tag()

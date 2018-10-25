@@ -1,4 +1,4 @@
-defmodule Gas.FeatureCase do
+defmodule Thises.FeatureCase do
   @moduledoc """
   This module defines the setup for tests requiring
   access to the application's data layer.
@@ -20,28 +20,28 @@ defmodule Gas.FeatureCase do
     quote do
       use Hound.Helpers
 
-      alias Gas.Repo
-      alias Gas.Factory.Source, as: SourceFactory
-      alias Gas.SourceApi, as: SourceApi
-      alias Gas.Author
-      alias Gas.Tag
+      alias Thises.Repo
+      alias Thises.Factory.Source, as: SourceFactory
+      alias Thises.SourceApi, as: SourceApi
+      alias Thises.Author
+      alias Thises.Tag
 
       import Ecto
       import Ecto.Changeset
-      import Gas.Factory
-      import Gas.FeatureCase
+      import Thises.Factory
+      import Thises.FeatureCase
     end
   end
 
   setup tags do
-    :ok = Ecto.Adapters.SQL.Sandbox.checkout(Gas.Repo)
+    :ok = Ecto.Adapters.SQL.Sandbox.checkout(Thises.Repo)
     parent = self()
 
     unless tags[:async] do
-      Ecto.Adapters.SQL.Sandbox.mode(Gas.Repo, {:shared, parent})
+      Ecto.Adapters.SQL.Sandbox.mode(Thises.Repo, {:shared, parent})
     end
 
-    # metadata = Phoenix.Ecto.SQL.Sandbox.metadata_for(Gas.Repo, self())
+    # metadata = Phoenix.Ecto.SQL.Sandbox.metadata_for(Thises.Repo, self())
 
     # user_agent =
     #   Hound.Browser.user_agent(:chrome)

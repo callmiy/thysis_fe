@@ -6,8 +6,8 @@ use Mix.Config
 # The watchers configuration can be used to run external
 # watchers to your application. For example, we use it
 # with brunch.io to recompile .js and .css sources.
-config :gas, GasWeb.Endpoint,
-  http: [port: System.get_env("GAS_PHOENIX_PORT") || 4000],
+config :thises, ThisesWeb.Endpoint,
+  http: [port: System.get_env("THISES_PHOENIX_PORT") || 4000],
   debug_errors: true,
   check_origin: false,
   watchers: []
@@ -29,13 +29,13 @@ config :gas, GasWeb.Endpoint,
 # different ports.
 
 # Watch static and templates for browser reloading.
-config :gas, GasWeb.Endpoint,
+config :thises, ThisesWeb.Endpoint,
   live_reload: [
     patterns: [
       ~r{priv/static/.*(js|css|png|jpeg|jpg|gif|svg)$},
       ~r{priv/gettext/.*(po)$},
-      ~r{lib/gas_web/views/.*(ex)$},
-      ~r{lib/gas_web/templates/.*(eex)$}
+      ~r{lib/thises_web/views/.*(ex)$},
+      ~r{lib/thises_web/templates/.*(eex)$}
     ]
   ]
 
@@ -47,9 +47,9 @@ config :logger, :console, format: "[$level] $message\n"
 config :phoenix, :stacktrace_depth, 20
 
 # Configure your database
-config :gas, Gas.Repo,
+config :thises, Thises.Repo,
   adapter: Ecto.Adapters.Postgres,
   username: "postgres",
-  database: "gasification_dev",
+  database: "thises_dev",
   hostname: "localhost",
   pool_size: 10

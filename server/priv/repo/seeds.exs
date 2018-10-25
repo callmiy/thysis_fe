@@ -5,21 +5,21 @@
 # Inside the script, you can read and write to any of your
 # repositories directly:
 #
-#     Gas.Repo.insert!(%Gas.SomeSchema{})
+#     Thises.Repo.insert!(%Thises.SomeSchema{})
 #
 # We recommend using the bang functions (`insert!`, `update!`
 # and so on) as they will fail if something goes wrong.
-import Gas.Factory
+import Thises.Factory
 import Faker, only: [random_between: 2]
 
-alias Gas.Repo
-alias Gas.SourceType
-alias Gas.Source
-alias Gas.Quote
-alias Gas.Tag
-alias Gas.QuoteTag
-alias Gas.SourceAuthor
-alias Gas.Factory.Source, as: SourceFactory
+alias Thises.Repo
+alias Thises.SourceType
+alias Thises.Source
+alias Thises.Quote
+alias Thises.Tag
+alias Thises.QuoteTag
+alias Thises.SourceAuthor
+alias Thises.Factory.Source, as: SourceFactory
 
 [
   SourceAuthor,

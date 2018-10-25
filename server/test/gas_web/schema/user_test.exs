@@ -1,12 +1,12 @@
-defmodule Gas.Schema.UserTest do
-  use Gas.DataCase, async: false
+defmodule Thises.Schema.UserTest do
+  use Thises.DataCase, async: false
 
-  alias GasWeb.Schema
-  alias Gas.Query.Registration, as: RegQuery
-  alias Gas.Factory.Registration, as: RegFactory
-  alias GasWeb.Query.User, as: Query
-  alias Gas.Factory.User, as: Factory
-  alias GasWeb.Auth.Guardian, as: GuardianApp
+  alias ThisesWeb.Schema
+  alias Thises.Query.Registration, as: RegQuery
+  alias Thises.Factory.Registration, as: RegFactory
+  alias ThisesWeb.Query.User, as: Query
+  alias Thises.Factory.User, as: Factory
+  alias ThisesWeb.Auth.Guardian, as: GuardianApp
 
   describe "mutation" do
     # @tag :skip

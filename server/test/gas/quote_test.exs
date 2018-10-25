@@ -1,9 +1,9 @@
-defmodule Gas.QuotesTest do
-  use Gas.DataCase
+defmodule Thises.QuotesTest do
+  use Thises.DataCase
 
-  alias Gas.Quote
-  alias Gas.QuoteApi, as: Api
-  alias Gas.QuoteTagApi, as: TagApi
+  alias Thises.Quote
+  alias Thises.QuoteApi, as: Api
+  alias Thises.QuoteTagApi, as: TagApi
 
   defp make_quote(attrs \\ %{}) do
     {:ok, quote_} =

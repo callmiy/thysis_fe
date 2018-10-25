@@ -1,4 +1,4 @@
-defmodule Gas.Repo.Migrations.AuthorsDropNameLastNameCompulsory do
+defmodule Thises.Repo.Migrations.AuthorsDropNameLastNameCompulsory do
   use Ecto.Migration
 
   def change do

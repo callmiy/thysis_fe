@@ -33,11 +33,11 @@ export const LOGIN_URL = "/auth/login";
 
 // END ROUTE URLS
 
-let titleEl = document.getElementById("gasification-title");
+let titleEl = document.getElementById("thises-title");
 
 export const setTitle = (title?: string) => {
   if (!titleEl) {
-    titleEl = document.getElementById("gasification-title");
+    titleEl = document.getElementById("thises-title");
   }
 
   if (titleEl) {

@@ -1,8 +1,8 @@
-defmodule GasWeb.SourceTypeSchemaTest do
-  use Gas.DataCase
-  alias GasWeb.Schema
-  alias GasWeb.Query.SourceType, as: SourceTypeQuery
-  alias Gas.SourceType
+defmodule ThisesWeb.SourceTypeSchemaTest do
+  use Thises.DataCase
+  alias ThisesWeb.Schema
+  alias ThisesWeb.Query.SourceType, as: SourceTypeQuery
+  alias Thises.SourceType
 
   describe "query" do
     test "get source type by id" do

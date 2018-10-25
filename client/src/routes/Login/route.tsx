@@ -10,6 +10,7 @@ import { Field } from "formik";
 import { FieldProps } from "formik";
 import { FormikErrors } from "formik";
 import isEmpty from "lodash/isEmpty";
+import { NavLink } from "react-router-dom";
 
 import { Mutation } from "react-apollo";
 import update from "immutability-helper";
@@ -23,6 +24,7 @@ import { State } from "./utils";
 import { FORM_VALUES_KEY } from "./utils";
 import { FormValues } from "./utils";
 import { setTitle } from "../../routes/util";
+import { USER_REG_URL } from "./../../routes/util";
 import RootHeader from "../../components/header.component";
 import { USER_LOCAL_STORAGE_KEY } from "../../constants";
 // import { initialFormAttrs } from "./utils";
@@ -253,6 +255,10 @@ export class Login extends React.Component<Props, State> {
             <Icon name="checkmark" /> Ok
           </Button>
         </div>
+
+        <Button className="to-reg-button">
+          <NavLink to={USER_REG_URL}>Don't have an account? Sign Up</NavLink>
+        </Button>
       </Form>
     );
   };

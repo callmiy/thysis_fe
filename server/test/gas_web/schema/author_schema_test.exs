@@ -1,10 +1,10 @@
-defmodule GasWeb.AuthorSchemaTest do
-  use Gas.DataCase
-  alias GasWeb.Schema
-  alias GasWeb.Query.Author, as: AuthorQuery, as: Queries
-  alias Gas.Author
-  alias Gas.Factory.Author, as: AuthorFactory
-  # alias Gas.MapHelpers
+defmodule ThisesWeb.AuthorSchemaTest do
+  use Thises.DataCase
+  alias ThisesWeb.Schema
+  alias ThisesWeb.Query.Author, as: AuthorQuery, as: Queries
+  alias Thises.Author
+  alias Thises.Factory.Author, as: AuthorFactory
+  # alias Thises.MapHelpers
 
   describe "query" do
     # @tag :skip

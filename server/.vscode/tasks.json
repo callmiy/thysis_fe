@@ -14,7 +14,7 @@
       },
       "options": {
         "env": {
-          "GAS_PHOENIX_PORT": "4016"
+          "THISES_PHOENIX_PORT": "4016"
         }
       },
       "problemMatcher": ["$mixCompileError", "$mixCompileWarning"],
@@ -77,7 +77,7 @@
       "command": "cd ../client && yarn deploy && cd ${workspaceFolder} && (bash priv/chrome.sh &) && mix test --only integration ${file}",
       "options": {
         "env": {
-          "GAS_PHOENIX_INTEGRATION_TEST_PORT": "4017",
+          "THISES_PHOENIX_INTEGRATION_TEST_PORT": "4017",
           "REACT_APP_API_URL": "http://localhost:4017/__api"
         }
       },
@@ -94,7 +94,7 @@
       },
       "options": {
         "env": {
-          "GAS_PHOENIX_INTEGRATION_TEST_PORT": "4017",
+          "THISES_PHOENIX_INTEGRATION_TEST_PORT": "4017",
           "REACT_APP_API_URL": "http://localhost:4017/__api"
         }
       },
@@ -111,7 +111,7 @@
       },
       "options": {
         "env": {
-          "GAS_PHOENIX_INTEGRATION_TEST_PORT": "4017",
+          "THISES_PHOENIX_INTEGRATION_TEST_PORT": "4017",
           "REACT_APP_API_URL": "http://localhost:4017/__api"
         }
       },
@@ -127,7 +127,7 @@
       },
       "options": {
         "env": {
-          "GAS_PHOENIX_INTEGRATION_TEST_PORT": "4017",
+          "THISES_PHOENIX_INTEGRATION_TEST_PORT": "4017",
           "REACT_APP_API_URL": "http://localhost:4017/__api"
         }
       },

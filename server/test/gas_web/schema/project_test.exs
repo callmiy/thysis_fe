@@ -1,9 +1,9 @@
-defmodule GasWeb.Schema.ProjectTest do
-  use Gas.DataCase, async: false
+defmodule ThisesWeb.Schema.ProjectTest do
+  use Thises.DataCase, async: false
 
-  alias Gas.Factory.Project, as: Factory
-  alias GasWeb.Schema
-  alias GasWeb.Query.Project, as: Query
+  alias Thises.Factory.Project, as: Factory
+  alias ThisesWeb.Schema
+  alias ThisesWeb.Query.Project, as: Query
 
   describe "Mutation" do
     test "creating a project succeeds" do

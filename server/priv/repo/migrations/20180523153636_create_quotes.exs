@@ -1,4 +1,4 @@
-defmodule Gas.Repo.Migrations.CreateQuotes do
+defmodule Thises.Repo.Migrations.CreateQuotes do
   use Ecto.Migration
 
   def change do

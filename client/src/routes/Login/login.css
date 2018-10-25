@@ -11,3 +11,10 @@
   padding: 5px;
   overflow-x: hidden;
   overflow-y: auto; }
+
+.login-route .ui.to-reg-button {
+  display: block;
+  width: 100%;
+  margin-top: 10px;
+  text-decoration: none;
+  color: initial; }

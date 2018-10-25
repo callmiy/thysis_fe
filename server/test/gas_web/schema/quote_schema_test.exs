@@ -1,10 +1,10 @@
-defmodule Gas.QuoteSchemaTest do
-  use Gas.DataCase
+defmodule Thises.QuoteSchemaTest do
+  use Thises.DataCase
 
-  alias GasWeb.Schema
-  alias Gas.MapHelpers
-  alias GasWeb.Query.Quote, as: QuoteQuery, as: Queries
-  alias Gas.Factory.Source, as: SourceFactory
+  alias ThisesWeb.Schema
+  alias Thises.MapHelpers
+  alias ThisesWeb.Query.Quote, as: QuoteQuery, as: Queries
+  alias Thises.Factory.Source, as: SourceFactory
 
   # @tag :skip
   describe "mutation" do

@@ -1,5 +1,5 @@
-defmodule GasWeb.HomePageFeatureTest do
-  use Gas.FeatureCase
+defmodule ThisesWeb.HomePageFeatureTest do
+  use Thises.FeatureCase
 
   @moduletag :integration
   @page_title "Gasifier"

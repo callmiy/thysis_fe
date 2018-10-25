@@ -1,4 +1,4 @@
-defmodule Gas.Repo.Migrations.AddFirstMiddleLastNamesToAuthor do
+defmodule Thises.Repo.Migrations.AddFirstMiddleLastNamesToAuthor do
   use Ecto.Migration
 
   def change do

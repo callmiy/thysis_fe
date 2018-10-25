@@ -1,8 +1,8 @@
-defmodule Gas.SourceTypesTest do
-  use Gas.DataCase
+defmodule Thises.SourceTypesTest do
+  use Thises.DataCase
 
-  alias Gas.SourceType
-  alias Gas.SourceTypeApi, as: Api
+  alias Thises.SourceType
+  alias Thises.SourceTypeApi, as: Api
 
   test "list/0 returns all source_types" do
     source_type = insert(:source_type)

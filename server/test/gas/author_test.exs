@@ -1,8 +1,8 @@
-defmodule Gas.AuthorsTest do
-  use Gas.DataCase
+defmodule Thises.AuthorsTest do
+  use Thises.DataCase
 
-  alias Gas.AuthorApi, as: Api
-  alias Gas.Author
+  alias Thises.AuthorApi, as: Api
+  alias Thises.Author
 
   defp make_author(attrs \\ %{}) do
     {:ok, author} =

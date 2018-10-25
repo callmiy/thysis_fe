@@ -1,4 +1,4 @@
-defmodule Gas.Repo.Migrations.SourceDeleteAuthorField do
+defmodule Thises.Repo.Migrations.SourceDeleteAuthorField do
   use Ecto.Migration
 
   def change do
