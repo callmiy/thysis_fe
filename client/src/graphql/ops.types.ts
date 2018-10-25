@@ -22,6 +22,10 @@ import { CreateAuthor as CreateAuthorMutation } from "./gen.types";
 import { CreateAuthorVariables } from "./gen.types";
 import { UpdateSource as UpdateSourceMutation } from "./gen.types";
 import { UpdateSourceVariables } from "./gen.types";
+import { UserRegMutation } from "./gen.types";
+import { UserRegMutationVariables } from "./gen.types";
+import { LoginMutation } from "./gen.types";
+import { LoginMutationVariables } from "./gen.types";
 
 export class TagsMinimalQueryComponent extends Query<TagsMinimalQuery, {}> {}
 export type TagsMinimalQueryResult = QueryResult<TagsMinimalQuery>;
@@ -87,3 +91,7 @@ export type CreateAuthorFn = MutationFn<
 >;
 
 export type CreateAuthorUpdateFn = MutationUpdaterFn<CreateAuthorMutation>;
+
+export type UserRegFn = MutationFn<UserRegMutation, UserRegMutationVariables>;
+
+export type LoginFn = MutationFn<LoginMutation, LoginMutationVariables>;

@@ -5,24 +5,47 @@ import { Operation } from "apollo-link";
 import { onError } from "apollo-link-error";
 import { HttpLink } from "apollo-link-http";
 
+import { initState } from "./state";
+import { userFromLocalStorage } from "./state";
+
 const HTTP_URL = process.env.REACT_APP_API_URL || "";
 
 let httpLink;
 httpLink = new HttpLink({ uri: HTTP_URL }) as ApolloLink;
+httpLink = middlewareAuthLink().concat(httpLink);
 httpLink = middlewareErrorLink().concat(httpLink);
 
 if (process.env.NODE_ENV !== "production") {
   httpLink = middlewareLoggerLink(httpLink);
 }
 
+const cache = new InMemoryCache();
+
 export const client = new ApolloClient({
-  cache: new InMemoryCache(),
-  link: httpLink
+  cache,
+  link: ApolloLink.from([initState(cache), httpLink])
 });
 
 export default client;
 
 // HELPER FUNCTIONS
+
+function middlewareAuthLink() {
+  return new ApolloLink((operation, forward) => {
+    const user = userFromLocalStorage();
+    const token = user ? user.jwt : null;
+
+    if (token) {
+      operation.setContext({
+        headers: {
+          authorization: `Bearer ${token}`
+        }
+      });
+    }
+
+    return forward ? forward(operation) : null;
+  });
+}
 
 const getNow = () => {
   const n = new Date();

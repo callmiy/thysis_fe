@@ -1,0 +1,9 @@
+@import "../../variables";
+
+.login-route {
+  @extend %route;
+
+  .main {
+    @extend %route-main;
+  }
+}

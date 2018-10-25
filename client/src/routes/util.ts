@@ -28,6 +28,9 @@ export const makeNewQuoteURL = (id?: string) => {
 
 export const SEARCH_QUOTES_URL = "/search/quotes";
 
+export const USER_REG_URL = "/auth/register";
+export const LOGIN_URL = "/auth/login";
+
 // END ROUTE URLS
 
 let titleEl = document.getElementById("gasification-title");

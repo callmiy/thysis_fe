@@ -1,0 +1,9 @@
+@import "../../variables";
+
+.user-reg-route {
+  @extend %route;
+
+  .main {
+    @extend %route-main;
+  }
+}

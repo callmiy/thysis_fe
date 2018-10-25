@@ -1,0 +1,15 @@
+%route {
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+%route-main {
+  flex: 1;
+  padding: 5px;
+  overflow-x: hidden;
+  overflow-y: auto;
+}

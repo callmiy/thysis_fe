@@ -75,6 +75,31 @@ export interface CreateAuthorVariables {
 // This file was automatically generated and should not be edited.
 
 // ====================================================
+// GraphQL mutation operation: LoginMutation
+// ====================================================
+
+export interface LoginMutation_login {
+  _id: string;
+  userId: string;
+  name: string;
+  email: string;
+  schemaType: string;
+  jwt: string;
+}
+
+export interface LoginMutation {
+  login: LoginMutation_login | null;
+}
+
+export interface LoginMutationVariables {
+  login: LoginUser;
+}
+
+
+/* tslint:disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
 // GraphQL query operation: QuoteFull
 // ====================================================
 
@@ -524,6 +549,31 @@ export interface UpdateSourceVariables {
 // This file was automatically generated and should not be edited.
 
 // ====================================================
+// GraphQL mutation operation: UserRegMutation
+// ====================================================
+
+export interface UserRegMutation_registration {
+  _id: string;
+  userId: string;
+  name: string;
+  email: string;
+  schemaType: string;
+  jwt: string;
+}
+
+export interface UserRegMutation {
+  registration: UserRegMutation_registration | null;
+}
+
+export interface UserRegMutationVariables {
+  registration: Registration;
+}
+
+
+/* tslint:disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
 // GraphQL fragment: AuthorRouteFrag
 // ====================================================
 
@@ -771,6 +821,23 @@ export interface TextSearchRowFrag {
   column: string;                // The column name of the table from which the search was obtained
 }
 
+
+/* tslint:disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL fragment: UserFragment
+// ====================================================
+
+export interface UserFragment {
+  _id: string;
+  userId: string;
+  name: string;
+  email: string;
+  schemaType: string;
+  jwt: string;
+}
+
 /* tslint:disable */
 // This file was automatically generated and should not be edited.
 
@@ -797,6 +864,12 @@ export interface CreateAuthorInput {
   firstName?: string | null;
   lastName: string;
   middleName?: string | null;
+}
+
+// Variables for login in User
+export interface LoginUser {
+  email?: string | null;
+  password?: string | null;
 }
 
 // Inputs for getting a single quote
@@ -866,6 +939,15 @@ export interface UpdateSourceInput {
   topic?: string | null;
   url?: string | null;
   year?: string | null;
+}
+
+// Variables for creating User and credential
+export interface Registration {
+  email: string;
+  name: string;
+  password: string;
+  passwordConfirmation: string;
+  source: string;
 }
 
 //==============================================================
