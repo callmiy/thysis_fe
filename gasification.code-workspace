@@ -12,6 +12,10 @@
       "path": "rust",
       "name": "rust"
     }
+    // {
+    //   "path": ".",
+    //   "name": "Root"
+    // }
   ],
   "settings": {
     "editor.formatOnSave": true,
