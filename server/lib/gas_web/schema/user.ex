@@ -4,7 +4,7 @@ defmodule GasWeb.Schema.User do
   import Absinthe.Resolution.Helpers, only: [dataloader: 1]
 
   alias GasWeb.Schema
-  alias GasWeb.UserResolver, as: Resolver
+  alias GasWeb.User.Resolver
   alias Gas.Projects
 
   @desc "A User"
@@ -60,6 +60,11 @@ defmodule GasWeb.Schema.User do
     field(:email, :string)
   end
 
+  @desc "Input variables for refreshing user"
+  input_object :refresh_input do
+    field(:jwt, non_null(:string))
+  end
+
   @desc "Mutations allowed on User object"
   object :user_mutation do
     @doc "Create a user and her credential"
@@ -81,6 +86,15 @@ defmodule GasWeb.Schema.User do
       arg(:login, non_null(:login_user))
 
       resolve(&Resolver.login/3)
+    end
+  end
+
+  @desc "Queries allowed on User object"
+  object :user_query do
+    @desc "Refresh a user session"
+    field :refresh, :user do
+      arg(:refresh, non_null(:refresh_input))
+      resolve(&Resolver.refresh/3)
     end
   end
 end

@@ -188,4 +188,68 @@ defmodule Gas.Schema.UserTest do
                )
     end
   end
+
+  describe "query" do
+    test "refreshes user succeeds with ok jwt" do
+      user = RegFactory.insert()
+      user_id = Integer.to_string(user.id)
+      {:ok, jwt, _claims} = GuardianApp.encode_and_sign(user)
+
+      queryMap = Query.refresh()
+
+      query = """
+        query RefreshUser(#{queryMap.parameters}) {
+          #{queryMap.query}
+        }
+
+        #{queryMap.fragments}
+      """
+
+      assert {:ok,
+              %{
+                data: %{
+                  "refresh" => %{"userId" => ^user_id, "jwt" => new_jwt}
+                }
+              }} =
+               Absinthe.run(query, Schema,
+                 variables: %{
+                   "refresh" => %{"jwt" => jwt}
+                 }
+               )
+
+      refute jwt == new_jwt
+    end
+
+    test "refreshes user fails for tampered with jwt" do
+      user = RegFactory.insert()
+      {:ok, jwt, _claims} = GuardianApp.encode_and_sign(user)
+
+      queryMap = Query.refresh()
+
+      query = """
+        query RefreshUser(#{queryMap.parameters}) {
+          #{queryMap.query}
+        }
+
+        #{queryMap.fragments}
+      """
+
+      assert {:ok,
+              %{
+                data: %{"refresh" => nil},
+                errors: [
+                  %{
+                    locations: [%{column: 0, line: 2}],
+                    message: "{\"error\":\"invalid_token\"}",
+                    path: ["refresh"]
+                  }
+                ]
+              }} =
+               Absinthe.run(query, Schema,
+                 variables: %{
+                   "refresh" => %{"jwt" => jwt <> "9"}
+                 }
+               )
+    end
+  end
 end

@@ -28,6 +28,7 @@ defmodule GasWeb.Schema do
     import_fields(:quote_query)
     import_fields(:author_query)
     import_fields(:project_query)
+    import_fields(:user_query)
   end
 
   mutation do

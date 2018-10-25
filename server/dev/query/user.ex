@@ -19,7 +19,7 @@ defmodule GasWeb.Query.User do
     {name, fragment}
   end
 
-  @doc false
+  @doc "update"
   def update do
     {user_frag_name, user_frag} = all_fields_fragment()
 
@@ -33,6 +33,23 @@ defmodule GasWeb.Query.User do
       query: query,
       fragments: ~s( #{user_frag} ),
       parameters: "$user: UpdateUser!"
+    }
+  end
+
+  @doc "refresh"
+  def refresh do
+    {user_frag_name, user_frag} = all_fields_fragment()
+
+    query = """
+        refresh(refresh: $refresh) {
+          ...#{user_frag_name}
+        }
+    """
+
+    %{
+      query: query,
+      fragments: ~s( #{user_frag} ),
+      parameters: "$refresh: RefreshInput!"
     }
   end
 end

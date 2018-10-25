@@ -1,4 +1,4 @@
-defmodule GasWeb.UserResolver do
+defmodule GasWeb.User.Resolver do
   alias Gas.Accounts
   alias GasWeb.Resolver
   alias GasWeb.Auth.Guardian, as: GuardianApp
@@ -52,6 +52,27 @@ defmodule GasWeb.UserResolver do
        |> Map.from_struct()
        |> Map.merge(%{
          jwt: jwt
+       })}
+    else
+      {:error, errs} ->
+        {
+          :error,
+          Poison.encode!(%{
+            error: errs
+          })
+        }
+    end
+  end
+
+  def refresh(_root, %{refresh: %{jwt: jwt}}, _info) do
+    with {:ok, _claims} <- GuardianApp.decode_and_verify(jwt),
+         {:ok, _old, {new_jwt, _claims}} = GuardianApp.refresh(jwt),
+         {:ok, user, _claims} <- GuardianApp.resource_from_token(jwt) do
+      {:ok,
+       user
+       |> Map.from_struct()
+       |> Map.merge(%{
+         jwt: new_jwt
        })}
     else
       {:error, errs} ->
