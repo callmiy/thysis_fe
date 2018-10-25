@@ -207,6 +207,31 @@ export interface Quotes1Variables {
 // This file was automatically generated and should not be edited.
 
 // ====================================================
+// GraphQL query operation: RefreshUserToken
+// ====================================================
+
+export interface RefreshUserToken_refresh {
+  _id: string;
+  userId: string;
+  name: string;
+  email: string;
+  schemaType: string;
+  jwt: string;
+}
+
+export interface RefreshUserToken {
+  refresh: RefreshUserToken_refresh | null;  // Refresh a user session
+}
+
+export interface RefreshUserTokenVariables {
+  refresh: RefreshInput;
+}
+
+
+/* tslint:disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
 // GraphQL query operation: SourceFull
 // ====================================================
 
@@ -893,6 +918,11 @@ export interface CreateQuoteInput {
 // Inputs for querying list of quotes
 export interface GetQuotes {
   source?: string | null;
+}
+
+// Input variables for refreshing user
+export interface RefreshInput {
+  jwt: string;
 }
 
 // Input for getting a source

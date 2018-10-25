@@ -24,14 +24,12 @@ export interface FormValues {
   extras: string;
 }
 
-export type OwnProps = {
+export type OwnProps = WithApolloClient<{}> & {
   sourceId?: string;
 } & TagsMinimalQuery &
   RouteComponentProps<{ sourceId?: string }>;
 
-export type NewQuoteProps = OwnProps &
-  GraphqlQueryControls &
-  WithApolloClient<OwnProps>;
+export type NewQuoteProps = OwnProps & GraphqlQueryControls;
 
 export interface NewQuoteState {
   initialFormValues: FormValues;

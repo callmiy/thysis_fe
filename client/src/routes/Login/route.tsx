@@ -163,14 +163,14 @@ export class Login extends React.Component<Props, State> {
   //   );
   // };
 
-  private submit = (createAuthor: LoginFn) => async (
+  private submit = (loginUser: LoginFn) => async (
     values: FormValues,
     formikBag: FormikProps<FormValues>
   ) => {
     formikBag.setSubmitting(true);
 
     try {
-      const result = await createAuthor();
+      const result = await loginUser();
 
       if (result && result.data) {
         const user = result.data.login;

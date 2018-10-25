@@ -8,7 +8,6 @@ import { Route } from "react-router-dom";
 import { Redirect } from "react-router-dom";
 import { RouteProps } from "react-router-dom";
 import { Dimmer, Loader } from "semantic-ui-react";
-import { graphql } from "react-apollo";
 
 import { ROOT_CONTAINER_STYLE } from "./../../constants";
 import { SimpleCss } from "./../../constants";
@@ -21,10 +20,8 @@ import { QUOTE_URL } from "./../../routes/util";
 import { AUTHOR_ROUTE_URL } from "./../../routes/util";
 import { USER_REG_URL } from "./../../routes/util";
 import { LOGIN_URL } from "./../../routes/util";
-import USER_FROM_LOCAL_QUERY from "./../../state/user-from-local-storage.query";
-import { UserFromLocalState } from "./utils";
 import { AuthOwnProps } from "./utils";
-import { AuthProps } from "./utils";
+import { userFromLocalStorage } from "./../../state";
 
 jss.setup(preset());
 
@@ -45,37 +42,28 @@ const styles = {
 
 const { classes } = jss.createStyleSheet(styles).attach();
 
-const userFromLocalGraphQl = graphql<
-  AuthOwnProps,
-  UserFromLocalState,
-  {},
-  {}
-  // UserFromLocalState
->(USER_FROM_LOCAL_QUERY, {
-  props: props => {
-    return props;
-  }
-});
-
-export const AuthRequired = userFromLocalGraphQl(
-  ({ component: AuthComponent, ...rest }: AuthProps) => {
-    const render = (childProps: RouteProps) => {
-      if (rest.data && rest.data.user && rest.data.user.jwt) {
-        return <AuthComponent {...childProps} />;
-      }
-
-      return <Redirect to={LOGIN_URL} {...childProps} />;
-    };
-
-    return <Route {...rest} render={render} />;
-  }
-);
-
 export const Loading = () => (
   <Dimmer inverted={true} className={`${classes.app}`} active={true}>
     <Loader size="medium">Loading..</Loader>
   </Dimmer>
 );
+
+const authComponent = ({ component: AuthComponent, ...rest }: AuthOwnProps) => {
+  const render = (childProps: RouteProps) => {
+    const user = userFromLocalStorage();
+    const jwt = user ? user.jwt : null;
+
+    if (jwt) {
+      return <AuthComponent {...childProps} />;
+    }
+
+    return <Redirect to={LOGIN_URL} {...childProps} />;
+  };
+
+  return <Route {...rest} render={render} />;
+};
+
+const AuthRequired = authComponent;
 
 const Home = Loadable({
   loading: Loading,

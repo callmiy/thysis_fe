@@ -1250,6 +1250,31 @@
         },
         {
           "possibleTypes": null,
+          "name": "RefreshInput",
+          "kind": "INPUT_OBJECT",
+          "interfaces": null,
+          "inputFields": [
+            {
+              "type": {
+                "ofType": {
+                  "ofType": null,
+                  "name": "String",
+                  "kind": "SCALAR"
+                },
+                "name": null,
+                "kind": "NON_NULL"
+              },
+              "name": "jwt",
+              "description": null,
+              "defaultValue": null
+            }
+          ],
+          "fields": null,
+          "enumValues": null,
+          "description": "Input variables for refreshing user"
+        },
+        {
+          "possibleTypes": null,
           "name": "QuoteFullSearchInput",
           "kind": "INPUT_OBJECT",
           "interfaces": null,
@@ -2112,6 +2137,33 @@
                     "kind": "INPUT_OBJECT"
                   },
                   "name": "quote",
+                  "description": null,
+                  "defaultValue": null
+                }
+              ]
+            },
+            {
+              "type": {
+                "ofType": null,
+                "name": "User",
+                "kind": "OBJECT"
+              },
+              "name": "refresh",
+              "isDeprecated": false,
+              "description": "Refresh a user session",
+              "deprecationReason": null,
+              "args": [
+                {
+                  "type": {
+                    "ofType": {
+                      "ofType": null,
+                      "name": "RefreshInput",
+                      "kind": "INPUT_OBJECT"
+                    },
+                    "name": null,
+                    "kind": "NON_NULL"
+                  },
+                  "name": "refresh",
                   "description": null,
                   "defaultValue": null
                 }
