@@ -1,6 +1,14 @@
 defmodule ThisesWeb.HomePageFeatureTest do
   use Thises.FeatureCase
 
+  alias Thises.Factory.Tag, as: TagFactory
+  alias Thises.Factory.Source, as: SourceFactory
+  alias Thises.Factory.Author, as: AuthorFactory
+  alias Thises.SourceApi
+  alias Thises.Repo
+  alias Thises.Author
+  alias Thises.Tag
+
   @moduletag :integration
   @page_title "Gasifier"
   @menu_items_selector "#menu-items .item"
@@ -21,7 +29,7 @@ defmodule ThisesWeb.HomePageFeatureTest do
       Task.async(fn ->
         # Given there are 2 tags in the database
         tags =
-          insert_list(2, :tag)
+          TagFactory.insert_list(2)
           |> Enum.map(&Regex.compile!(&1.text))
 
         # and there are 2 sources in the database
@@ -116,7 +124,7 @@ defmodule ThisesWeb.HomePageFeatureTest do
     assert author_submit_btn = find_element(:id, @author_modal_submit_id)
 
     # when we fill in author name
-    author_name = params_for(:author).name
+    author_name = AuthorFactory.params().last_name
     find_element(:name, "author") |> fill_field(author_name)
 
     # and click author submit button
@@ -152,7 +160,7 @@ defmodule ThisesWeb.HomePageFeatureTest do
     assert tag_submit_btn = find_element(:id, @tag_modal_submit_id)
 
     # when we fill in tag text
-    tag_text = params_for(:tag).text
+    tag_text = TagFactory.params().text
     find_element(:name, "tag") |> fill_field(tag_text)
 
     # and click tag submit button

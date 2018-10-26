@@ -1,4 +1,4 @@
-defmodule ThisesWeb.QuoteResolver do
+defmodule ThisesWeb.Resolver.Quote do
   @moduledoc """
   Resolver for the Quote Schema
   """
@@ -7,13 +7,9 @@ defmodule ThisesWeb.QuoteResolver do
   alias Thises.QuoteApi, as: Api
   alias ThisesWeb.Resolver
   alias Thises.Sources
-  alias Thises.Sources.Source
+  # alias Thises.Sources.Source
 
-  @doc """
-  Create a quote
-  """
-  @spec create_quote(any, %{quote: Map.t()}, any) :: {:ok, %Quote{}} | {:error, String.t()}
-  def create_quote(_root, %{quote: inputs}, _info) do
+  def create_quote(_, %{quote: inputs}, %{context: %{current_user: _user}}) do
     case Api.create_with_tags(inputs) do
       {:ok, %{quote: quote_}} ->
         {:ok, quote_}
@@ -29,28 +25,33 @@ defmodule ThisesWeb.QuoteResolver do
     end
   end
 
-  @spec quotes(any, %{}, any) :: {:ok, [%Quote{}]} | {:error, String.t()}
-  def quotes(_root, args, _info) do
+  def create_quote(_, _, _), do: Resolver.unauthorized()
+
+  def quotes(_, args, %{context: %{current_user: _user}}) do
     {:ok, Api.get_quotes_by(Map.get(args, :quote))}
   end
 
-  def quote(_roots, %{quote: %{id: id}}, _info) do
+  def quote(_, %{quote: %{id: id}}, %{context: %{current_user: _user}}) do
     case Api.get(id) do
       nil -> {:error, "No quote exists for id: #{id}"}
       quote_ -> {:ok, quote_}
     end
   end
 
-  def full_text_search(_root, %{text: %{text: text}}, _info) do
+  def quote(_, _, _), do: Resolver.unauthorized()
+
+  def full_text_search(_, %{text: %{text: text}}, %{context: %{current_user: _user}}) do
     {:ok, Api.full_text_search(text)}
   end
 
-  @spec source(%Quote{source_id: Integer.t()}, any, any) ::
-          {:ok, [%Source{}]} | {:error, String.t()}
-  def source(%Quote{source_id: id}, _, _) do
+  def full_text_search(_, _, _), do: Resolver.unauthorized()
+
+  def source(%Quote{source_id: id}, _, %{context: %{current_user: _user}}) do
     case Sources.get(id) do
       nil -> {:error, "No quote source with ID: #{id}"}
       source -> {:ok, source}
     end
   end
+
+  def source(_, _, _), do: Resolver.unauthorized()
 end

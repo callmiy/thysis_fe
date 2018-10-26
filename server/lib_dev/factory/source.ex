@@ -60,10 +60,12 @@ defmodule Thises.Factory.Source do
   end
 
   def params_with_assoc(attrs \\ %{}) do
+    {_, assoc_ids} = assoc()
+
     attrs =
       attrs
       |> params_no_authors()
-      |> with_assoc()
+      |> Map.merge(assoc_ids)
 
     Map.merge(attrs, authors(attrs))
   end
@@ -76,14 +78,24 @@ defmodule Thises.Factory.Source do
       url: Enum.random([Faker.Internet.url(), nil])
     }
 
-  defp with_assoc(attrs) do
+  def assoc do
     user = RegFactory.insert()
+    project = ProjectFactory.insert(user_id: user.id)
+    source_type = SourceTypeFactory.insert(user_id: user.id)
 
-    Map.merge(attrs, %{
+    assoc = %{
+      user: user,
+      project: project,
+      source_type: source_type
+    }
+
+    assoc_ids = %{
       user_id: user.id,
-      project_id: ProjectFactory.insert(user_id: user.id).id,
-      source_type_id: SourceTypeFactory.insert(user_id: user.id).id
-    })
+      project_id: project.id,
+      source_type_id: source_type.id
+    }
+
+    {assoc, assoc_ids}
   end
 
   def stringify(%Source{} = source),

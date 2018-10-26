@@ -2,6 +2,10 @@ defmodule Thises.Factory.Tag do
   use Thises.Factory
 
   alias Thises.TagApi
+  alias Thises.Factory
+  alias Thises.Tag
+
+  @simple_attrs [:text, :question]
 
   def insert(attrs) do
     {:ok, tag} =
@@ -26,4 +30,23 @@ defmodule Thises.Factory.Tag do
           Faker.String.base64(Faker.random_between(5, 15))
         ])
     }
+
+  def stringify(%Tag{} = attrs),
+    do:
+      attrs
+      |> Map.from_struct()
+      |> stringify()
+
+  def stringify(%{} = attrs) do
+    attrs
+    |> Factory.reject_attrs()
+    |> Enum.map(fn
+      {k, v} when k in @simple_attrs ->
+        {Factory.to_camel_key(k), v}
+
+      _ ->
+        nil
+    end)
+    |> Enum.into(%{})
+  end
 end

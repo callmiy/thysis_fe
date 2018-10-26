@@ -1,8 +1,20 @@
 defmodule Thises.Factory.Quote do
-  use Thises.Factory, simple_attrs: :issue
+  use Thises.Factory
 
   alias Thises.Factory
   alias Thises.QuoteApi
+  alias Thises.Quote
+  alias Thises.Factory.Tag, as: TagFactory
+
+  @simple_attrs [
+    :page_start,
+    :page_end,
+    :text,
+    :volume,
+    :issue,
+    :source_id,
+    :extras
+  ]
 
   def insert(attrs) do
     {:ok, q} =
@@ -17,6 +29,7 @@ defmodule Thises.Factory.Quote do
     defaults()
     |> Map.merge(attrs)
     |> page_end()
+    |> tags()
   end
 
   defp defaults,
@@ -25,7 +38,8 @@ defmodule Thises.Factory.Quote do
       page_start: Enum.random([nil, Faker.random_between(1, 100)]),
       text: Faker.String.base64(Faker.random_between(50, 200)),
       volume: Enum.random([Factory.random_string_int(), nil]),
-      issue: Enum.random([Factory.random_string_int(), nil])
+      issue: Enum.random([Factory.random_string_int(), nil]),
+      extras: Enum.random([nil, Faker.String.base64(5)])
     }
 
   defp page_end(%{page_end: _} = attrs), do: attrs
@@ -42,5 +56,43 @@ defmodule Thises.Factory.Quote do
       end
 
     Map.put(attrs, :page_end, page_end)
+  end
+
+  defp tags(%{tags: _} = attrs), do: attrs
+
+  defp tags(attrs) do
+    Map.put(
+      attrs,
+      :tags,
+      Enum.random(1..5)
+      |> TagFactory.insert_list()
+      |> Enum.map(& &1.id)
+    )
+  end
+
+  def stringify(%Quote{} = attrs) do
+    attrs
+    |> Map.from_struct()
+    |> stringify()
+  end
+
+  def stringify(%{} = attrs) do
+    attrs
+    |> Factory.reject_attrs()
+    |> Enum.map(fn
+      {k, v} when k in @simple_attrs ->
+        {Factory.to_camel_key(k), v}
+
+      {k, %Date{} = v} ->
+        {Factory.to_camel_key(k), Date.to_iso8601(v)}
+
+      {:tags, v} ->
+        {"tags", v}
+
+      _ ->
+        nil
+    end)
+    |> Enum.reject(&(&1 == nil))
+    |> Enum.into(%{})
   end
 end

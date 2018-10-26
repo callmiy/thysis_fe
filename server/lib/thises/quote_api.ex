@@ -223,8 +223,15 @@ defmodule Thises.QuoteApi do
       |> Repo.all()
       |> Enum.map(fn a ->
         full_name =
-          [a.l, a.f, a.m]
-          |> Enum.reject(&(&1 == nil))
+          [
+            a.l,
+            a.f || "",
+            (a.m || "")
+            |> String.split(" ")
+            |> Enum.map(&String.capitalize/1)
+            |> Enum.join(" ")
+          ]
+          |> Enum.reject(&(&1 == ""))
           |> Enum.join(" ")
 
         %{

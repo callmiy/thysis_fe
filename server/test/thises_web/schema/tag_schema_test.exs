@@ -1,13 +1,13 @@
 defmodule ThisesWeb.TagSchemaTest do
   use Thises.DataCase
   alias ThisesWeb.Schema
-  alias ThisesWeb.Query.Tag, as: TagQuery, as: Queries
+  alias ThisesWeb.Query.Tag, as: Query
   alias Thises.Tag
-  alias Thises.MapHelpers
+  alias Thises.Factory.Tag, as: Factory
 
   describe "query" do
     test "get tag by id" do
-      %Tag{id: id} = insert(:tag)
+      %Tag{id: id} = Factory.insert()
       id = Integer.to_string(id)
 
       assert {:ok,
@@ -23,7 +23,7 @@ defmodule ThisesWeb.TagSchemaTest do
                 }
               }} =
                Absinthe.run(
-                 Queries.query(:tag),
+                 Query.query(:tag),
                  Schema,
                  variables: %{
                    "tag" => %{
@@ -34,7 +34,7 @@ defmodule ThisesWeb.TagSchemaTest do
     end
 
     test "get tag by text" do
-      %Tag{text: text} = insert(:tag)
+      %Tag{text: text} = Factory.insert()
 
       assert {:ok,
               %{
@@ -48,7 +48,7 @@ defmodule ThisesWeb.TagSchemaTest do
                 }
               }} =
                Absinthe.run(
-                 Queries.query(:tag),
+                 Query.query(:tag),
                  Schema,
                  variables: %{
                    "tag" => %{
@@ -59,7 +59,7 @@ defmodule ThisesWeb.TagSchemaTest do
     end
 
     test "get tag by id and text" do
-      %Tag{id: id, text: text} = insert(:tag)
+      %Tag{id: id, text: text} = Factory.insert()
       id = Integer.to_string(id)
 
       assert {:ok,
@@ -74,7 +74,7 @@ defmodule ThisesWeb.TagSchemaTest do
                 }
               }} =
                Absinthe.run(
-                 Queries.query(:tag),
+                 Query.query(:tag),
                  Schema,
                  variables: %{
                    "tag" => %{
@@ -87,10 +87,10 @@ defmodule ThisesWeb.TagSchemaTest do
 
     test "get all tags succeeds" do
       # first tag
-      insert(:tag)
+      Factory.insert()
 
       # 2nd tag
-      %{text: text, id: id} = insert(:tag)
+      %{text: text, id: id} = Factory.insert()
       id = inspect(id)
 
       assert {:ok,
@@ -98,7 +98,7 @@ defmodule ThisesWeb.TagSchemaTest do
                 data: %{
                   "tags" => tags
                 }
-              }} = Absinthe.run(Queries.query(:tags), Schema)
+              }} = Absinthe.run(Query.query(:tags), Schema)
 
       assert length(tags) == 2
       assert %{"id" => ^id, "text" => ^text} = List.last(tags)
@@ -107,7 +107,7 @@ defmodule ThisesWeb.TagSchemaTest do
 
   describe "mutation" do
     test "create tag succeeds" do
-      %{text: text} = attrs = params_for(:tag)
+      %{text: text} = attrs = Factory.params()
       question = Map.get(attrs, :question)
 
       assert {:ok,
@@ -121,10 +121,10 @@ defmodule ThisesWeb.TagSchemaTest do
                 }
               }} =
                Absinthe.run(
-                 Queries.mutation(:tag),
+                 Query.mutation(:tag),
                  Schema,
                  variables: %{
-                   "tag" => MapHelpers.stringify_keys(attrs)
+                   "tag" => Factory.stringify(attrs)
                  }
                )
     end

@@ -2,27 +2,27 @@ defmodule Thises.QuoteSchemaTest do
   use Thises.DataCase
 
   alias ThisesWeb.Schema
-  alias Thises.MapHelpers
-  alias ThisesWeb.Query.Quote, as: QuoteQuery, as: Queries
+  alias ThisesWeb.Query.Quote, as: Query
   alias Thises.Factory.Source, as: SourceFactory
+  alias Thises.Factory.Quote, as: Factory
+  alias Thises.Factory.SourceType, as: SourceTypeFactory
+  alias Thises.Factory.Tag, as: TagFactory
+  alias Thises.Factory.Author, as: AuthorFactory
 
-  # @tag :skip
   describe "mutation" do
+    # @tag :skip
     test "create quote succeeds" do
+      {assoc, assoc_ids} = SourceFactory.assoc()
+
       %{
         id: source_id
-      } = source = SourceFactory.insert()
-
-      source_id = Integer.to_string(source_id)
-
-      tags =
-        insert_list(2, :tag)
-        |> Enum.map(&Integer.to_string(&1.id))
+      } = _source = SourceFactory.insert(assoc_ids)
 
       quote_ =
-        params_for(:quote, source: source)
-        |> MapHelpers.stringify_keys()
-        |> Map.merge(%{"sourceId" => source_id, "tags" => tags})
+        Factory.params(source_id: source_id)
+        |> Factory.stringify()
+
+      source_id = Integer.to_string(source_id)
 
       variables = %{"quote" => quote_}
 
@@ -37,18 +37,19 @@ defmodule Thises.QuoteSchemaTest do
                 }
               }} =
                Absinthe.run(
-                 Queries.mutation(:create_quote),
+                 Query.mutation(:create_quote),
                  Schema,
-                 variables: variables
+                 variables: variables,
+                 context: context(assoc.user)
                )
     end
   end
 
-  # @tag :skip
   describe "query" do
     # @tag :skip
     test "get all quotes with no variables succeeds" do
-      insert_list(3, :quote)
+      {assoc, assoc_ids} = SourceFactory.assoc()
+      Factory.insert_list(3, source_id: SourceFactory.insert(assoc_ids).id)
 
       assert {:ok,
               %{
@@ -57,8 +58,9 @@ defmodule Thises.QuoteSchemaTest do
                 }
               }} =
                Absinthe.run(
-                 Queries.query(:quotes),
-                 Schema
+                 Query.query(:quotes),
+                 Schema,
+                 context: context(assoc.user)
                )
 
       assert length(quotes) == 3
@@ -66,13 +68,14 @@ defmodule Thises.QuoteSchemaTest do
 
     # @tag :skip
     test "get quotes by source id succeeds" do
-      [source1, source2] = SourceFactory.insert_list(2)
-      %{id: source1_quote_id} = insert(:quote, source: source1)
+      {assoc, assoc_ids} = SourceFactory.assoc()
+      [source1, source2] = SourceFactory.insert_list(2, assoc_ids)
+      %{id: source1_quote_id} = Factory.insert(source_id: source1.id)
 
       source2_id = Integer.to_string(source2.id)
 
       raw_quotes_id =
-        insert_list(2, :quote, source: source2)
+        Factory.insert_list(2, source_id: source2.id)
         |> Enum.map(&Integer.to_string(&1.id))
         |> Enum.sort()
 
@@ -98,26 +101,35 @@ defmodule Thises.QuoteSchemaTest do
                 }
               }} =
                Absinthe.run(
-                 Queries.query(:quotes),
+                 Query.query(:quotes),
                  Schema,
-                 variables: variables
+                 variables: variables,
+                 context: context(assoc.user)
                )
 
       {ids, names} =
-        Enum.reduce(source2.authors, {[], []}, fn %{id: id, name: name}, {ids, names} ->
-          {
-            [Integer.to_string(id) | ids],
-            [name | names]
-          }
-        end)
+        Enum.reduce(
+          source2.authors,
+          {[], []},
+          fn %{id: id, last_name: name}, {ids, names} ->
+            {
+              [Integer.to_string(id) | ids],
+              [name | names]
+            }
+          end
+        )
 
       {graphQl_ids, graphQl_names} =
-        Enum.reduce(graphQl_authors, {[], []}, fn %{"id" => id, "name" => name}, {ids, names} ->
-          {
-            [id | ids],
-            [name | names]
-          }
-        end)
+        Enum.reduce(
+          graphQl_authors,
+          {[], []},
+          fn %{"id" => id, "lastName" => name}, {ids, names} ->
+            {
+              [id | ids],
+              [name | names]
+            }
+          end
+        )
 
       assert Enum.sort(ids) == Enum.sort(graphQl_ids)
       assert Enum.sort(names) == Enum.sort(graphQl_names)
@@ -128,9 +140,17 @@ defmodule Thises.QuoteSchemaTest do
       refute Enum.member?(quotes_ids, Integer.to_string(source1_quote_id))
     end
 
+    # @tag :skip
     test "get a quote by id succeeds for existing quote" do
-      %{id: id} = insert(:quote)
+      {assoc, assoc_ids} = SourceFactory.assoc()
+      %{id: id} = Factory.insert(source_id: SourceFactory.insert(assoc_ids).id)
       id_binary = Integer.to_string(id)
+
+      variables = %{
+        "quote" => %{
+          "id" => id_binary
+        }
+      }
 
       assert {:ok,
               %{
@@ -141,22 +161,25 @@ defmodule Thises.QuoteSchemaTest do
                 }
               }} =
                Absinthe.run(
-                 Queries.get_quote(),
+                 Query.get_quote(),
                  Schema,
-                 variables: %{
-                   "quote" => %{
-                     "id" => id_binary
-                   }
-                 }
+                 variables: variables,
+                 context: context(assoc.user)
                )
     end
   end
 
-  # @tag :skip
   describe "full text search" do
+    # @tag :skip
     test "full text search across source_types table" do
       search_text = Faker.String.base64(4)
-      %{id: id} = insert(:source_type, name: search_text)
+      {assoc, _assoc_ids} = SourceFactory.assoc()
+
+      %{id: id} =
+        SourceTypeFactory.insert(
+          user_id: assoc.user.id,
+          name: search_text
+        )
 
       assert {:ok,
               %{
@@ -174,19 +197,22 @@ defmodule Thises.QuoteSchemaTest do
                 }
               }} =
                Absinthe.run(
-                 Queries.query(:full_text_search),
+                 Query.query(:full_text_search),
                  Schema,
                  variables: %{
                    "text" => %{
                      "text" => search_text
                    }
-                 }
+                 },
+                 context: context(assoc.user)
                )
     end
 
+    # @tag :skip
     test "full text search across sources table" do
       search_text = Faker.String.base64(4)
-      %{id: id} = SourceFactory.insert(topic: search_text)
+      {assoc, assoc_ids} = SourceFactory.assoc()
+      %{id: id} = SourceFactory.insert(Map.put(assoc_ids, :topic, search_text))
 
       assert {:ok,
               %{
@@ -204,19 +230,28 @@ defmodule Thises.QuoteSchemaTest do
                 }
               }} =
                Absinthe.run(
-                 Queries.query(:full_text_search),
+                 Query.query(:full_text_search),
                  Schema,
                  variables: %{
                    "text" => %{
                      "text" => search_text
                    }
-                 }
+                 },
+                 context: context(assoc.user)
                )
     end
 
+    # @tag :skip
     test "full text search across tags table" do
+      {assoc, _assoc_ids} = SourceFactory.assoc()
       search_text = Faker.String.base64(4)
-      %{id: id} = insert(:tag, text: search_text)
+      %{id: id} = TagFactory.insert(text: search_text)
+
+      variables = %{
+        "text" => %{
+          "text" => search_text
+        }
+      }
 
       assert {:ok,
               %{
@@ -234,19 +269,29 @@ defmodule Thises.QuoteSchemaTest do
                 }
               }} =
                Absinthe.run(
-                 Queries.query(:full_text_search),
+                 Query.query(:full_text_search),
                  Schema,
-                 variables: %{
-                   "text" => %{
-                     "text" => search_text
-                   }
-                 }
+                 variables: variables,
+                 context: context(assoc.user)
                )
     end
 
+    # @tag :skip
     test "full text search across quotes table" do
+      {assoc, assoc_ids} = SourceFactory.assoc()
       search_text = Faker.String.base64(4)
-      %{id: id} = insert(:quote, text: search_text)
+
+      %{id: id} =
+        Factory.insert(
+          text: search_text,
+          source_id: SourceFactory.insert(assoc_ids).id
+        )
+
+      variables = %{
+        "text" => %{
+          "text" => search_text
+        }
+      }
 
       assert {:ok,
               %{
@@ -264,22 +309,32 @@ defmodule Thises.QuoteSchemaTest do
                 }
               }} =
                Absinthe.run(
-                 Queries.query(:full_text_search),
+                 Query.query(:full_text_search),
                  Schema,
-                 variables: %{
-                   "text" => %{
-                     "text" => search_text
-                   }
-                 }
+                 variables: variables,
+                 context: context(assoc.user)
                )
     end
 
+    # @tag :skip
     test "full text search across quotes and tag tables case insensitive" do
+      {assoc, assoc_ids} = SourceFactory.assoc()
       search_text = Faker.String.base64(4)
-      %{id: qid} = insert(:quote, text: search_text)
+
+      %{id: qid} =
+        Factory.insert(
+          text: search_text,
+          source_id: SourceFactory.insert(assoc_ids).id
+        )
 
       search_text_ = String.upcase(search_text)
-      %{id: tid} = insert(:tag, text: search_text_)
+      %{id: tid} = TagFactory.insert(text: search_text_)
+
+      variables = %{
+        "text" => %{
+          "text" => search_text
+        }
+      }
 
       assert {:ok,
               %{
@@ -303,19 +358,43 @@ defmodule Thises.QuoteSchemaTest do
                 }
               }} =
                Absinthe.run(
-                 Queries.query(:full_text_search),
+                 Query.query(:full_text_search),
                  Schema,
-                 variables: %{
-                   "text" => %{
-                     "text" => search_text
-                   }
-                 }
+                 variables: variables,
+                 context: context(assoc.user)
                )
     end
 
+    # @tag :skip
     test "full text search across authors table" do
-      search_text = Faker.String.base64(4)
-      %{id: id} = insert(:author, name: search_text)
+      {assoc, _assoc_ids} = SourceFactory.assoc()
+      search_text = Faker.Name.last_name()
+      first_name = Faker.Name.first_name()
+
+      middle_names =
+        [
+          Faker.String.base64(3),
+          Faker.String.base64(2)
+        ]
+        |> Enum.map(&String.capitalize/1)
+        |> Enum.join(" ")
+
+      full_name = ~s(#{search_text} #{first_name} #{middle_names})
+
+      %{id: id} =
+        AuthorFactory.insert(
+          last_name: search_text,
+          first_name: first_name,
+          middle_name: middle_names,
+          user_id: assoc.user.id,
+          project_id: assoc.project.id
+        )
+
+      variables = %{
+        "text" => %{
+          "text" => search_text
+        }
+      }
 
       assert {:ok,
               %{
@@ -325,22 +404,23 @@ defmodule Thises.QuoteSchemaTest do
                       %{
                         "tid" => ^id,
                         "source" => "AUTHORS",
-                        "text" => ^search_text,
-                        "column" => "name"
+                        "text" => ^full_name,
+                        "column" => "full_name"
                       }
                     ]
                   }
                 }
               }} =
                Absinthe.run(
-                 Queries.query(:full_text_search),
+                 Query.query(:full_text_search),
                  Schema,
-                 variables: %{
-                   "text" => %{
-                     "text" => search_text
-                   }
-                 }
+                 variables: variables,
+                 context: context(assoc.user)
                )
     end
+  end
+
+  defp context(user) do
+    %{current_user: user}
   end
 end

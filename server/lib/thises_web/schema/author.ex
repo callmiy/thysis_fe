@@ -21,7 +21,7 @@ defmodule ThisesWeb.Schema.Author do
     field(
       :sources,
       list_of(:source) |> non_null(),
-      resolve: dataloader(Thises.SourceApi)
+      resolve: dataloader(Thises.Sources)
     )
   end
 

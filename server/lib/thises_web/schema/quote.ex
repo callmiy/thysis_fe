@@ -7,7 +7,7 @@ defmodule ThisesWeb.Schema.Quote do
 
   import Absinthe.Resolution.Helpers, only: [dataloader: 1]
 
-  alias ThisesWeb.QuoteResolver, as: Resolver
+  alias ThisesWeb.Resolver.Quote , as: Resolver
 
   @desc "A Quote"
   object :quote do
@@ -22,7 +22,7 @@ defmodule ThisesWeb.Schema.Quote do
     field(:inserted_at, non_null(:iso_datetime))
     field(:updated_at, non_null(:iso_datetime))
 
-    field(:source, :source, resolve: dataloader(Thises.SourceApi))
+    field(:source, :source, resolve: dataloader(Thises.Sources))
     field(:tags, list_of(:tag), resolve: dataloader(Thises.TagApi))
   end
 
