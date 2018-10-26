@@ -117,17 +117,4 @@ defmodule Thises.Projects do
   def query(queryable, _params) do
     queryable
   end
-
-  def owner?(user_id, project_id) do
-    case Project
-         |> where([p], p.user_id == ^user_id)
-         |> where([p], p.id == ^project_id)
-         |> Repo.one() do
-      nil ->
-        :error
-
-      _ ->
-        :ok
-    end
-  end
 end

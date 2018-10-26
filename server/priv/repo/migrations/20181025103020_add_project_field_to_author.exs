@@ -1,4 +1,4 @@
-defmodule Thises.Repo.Migrations.UserNameUniquenessSourceType do
+defmodule Thises.Repo.Migrations.AddProjectAndUserToAuthor do
   use Ecto.Migration
 
   def up do

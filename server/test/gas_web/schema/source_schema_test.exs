@@ -14,9 +14,14 @@ defmodule ThisesWeb.SourceSchemaTest do
     # @tag :skip
     test "get all sources for project does not get other projects succeeds" do
       user = RegFactory.insert()
+      source_type_id = SourceTypeFactory.insert(user_id: user.id).id
 
       # first source belonging to random project of same user
-      Factory.insert(project: ProjectFactory.insert(user: user))
+      Factory.insert(
+        project_id: ProjectFactory.insert(user: user).id,
+        user_id: user.id,
+        source_type_id: source_type_id
+      )
 
       project = ProjectFactory.insert(user: user)
 
@@ -24,11 +29,21 @@ defmodule ThisesWeb.SourceSchemaTest do
 
       %Source{
         id: id1
-      } = Factory.insert(project: project)
+      } =
+        Factory.insert(
+          project_id: project.id,
+          user_id: user.id,
+          source_type_id: source_type_id
+        )
 
       %Source{
         id: id2
-      } = Factory.insert(project: project)
+      } =
+        Factory.insert(
+          project_id: project.id,
+          user_id: user.id,
+          source_type_id: source_type_id
+        )
 
       ids =
         [id1, id2]
@@ -63,15 +78,29 @@ defmodule ThisesWeb.SourceSchemaTest do
     # @tag :skip
     test "get all sources for user succeeds" do
       user = RegFactory.insert()
+      source_type_id = SourceTypeFactory.insert().id
 
       # first source belonging to random project of same user
-      Factory.insert(project: ProjectFactory.insert(user: user))
+      Factory.insert(
+        project_id: ProjectFactory.insert(user: user).id,
+        user_id: user.id,
+        source_type_id: source_type_id
+      )
 
       project = ProjectFactory.insert(user: user)
 
       # 2nd and 3rd source
-      Factory.insert(project: project)
-      Factory.insert(project: project)
+      Factory.insert(
+        project_id: project.id,
+        user_id: user.id,
+        source_type_id: source_type_id
+      )
+
+      Factory.insert(
+        project_id: project.id,
+        user_id: user.id,
+        source_type_id: source_type_id
+      )
 
       queryMap = Query.sources()
 
@@ -104,7 +133,12 @@ defmodule ThisesWeb.SourceSchemaTest do
       %Source{
         id: id,
         year: year
-      } = Factory.insert(project: ProjectFactory.insert(user: user))
+      } =
+        Factory.insert(
+          project_id: ProjectFactory.insert(user: user).id,
+          user_id: user.id,
+          source_type_id: SourceTypeFactory.insert(user: user).id
+        )
 
       id = Integer.to_string(id)
 
@@ -138,7 +172,7 @@ defmodule ThisesWeb.SourceSchemaTest do
       user = RegFactory.insert()
 
       # source does not belong to user
-      source = Factory.insert()
+      source = Factory.insert_with_assoc()
 
       assert {:ok,
               %{
@@ -173,8 +207,10 @@ defmodule ThisesWeb.SourceSchemaTest do
         Factory.params(
           project_id: ProjectFactory.insert(user: user).id,
           source_type_id: source_type_id,
+          user_id: user.id,
           year: "2016"
         )
+        |> Map.delete(:user_id)
 
       source_type_id = Integer.to_string(source_type_id)
 
@@ -210,13 +246,14 @@ defmodule ThisesWeb.SourceSchemaTest do
         ~s|{"name":"source","error":{"authors":"#{Sources.author_required_error_string()}"}}|
 
       user = RegFactory.insert()
-      source_type = SourceTypeFactory.insert(user: user)
 
       source =
         Factory.params_no_authors(
-          source_type_id: source_type.id,
-          project_id: ProjectFactory.insert(user: user).id
+          source_type_id: SourceTypeFactory.insert(user: user).id,
+          project_id: ProjectFactory.insert(user_id: user.id).id,
+          user_id: user.id
         )
+        |> Map.delete(:user_id)
         |> Factory.stringify()
 
       assert {:ok,
@@ -243,23 +280,24 @@ defmodule ThisesWeb.SourceSchemaTest do
 
     # @tag :skip
     test "create source does not insert duplicate author IDs" do
-      id = AuthorFactory.insert().id
-
-      author_attrs =
-        3
-        |> AuthorFactory.params_list()
-        |> Enum.map(&%{last_name: &1.last_name})
+      user = RegFactory.insert()
+      project = ProjectFactory.insert(user_id: user.id)
+      user_project_ids_map = %{user_id: user.id, project_id: project.id}
+      id = AuthorFactory.insert(user_project_ids_map).id
 
       source =
         Factory.params_no_authors(%{
-          source_type_id: insert(:source_type).id
+          source_type_id: SourceTypeFactory.insert().id,
+          user_id: user.id,
+          project_id: project.id
         })
         |> Map.merge(%{
           # 2 author ids
           author_ids: [id, id],
           # 3 author attrs
-          author_attrs: author_attrs
+          author_attrs: AuthorFactory.params_list(3, user_project_ids_map)
         })
+        |> Map.delete(:user_id)
         |> Factory.stringify()
 
       assert {:ok,
@@ -275,24 +313,35 @@ defmodule ThisesWeb.SourceSchemaTest do
                  Schema,
                  variables: %{
                    "source" => source
-                 }
+                 },
+                 context: %{current_user: user}
                )
 
       assert length(authors) == 4
     end
 
-    @tag :skip
+    # @tag :skip
     test "create source with invalid author IDs errors" do
-      id = AuthorFactory.insert().id
+      user = RegFactory.insert()
+      project = ProjectFactory.insert(user_id: user.id)
+      id = AuthorFactory.insert(user_id: user.id, project_id: project.id).id
 
       source =
         Factory.params_no_authors(%{
-          source_type_id: insert(:source_type).id
+          source_type_id: SourceTypeFactory.insert().id,
+          user_id: user.id,
+          project_id: project.id
         })
         |> Map.merge(%{author_ids: [id, id + 1]})
+        |> Map.delete(:user_id)
         |> Factory.stringify()
 
-      error = "{name: source, error: [author_ids: #{Sources.invalid_ids_error_string([id + 1])}]}"
+      error =
+        %{
+          name: "source",
+          error: %{author_ids: Sources.invalid_ids_error_string([id + 1])}
+        }
+        |> Poison.encode!()
 
       assert {:ok,
               %{
@@ -309,21 +358,34 @@ defmodule ThisesWeb.SourceSchemaTest do
                Absinthe.run(
                  Query.mutation(:source),
                  Schema,
-                 variables: %{"source" => source}
+                 variables: %{"source" => source},
+                 context: %{current_user: user}
                )
     end
   end
 
   describe "update mutation" do
-    @tag :skip
+    # @tag :skip
     test "update source with author ids succeeds" do
-      %{authors: authors, id: id} = Factory.insert()
+      user = RegFactory.insert()
+      project = ProjectFactory.insert(user_id: user.id)
+
+      %{authors: authors, id: id} =
+        Factory.insert(
+          user_id: user.id,
+          project_id: project.id,
+          source_type_id: SourceTypeFactory.insert(user_id: user.id).id
+        )
+
       id = Integer.to_string(id)
 
       ids =
         1..3
         |> Enum.random()
-        |> AuthorFactory.insert_list()
+        |> AuthorFactory.insert_list(
+          user_id: user.id,
+          project_id: project.id
+        )
         |> Enum.map(&Integer.to_string(&1.id))
 
       assert {:ok,
@@ -343,7 +405,8 @@ defmodule ThisesWeb.SourceSchemaTest do
                      "id" => id,
                      "author_ids" => ids
                    }
-                 }
+                 },
+                 context: %{current_user: user}
                )
 
       assert length(authors_graphQl) == length(authors) + length(ids)
@@ -351,18 +414,28 @@ defmodule ThisesWeb.SourceSchemaTest do
       assert Enum.all?(ids, &Enum.member?(authors_graphQl_ids, &1))
     end
 
-    @tag :skip
+    # @tag :skip
     test "update source with author attrs succeeds" do
-      %{authors: authors, id: id} = Factory.insert()
+      user = RegFactory.insert()
+      project = ProjectFactory.insert(user_id: user.id)
+
+      %{authors: authors, id: id} =
+        Factory.insert(
+          user_id: user.id,
+          project_id: project.id,
+          source_type_id: SourceTypeFactory.insert(user_id: user.id).id
+        )
+
       id = Integer.to_string(id)
 
       author_attrs =
         1..3
         |> Enum.random()
-        |> AuthorFactory.insert_list()
-        |> Enum.map(fn a ->
-          %{"lastName" => a.last_name}
-        end)
+        |> AuthorFactory.params_list(
+          user_id: user.id,
+          project_id: project.id
+        )
+        |> Enum.map(&AuthorFactory.stringify/1)
 
       assert {:ok,
               %{
@@ -379,9 +452,10 @@ defmodule ThisesWeb.SourceSchemaTest do
                  variables: %{
                    "source" => %{
                      "id" => id,
-                     "author_attrs" => author_attrs
+                     "authorAttrs" => author_attrs
                    }
-                 }
+                 },
+                 context: %{current_user: user}
                )
 
       assert length(authors_graphQl) == length(authors) + length(author_attrs)
@@ -393,9 +467,11 @@ defmodule ThisesWeb.SourceSchemaTest do
              )
     end
 
-    @tag :skip
+    # @tag :skip
     test "update source without author attrs and author ids succeeds" do
-      %{authors: authors, id: id} = source = Factory.insert()
+      {assoc, assoc_ids} = assoc(nil)
+
+      %{authors: authors, id: id} = source = Factory.insert(assoc_ids)
       id = Integer.to_string(id)
 
       attrs =
@@ -420,7 +496,8 @@ defmodule ThisesWeb.SourceSchemaTest do
                  Schema,
                  variables: %{
                    "source" => attrs |> Map.merge(%{"id" => id})
-                 }
+                 },
+                 context: %{current_user: assoc.user}
                )
 
       assert length(authors_graphQl) == length(authors)
@@ -436,18 +513,22 @@ defmodule ThisesWeb.SourceSchemaTest do
              end)
     end
 
-    @tag :skip
+    # @tag :skip
     test "update source with deleted authors succeeds" do
+      {assoc, assoc_ids} = assoc(nil)
+
       author_ids =
-        AuthorFactory.insert_list(3)
+        AuthorFactory.insert_list(3, assoc_ids)
         |> Enum.map(&Integer.to_string(&1.id))
 
       taken = Enum.take(author_ids, 2)
 
       %{id: id} =
         Factory.insert(
-          author_ids: author_ids,
-          author_attrs: nil
+          Map.merge(assoc_ids, %{
+            author_ids: author_ids,
+            author_attrs: nil
+          })
         )
 
       id = Integer.to_string(id)
@@ -471,11 +552,32 @@ defmodule ThisesWeb.SourceSchemaTest do
                Absinthe.run(
                  Query.mutation(:update_source),
                  Schema,
-                 variables: variables
+                 variables: variables,
+                 context: %{current_user: assoc.user}
                )
 
       refute Enum.member?(taken, author_graphQl["id"])
     end
+  end
+
+  defp assoc(_) do
+    user = RegFactory.insert()
+    source_type = SourceTypeFactory.insert(user_id: user.id)
+    project = ProjectFactory.insert(user_id: user.id)
+
+    assoc = %{
+      user: user,
+      source_type: source_type,
+      project: project
+    }
+
+    ids = %{
+      source_type_id: source_type.id,
+      project_id: project.id,
+      user_id: user.id
+    }
+
+    {assoc, ids}
   end
 
   defp assert_authors(%{} = source, authors_graphql) do

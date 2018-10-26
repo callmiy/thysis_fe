@@ -34,8 +34,8 @@ defmodule ThisesWeb.Query.Author do
     {frag_name, frag} = all_fields_fragment()
 
     """
-    query GetAuthors {
-      authors {
+    query GetAuthors($author: GetAuthorsInput) {
+      authors(author: $author) {
         ...#{frag_name}
       }
     }

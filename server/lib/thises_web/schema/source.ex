@@ -48,6 +48,10 @@ defmodule ThisesWeb.Schema.Source do
     @desc "ID of project to which source belongs"
     field(:project_id, non_null(:id))
 
+    # The user must always be authenticated and must come from the context
+    # @desc "ID of user to whom source belongs"
+    # field(:user_id, non_null(:id))
+
     @desc "The topic of the work, as given by authors - mandatory"
     field(:topic, non_null(:string))
 

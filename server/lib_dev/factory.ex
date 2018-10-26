@@ -12,10 +12,24 @@ defmodule Thises.Factory do
       |> Atom.to_string()
       |> String.split("_")
 
-    first <> Enum.reduce(rest, "", &(String.capitalize(&1) <> &2))
+    first <> Enum.reduce(rest, "", &(&2 <> String.capitalize(&1)))
   end
 
   def random_string_int, do: Integer.to_string(Faker.random_between(2, 100))
+
+  def reject_attrs(%{} = attrs) do
+    Enum.reject(attrs, fn
+      {_k, nil} ->
+        true
+
+      {_, %Ecto.Association.NotLoaded{}} ->
+        true
+
+      _other ->
+        false
+    end)
+    |> Enum.into(%{})
+  end
 
   defmacro __using__(_opts) do
     quote do

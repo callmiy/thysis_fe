@@ -7,7 +7,7 @@ defmodule ThisesWeb.Schema.Author do
 
   import Absinthe.Resolution.Helpers, only: [dataloader: 1]
 
-  alias ThisesWeb.AuthorResolver
+  alias ThisesWeb.Resolver.Author, as: Resolver
 
   @desc "An Author"
   object :author do
@@ -30,10 +30,17 @@ defmodule ThisesWeb.Schema.Author do
     field(:id, :id |> non_null())
   end
 
+  @desc "Get authors input"
+  input_object :get_authors_input do
+    field(:project_id, :id)
+  end
+
   @desc "Input for creating an author"
   input_object :create_author_input do
     field(:first_name, :string)
     field(:last_name, :string |> non_null())
+    field(:project_id, :id |> non_null())
+    field(:user_id, :id |> non_null())
     field(:middle_name, :string)
   end
 
@@ -43,11 +50,12 @@ defmodule ThisesWeb.Schema.Author do
     field :author, type: :author do
       arg(:author, non_null(:get_author_input))
 
-      resolve(&AuthorResolver.author/3)
+      resolve(&Resolver.author/3)
     end
 
     field :authors, type: list_of(:author) do
-      resolve(&AuthorResolver.authors/3)
+      arg(:author, :get_authors_input)
+      resolve(&Resolver.authors/3)
     end
   end
 
@@ -57,7 +65,7 @@ defmodule ThisesWeb.Schema.Author do
     field :create_author, type: :author do
       arg(:author, non_null(:create_author_input))
 
-      resolve(&AuthorResolver.create_author/3)
+      resolve(&Resolver.create_author/3)
     end
   end
 end

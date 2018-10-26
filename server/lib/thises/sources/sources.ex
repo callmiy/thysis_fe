@@ -26,23 +26,17 @@ defmodule Thises.Sources do
     Repo.all(Source)
   end
 
-  def list(%{project_id: project_id}, _user_id) do
-    Source
-    |> where([s], s.project_id == ^project_id)
+  def list(attrs) do
+    attrs
+    |> Enum.reduce(Source, &where_by/2)
     |> Repo.all()
   end
 
-  def list(_, user_id) do
-    user_id
-    |> sources_for_user()
-    |> Repo.all()
-  end
+  defp where_by({:project_id, id}, query),
+    do: where(query, [s], s.project_id == ^id)
 
-  defp sources_for_user(user_id),
-    do:
-      Source
-      |> join(:inner, [s], p in assoc(s, :project))
-      |> where([s, p], p.user_id == ^user_id)
+  defp where_by({:user_id, id}, query),
+    do: where(query, [s], s.user_id == ^id)
 
   @doc """
   Gets a single source.
@@ -58,14 +52,14 @@ defmodule Thises.Sources do
       ** nil
 
   """
-  def get(id), do: Repo.get(Source, id)
-
-  def get(source_id, user_id) do
-    user_id
-    |> sources_for_user()
+  def get(%{id: source_id, user_id: user_id}) do
+    Source
     |> where([s], s.id == ^source_id)
+    |> where([s], s.user_id == ^user_id)
     |> Repo.one()
   end
+
+  def get(id), do: Repo.get(Source, id)
 
   @spec create_(
           %{
@@ -105,6 +99,11 @@ defmodule Thises.Sources do
   def create_(attrs), do: create_source(nil, attrs)
 
   defp create_source(source_type_multi, attrs) do
+    attrs =
+      attrs
+      |> string_valued_attrs_to_integer()
+      |> augment_author_attrs()
+
     {source_multi, changes} = create_source_multi(source_type_multi, attrs)
 
     with {:ok, result} <-
@@ -115,6 +114,64 @@ defmodule Thises.Sources do
       result = create_source_result(result)
       {:ok, result}
     end
+  end
+
+  # Ecto Multi insert needs associated IDs to be integer not strings
+  defp string_valued_attrs_to_integer(attrs) do
+    integer_attrs =
+      attrs
+      |> Map.take([:project_id, :user_id])
+      |> Enum.map(fn
+        {k, v} when is_binary(v) ->
+          {k, String.to_integer(v)}
+
+        other ->
+          other
+      end)
+      |> Enum.into(%{})
+
+    Map.merge(attrs, integer_attrs)
+  end
+
+  # We will assume we are creating authors for source user and project
+  defp augment_author_attrs(
+         %{author_attrs: data, project_id: project_id, user_id: user_id} = attrs
+       )
+       when is_list(data) do
+    other_fields = %{
+      project_id: project_id,
+      user_id: user_id
+    }
+
+    %{
+      attrs
+      | author_attrs: augment_author_attrs(data, other_fields)
+    }
+  end
+
+  defp augment_author_attrs(%{author_attrs: data} = attrs) when is_list(data) do
+    %{
+      attrs
+      | author_attrs: augment_author_attrs(data, %{})
+    }
+  end
+
+  defp augment_author_attrs(attrs), do: attrs
+
+  defp augment_author_attrs(author_attrs, %{} = to_merge) when is_list(author_attrs) do
+    author_attrs
+    |> Enum.map(fn author ->
+      author
+      |> Enum.map(fn
+        {k, v} when k in [:project_id, :user_id] and is_binary(v) ->
+          {k, String.to_integer(v)}
+
+        other ->
+          other
+      end)
+      |> Enum.into(%{})
+      |> Map.merge(to_merge)
+    end)
   end
 
   defp create_source_multi(source_type_multi, %Source{} = source) do
@@ -175,18 +232,27 @@ defmodule Thises.Sources do
     end)
   end
 
-  defp create_authors_multi(transaction, :author_attrs, %Ecto.Changeset{
-         changes: %{author_attrs: author_attrs}
-       })
+  defp create_authors_multi(
+         transaction,
+         :author_attrs,
+         %Ecto.Changeset{
+           changes: %{author_attrs: author_attrs}
+         }
+       )
        when is_list(author_attrs) do
     now = Timex.now()
 
-    Multi.merge(transaction, fn %{source: %Source{id: id}} ->
+    other_fields = %{
+      inserted_at: now,
+      updated_at: now
+    }
+
+    Multi.merge(transaction, fn %{source: %Source{id: source_id}} ->
       Multi.new()
       |> Multi.insert_all(
         :author_attrs,
         Author,
-        Enum.map(author_attrs, &Map.merge(&1, %{inserted_at: now, updated_at: now})),
+        Enum.map(author_attrs, &Map.merge(&1, other_fields)),
         returning: true
       )
       |> Multi.merge(fn %{author_attrs: {_num_inserts, authors}} ->
@@ -195,7 +261,7 @@ defmodule Thises.Sources do
             authors,
             &[
               author_id: String.to_integer("#{&1.id}"),
-              source_id: id,
+              source_id: source_id,
               inserted_at: now,
               updated_at: now
             ]
@@ -263,6 +329,11 @@ defmodule Thises.Sources do
   """
 
   def update_(%Source{} = source, attrs) do
+    attrs =
+      attrs
+      |> string_valued_attrs_to_integer()
+      |> augment_author_attrs()
+
     changes = Source.changeset(source, attrs)
 
     with {:ok, result} <-
@@ -276,6 +347,16 @@ defmodule Thises.Sources do
 
       {:ok, result}
     end
+  end
+
+  defp delete_authors_multi(transaction, %{deleted_authors: ids}) when is_list(ids) do
+    Multi.run(transaction, :delete_authors, fn _n ->
+      {:ok, SourceAuthorApi.delete_(ids)}
+    end)
+  end
+
+  defp delete_authors_multi(transaction, _) do
+    Multi.run(transaction, :delete_authors, fn _ -> {:ok, []} end)
   end
 
   @doc """
@@ -341,16 +422,6 @@ defmodule Thises.Sources do
   end
 
   # END ABSINTHE DATALOADER
-
-  defp delete_authors_multi(transaction, %{deleted_authors: ids}) when is_list(ids) do
-    Multi.run(transaction, :delete_authors, fn _n ->
-      {:ok, SourceAuthorApi.delete_(ids)}
-    end)
-  end
-
-  defp delete_authors_multi(transaction, _) do
-    Multi.run(transaction, :delete_authors, fn _ -> {:ok, []} end)
-  end
 
   defp delete_authors(%{source: %{authors: authors} = source, delete_authors: ids} = record)
        when is_list(authors) and is_list(ids) do

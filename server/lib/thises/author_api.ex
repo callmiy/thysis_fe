@@ -25,6 +25,22 @@ defmodule Thises.AuthorApi do
     |> Repo.all()
   end
 
+  def list(%{} = attrs) do
+    attrs
+    |> Enum.reduce(Author, &where_by/2)
+    |> Repo.all()
+  end
+
+  defp where_by({:user_id, user_id}, query) do
+    where(query, [a], a.user_id == ^user_id)
+  end
+
+  defp where_by({:project_id, project_id}, query) do
+    where(query, [a], a.project_id == ^project_id)
+  end
+
+  defp where_by(_, query), do: query
+
   @doc """
   Gets a single author.
 
@@ -58,8 +74,14 @@ defmodule Thises.AuthorApi do
     attrs =
       attrs
       |> Enum.map(fn
-        {k, nil} -> {k, nil}
-        {k, v} -> {k, String.capitalize(v)}
+        {k, nil} ->
+          {k, nil}
+
+        {k, v} when k in [:first_name, :middle_name, :last_name] ->
+          {k, String.capitalize(v)}
+
+        others ->
+          others
       end)
       |> Enum.into(%{})
 

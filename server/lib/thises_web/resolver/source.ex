@@ -8,14 +8,13 @@ defmodule ThisesWeb.Resolver.Source do
   alias Thises.Sources.Source
   alias Thises.Sources
   alias ThisesWeb.Resolver
-  alias Thises.Projects
 
   @doc """
   Get all sources.
   """
 
   def sources(_root, %{source: params}, %{context: %{current_user: user}}) do
-    {:ok, Sources.list(params, user.id)}
+    {:ok, Sources.list(Map.put(params, :user_id, user.id))}
   end
 
   def sources(root, params, info),
@@ -25,10 +24,15 @@ defmodule ThisesWeb.Resolver.Source do
   Get one source.
   """
 
-  def source(_, %{source: %{id: id}}, %{context: %{current_user: user}}) do
-    case Sources.get(id, user.id) do
-      %Source{} = source_ -> {:ok, source_}
-      nil -> {:error, "No source with id: #{id} or user unauthorized"}
+  def source(_, %{source: params}, %{context: %{current_user: user}}) do
+    case params
+         |> Map.put(:user_id, user.id)
+         |> Sources.get() do
+      %Source{} = source_ ->
+        {:ok, source_}
+
+      nil ->
+        {:error, "No source with id: #{params.id} or user unauthorized"}
     end
   end
 
@@ -54,14 +58,17 @@ defmodule ThisesWeb.Resolver.Source do
     # {:ok, Sources.display(source)}
   end
 
-  def create(_, %{source: %{project_id: project_id} = inputs}, %{context: %{current_user: user}}) do
-    with :ok <- Projects.owner?(user.id, project_id),
-         {:ok, %{source: source}} <- Sources.create_(inputs) do
+  def create(_, %{source: inputs}, %{context: %{current_user: user}}) do
+    with {:ok, %{source: source}} <-
+           Sources.create_(
+             Map.put(
+               inputs,
+               :user_id,
+               user.id
+             )
+           ) do
       {:ok, source}
     else
-      :error ->
-        {:error, "Unauthorized"}
-
       {:error, failed_operation, changeset, _success} ->
         {
           :error,
@@ -77,30 +84,33 @@ defmodule ThisesWeb.Resolver.Source do
     {:error, "Unauthorized"}
   end
 
-  @doc """
-  Create a source
-  """
-  @spec update(any, %{source: %{id: Integer.t() | String.t()}}, any) ::
-          {:ok, %Source{}} | {:error, String.t()}
-  def update(_root, %{source: %{id: id} = inputs} = _args, _info) do
+  def update(_, %{source: %{id: id} = inputs}, %{context: %{current_user: user}}) do
     case Sources.get(id) do
       nil ->
         {:error, "No source with id: #{id}"}
 
       source ->
-        case Sources.update_(source, inputs) do
-          {:ok, %{source: source}} ->
-            {:ok, source}
-
-          {:error, failed_operation, changeset, _success} ->
-            {
-              :error,
-              Resolver.transaction_errors_to_string(
-                changeset,
-                failed_operation
-              )
-            }
+        if user.id == source.user_id do
+          update_source(source, inputs)
+        else
+          {:error, "Unauthorized"}
         end
+    end
+  end
+
+  defp update_source(source, %{} = inputs) do
+    case Sources.update_(source, inputs) do
+      {:ok, %{source: source}} ->
+        {:ok, source}
+
+      {:error, failed_operation, changeset, _success} ->
+        {
+          :error,
+          Resolver.transaction_errors_to_string(
+            changeset,
+            failed_operation
+          )
+        }
     end
   end
 end

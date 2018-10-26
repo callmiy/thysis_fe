@@ -9,8 +9,9 @@ defmodule Thises.Factory.Source do
   alias Thises.Sources
   alias Thises.Sources.Source
   alias Thises.Factory.Project, as: ProjectFactory
+  alias Thises.Factory.Registration, as: RegFactory
 
-  @rest_keys [
+  @simple_attrs [
     :topic,
     :year,
     :publication,
@@ -29,6 +30,12 @@ defmodule Thises.Factory.Source do
 
     data.source
   end
+
+  def insert_with_assoc(attrs \\ %{}),
+    do:
+      attrs
+      |> params_with_assoc()
+      |> insert()
 
   def params(attrs) do
     attrs =
@@ -52,6 +59,15 @@ defmodule Thises.Factory.Source do
     |> Map.merge(attrs)
   end
 
+  def params_with_assoc(attrs \\ %{}) do
+    attrs =
+      attrs
+      |> params_no_authors()
+      |> with_assoc()
+
+    Map.merge(attrs, authors(attrs))
+  end
+
   defp defaults,
     do: %{
       topic: Faker.String.base64(),
@@ -59,6 +75,16 @@ defmodule Thises.Factory.Source do
       publication: Enum.random([Faker.String.base64(), nil]),
       url: Enum.random([Faker.Internet.url(), nil])
     }
+
+  defp with_assoc(attrs) do
+    user = RegFactory.insert()
+
+    Map.merge(attrs, %{
+      user_id: user.id,
+      project_id: ProjectFactory.insert(user_id: user.id).id,
+      source_type_id: SourceTypeFactory.insert(user_id: user.id).id
+    })
+  end
 
   def stringify(%Source{} = source),
     do:
@@ -69,10 +95,8 @@ defmodule Thises.Factory.Source do
   def stringify(%{} = attrs),
     do:
       attrs
+      |> Factory.reject_attrs()
       |> Enum.map(fn
-        {_, nil} ->
-          nil
-
         {:source_type, source_type} ->
           {"sourceType", SourceTypeFactory.stringify(source_type)}
 
@@ -85,7 +109,7 @@ defmodule Thises.Factory.Source do
         {:author_attrs, attrs} ->
           {"authorAttrs", Enum.map(attrs, &AuthorFactory.stringify/1)}
 
-        {k, v} when k in @rest_keys ->
+        {k, v} when k in @simple_attrs ->
           {Factory.to_camel_key(k), v}
 
         _ ->
@@ -153,7 +177,7 @@ defmodule Thises.Factory.Source do
     |> AuthorFactory.insert_list(
       project_id: attrs.project_id,
       user_id: attrs.user_id
-      )
+    )
     |> Enum.map(& &1.id)
   end
 end
