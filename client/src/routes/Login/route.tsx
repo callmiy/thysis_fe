@@ -11,14 +11,10 @@ import { FieldProps } from "formik";
 import { FormikErrors } from "formik";
 import isEmpty from "lodash/isEmpty";
 import { NavLink } from "react-router-dom";
-
-import { Mutation } from "react-apollo";
 import update from "immutability-helper";
 
 import "./login.css";
-import LOGIN_MUTATION from "../../graphql/login.mutation";
-import { LoginFn } from "../../graphql/ops.types";
-import { initialState, initialFormValues } from "./utils";
+import { initialState } from "./utils";
 import { Props } from "./utils";
 import { State } from "./utils";
 import { FORM_VALUES_KEY } from "./utils";
@@ -26,8 +22,6 @@ import { FormValues } from "./utils";
 import { setTitle } from "../../routes/util";
 import { USER_REG_URL } from "./../../routes/util";
 import RootHeader from "../../components/header.component";
-import { USER_LOCAL_STORAGE_KEY } from "../../constants";
-// import { initialFormAttrs } from "./utils";
 
 export class Login extends React.Component<Props, State> {
   state = initialState;
@@ -41,27 +35,19 @@ export class Login extends React.Component<Props, State> {
   }
 
   render() {
-    const { formValues } = this.state;
-
     return (
       <div className="login-route">
         <RootHeader title="Sign in" />
 
         {this.renderError()}
 
-        <Mutation mutation={LOGIN_MUTATION} variables={{ login: formValues }}>
-          {login => {
-            return (
-              <Formik
-                initialValues={this.state.initialFormValues}
-                enableReinitialize={true}
-                onSubmit={this.submit(login)}
-                render={this.renderForm}
-                validate={this.validate}
-              />
-            );
-          }}
-        </Mutation>
+        <Formik
+          initialValues={this.state.initialFormValues}
+          enableReinitialize={true}
+          onSubmit={this.submit}
+          render={this.renderForm}
+          validate={this.validate}
+        />
       </div>
     );
   }
@@ -150,41 +136,25 @@ export class Login extends React.Component<Props, State> {
     return undefined;
   };
 
-  // private handleChange = (key: FORM_VALUES_KEY) => (
-  //   e: React.ChangeEvent<HTMLInputElement>
-  // ) => {
-  //   const { target } = e;
-  //   this.setState(s =>
-  //     update(s, {
-  //       formValues: {
-  //         [key]: {
-  //           $set: target.value
-  //         }
-  //       }
-  //     })
-  //   );
-  // };
-
-  private submit = (loginUser: LoginFn) => async (
+  private submit = async (
     values: FormValues,
     formikBag: FormikProps<FormValues>
   ) => {
     formikBag.setSubmitting(true);
 
     try {
-      const result = await loginUser();
+      const result = await this.props.login({
+        variables: {
+          login: this.state.formValues
+        }
+      });
 
       if (result && result.data) {
         const user = result.data.login;
-        localStorage.setItem(USER_LOCAL_STORAGE_KEY, JSON.stringify(user));
 
-        this.setState(s =>
-          update(s, {
-            formValues: {
-              $set: initialFormValues
-            }
-          })
-        );
+        await this.props.updateLocalUser({
+          variables: { user }
+        });
 
         this.props.history.replace("/");
       }

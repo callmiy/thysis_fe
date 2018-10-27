@@ -37,7 +37,7 @@ export interface NewQuoteState {
   sourceId?: string;
   queryResult?: ApolloQueryResult<Sources1Query & Source1Query>;
   graphqlError?: ApolloError;
-  submittedSourceId?: string;
+  submittedSourceId?: string | null;
   selectedTags: TagFrag[]; // from form
 }
 

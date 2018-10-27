@@ -94,4 +94,12 @@ export type CreateAuthorUpdateFn = MutationUpdaterFn<CreateAuthorMutation>;
 
 export type UserRegFn = MutationFn<UserRegMutation, UserRegMutationVariables>;
 
+export interface UserRegMutationProps {
+  regUser: UserRegFn;
+}
+
 export type LoginFn = MutationFn<LoginMutation, LoginMutationVariables>;
+
+export interface LoginMutationProps {
+  login?: LoginFn;
+}

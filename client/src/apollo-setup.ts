@@ -6,7 +6,7 @@ import { onError } from "apollo-link-error";
 import { HttpLink } from "apollo-link-http";
 
 import { initState } from "./state";
-import { userFromLocalStorage } from "./state";
+import { getToken } from "./state";
 
 const HTTP_URL = process.env.REACT_APP_API_URL || "";
 
@@ -32,8 +32,7 @@ export default client;
 
 function middlewareAuthLink() {
   return new ApolloLink((operation, forward) => {
-    const user = userFromLocalStorage();
-    const token = user ? user.jwt : null;
+    const token = getToken();
 
     if (token) {
       operation.setContext({

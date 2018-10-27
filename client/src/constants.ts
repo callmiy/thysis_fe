@@ -7,7 +7,7 @@ export const BORDER_COLLAPSE_SEPARATE = "separate" as "separate";
 export const FLEX_DIRECTION_COLUMN = "column" as "column";
 export const OVERFLOW_X_HIDDEN = "hidden" as "hidden";
 export const OVERFLOW_Y_AUTO = "auto" as "auto";
-export const USER_LOCAL_STORAGE_KEY = "user";
+export const TOKEN_KEY = "token";
 
 export type SimpleCss = Record<string, SimpleStyle>;
 

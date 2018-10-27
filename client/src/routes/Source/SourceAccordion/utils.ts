@@ -54,5 +54,6 @@ export const initialState: State = {
 
 export enum SourceAccordionIndex {
   DETAIL = 0,
-  LIST_QUOTES = 1
+  LIST_QUOTES = 1,
+  NO_MATCH = -1
 }

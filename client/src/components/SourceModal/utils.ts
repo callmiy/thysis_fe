@@ -37,7 +37,8 @@ export interface State {
 export const initialState: State = {
   output: {
     sourceTypeId: "",
-    topic: ""
+    topic: "",
+    projectId: ""
   }
 };
 

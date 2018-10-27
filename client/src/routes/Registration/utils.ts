@@ -1,27 +1,28 @@
-import { GraphqlQueryControls } from "react-apollo";
 import { ApolloError } from "apollo-client";
 import { ChildProps } from "react-apollo";
-import { WithApolloClient } from "react-apollo";
 import { RouteComponentProps } from "react-router-dom";
 
 import { UserRegMutation } from "../../graphql/gen.types";
 import { UserRegMutationVariables } from "../../graphql/gen.types";
+import { UserRegMutationProps } from "../../graphql/ops.types";
+import { UserLocalMutationProps } from "../../state/user.local.mutation";
 
-export type OwnProps = RouteComponentProps<{}> & UserRegMutation;
+export type OwnProps = RouteComponentProps<{}> &
+  UserRegMutationProps &
+  UserLocalMutationProps;
 
-export type Props = GraphqlQueryControls<UserRegMutationVariables> &
-  ChildProps<
-    WithApolloClient<OwnProps>,
-    UserRegMutation,
-    UserRegMutationVariables
-  >;
+export type Props = ChildProps<
+  OwnProps,
+  UserRegMutation,
+  UserRegMutationVariables
+>;
 
 export interface FormValues {
   email: string;
   name: string;
   password: string;
   passwordConfirmation: string;
-  source?: string;
+  source: string;
 }
 
 export enum FORM_VALUES_KEY {

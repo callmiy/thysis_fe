@@ -41,6 +41,6 @@ export const setTitle = (title?: string) => {
   }
 
   if (titleEl) {
-    titleEl.innerText = title ? `Gasifier | ${title}` : "Gasifier";
+    titleEl.innerText = title ? `Thises | ${title}` : "Thises";
   }
 };

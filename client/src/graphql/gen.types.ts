@@ -100,6 +100,24 @@ export interface LoginMutationVariables {
 // This file was automatically generated and should not be edited.
 
 // ====================================================
+// GraphQL query operation: ProjectsQuery
+// ====================================================
+
+export interface ProjectsQuery_projects {
+  _id: string;
+  projectId: string;
+  title: string;
+}
+
+export interface ProjectsQuery {
+  projects: (ProjectsQuery_projects | null)[] | null;
+}
+
+
+/* tslint:disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
 // GraphQL query operation: QuoteFull
 // ====================================================
 
@@ -207,10 +225,10 @@ export interface Quotes1Variables {
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL query operation: RefreshUserToken
+// GraphQL query operation: RefreshUserQuery
 // ====================================================
 
-export interface RefreshUserToken_refresh {
+export interface RefreshUserQuery_refresh {
   _id: string;
   userId: string;
   name: string;
@@ -219,11 +237,11 @@ export interface RefreshUserToken_refresh {
   jwt: string;
 }
 
-export interface RefreshUserToken {
-  refresh: RefreshUserToken_refresh | null;  // Refresh a user session
+export interface RefreshUserQuery {
+  refresh: RefreshUserQuery_refresh | null;  // Refresh a user session
 }
 
-export interface RefreshUserTokenVariables {
+export interface RefreshUserQueryVariables {
   refresh: RefreshInput;
 }
 
@@ -635,6 +653,20 @@ export interface AuthorFrag {
 // This file was automatically generated and should not be edited.
 
 // ====================================================
+// GraphQL fragment: ProjectFragment
+// ====================================================
+
+export interface ProjectFragment {
+  _id: string;
+  projectId: string;
+  title: string;
+}
+
+
+/* tslint:disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
 // GraphQL fragment: Quote1Frag
 // ====================================================
 
@@ -889,6 +921,8 @@ export interface CreateAuthorInput {
   firstName?: string | null;
   lastName: string;
   middleName?: string | null;
+  projectId: string;
+  userId: string;
 }
 
 // Variables for login in User
@@ -934,6 +968,7 @@ export interface GetSourceInput {
 export interface CreateSourceInput {
   authorAttrs?: (CreateAuthorInput | null)[] | null;
   authorIds?: (string | null)[] | null;
+  projectId: string;
   publication?: string | null;
   sourceTypeId: string;
   topic: string;

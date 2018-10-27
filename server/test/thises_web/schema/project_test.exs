@@ -98,7 +98,7 @@ defmodule ThisesWeb.Schema.ProjectTest do
                 data: %{
                   "projects" => projects
                 }
-              }} = Absinthe.run(query, Schema, context: %{current_user: user})
+              }} = Absinthe.run(query, Schema, context: context(user))
 
       assert projects
              |> Enum.map(& &1["projectId"])
@@ -139,4 +139,6 @@ defmodule ThisesWeb.Schema.ProjectTest do
                )
     end
   end
+
+  defp context(user), do: %{current_user: user}
 end

@@ -18,6 +18,7 @@ import isEmpty from "lodash/isEmpty";
 import SOURCES_QUERY from "../../graphql/sources-1.query";
 import { CreateSourceUpdateFn } from "../../graphql/ops.types";
 import { SourceTypeFrag } from "../../graphql/gen.types";
+import { CreateSource_createSource } from "../../graphql/gen.types";
 import { SourceFullFrag } from "../../graphql/gen.types";
 import { Sources1 as Sources1Query } from "../../graphql/gen.types";
 import { AuthorFrag } from "../../graphql/gen.types";
@@ -88,10 +89,12 @@ export class SourceModal extends React.Component<Props, State> {
         return;
       }
 
+      const createSource = data.createSource as CreateSource_createSource;
+
       this.setState(s =>
         update(s, {
           source: {
-            $set: data.createSource
+            $set: createSource
           }
         })
       );

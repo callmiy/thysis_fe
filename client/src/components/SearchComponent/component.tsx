@@ -10,7 +10,8 @@ import { Icon } from "semantic-ui-react";
 import { NavLink } from "react-router-dom";
 
 import { AllMatchingTexts as AllMatchingTextsQuery } from "../../graphql/gen.types";
-import { SearchQuotesState } from "./utils";
+import { AllMatchingTexts_quoteFullSearch } from "../../graphql/gen.types";
+import { State } from "./utils";
 import { SearchQuotesProps } from "./utils";
 import ALL_MATCHING_TEXT_QUERY from "../../graphql/text-search.query";
 import { classes } from "./styles";
@@ -32,9 +33,9 @@ const RENDER_ROW_PROPS = {
 
 export class SearchQuotesComponent extends React.Component<
   SearchQuotesProps,
-  SearchQuotesState
+  State
 > {
-  state: SearchQuotesState = {
+  state: State = {
     searchText: "",
     searchLoading: false
   };
@@ -156,6 +157,14 @@ export class SearchQuotesComponent extends React.Component<
         }
       })) as ApolloQueryResult<AllMatchingTextsQuery>;
 
+      const data = result.data;
+
+      if (!data) {
+        return;
+      }
+
+      const quoteFullSearch = data.quoteFullSearch as AllMatchingTexts_quoteFullSearch;
+
       this.setState(s =>
         update(s, {
           searchLoading: {
@@ -163,7 +172,7 @@ export class SearchQuotesComponent extends React.Component<
           },
 
           result: {
-            $set: result.data.quoteFullSearch
+            $set: quoteFullSearch
           }
         })
       );

@@ -11,6 +11,7 @@ import isEqual from "lodash/isEqual";
 import isEmpty from "lodash/isEmpty";
 
 import { AuthorFrag, SourceTypeFrag } from "../../../graphql/gen.types";
+import { Quotes1_quotes } from "../../../graphql/gen.types";
 import QUOTES_QUERY from "../../../graphql/quotes-1.query";
 import { Quotes1QueryClientResult } from "../../../graphql/ops.types";
 import { authorDisplay } from "../../../graphql/utils";
@@ -391,7 +392,7 @@ export class SourceAccordion extends React.Component<Props, State> {
   };
 
   handleAccordionClick: AccordionTitleClickCb = (event, titleProps) => {
-    const { index } = titleProps;
+    const index = titleProps.index as SourceAccordionIndex;
     const { activeIndex } = this.state;
 
     if (index === SourceAccordionIndex.LIST_QUOTES) {
@@ -401,7 +402,7 @@ export class SourceAccordion extends React.Component<Props, State> {
     this.setState(s =>
       update(s, {
         activeIndex: {
-          $set: activeIndex === index ? -1 : index
+          $set: activeIndex === index ? SourceAccordionIndex.NO_MATCH : index
         },
         ...this.getNewDetailState(index as number)
       })
@@ -464,10 +465,12 @@ export class SourceAccordion extends React.Component<Props, State> {
         }
       })) as Quotes1QueryClientResult;
 
+      const quotes = result.data.quotes as Quotes1_quotes[];
+
       this.setState(s =>
         update(s, {
           quotes: {
-            $set: result.data.quotes
+            $set: quotes
           },
 
           loadingQuotes: {

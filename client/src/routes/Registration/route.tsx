@@ -10,22 +10,16 @@ import { Field } from "formik";
 import { FieldProps } from "formik";
 import { FormikErrors } from "formik";
 import isEmpty from "lodash/isEmpty";
-
-import { Mutation } from "react-apollo";
 import update from "immutability-helper";
 
 import "./reg.css";
-import REG_USER_MUTATION from "../../graphql/user-reg.mutation";
-import { UserRegFn } from "../../graphql/ops.types";
-import { initialState, initialFormValues } from "./utils";
+import { initialState } from "./utils";
 import { Props } from "./utils";
 import { State } from "./utils";
 import { FORM_VALUES_KEY } from "./utils";
 import { FormValues } from "./utils";
 import { setTitle } from "../../routes/util";
 import RootHeader from "../../components/header.component";
-import { USER_LOCAL_STORAGE_KEY } from "../../constants";
-// import { initialFormAttrs } from "./utils";
 
 export class UserReg extends React.Component<Props, State> {
   state = initialState;
@@ -39,30 +33,19 @@ export class UserReg extends React.Component<Props, State> {
   }
 
   render() {
-    const { formValues } = this.state;
-
     return (
       <div className="user-reg-route">
         <RootHeader title="Sign Up" />
 
         {this.renderErrorOrSuccess()}
 
-        <Mutation
-          mutation={REG_USER_MUTATION}
-          variables={{ registration: formValues }}
-        >
-          {regUser => {
-            return (
-              <Formik
-                initialValues={this.state.initialFormValues}
-                enableReinitialize={true}
-                onSubmit={this.submit(regUser)}
-                render={this.renderForm}
-                validate={this.validate}
-              />
-            );
-          }}
-        </Mutation>
+        <Formik
+          initialValues={this.state.initialFormValues}
+          enableReinitialize={true}
+          onSubmit={this.submit}
+          render={this.renderForm}
+          validate={this.validate}
+        />
       </div>
     );
   }
@@ -236,26 +219,25 @@ export class UserReg extends React.Component<Props, State> {
     );
   };
 
-  private submit = (createAuthor: UserRegFn) => async (
+  private submit = async (
     values: FormValues,
     formikBag: FormikProps<FormValues>
   ) => {
     formikBag.setSubmitting(true);
 
     try {
-      const result = await createAuthor();
+      const result = await this.props.regUser({
+        variables: {
+          registration: values
+        }
+      });
 
       if (result && result.data) {
         const user = result.data.registration;
-        localStorage.setItem(USER_LOCAL_STORAGE_KEY, JSON.stringify(user));
 
-        this.setState(s =>
-          update(s, {
-            formValues: {
-              $set: initialFormValues
-            }
-          })
-        );
+        await this.props.updateLocalUser({
+          variables: { user }
+        });
 
         this.props.history.replace("/");
       }
@@ -387,10 +369,6 @@ export class UserReg extends React.Component<Props, State> {
       return update(s, {
         graphQlError: {
           $set: undefined
-        },
-
-        submitSuccess: {
-          $set: false
         }
       });
     });

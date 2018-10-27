@@ -1,16 +1,9 @@
-import jss from "jss";
-import preset from "jss-preset-default";
 import * as React from "react";
 import Loadable from "react-loadable";
 import { BrowserRouter } from "react-router-dom";
 import { Switch } from "react-router-dom";
 import { Route } from "react-router-dom";
-import { Redirect } from "react-router-dom";
-import { RouteProps } from "react-router-dom";
-import { Dimmer, Loader } from "semantic-ui-react";
 
-import { ROOT_CONTAINER_STYLE } from "./../../constants";
-import { SimpleCss } from "./../../constants";
 import { ROOT_URL } from "./../../routes/util";
 import { TAG_URL } from "./../../routes/util";
 import { SOURCE_URL } from "./../../routes/util";
@@ -20,50 +13,8 @@ import { QUOTE_URL } from "./../../routes/util";
 import { AUTHOR_ROUTE_URL } from "./../../routes/util";
 import { USER_REG_URL } from "./../../routes/util";
 import { LOGIN_URL } from "./../../routes/util";
-import { AuthOwnProps } from "./utils";
-import { userFromLocalStorage } from "./../../state";
-
-jss.setup(preset());
-
-const styles = {
-  app: ROOT_CONTAINER_STYLE,
-
-  loadingIndicator: {
-    display: "flex",
-    flex: 1,
-    "justify-content": "center",
-    "align-items": "center",
-    background: "#757575",
-    color: "#fff",
-    "font-size": "1.5rem",
-    height: "100%"
-  }
-} as SimpleCss;
-
-const { classes } = jss.createStyleSheet(styles).attach();
-
-export const Loading = () => (
-  <Dimmer inverted={true} className={`${classes.app}`} active={true}>
-    <Loader size="medium">Loading..</Loader>
-  </Dimmer>
-);
-
-const authComponent = ({ component: AuthComponent, ...rest }: AuthOwnProps) => {
-  const render = (childProps: RouteProps) => {
-    const user = userFromLocalStorage();
-    const jwt = user ? user.jwt : null;
-
-    if (jwt) {
-      return <AuthComponent {...childProps} />;
-    }
-
-    return <Redirect to={LOGIN_URL} {...childProps} />;
-  };
-
-  return <Route {...rest} render={render} />;
-};
-
-const AuthRequired = authComponent;
+import Loading from "./Loading";
+import AuthRequired from "./AuthRequired";
 
 const Home = Loadable({
   loading: Loading,
@@ -141,6 +92,8 @@ export class App extends React.Component<{}> {
           />
 
           <AuthRequired exact={true} path={ROOT_URL} component={Home} />
+
+          <Route component={LoginRoute} />
         </Switch>
       </BrowserRouter>
     );

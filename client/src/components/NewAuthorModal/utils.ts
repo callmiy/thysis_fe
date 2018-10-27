@@ -14,8 +14,8 @@ export interface Props {
 
 export interface FormOutputs {
   lastName: string;
-  firstName?: string;
-  middleName?: string;
+  firstName?: string | null;
+  middleName?: string | null;
 }
 
 export enum FORM_OUTPUT_KEY {

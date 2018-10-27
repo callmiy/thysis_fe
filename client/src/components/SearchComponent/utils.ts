@@ -11,8 +11,8 @@ export type SemanticOnInputChangeFunc = (
   data: InputOnChangeData
 ) => void;
 
-export interface SearchQuotesState {
-  searchText: "";
+export interface State {
+  searchText: string;
   searchLoading: boolean;
   result?: TextSearchResultFrag;
   searchError?: ApolloError;

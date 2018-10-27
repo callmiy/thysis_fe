@@ -2,8 +2,8 @@ import gql from "graphql-tag";
 
 import { userFragment } from "./user.fragment";
 
-export const refreshToken = gql`
-  query RefreshUserToken($refresh: RefreshInput!) {
+export const refreshUserQuery = gql`
+  query RefreshUserQuery($refresh: RefreshInput!) {
     refresh(refresh: $refresh) {
       ...UserFragment
     }
@@ -12,4 +12,4 @@ export const refreshToken = gql`
   ${userFragment}
 `;
 
-export default refreshToken;
+export default refreshUserQuery;
