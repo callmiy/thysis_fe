@@ -4,7 +4,7 @@ import { Loader } from "semantic-ui-react";
 import { Icon } from "semantic-ui-react";
 import { NavLink } from "react-router-dom";
 
-import RootHeader from "../../components/header.component";
+import RootHeader from "../../components/Header";
 import { setTitle } from "../../routes/util";
 import { makeNewQuoteURL } from "../../routes/util";
 import { classes } from "./styles";

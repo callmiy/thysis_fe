@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import RootHeader from "../../components/header.component";
+import RootHeader from "../../components/Header";
 import SearchQuotesMenu from "../../components/search-quotes-route-bottom-menu.component";
 import { setTitle } from "../../routes/util";
 import { classes } from "./styles";

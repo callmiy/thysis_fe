@@ -5,7 +5,7 @@ import { Dimmer } from "semantic-ui-react";
 import { Loader } from "semantic-ui-react";
 import { List } from "semantic-ui-react";
 
-import RootHeader from "../../components/header.component";
+import RootHeader from "../../components/Header";
 import { TagQuoteQueryComponent } from "../../graphql/ops.types";
 import TAG_QUOTE_QUERY from "../../graphql/tag-with-quotes.query";
 import { TagQuote as TagQuoteQuery } from "../../graphql/gen.types";

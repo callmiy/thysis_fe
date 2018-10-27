@@ -4,7 +4,7 @@ import { Menu } from "semantic-ui-react";
 import { Icon } from "semantic-ui-react";
 import update from "immutability-helper";
 
-import Header from "../../components/header.component";
+import Header from "../../components/Header";
 import { makeNewQuoteURL } from "../../routes/util";
 import { SEARCH_QUOTES_URL } from "../../routes/util";
 import TagsModal from "../../components/TagsModal";

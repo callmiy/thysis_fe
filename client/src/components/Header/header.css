@@ -1,0 +1,30 @@
+.app-header {
+  flex-shrink: 0;
+  border-radius: 0;
+  margin: 0 0 10px 0;
+  border-radius: 0 !important;
+  position: relative;
+  background-color: #5faac7;
+  color: white;
+  padding: 5px 8px; }
+  .app-header .top {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px; }
+  .app-header .title {
+    font-weight: 700;
+    font-size: 1.6rem; }
+  .app-header .project-title {
+    background-color: #72b4ce;
+    padding: 1px 3px;
+    font-style: italic;
+    font-weight: bolder; }
+  .app-header .bottom {
+    margin-bottom: 5px;
+    min-height: 20px; }
+  .app-header .to-projects {
+    color: #f2f2f2;
+    text-decoration: none;
+    background-color: #98c8db;
+    padding: 5px 8px;
+    font-weight: 700; }

@@ -6,7 +6,7 @@ import { List } from "semantic-ui-react";
 import update from "immutability-helper";
 
 import "./select-project.css";
-import Header from "../../../components/header.component";
+import Header from "../../../components/Header";
 import { Props, State, initialState } from "./select-project";
 import { SemanticOnInputChangeFunc } from "../../../utils";
 import { ProjectFragment } from "src/graphql/gen.types";

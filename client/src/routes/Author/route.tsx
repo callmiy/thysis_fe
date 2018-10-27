@@ -5,7 +5,7 @@ import { List } from "semantic-ui-react";
 import { NavLink } from "react-router-dom";
 
 import "./author-route.css";
-import RootHeader from "../../components/header.component";
+import RootHeader from "../../components/Header";
 import { setTitle } from "../../routes/util";
 import { makeSourceURL } from "../../routes/util";
 import { Props } from "./utils";

@@ -21,7 +21,7 @@ import { FORM_VALUES_KEY } from "./utils";
 import { FormValues } from "./utils";
 import { setTitle } from "../../routes/util";
 import { USER_REG_URL } from "./../../routes/util";
-import RootHeader from "../../components/header.component";
+import RootHeader from "../../components/Header";
 
 export class Login extends React.Component<Props, State> {
   state = initialState;
