@@ -6,7 +6,7 @@ import SourceModal from "./component";
 import { CreateSource as CreateSourceMutation } from "../../graphql/gen.types";
 import { CreateSourceVariables } from "../../graphql/gen.types";
 import CREATE_SOURCE_MUTATION from "../../graphql/source.mutation";
-import { OwnProps } from "./utils";
+import { OwnProps } from "./source-modal";
 
 const createSourceGraphql = graphql<
   OwnProps,

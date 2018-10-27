@@ -1,3 +1,5 @@
+@import "./variables";
+
 %route {
   height: 100%;
   overflow: hidden;
@@ -12,4 +14,14 @@
   padding: 5px;
   overflow-x: hidden;
   overflow-y: auto;
+}
+
+%simple-error {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: $error-color;
+  font-weight: 900;
+  font-size: 1.2em;
 }

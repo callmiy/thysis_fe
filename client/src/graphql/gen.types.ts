@@ -406,34 +406,38 @@ export interface Source1Variables {
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL query operation: Sources1
+// GraphQL query operation: Sources1Query
 // ====================================================
 
-export interface Sources1_sources_authors {
+export interface Sources1Query_sources_authors {
   id: string;
   firstName: string | null;
   lastName: string;
   middleName: string | null;
 }
 
-export interface Sources1_sources_sourceType {
+export interface Sources1Query_sources_sourceType {
   id: string;
   name: string | null;
 }
 
-export interface Sources1_sources {
+export interface Sources1Query_sources {
   id: string;
   year: string | null;
   topic: string;
   publication: string | null;
   url: string | null;
   insertedAt: any;
-  authors: (Sources1_sources_authors | null)[];
-  sourceType: Sources1_sources_sourceType;
+  authors: (Sources1Query_sources_authors | null)[];
+  sourceType: Sources1Query_sources_sourceType;
 }
 
-export interface Sources1 {
-  sources: (Sources1_sources | null)[] | null;  // Query for all sources
+export interface Sources1Query {
+  sources: (Sources1Query_sources | null)[] | null;  // Query for all sources
+}
+
+export interface Sources1QueryVariables {
+  source?: GetSourcesInput | null;
 }
 
 
@@ -1002,6 +1006,11 @@ export interface CreateSourceInput {
   topic: string;
   url?: string | null;
   year?: string | null;
+}
+
+// Input for getting a sources belonging to a project or user
+export interface GetSourcesInput {
+  projectId?: string | null;
 }
 
 // Get tag input

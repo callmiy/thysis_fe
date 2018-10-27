@@ -5,7 +5,7 @@ import { QueryResult } from "react-apollo";
 import { ApolloQueryResult } from "apollo-client";
 
 import { TagsMinimal as TagsMinimalQuery } from "./gen.types";
-import { Sources1 as Sources1Query } from "./gen.types";
+import { Sources1Query } from "./gen.types";
 import { CreateQuote as CreateQuoteMutation } from "./gen.types";
 import { CreateQuoteVariables } from "./gen.types";
 import { CreateTag as CreateTagMutation } from "./gen.types";

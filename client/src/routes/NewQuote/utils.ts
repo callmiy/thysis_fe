@@ -11,7 +11,7 @@ import { VolumeIssueType } from "./form-volume-issue-control.component";
 import { PageType } from "./form-page-start-end-control.component";
 import { DateType } from "./date.component";
 import { SourceFullFrag } from "../../graphql/gen.types";
-import { Sources1 as Sources1Query } from "../../graphql/gen.types";
+import { Sources1Query } from "../../graphql/gen.types";
 import { Source1 as Source1Query } from "../../graphql/gen.types";
 
 export interface FormValues {

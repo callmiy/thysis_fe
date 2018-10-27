@@ -3,13 +3,14 @@ import { Modal } from "semantic-ui-react";
 import { List } from "semantic-ui-react";
 import { Loader } from "semantic-ui-react";
 
+import "./sources-modal.css";
 import { SourceFullFrag } from "../../graphql/gen.types";
 import { sourceDisplay } from "../../graphql/utils";
 import { makeSourceURL } from "../../routes/util";
 import { styles } from "./styles";
 import { modalStyle } from "./styles";
 import { classes } from "./styles";
-import { Props } from "./utils";
+import { Props } from "./sources-modal";
 
 export class SourcesModal extends React.Component<Props> {
   render() {
@@ -21,6 +22,7 @@ export class SourcesModal extends React.Component<Props> {
         open={this.props.open}
         onClose={this.resetModal}
         dimmer="inverted"
+        className="sources-modal"
       >
         <Modal.Content>
           <div className={classes.content}>
@@ -54,9 +56,9 @@ export class SourcesModal extends React.Component<Props> {
       return <Loader active={true} />;
     }
 
-    const { sources } = this.props;
+    const { sources, currentProject } = this.props;
 
-    if (sources) {
+    if (sources && sources.length) {
       return (
         <List style={styles.list} divided={true} relaxed={true}>
           {sources.map(this.renderSource)}
@@ -64,7 +66,9 @@ export class SourcesModal extends React.Component<Props> {
       );
     }
 
-    return undefined;
+    return (
+      <div>No sources {`for "${currentProject && currentProject.title}"`}</div>
+    );
   };
 
   renderSource = (source: SourceFullFrag) => {

@@ -1,0 +1,41 @@
+@import "./../../styles/extensions";
+
+.sources-modal {
+  .modal {
+    overflow: hidden;
+    margin-top: -100px;
+  }
+
+  .content {
+    word-wrap: break-word;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    overflow: hidden;
+  }
+
+  .modal-close {
+    flex-shrink: 0;
+    font-weight: 900;
+    font-size: 2rem;
+    text-align: right;
+    cursor: pointer;
+  }
+
+  .list {
+    background: white;
+    padding: 8px;
+    flex: 1;
+    overflow: auto;
+    margin-top: 0;
+    border: 1px solid #dad8d8;
+  }
+
+  .list-item {
+    cursor: pointer;
+  }
+
+  .error-container {
+    @extend %simple-error;
+  }
+}

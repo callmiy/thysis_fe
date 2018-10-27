@@ -20,7 +20,7 @@ import { CreateSourceUpdateFn } from "../../graphql/ops.types";
 import { SourceTypeFrag } from "../../graphql/gen.types";
 import { CreateSource_createSource } from "../../graphql/gen.types";
 import { SourceFullFrag } from "../../graphql/gen.types";
-import { Sources1 as Sources1Query } from "../../graphql/gen.types";
+import { Sources1Query } from "../../graphql/gen.types";
 import { AuthorFrag } from "../../graphql/gen.types";
 import { sourceDisplay } from "../../graphql/utils";
 import SourceTypeControlComponent from "../SourceTypeControl";
@@ -29,11 +29,11 @@ import { makeSourceURL } from "../../routes/util";
 import { styles } from "./styles";
 import { classes } from "./styles";
 import { modalStyle } from "./styles";
-import { Props } from "./utils";
-import { State } from "./utils";
-import { initialState } from "./utils";
-import { initialFormValues } from "./utils";
-import { FormValues } from "./utils";
+import { Props } from "./source-modal";
+import { State } from "./source-modal";
+import { initialState } from "./source-modal";
+import { initialFormValues } from "./source-modal";
+import { FormValues } from "./source-modal";
 
 export class SourceModal extends React.Component<Props, State> {
   state = initialState;

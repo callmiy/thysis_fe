@@ -22,7 +22,7 @@ import { NavLink } from "react-router-dom";
 import { Quotes1 as Quotes1Query } from "../../graphql/gen.types";
 import { TagFrag } from "../../graphql/gen.types";
 import { SourceFullFrag } from "../../graphql/gen.types";
-import { Sources1 as Sources1Query } from "../../graphql/gen.types";
+import { Sources1Query } from "../../graphql/gen.types";
 import { Source1 as Source1Query } from "../../graphql/gen.types";
 import { sourceDisplay } from "../../graphql/utils";
 import TagControl from "./form-tag-control.component";

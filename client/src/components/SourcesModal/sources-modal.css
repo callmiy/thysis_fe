@@ -1,0 +1,37 @@
+.sources-modal .error-container {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #9f3a38;
+  font-weight: 900;
+  font-size: 1.2em; }
+
+.sources-modal .modal {
+  overflow: hidden;
+  margin-top: -100px; }
+
+.sources-modal .content {
+  word-wrap: break-word;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow: hidden; }
+
+.sources-modal .modal-close {
+  flex-shrink: 0;
+  font-weight: 900;
+  font-size: 2rem;
+  text-align: right;
+  cursor: pointer; }
+
+.sources-modal .list {
+  background: white;
+  padding: 8px;
+  flex: 1;
+  overflow: auto;
+  margin-top: 0;
+  border: 1px solid #dad8d8; }
+
+.sources-modal .list-item {
+  cursor: pointer; }
