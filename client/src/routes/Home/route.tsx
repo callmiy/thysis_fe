@@ -1,5 +1,4 @@
 import * as React from "react";
-import { RouteComponentProps } from "react-router-dom";
 import { NavLink } from "react-router-dom";
 import { Menu } from "semantic-ui-react";
 import { Icon } from "semantic-ui-react";
@@ -15,31 +14,67 @@ import SourceModal from "../../components/SourceModal";
 import NewAuthorModal from "../../components/NewAuthorModal";
 import styles from "./styles";
 import { classes } from "./styles";
+import { Props } from "./home";
+import { State } from "./home";
+import { MenuItem } from "./home";
+import SelectProject from "./SelectProject";
+import { ProjectFragment } from "src/graphql/gen.types";
 
-enum HomeEnum {
-  TAG_LIST = "tagList",
-  SOURCE_LIST = "sourceList",
-  NEW_TAG = "newTag",
-  NEW_SOURCE = "newSource",
-  NEW_AUTHOR = "newAuthor"
-}
+export class Home extends React.Component<Props, State> {
+  static getDerivedStateFromProps(props: Props, state: State) {
+    if (!state.selectedProject && props.currentProject) {
+      return update(state, {
+        selectedProject: {
+          $set: props.currentProject
+        }
+      });
+    }
 
-interface HomeState {
-  modalOpened: {};
-}
+    return null;
+  }
 
-type HomeProps = RouteComponentProps<{}>;
-
-export class Home extends React.Component<HomeProps, HomeState> {
-  state: HomeState = {
+  state: State = {
     modalOpened: {}
   };
 
-  constructor(props: HomeProps) {
+  constructor(props: Props) {
     super(props);
   }
 
   render() {
+    const { user } = this.props;
+    const { selectedProject } = this.state;
+    return selectedProject ? (
+      this.renderCurrentProject()
+    ) : (
+      <SelectProject
+        user={user}
+        onProjectSelected={this.handleProjectSelected}
+      />
+    );
+  }
+
+  toggleModalOpen = (name: string, open: boolean) => () => {
+    this.setState(s =>
+      update(s, {
+        modalOpened: {
+          $set: {}
+        }
+      })
+    );
+
+    this.setState(s =>
+      update(s, {
+        modalOpened: {
+          [name]: {
+            $set: open
+          }
+        }
+      })
+    );
+  };
+
+  private renderCurrentProject = () => {
     return (
       <div className={`${classes.homeRoot}`}>
         <Header title="Home" />
@@ -72,7 +107,7 @@ export class Home extends React.Component<HomeProps, HomeState> {
 
             <Menu.Item
               style={styles.menuAnchor}
-              onClick={this.toggleModalOpen(HomeEnum.TAG_LIST, true)}
+              onClick={this.toggleModalOpen(MenuItem.TAG_LIST, true)}
             >
               <Icon name="numbered list" />
               List Tags
@@ -80,7 +115,7 @@ export class Home extends React.Component<HomeProps, HomeState> {
 
             <Menu.Item
               style={styles.menuAnchor}
-              onClick={this.toggleModalOpen(HomeEnum.SOURCE_LIST, true)}
+              onClick={this.toggleModalOpen(MenuItem.SOURCE_LIST, true)}
             >
               <Icon name="numbered list" />
               List Sources
@@ -88,7 +123,7 @@ export class Home extends React.Component<HomeProps, HomeState> {
 
             <Menu.Item
               style={styles.menuAnchor}
-              onClick={this.toggleModalOpen(HomeEnum.NEW_AUTHOR, true)}
+              onClick={this.toggleModalOpen(MenuItem.NEW_AUTHOR, true)}
             >
               <Icon name="user" />
               New Author
@@ -96,7 +131,7 @@ export class Home extends React.Component<HomeProps, HomeState> {
 
             <Menu.Item
               style={styles.menuAnchor}
-              onClick={this.toggleModalOpen(HomeEnum.NEW_TAG, true)}
+              onClick={this.toggleModalOpen(MenuItem.NEW_TAG, true)}
             >
               <Icon name="tag" />
               New Tag
@@ -104,7 +139,7 @@ export class Home extends React.Component<HomeProps, HomeState> {
 
             <Menu.Item
               style={styles.menuAnchor}
-              onClick={this.toggleModalOpen(HomeEnum.NEW_SOURCE, true)}
+              onClick={this.toggleModalOpen(MenuItem.NEW_SOURCE, true)}
             >
               <Icon name="user" />
               New Source
@@ -112,62 +147,52 @@ export class Home extends React.Component<HomeProps, HomeState> {
           </Menu>
         </div>
 
-        {this.state.modalOpened[HomeEnum.TAG_LIST] && (
+        {this.state.modalOpened[MenuItem.TAG_LIST] && (
           <TagsModal
-            open={this.state.modalOpened[HomeEnum.TAG_LIST]}
-            dismissModal={this.toggleModalOpen(HomeEnum.TAG_LIST, false)}
+            open={this.state.modalOpened[MenuItem.TAG_LIST]}
+            dismissModal={this.toggleModalOpen(MenuItem.TAG_LIST, false)}
           />
         )}
 
-        {this.state.modalOpened[HomeEnum.SOURCE_LIST] && (
+        {this.state.modalOpened[MenuItem.SOURCE_LIST] && (
           <SourcesModal
-            open={this.state.modalOpened[HomeEnum.SOURCE_LIST]}
-            dismissModal={this.toggleModalOpen(HomeEnum.SOURCE_LIST, false)}
+            open={this.state.modalOpened[MenuItem.SOURCE_LIST]}
+            dismissModal={this.toggleModalOpen(MenuItem.SOURCE_LIST, false)}
           />
         )}
 
-        {this.state.modalOpened[HomeEnum.NEW_AUTHOR] && (
+        {this.state.modalOpened[MenuItem.NEW_AUTHOR] && (
           <NewAuthorModal
-            open={this.state.modalOpened[HomeEnum.NEW_AUTHOR]}
-            dismissModal={this.toggleModalOpen(HomeEnum.NEW_AUTHOR, false)}
+            open={this.state.modalOpened[MenuItem.NEW_AUTHOR]}
+            dismissModal={this.toggleModalOpen(MenuItem.NEW_AUTHOR, false)}
             style={{ marginTop: 0 }}
           />
         )}
 
-        {this.state.modalOpened[HomeEnum.NEW_TAG] && (
+        {this.state.modalOpened[MenuItem.NEW_TAG] && (
           <NewTagModalForm
-            open={this.state.modalOpened[HomeEnum.NEW_TAG]}
-            dismissModal={this.toggleModalOpen(HomeEnum.NEW_TAG, false)}
+            open={this.state.modalOpened[MenuItem.NEW_TAG]}
+            dismissModal={this.toggleModalOpen(MenuItem.NEW_TAG, false)}
             style={{ marginTop: 0 }}
           />
         )}
 
-        {this.state.modalOpened[HomeEnum.NEW_SOURCE] && (
+        {this.state.modalOpened[MenuItem.NEW_SOURCE] && (
           <SourceModal
-            open={this.state.modalOpened[HomeEnum.NEW_SOURCE]}
-            dismissModal={this.toggleModalOpen(HomeEnum.NEW_SOURCE, false)}
+            open={this.state.modalOpened[MenuItem.NEW_SOURCE]}
+            dismissModal={this.toggleModalOpen(MenuItem.NEW_SOURCE, false)}
             style={{ marginTop: 0 }}
           />
         )}
       </div>
     );
-  }
+  };
 
-  toggleModalOpen = (name: string, open: boolean) => () => {
+  private handleProjectSelected = (project: ProjectFragment) => {
     this.setState(s =>
       update(s, {
-        modalOpened: {
-          $set: {}
-        }
-      })
-    );
-
-    this.setState(s =>
-      update(s, {
-        modalOpened: {
-          [name]: {
-            $set: open
-          }
+        selectedProject: {
+          $set: project
         }
       })
     );

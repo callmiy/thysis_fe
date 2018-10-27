@@ -16,7 +16,7 @@ import { SearchQuotesProps } from "./utils";
 import ALL_MATCHING_TEXT_QUERY from "../../graphql/text-search.query";
 import { classes } from "./styles";
 import ErrorBoundary from "../../containers/error-boundary.container";
-import { SemanticOnInputChangeFunc } from "./utils";
+import { SemanticOnInputChangeFunc } from "../../utils";
 import { TextSearchResultFrag } from "../../graphql/gen.types";
 import { TextSearchRowFrag } from "../../graphql/gen.types";
 import { makeSourceURL } from "../../routes/util";

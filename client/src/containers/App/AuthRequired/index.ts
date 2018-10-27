@@ -1,20 +1,38 @@
 import { graphql } from "react-apollo";
+import { compose } from "react-apollo";
 
 import AUTH_USER_LOCAL_QUERY from "../../../state/auth-user.local.query";
+import CURRENT_PROJECT_QUERY from "../../../state/project.local.query";
+import { CurrentProjectLocalData } from "../../../state/project.local.query";
 import { LocalGraphQlData } from "./utils";
-import { FromGraphQl } from "./utils";
+import { LocalUserGqlProps } from "./utils";
 import { OwnProps } from "./utils";
+import { CurrentProjectLocalGqlProps } from "./utils";
 import { AuthRequired } from "./component";
 
 const authUserLocalGraphQl = graphql<
   OwnProps,
   LocalGraphQlData,
   {},
-  FromGraphQl
+  LocalUserGqlProps
 >(AUTH_USER_LOCAL_QUERY, {
   props: ({ data }) => {
     return data;
   }
 });
 
-export default authUserLocalGraphQl(AuthRequired);
+const currentProjectLocalGql = graphql<
+  OwnProps,
+  CurrentProjectLocalData,
+  {},
+  CurrentProjectLocalGqlProps
+>(CURRENT_PROJECT_QUERY, {
+  props: ({ data }) => {
+    return data;
+  }
+});
+
+export default compose(
+  authUserLocalGraphQl,
+  currentProjectLocalGql
+)(AuthRequired);

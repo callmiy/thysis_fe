@@ -6,16 +6,28 @@ import { Route } from "react-router-dom";
 import Refresh from "./../Refresh";
 import { Props } from "./utils";
 import { LOGIN_URL } from "./../../../routes/util";
+import { ROOT_URL } from "../../../routes/util";
 
 export const AuthRequired = ({
   component: AuthComponent,
   user,
   staleToken,
+  currentProject,
   ...rest
 }: Props) => {
+  const data = {
+    user,
+    currentProject,
+    ...rest
+  };
+
   const render = (childProps: RouteProps) => {
     if (user) {
-      return <AuthComponent {...childProps} />;
+      if (!currentProject && rest.path !== ROOT_URL) {
+        return <Redirect to={ROOT_URL} {...data} {...childProps} />;
+      }
+
+      return <AuthComponent {...data} {...childProps} />;
     }
 
     if (staleToken) {
@@ -23,6 +35,7 @@ export const AuthRequired = ({
         <Refresh
           componentProps={{ component: AuthComponent, ...childProps }}
           jwt={staleToken}
+          currentProject={currentProject}
         />
       );
     }
@@ -30,7 +43,7 @@ export const AuthRequired = ({
     return <Redirect to={LOGIN_URL} {...childProps} />;
   };
 
-  return <Route user={user} {...rest} render={render} />;
+  return <Route {...data} render={render} />;
 };
 
 export default AuthRequired;

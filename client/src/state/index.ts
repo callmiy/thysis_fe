@@ -2,7 +2,9 @@ import { withClientState } from "apollo-link-state";
 import { InMemoryCache } from "apollo-cache-inmemory";
 
 import { UserFragment } from "./../graphql/gen.types";
+import { ProjectFragment } from "./../graphql/gen.types";
 import { TOKEN_KEY } from "./../constants";
+import { CURRENT_PROJECT_KEY } from "./../constants";
 
 type ClientStateFn<TVariables> = (
   fieldName: string,
@@ -32,18 +34,47 @@ const userMutation: ClientStateFn<{
   return null;
 };
 
+const projectMutation: ClientStateFn<{
+  currentProject: ProjectFragment;
+}> = (_, { currentProject }, { cache }) => {
+  // tslint:disable-next-line:no-console
+  console.log(
+    `
+
+
+  logging starts
+
+
+  project mutation current`,
+    currentProject,
+    `
+
+  logging ends
+
+
+  `
+  );
+
+  const data = { currentProject };
+  cache.writeData({ data });
+  storeProject(currentProject);
+  return null;
+};
+
 export const initState = (cache: InMemoryCache) => {
   return withClientState({
     cache,
     resolvers: {
       Mutation: {
         updateNetworkStatus,
-        user: userMutation
+        user: userMutation,
+        currentProject: projectMutation
       }
     },
     defaults: {
       staleToken: getToken(),
-      user: null
+      user: null,
+      currentProject: getProject()
     }
   });
 };
@@ -51,6 +82,13 @@ export const initState = (cache: InMemoryCache) => {
 export const getToken = (): string | null =>
   localStorage.getItem(TOKEN_KEY) || null;
 
-export const storeToken = (token: string) => {
+export const storeToken = (token: string) =>
   localStorage.setItem(TOKEN_KEY, token);
+
+export const getProject = (): ProjectFragment | null => {
+  const project = localStorage.getItem(CURRENT_PROJECT_KEY);
+  return project ? JSON.parse(project) : null;
 };
+
+export const storeProject = (project: ProjectFragment) =>
+  localStorage.setItem(CURRENT_PROJECT_KEY, JSON.stringify(project));

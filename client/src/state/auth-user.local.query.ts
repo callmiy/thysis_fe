@@ -1,6 +1,7 @@
 import gql from "graphql-tag";
 
 import { userFragment } from "../graphql/user.fragment";
+import { UserFragment } from "src/graphql/gen.types";
 
 export const authUserLocalQuery = gql`
   query UserLocalQuery {
@@ -15,3 +16,7 @@ export const authUserLocalQuery = gql`
 `;
 
 export default authUserLocalQuery;
+
+export interface UserLocalGqlData {
+  user: UserFragment;
+}

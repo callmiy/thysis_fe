@@ -13,7 +13,7 @@ import { QUOTE_URL } from "./../../routes/util";
 import { AUTHOR_ROUTE_URL } from "./../../routes/util";
 import { USER_REG_URL } from "./../../routes/util";
 import { LOGIN_URL } from "./../../routes/util";
-import Loading from "./Loading";
+import Loading from "./../../components/Loading";
 import AuthRequired from "./AuthRequired";
 
 const Home = Loadable({

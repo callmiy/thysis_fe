@@ -75,6 +75,28 @@ export interface CreateAuthorVariables {
 // This file was automatically generated and should not be edited.
 
 // ====================================================
+// GraphQL mutation operation: CreateProjectMutation
+// ====================================================
+
+export interface CreateProjectMutation_project {
+  _id: string;
+  projectId: string;
+  title: string;
+}
+
+export interface CreateProjectMutation {
+  project: CreateProjectMutation_project | null;
+}
+
+export interface CreateProjectMutationVariables {
+  project: CreateProjectInput;
+}
+
+
+/* tslint:disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
 // GraphQL mutation operation: LoginMutation
 // ====================================================
 
@@ -922,6 +944,12 @@ export interface CreateAuthorInput {
   lastName: string;
   middleName?: string | null;
   projectId: string;
+  userId: string;
+}
+
+// Variables for creating a Project
+export interface CreateProjectInput {
+  title: string;
   userId: string;
 }
 

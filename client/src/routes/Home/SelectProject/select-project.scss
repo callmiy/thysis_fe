@@ -1,0 +1,31 @@
+@import "../../../styles/extensions";
+
+.select-project {
+  @extend %route;
+
+  .main {
+    @extend %route-main;
+
+    & > .form {
+      & > .control {
+        display: flex;
+
+        & > .field {
+          margin-bottom: 0.3em;
+        }
+
+        & > .input {
+          flex: 1;
+        }
+
+        & > .icon {
+          padding: 5px 30px 30px 10px;
+        }
+      }
+
+      & > .message {
+        color: red;
+      }
+    }
+  }
+}

@@ -8,6 +8,7 @@ export const FLEX_DIRECTION_COLUMN = "column" as "column";
 export const OVERFLOW_X_HIDDEN = "hidden" as "hidden";
 export const OVERFLOW_Y_AUTO = "auto" as "auto";
 export const TOKEN_KEY = "token";
+export const CURRENT_PROJECT_KEY = "current-project";
 
 export type SimpleCss = Record<string, SimpleStyle>;
 
