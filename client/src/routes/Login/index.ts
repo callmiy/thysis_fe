@@ -8,7 +8,7 @@ import { LoginFn } from "./../../graphql/ops.types";
 import { LoginMutationProps } from "./../../graphql/ops.types";
 import LOGIN_MUTATION from "./../../graphql/login.mutation";
 import { userLocalMutationGql } from "./../../state/user.local.mutation";
-import { OwnProps } from "./utils";
+import { OwnProps } from "./login";
 
 const loginMutationGql = graphql<
   OwnProps,

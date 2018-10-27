@@ -5,17 +5,19 @@ import { Form } from "semantic-ui-react";
 import { List } from "semantic-ui-react";
 import update from "immutability-helper";
 
-import "./select-project.css";
-import Header from "../../../components/Header";
-import { Props, State, initialState } from "./select-project";
-import { SemanticOnInputChangeFunc } from "../../../utils";
+import "./projects.css";
+import Header from "../../components/Header";
+import { Props, State, initialState } from "./projects";
+import { SemanticOnInputChangeFunc } from "../../utils";
 import { ProjectFragment } from "src/graphql/gen.types";
+import { ROOT_URL } from "../util";
 
 export class SelectProject extends React.Component<Props, State> {
-  state = initialState;
+  state: State = initialState;
 
   render() {
     const { form } = this.state;
+
     const formError = this.formError();
 
     return (
@@ -76,21 +78,24 @@ export class SelectProject extends React.Component<Props, State> {
   };
 
   private renderProject = (project: ProjectFragment) => (
-    <List.Content
-      className="project-row"
-      key={project.projectId}
-      onClick={this.projectSelected(project)}
-    >
-      <List.Header className="project-row__header">{project.title}</List.Header>
-      <List.Description className="project-row__desc">
-        Updated 10 mins ago
-      </List.Description>
-    </List.Content>
+    <List.Item key={project.projectId}>
+      <List.Content
+        className="project-row"
+        onClick={this.projectSelected(project)}
+      >
+        <List.Header className="project-row__header">
+          {project.title}
+        </List.Header>
+        <List.Description className="project-row__desc">
+          Updated 10 mins ago
+        </List.Description>
+      </List.Content>
+    </List.Item>
   );
 
-  private projectSelected = (currentProject: ProjectFragment) => () => {
-    this.props.onProjectSelected(currentProject);
-    this.props.updateLocalProject({ variables: { currentProject } });
+  private projectSelected = (currentProject: ProjectFragment) => async () => {
+    await this.props.updateLocalProject({ variables: { currentProject } });
+    this.props.history.push(ROOT_URL);
   };
 
   private submit = async () => {
@@ -111,7 +116,7 @@ export class SelectProject extends React.Component<Props, State> {
       return;
     }
 
-    this.props.onProjectSelected(project);
+    this.projectSelected(project)();
   };
 
   private onProjectInputChange: SemanticOnInputChangeFunc = (e, { value }) => {

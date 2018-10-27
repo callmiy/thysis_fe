@@ -2,17 +2,17 @@ import { graphql } from "react-apollo";
 import { compose } from "react-apollo";
 import update from "immutability-helper";
 
-import PROJECTS_QUERY from "../../../graphql/projects.query";
-import { ProjectsQuery } from "../../../graphql/gen.types";
+import PROJECTS_QUERY from "../../graphql/projects.query";
+import { ProjectsQuery } from "../../graphql/gen.types";
 import CREATE_PROJECT_MUTATION, {
   CreateProjectMutationFn,
   CreateProjectMutationProps
-} from "../../../graphql/create-project.mutation";
-import { CreateProjectMutation } from "../../../graphql/gen.types";
-import { CreateProjectMutationVariables } from "../../../graphql/gen.types";
-import { SelectProject } from "./component";
-import { projectLocalMutationGql } from "../../../state/project.local.mutation";
-import { ProjectsGqlDataValue, OwnProps } from "./select-project";
+} from "../../graphql/create-project.mutation";
+import { CreateProjectMutation } from "../../graphql/gen.types";
+import { CreateProjectMutationVariables } from "../../graphql/gen.types";
+import { SelectProject } from "./route";
+import { projectLocalMutationGql } from "../../state/project.local.mutation";
+import { ProjectsGqlDataValue, OwnProps } from "./projects";
 
 const projectsGql = graphql<
   {},

@@ -14,12 +14,12 @@ import { NavLink } from "react-router-dom";
 import update from "immutability-helper";
 
 import "./login.css";
-import { initialState } from "./utils";
-import { Props } from "./utils";
-import { State } from "./utils";
-import { FORM_VALUES_KEY } from "./utils";
-import { FormValues } from "./utils";
-import { setTitle } from "../../routes/util";
+import { initialState } from "./login";
+import { Props } from "./login";
+import { State } from "./login";
+import { FORM_VALUES_KEY } from "./login";
+import { FormValues } from "./login";
+import { setTitle, PROJECTS_URL } from "../../routes/util";
 import { USER_REG_URL } from "./../../routes/util";
 import RootHeader from "../../components/Header";
 
@@ -156,7 +156,7 @@ export class Login extends React.Component<Props, State> {
           variables: { user }
         });
 
-        this.props.history.replace("/");
+        this.props.history.replace(PROJECTS_URL);
       }
     } catch (error) {
       formikBag.setSubmitting(false);

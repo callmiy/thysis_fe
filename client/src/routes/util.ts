@@ -30,6 +30,7 @@ export const SEARCH_QUOTES_URL = "/search/quotes";
 
 export const USER_REG_URL = "/auth/register";
 export const LOGIN_URL = "/auth/login";
+export const PROJECTS_URL = "/projects";
 
 // END ROUTE URLS
 

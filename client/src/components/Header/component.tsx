@@ -3,9 +3,9 @@ import { NavLink } from "react-router-dom";
 
 import "./header.css";
 import { Props } from "./header.utils";
-import { LOGIN_URL, USER_REG_URL } from "../../routes/util";
+import { LOGIN_URL, USER_REG_URL, PROJECTS_URL } from "../../routes/util";
 
-const NO_DISPLAY_PROJECT_PATHS = [LOGIN_URL, USER_REG_URL];
+const NO_DISPLAY_PROJECT_PATHS = [LOGIN_URL, USER_REG_URL, PROJECTS_URL];
 
 export default class Header extends React.PureComponent<Props> {
   render() {
@@ -25,7 +25,7 @@ export default class Header extends React.PureComponent<Props> {
 
         <div className="bottom">
           {this.shouldDisplayProject() && (
-            <NavLink to="/" className="to-projects">
+            <NavLink to={PROJECTS_URL} className="to-projects">
               Projects
             </NavLink>
           )}

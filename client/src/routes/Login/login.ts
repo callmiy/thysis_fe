@@ -4,8 +4,8 @@ import { RouteComponentProps } from "react-router-dom";
 
 import { LoginMutation } from "../../graphql/gen.types";
 import { LoginMutationVariables } from "../../graphql/gen.types";
-import { LoginMutationProps } from "./../../graphql/ops.types";
-import { UserLocalMutationProps } from "./../../state/user.local.mutation";
+import { LoginMutationProps } from "../../graphql/ops.types";
+import { UserLocalMutationProps } from "../../state/user.local.mutation";
 
 export type OwnProps = RouteComponentProps<{}> & LoginMutation;
 

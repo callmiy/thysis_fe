@@ -4,7 +4,7 @@ import { BrowserRouter } from "react-router-dom";
 import { Switch } from "react-router-dom";
 import { Route } from "react-router-dom";
 
-import { ROOT_URL } from "./../../routes/util";
+import { ROOT_URL, PROJECTS_URL } from "./../../routes/util";
 import { TAG_URL } from "./../../routes/util";
 import { SOURCE_URL } from "./../../routes/util";
 import { NEW_QUOTE_URL } from "./../../routes/util";
@@ -61,6 +61,11 @@ const LoginRoute = Loadable({
   loader: () => import("./../../routes/Login")
 });
 
+const ProjectsRoute = Loadable({
+  loading: Loading,
+  loader: () => import("./../../routes/Projects")
+});
+
 export class App extends React.Component<{}> {
   render() {
     return (
@@ -75,6 +80,12 @@ export class App extends React.Component<{}> {
             exact={true}
             path={AUTHOR_ROUTE_URL}
             component={AuthorRoute}
+          />
+
+          <AuthRequired
+            exact={true}
+            path={PROJECTS_URL}
+            component={ProjectsRoute}
           />
 
           <AuthRequired

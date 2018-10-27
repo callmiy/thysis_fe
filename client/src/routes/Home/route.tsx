@@ -17,22 +17,8 @@ import { classes } from "./styles";
 import { Props } from "./home";
 import { State } from "./home";
 import { MenuItem } from "./home";
-import SelectProject from "./SelectProject";
-import { ProjectFragment } from "src/graphql/gen.types";
 
 export class Home extends React.Component<Props, State> {
-  static getDerivedStateFromProps(props: Props, state: State) {
-    if (!state.selectedProject && props.currentProject) {
-      return update(state, {
-        selectedProject: {
-          $set: props.currentProject
-        }
-      });
-    }
-
-    return null;
-  }
-
   state: State = {
     modalOpened: {}
   };
@@ -42,39 +28,6 @@ export class Home extends React.Component<Props, State> {
   }
 
   render() {
-    const { user } = this.props;
-    const { selectedProject } = this.state;
-    return selectedProject ? (
-      this.renderCurrentProject()
-    ) : (
-      <SelectProject
-        user={user}
-        onProjectSelected={this.handleProjectSelected}
-      />
-    );
-  }
-
-  toggleModalOpen = (name: string, open: boolean) => () => {
-    this.setState(s =>
-      update(s, {
-        modalOpened: {
-          $set: {}
-        }
-      })
-    );
-
-    this.setState(s =>
-      update(s, {
-        modalOpened: {
-          [name]: {
-            $set: open
-          }
-        }
-      })
-    );
-  };
-
-  private renderCurrentProject = () => {
     return (
       <div className={`${classes.homeRoot}`}>
         <Header title="Home" />
@@ -186,13 +139,23 @@ export class Home extends React.Component<Props, State> {
         )}
       </div>
     );
-  };
+  }
 
-  private handleProjectSelected = (project: ProjectFragment) => {
+  toggleModalOpen = (name: string, open: boolean) => () => {
     this.setState(s =>
       update(s, {
-        selectedProject: {
-          $set: project
+        modalOpened: {
+          $set: {}
+        }
+      })
+    );
+
+    this.setState(s =>
+      update(s, {
+        modalOpened: {
+          [name]: {
+            $set: open
+          }
         }
       })
     );

@@ -5,7 +5,7 @@ import REFRESH_USER_QUERY from "../../../graphql/refresh-user.query";
 import { RefreshUserQuery } from "../../../graphql/gen.types";
 import { RefreshUserQueryVariables } from "../../../graphql/gen.types";
 import { userLocalMutationGql } from "../../../state/user.local.mutation";
-import { OwnProps } from "./utils";
+import { OwnProps } from "./refresh";
 import { Refresh } from "./component";
 
 const refreshUserGql = graphql<

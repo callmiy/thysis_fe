@@ -1,9 +1,8 @@
 import React from "react";
 import { Redirect } from "react-router-dom";
-import { LOGIN_URL } from "./../../../routes/util";
-import { ROOT_URL } from "./../../../routes/util";
+import { LOGIN_URL, PROJECTS_URL } from "./../../../routes/util";
 
-import { Props } from "./utils";
+import { Props } from "./refresh";
 import Loading from "../../../components/Loading";
 
 export class Refresh extends React.Component<Props, {}> {
@@ -22,9 +21,9 @@ export class Refresh extends React.Component<Props, {}> {
 
       if (
         !currentProject &&
-        (rest.location && rest.location.pathname) !== ROOT_URL
+        (rest.location && rest.location.pathname) !== PROJECTS_URL
       ) {
-        return <Redirect to={ROOT_URL} {...rest} />;
+        return <Redirect to={PROJECTS_URL} {...rest} />;
       }
 
       return <Component {...rest} />;

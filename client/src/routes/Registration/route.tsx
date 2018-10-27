@@ -13,12 +13,12 @@ import isEmpty from "lodash/isEmpty";
 import update from "immutability-helper";
 
 import "./reg.css";
-import { initialState } from "./utils";
-import { Props } from "./utils";
-import { State } from "./utils";
-import { FORM_VALUES_KEY } from "./utils";
-import { FormValues } from "./utils";
-import { setTitle } from "../../routes/util";
+import { initialState } from "./reg";
+import { Props } from "./reg";
+import { State } from "./reg";
+import { FORM_VALUES_KEY } from "./reg";
+import { FormValues } from "./reg";
+import { setTitle, PROJECTS_URL } from "../../routes/util";
 import RootHeader from "../../components/Header";
 
 export class UserReg extends React.Component<Props, State> {
@@ -239,7 +239,7 @@ export class UserReg extends React.Component<Props, State> {
           variables: { user }
         });
 
-        this.props.history.replace("/");
+        this.props.history.replace(PROJECTS_URL);
       }
     } catch (error) {
       formikBag.setSubmitting(false);

@@ -4,9 +4,8 @@ import { RouteProps } from "react-router-dom";
 import { Route } from "react-router-dom";
 
 import Refresh from "./../Refresh";
-import { Props } from "./utils";
-import { LOGIN_URL } from "./../../../routes/util";
-import { ROOT_URL } from "../../../routes/util";
+import { Props } from "./auth-required";
+import { LOGIN_URL, PROJECTS_URL } from "./../../../routes/util";
 
 export const AuthRequired = ({
   component: AuthComponent,
@@ -23,8 +22,8 @@ export const AuthRequired = ({
 
   const render = (childProps: RouteProps) => {
     if (user) {
-      if (!currentProject && rest.path !== ROOT_URL) {
-        return <Redirect to={ROOT_URL} {...data} {...childProps} />;
+      if (!currentProject && rest.path !== PROJECTS_URL) {
+        return <Redirect to={PROJECTS_URL} {...data} {...childProps} />;
       }
 
       return <AuthComponent {...data} {...childProps} />;
