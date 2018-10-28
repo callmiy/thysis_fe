@@ -6,35 +6,25 @@ import { Header } from "semantic-ui-react";
 import { Message } from "semantic-ui-react";
 import { Icon } from "semantic-ui-react";
 import { Form } from "semantic-ui-react";
-// import { Label} from "semantic-ui-react";
 import { Formik } from "formik";
 import { FormikProps } from "formik";
 import { Field } from "formik";
 import { FieldProps } from "formik";
 import { FormikErrors } from "formik";
 import isEmpty from "lodash/isEmpty";
-
-import { Mutation } from "react-apollo";
 import update from "immutability-helper";
 
-import CREATE_AUTHOR_MUTATION from "../../graphql/create-author.mutation";
-import { CreateAuthorFn, CreateAuthorUpdateFn } from "../../graphql/ops.types";
-import { GetAllAuthors as GetAllAuthorsQuery } from "../../graphql/gen.types";
-import { AuthorFrag } from "../../graphql/gen.types";
-import AUTHORS_QUERY from "../../graphql/authors.query";
-import { initialState, initialFormOutput } from "./utils";
-import { Props } from "./utils";
-import { State } from "./utils";
-import { FORM_OUTPUT_KEY } from "./utils";
-import { FormOutputs } from "./utils";
-// import { initialFormAttrs } from "./utils";
+import { initialState, initialFormOutput } from "./new-author-modal";
+import { Props } from "./new-author-modal";
+import { State } from "./new-author-modal";
+import { FORM_OUTPUT_KEY } from "./new-author-modal";
+import { FormValues } from "./new-author-modal";
 
 export class NewAuthorModal extends React.Component<Props, State> {
   state = initialState;
 
   render() {
     const { open, style } = this.props;
-    const { formOutputs } = this.state;
 
     return (
       <Modal
@@ -50,30 +40,20 @@ export class NewAuthorModal extends React.Component<Props, State> {
         <Modal.Content>
           {this.renderErrorOrSuccess()}
 
-          <Mutation
-            mutation={CREATE_AUTHOR_MUTATION}
-            variables={{ author: this.eliminateEmptyFields(formOutputs) }}
-            update={this.writeAuthorToCache}
-          >
-            {createAuthor => {
-              return (
-                <Formik
-                  initialValues={this.state.initialFormOutput}
-                  enableReinitialize={true}
-                  onSubmit={this.submit(createAuthor)}
-                  render={this.renderForm}
-                  validate={this.validate}
-                />
-              );
-            }}
-          </Mutation>
+          <Formik
+            initialValues={this.state.initialFormOutput}
+            enableReinitialize={true}
+            onSubmit={this.submit}
+            render={this.renderForm}
+            validate={this.validate}
+          />
         </Modal.Content>
       </Modal>
     );
   }
 
-  validate = (values: FormOutputs) => {
-    const errors: FormikErrors<FormOutputs> = {};
+  validate = (values: FormValues) => {
+    const errors: FormikErrors<FormValues> = {};
 
     for (const key of Object.keys(values)) {
       const error = this[
@@ -197,14 +177,12 @@ export class NewAuthorModal extends React.Component<Props, State> {
     );
   };
 
-  submit = (createAuthor: CreateAuthorFn) => async (
-    values: FormOutputs,
-    formikBag: FormikProps<FormOutputs>
-  ) => {
+  submit = async (values: FormValues, formikBag: FormikProps<FormValues>) => {
     formikBag.setSubmitting(true);
 
     try {
-      await createAuthor();
+      await (this.props.createAuthor &&
+        this.props.createAuthor(this.eliminateEmptyFields(values)));
 
       this.setState(s =>
         update(s, {
@@ -232,73 +210,13 @@ export class NewAuthorModal extends React.Component<Props, State> {
     }
   };
 
-  writeAuthorToCache: CreateAuthorUpdateFn = (
-    cache,
-    { data: createAuthor }
-  ) => {
-    if (!createAuthor) {
-      return;
-    }
-
-    const author = createAuthor.createAuthor as AuthorFrag;
-
-    if (this.props.onAuthorCreated) {
-      this.props.onAuthorCreated(author);
-    }
-
-    // tslint:disable-next-line:no-any
-    const cacheWithData = cache as any;
-    const rootQuery = cacheWithData.data.data.ROOT_QUERY;
-
-    // no component has already fetched authors so we do not have any in the
-    // cache
-    if (!rootQuery) {
-      return;
-    }
-
-    try {
-      const authorsQuery = cache.readQuery({
-        query: AUTHORS_QUERY
-      }) as GetAllAuthorsQuery;
-
-      const authors = authorsQuery.authors as AuthorFrag[];
-
-      if (authors) {
-        cache.writeQuery({
-          query: AUTHORS_QUERY,
-          data: {
-            authors: [author, ...authors]
-          }
-        });
-      }
-    } catch (error) {
-      //  tslint:disable-next-line:no-console
-      console.log(
-        `
-
-
-      logging starts
-
-
-      error writing new tag to cache:\n`,
-        error,
-        `
-
-      logging ends
-
-
-      `
-      );
-    }
-  };
-
   private renderForm = ({
     handleReset,
     dirty,
     isSubmitting,
     errors,
     handleSubmit
-  }: FormikProps<FormOutputs>) => {
+  }: FormikProps<FormValues>) => {
     const dirtyOrSubmitting = !dirty || isSubmitting;
     const disableSubmit = dirtyOrSubmitting || !isEmpty(errors);
 
@@ -348,7 +266,7 @@ export class NewAuthorModal extends React.Component<Props, State> {
   };
 
   private renderInput = (label: string) => (
-    formProps: FieldProps<FormOutputs>
+    formProps: FieldProps<FormValues>
   ) => {
     const { field, form } = formProps;
     const name = field.name as FORM_OUTPUT_KEY;
@@ -389,7 +307,7 @@ export class NewAuthorModal extends React.Component<Props, State> {
 
   private handleFormControlBlur = (
     name: FORM_OUTPUT_KEY,
-    form: FormikProps<FormOutputs>
+    form: FormikProps<FormValues>
   ) => () => {
     form.setFieldTouched(name, true);
   };
@@ -408,8 +326,8 @@ export class NewAuthorModal extends React.Component<Props, State> {
     });
   };
 
-  private eliminateEmptyFields = (values: FormOutputs) => {
-    const data = {} as FormOutputs;
+  private eliminateEmptyFields = (values: FormValues) => {
+    const data = {} as FormValues;
 
     for (const [k, val] of Object.entries(values)) {
       if (val) {

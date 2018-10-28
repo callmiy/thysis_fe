@@ -47,6 +47,10 @@ export interface GetAllAuthors {
   authors: (GetAllAuthors_authors | null)[] | null;
 }
 
+export interface GetAllAuthorsVariables {
+  author?: GetAuthorsInput | null;
+}
+
 
 /* tslint:disable */
 // This file was automatically generated and should not be edited.
@@ -940,6 +944,11 @@ export enum QuoteFullSearchTable {
 // Get author input
 export interface GetAuthorInput {
   id: string;
+}
+
+// Get authors input
+export interface GetAuthorsInput {
+  projectId?: string | null;
 }
 
 // Input for creating an author

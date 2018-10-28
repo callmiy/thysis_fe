@@ -1,18 +1,30 @@
 import React from "react";
 import { ApolloError } from "apollo-client";
+import { FetchResult } from "react-apollo";
 
-import { AuthorFrag } from "../../graphql/gen.types";
+import { AuthorFrag, CreateAuthor } from "../../graphql/gen.types";
+import { CurrentProjectLocalData } from "../../state/project.local.query";
+import { UserLocalGqlData } from "../../state/auth-user.local.query";
+
+export interface CreateAuthorMutationProps {
+  createAuthor: (
+    variables: FormValues
+  ) => Promise<void | FetchResult<CreateAuthor>>;
+}
 
 type AuthorModalCreatedCb = (tag: AuthorFrag) => void;
 
-export interface Props {
-  open: boolean;
-  dismissModal: () => void;
-  style: React.CSSProperties;
-  onAuthorCreated?: AuthorModalCreatedCb;
-}
+export type OwnProps = CurrentProjectLocalData &
+  UserLocalGqlData & {
+    open: boolean;
+    dismissModal: () => void;
+    style: React.CSSProperties;
+    onAuthorCreated?: AuthorModalCreatedCb;
+  };
 
-export interface FormOutputs {
+export type Props = CreateAuthorMutationProps & OwnProps;
+
+export interface FormValues {
   lastName: string;
   firstName?: string | null;
   middleName?: string | null;
@@ -31,8 +43,8 @@ export const initialFormOutput = {
 };
 
 export interface State {
-  initialFormOutput: FormOutputs;
-  formOutputs: FormOutputs;
+  initialFormOutput: FormValues;
+  formOutputs: FormValues;
   graphQlError?: ApolloError;
   submitting: boolean;
   submitSuccess: boolean;
