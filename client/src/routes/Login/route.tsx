@@ -56,9 +56,11 @@ export class Login extends React.Component<Props, State> {
     const errors: FormikErrors<FormValues> = {};
 
     for (const key of Object.keys(values)) {
-      const error = this[
-        `validate${key.charAt(0).toUpperCase()}${key.slice(1)}`
-      ](values[key]);
+      const error = this.formValuesEmpty(values)
+        ? ""
+        : this[`validate${key.charAt(0).toUpperCase()}${key.slice(1)}`](
+            values[key]
+          );
 
       if (error) {
         errors[key] = error;
@@ -290,6 +292,18 @@ export class Login extends React.Component<Props, State> {
         }
       });
     });
+  };
+
+  private formValuesEmpty = (values: FormValues) => {
+    let result = true;
+
+    for (const value of Object.values(values)) {
+      if (value.trim()) {
+        result = false;
+      }
+    }
+
+    return result;
   };
 }
 

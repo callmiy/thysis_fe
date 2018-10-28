@@ -44,3 +44,6 @@ body,
   padding: 0 !important;
   flex: 1;
   overflow: hidden; }
+
+.icon {
+  color: #5faac7 !important; }

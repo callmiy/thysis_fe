@@ -46,13 +46,13 @@ export const styles = {
     position: "absolute",
     bottom: 15,
     right: 15,
-    color: "#01751c",
+    color: "#5faac7",
     zIndex: 10,
     fontWeight: 900,
     fontSize: "1.3em",
 
     "&:hover": {
-      color: "#01751c"
+      color: "#5faac7"
     }
   },
 
