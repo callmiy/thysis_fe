@@ -1,42 +1,49 @@
 defmodule ThisesWeb.Query.SourceType do
+  @name "SourceTypeFieldsFragment"
+
+  @fragment """
+    fragment #{@name} on SourceType {
+      id
+      name
+    }
+  """
   def all_fields_fragment do
-    name = "SourceTypeFieldsFragment"
-
-    fragment = """
-      fragment #{name} on SourceType {
-        id
-        name
-      }
-    """
-
-    {name, fragment}
+    {@name, @fragment}
   end
 
   def query(:source_type) do
-    {frag_name, frag} = all_fields_fragment()
-
     """
     query SourceType($sourceType: GetSourceTypeInput!) {
       sourceType(sourceType: $sourceType) {
-        ...#{frag_name}
+        ...#{@name}
       }
     }
 
-    #{frag}
+    #{@fragment}
     """
   end
 
   def query(:source_types) do
-    {frag_name, frag} = all_fields_fragment()
-
     """
     query SourceTypes {
       sourceTypes {
-        ...#{frag_name}
+        ...#{@name}
       }
     }
 
-    #{frag}
+    #{@fragment}
+    """
+  end
+
+  def create() do
+    """
+    mutation CreateSourceType($sourceType: CreateSourceTypeInput!) {
+      sourceType(sourceType: $sourceType) {
+        ...#{@name}
+      }
+    }
+
+    #{@fragment}
     """
   end
 end

@@ -1,14 +1,13 @@
 import { RouteComponentProps } from "react-router-dom";
 import { ApolloError } from "apollo-client";
-import { ChildProps } from "react-apollo";
+import { FetchResult, WithApolloClient } from "react-apollo";
 
 import { SourceFullFrag } from "../../graphql/gen.types";
-import { CreateSourceInput } from "../../graphql/gen.types";
 import { SourceTypeFrag } from "../../graphql/gen.types";
 import { AuthorFrag } from "../../graphql/gen.types";
-import { CreateSource as CreateSourceMutation } from "../../graphql/gen.types";
-import { CreateSourceVariables } from "../../graphql/gen.types";
-import { CreateSourceMutationFn } from "../../graphql/ops.types";
+import { CreateSource } from "../../graphql/gen.types";
+import { CreateSourceFn } from "../../graphql/source.mutation";
+import { CurrentProjectLocalData } from "../../state/project.local.query";
 
 export interface FormValues {
   sourceType: SourceTypeFrag | null;
@@ -29,32 +28,30 @@ export const initialFormValues: FormValues = {
 };
 
 export interface State {
-  output: CreateSourceInput;
   source?: SourceFullFrag;
-  formError?: ApolloError;
+  formError?: ApolloError | { message: string };
 }
 
-export const initialState: State = {
-  output: {
-    sourceTypeId: "",
-    topic: "",
-    projectId: ""
-  }
-};
+export const initialState: State = {};
 
-export interface OwnProps extends RouteComponentProps<{}> {
+export interface OwnProps
+  extends RouteComponentProps<{}>,
+    CurrentProjectLocalData,
+    WithApolloClient<{}> {
   open: boolean;
   dismissModal: () => void;
   style?: React.CSSProperties;
   existingSource?: ExistingSourceProps;
-  createSource: CreateSourceMutationFn;
+  createSource: CreateSourceFn;
 }
 
-export type Props = ChildProps<
-  OwnProps,
-  CreateSourceMutation,
-  CreateSourceVariables
->;
+export interface CreateSourceProps {
+  createSource: (
+    values: FormValues
+  ) => Promise<void | FetchResult<CreateSource>>;
+}
+
+export type Props = OwnProps & CreateSourceProps;
 
 export interface ExistingSourceProps {
   onSourceChanged?: OnSourceChangedCb;

@@ -1,12 +1,12 @@
 defmodule Thises.Factory.User do
-  @doc "params"
-  def params(attrs \\ %{})
+  use Thises.Factory
 
-  def params(attrs) when is_list(attrs),
-    do:
-      attrs
-      |> Map.new()
-      |> params()
+  alias Thises.Factory
+
+  @simple_attrs [:name, :email, :_rev]
+
+  @doc false
+  def insert(_), do: nil
 
   def params(%{} = attrs) do
     attrs
@@ -18,7 +18,15 @@ defmodule Thises.Factory.User do
   def stringify(%{} = params),
     do:
       params
-      |> Enum.map(fn {k, v} -> {Atom.to_string(k), v} end)
+      |> Factory.reject_attrs()
+      |> Enum.map(fn
+        {k, v} when k in @simple_attrs ->
+          {Factory.to_camel_key(k), v}
+
+        _ ->
+          nil
+      end)
+      |> Enum.reject(&(&1 == nil))
       |> Enum.into(%{})
 
   defp name(%{name: _val} = params), do: params

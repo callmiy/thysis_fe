@@ -38,6 +38,7 @@ defmodule ThisesWeb.Schema do
     import_fields(:source_mutation)
     import_fields(:user_mutation)
     import_fields(:project_mutation)
+    import_fields(:source_type_mutation)
   end
 
   def context(ctx) do

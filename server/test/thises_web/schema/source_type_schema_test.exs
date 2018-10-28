@@ -1,7 +1,7 @@
 defmodule ThisesWeb.SourceTypeSchemaTest do
   use Thises.DataCase
   alias ThisesWeb.Schema
-  alias ThisesWeb.Query.SourceType, as: SourceTypeQuery
+  alias ThisesWeb.Query.SourceType, as: Query
   alias Thises.SourceType
   alias Thises.Factory.SourceType, as: Factory
   alias Thises.Factory.Registration, as: RegFactory
@@ -22,7 +22,7 @@ defmodule ThisesWeb.SourceTypeSchemaTest do
                 }
               }} =
                Absinthe.run(
-                 SourceTypeQuery.query(:source_type),
+                 Query.query(:source_type),
                  Schema,
                  variables: %{
                    "sourceType" => %{
@@ -49,7 +49,7 @@ defmodule ThisesWeb.SourceTypeSchemaTest do
                 }
               }} =
                Absinthe.run(
-                 SourceTypeQuery.query(:source_type),
+                 Query.query(:source_type),
                  Schema,
                  variables: %{
                    "sourceType" => %{
@@ -79,12 +79,42 @@ defmodule ThisesWeb.SourceTypeSchemaTest do
                   "sourceTypes" => source_types
                 }
               }} =
-               Absinthe.run(SourceTypeQuery.query(:source_types), Schema,
-                 context: %{current_user: user}
-               )
+               Absinthe.run(Query.query(:source_types), Schema, context: %{current_user: user})
 
       assert length(source_types) == 2
       assert %{"id" => ^id, "name" => ^name} = List.last(source_types)
     end
   end
+
+  describe "mutation" do
+    test "create source type succeeds" do
+      user = RegFactory.insert()
+
+      %{"name" => name} =
+        attrs =
+        Factory.params()
+        |> Factory.stringify()
+
+      # user_id = Integer.to_string(user.id)
+
+      variables = %{
+        "sourceType" => attrs
+      }
+
+      assert {:ok,
+              %{
+                data: %{
+                  "sourceType" => %{
+                    "name" => ^name
+                  }
+                }
+              }} =
+               Absinthe.run(Query.create(), Schema,
+                 variables: variables,
+                 context: context(user)
+               )
+    end
+  end
+
+  defp context(user), do: %{current_user: user}
 end

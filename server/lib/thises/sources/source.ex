@@ -63,6 +63,7 @@ defmodule Thises.Sources.Source do
         :user_id
       ])
       |> validate_required([:topic, :source_type_id, :project_id, :user_id])
+      |> assoc_constraint(:source_type)
       |> foreign_key_constraint(:project, name: "sources_project_id_user_id_fk")
 
     {author_ids, changes} = validate_author_ids(changes)

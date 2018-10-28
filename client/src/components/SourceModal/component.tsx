@@ -15,12 +15,8 @@ import { Card } from "semantic-ui-react";
 import update from "immutability-helper";
 import isEmpty from "lodash/isEmpty";
 
-import SOURCES_QUERY from "../../graphql/sources-1.query";
-import { CreateSourceUpdateFn } from "../../graphql/ops.types";
 import { SourceTypeFrag } from "../../graphql/gen.types";
 import { CreateSource_createSource } from "../../graphql/gen.types";
-import { SourceFullFrag } from "../../graphql/gen.types";
-import { Sources1Query } from "../../graphql/gen.types";
 import { AuthorFrag } from "../../graphql/gen.types";
 import { sourceDisplay } from "../../graphql/utils";
 import SourceTypeControlComponent from "../SourceTypeControl";
@@ -68,16 +64,27 @@ export class SourceModal extends React.Component<Props, State> {
   }
 
   submit = async (values: FormValues, formikBag: FormikProps<FormValues>) => {
+    const { createSource } = this.props;
+
+    if (!createSource) {
+      this.setState(s =>
+        update(s, {
+          formError: {
+            $set: { message: "You have not selected a project" }
+          }
+        })
+      );
+
+      return;
+    }
+
     formikBag.setSubmitting(true);
 
     try {
-      const result = await this.props.createSource({
-        variables: {
-          source: this.state.output
-        }
-      });
+      const result = await createSource(values);
 
       formikBag.setSubmitting(false);
+      formikBag.resetForm();
 
       if (!result) {
         return;
@@ -89,17 +96,15 @@ export class SourceModal extends React.Component<Props, State> {
         return;
       }
 
-      const createSource = data.createSource as CreateSource_createSource;
+      const source = data.createSource as CreateSource_createSource;
 
       this.setState(s =>
         update(s, {
           source: {
-            $set: createSource
+            $set: source
           }
         })
       );
-
-      formikBag.resetForm();
     } catch (error) {
       this.setState(s =>
         update(s, {
@@ -117,7 +122,9 @@ export class SourceModal extends React.Component<Props, State> {
     const errors: FormikErrors<FormValues> = {};
 
     for (const key of Object.keys(values)) {
-      const error = this[`validate${key}`](values[key]);
+      const error = this[
+        `validate${key.charAt(0).toUpperCase()}${key.slice(1)}`
+      ](values[key]);
 
       if (error) {
         errors[key] = error;
@@ -363,146 +370,56 @@ export class SourceModal extends React.Component<Props, State> {
     val: undefined | AuthorFrag
   ) => form.setFieldValue(name, val);
 
-  writeSourcesToCache: CreateSourceUpdateFn = (
-    cache,
-    { data: createSource }
-  ) => {
-    if (!createSource) {
-      return;
-    }
-
-    // tslint:disable-next-line:no-any
-    const cacheWithData = cache as any;
-    const rootQuery = cacheWithData.data.data.ROOT_QUERY;
-    // Return if we have not previously fetched sources else apollo errors
-    if (!rootQuery || !rootQuery.quotes) {
-      return;
-    }
-
-    const sourcesQuery = cache.readQuery({
-      query: SOURCES_QUERY
-    }) as Sources1Query;
-
-    const sources = sourcesQuery.sources as SourceFullFrag[];
-
-    cache.writeQuery({
-      query: SOURCES_QUERY,
-      data: {
-        sources: [createSource.createSource, ...sources]
-      }
-    });
-  };
-
   goToSource = (id: string) => async () => {
     await this.setState(initialState);
     this.props.dismissModal();
     this.props.history.push(makeSourceURL(id));
   };
 
-  validatesourceType = (sourceType: SourceTypeFrag | null) => {
+  validateSourceType = (sourceType: SourceTypeFrag | null) => {
     if (!sourceType) {
       return "Select a source type";
     }
 
-    this.setState(prev =>
-      update(prev, {
-        output: {
-          sourceTypeId: {
-            $set: sourceType.id
-          }
-        }
-      })
-    );
-
     return "";
   };
 
-  validateauthors = (authors: AuthorFrag[]) => {
+  validateAuthors = (authors: AuthorFrag[]) => {
     if (!authors || !authors.length) {
       return "Select at least one author";
     }
 
-    this.setState(prev =>
-      update(prev, {
-        output: {
-          authorIds: {
-            $set: authors.map(a => a.id)
-          }
-        }
-      })
-    );
-
     return "";
   };
 
-  validatetopic = (topic: string | null) => {
-    if (!topic) {
+  validateTopic = (topic: string | null) => {
+    if (!topic || !topic.trim()) {
       return "Enter source topic according to author(s)";
     }
 
-    this.setState(prev =>
-      update(prev, {
-        output: {
-          topic: {
-            $set: topic
-          }
-        }
-      })
-    );
+    return "";
+  };
+
+  validateYear = (year: string | null) => {
+    if (!year || !year.trim()) {
+      return "";
+    }
 
     return "";
   };
 
-  validateyear = (year: string | null) => {
-    if (!year) {
+  validatePublication = (publication: string | null) => {
+    if (!publication || !publication.trim()) {
       return "";
     }
-
-    this.setState(prev =>
-      update(prev, {
-        output: {
-          year: {
-            $set: year
-          }
-        }
-      })
-    );
 
     return "";
   };
 
-  validatepublication = (publication: string | null) => {
-    if (!publication) {
+  validateUrl = (url: string | null) => {
+    if (!url || !url.trim()) {
       return "";
     }
-
-    this.setState(prev =>
-      update(prev, {
-        output: {
-          publication: {
-            $set: publication
-          }
-        }
-      })
-    );
-
-    return "";
-  };
-
-  validateurl = (url: string | null) => {
-    if (!url) {
-      return "";
-    }
-
-    this.setState(prev =>
-      update(prev, {
-        output: {
-          url: {
-            $set: url
-          }
-        }
-      })
-    );
 
     return "";
   };

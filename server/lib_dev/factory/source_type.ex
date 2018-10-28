@@ -1,20 +1,13 @@
 defmodule Thises.Factory.SourceType do
+  use Thises.Factory
+
   alias Thises.Accounts.User
   alias Thises.Factory.Registration, as: RegFactory
   alias Thises.SourceTypeApi
+  alias Thises.Factory
+  alias Thises.Factory.User, as: UserFactory
 
-  def insert_list(how_many, attrs \\ %{}) when how_many > 0,
-    do:
-      1..how_many
-      |> Enum.map(fn _ -> insert(attrs) end)
-
-  def insert(attrs \\ %{})
-
-  def insert(attrs) when is_list(attrs),
-    do:
-      attrs
-      |> Map.new()
-      |> insert()
+  @simple_attrs [:name, :user_id]
 
   def insert(attrs) do
     {:ok, source_type} =
@@ -24,14 +17,6 @@ defmodule Thises.Factory.SourceType do
 
     source_type
   end
-
-  def params(attrs \\ %{})
-
-  def params(attrs) when is_list(attrs),
-    do:
-      attrs
-      |> Map.new()
-      |> params()
 
   def params(attrs) do
     attrs
@@ -47,11 +32,18 @@ defmodule Thises.Factory.SourceType do
   def stringify(%{} = attrs),
     do:
       attrs
-      |> Map.delete(:user)
+      |> Factory.reject_attrs()
       |> Enum.map(fn
-        {:user_id, id} -> {"userId", id}
-        {k, v} -> {Atom.to_string(k), v}
+        {:user, v} ->
+          {"user", UserFactory.stringify(v)}
+
+        {k, v} when k in @simple_attrs ->
+          {Factory.to_camel_key(k), v}
+
+        _ ->
+          nil
       end)
+      |> Enum.reject(&(&1 == nil))
       |> Enum.into(%{})
 
   defp name(%{name: _} = attrs), do: attrs

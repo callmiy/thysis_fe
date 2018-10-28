@@ -37,24 +37,6 @@ const userMutation: ClientStateFn<{
 const projectMutation: ClientStateFn<{
   currentProject: ProjectFragment;
 }> = (_, { currentProject }, { cache }) => {
-  // tslint:disable-next-line:no-console
-  console.log(
-    `
-
-
-  logging starts
-
-
-  project mutation current`,
-    currentProject,
-    `
-
-  logging ends
-
-
-  `
-  );
-
   const data = { currentProject };
   cache.writeData({ data });
   storeProject(currentProject);

@@ -101,6 +101,27 @@ export interface CreateProjectMutationVariables {
 // This file was automatically generated and should not be edited.
 
 // ====================================================
+// GraphQL mutation operation: CreateSourceType
+// ====================================================
+
+export interface CreateSourceType_sourceType {
+  id: string;
+  name: string | null;
+}
+
+export interface CreateSourceType {
+  sourceType: CreateSourceType_sourceType | null;  // Create a source type
+}
+
+export interface CreateSourceTypeVariables {
+  sourceType: CreateSourceTypeInput;
+}
+
+
+/* tslint:disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
 // GraphQL mutation operation: LoginMutation
 // ====================================================
 
@@ -964,6 +985,11 @@ export interface CreateAuthorInput {
 export interface CreateProjectInput {
   title: string;
   userId: string;
+}
+
+// Create source type input
+export interface CreateSourceTypeInput {
+  name: string;
 }
 
 // Variables for login in User

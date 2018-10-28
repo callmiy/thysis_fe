@@ -12,6 +12,7 @@ import SourcesModal from "../../components/SourcesModal";
 import NewTagModalForm from "../../components/NewTagModalForm";
 import SourceModal from "../../components/SourceModal";
 import NewAuthorModal from "../../components/NewAuthorModal";
+import NewSourceTypeModal from "../../components/NewSourceTypeModal";
 import styles from "./styles";
 import { classes } from "./styles";
 import { Props } from "./home";
@@ -99,6 +100,14 @@ export class Home extends React.Component<Props, State> {
               <Icon name="user" />
               New Source
             </Menu.Item>
+
+            <Menu.Item
+              style={styles.menuAnchor}
+              onClick={this.toggleModalOpen(MenuItem.NEW_SOURCE_TYPE, true)}
+            >
+              <Icon name="tree" />
+              New Source Type
+            </Menu.Item>
           </Menu>
         </div>
 
@@ -139,6 +148,16 @@ export class Home extends React.Component<Props, State> {
             open={this.state.modalOpened[MenuItem.NEW_SOURCE]}
             dismissModal={this.toggleModalOpen(MenuItem.NEW_SOURCE, false)}
             style={{ marginTop: 0 }}
+            currentProject={currentProject}
+          />
+        )}
+
+        {this.state.modalOpened[MenuItem.NEW_SOURCE_TYPE] && (
+          <NewSourceTypeModal
+            open={this.state.modalOpened[MenuItem.NEW_SOURCE_TYPE]}
+            dismissModal={this.toggleModalOpen(MenuItem.NEW_SOURCE_TYPE, false)}
+            style={{ marginTop: 0 }}
+            user={user}
           />
         )}
       </div>
