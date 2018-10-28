@@ -11,6 +11,7 @@ import { Props, State, initialState } from "./projects";
 import { SemanticOnInputChangeFunc } from "../../utils";
 import { ProjectFragment } from "src/graphql/gen.types";
 import { ROOT_URL } from "../util";
+import Loading from "../../components/Loading";
 
 export class SelectProject extends React.Component<Props, State> {
   state: State = initialState;
@@ -62,7 +63,12 @@ export class SelectProject extends React.Component<Props, State> {
   }
 
   private renderProjects = () => {
-    const { projects } = this.props;
+    const { projects, loading } = this.props;
+
+    if (loading) {
+      return <Loading />;
+    }
+
     if (!projects || !projects.length) {
       return <div>You currently have no project. You may create one now.</div>;
     }

@@ -9,7 +9,7 @@ jss.setup(preset());
 export const styles = {
   modal: {
     overflow: "hidden",
-    marginTop: "-100px"
+    marginTop: "-20px"
   },
 
   content: {
