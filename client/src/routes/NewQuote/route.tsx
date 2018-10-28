@@ -49,19 +49,16 @@ import { makeNewQuoteURL } from "../../routes/util";
 import { styles } from "./styles";
 import { inlineStyle } from "./styles";
 import { classes } from "./styles";
-import { ShouldReUseSource } from "./utils";
-import { FormValues } from "./utils";
-import { NewQuoteState } from "./utils";
-import { NewQuoteProps } from "./utils";
+import { ShouldReUseSource } from "./new-quote";
+import { FormValues } from "./new-quote";
+import { State } from "./new-quote";
+import { Props } from "./new-quote";
 import QuotesSidebar from "./QuotesSidebar";
-import { initialFormValues } from "./utils";
-import { formOutputs } from "./utils";
+import { initialFormValues } from "./new-quote";
+import { formOutputs } from "./new-quote";
 
-export class NewQuote extends React.Component<NewQuoteProps, NewQuoteState> {
-  static getDerivedStateFromProps(
-    nextProps: NewQuoteProps,
-    currentState: NewQuoteState
-  ) {
+export class NewQuote extends React.Component<Props, State> {
+  static getDerivedStateFromProps(nextProps: Props, currentState: State) {
     const { sourceId } = nextProps.match.params;
 
     if (sourceId !== currentState.sourceId) {
@@ -78,7 +75,7 @@ export class NewQuote extends React.Component<NewQuoteProps, NewQuoteState> {
     return null;
   }
 
-  state: NewQuoteState = {
+  state: State = {
     initialFormValues,
     formOutputs,
     selectedTags: []
@@ -114,8 +111,19 @@ export class NewQuote extends React.Component<NewQuoteProps, NewQuoteState> {
           }
         });
       } else {
+        const { currentProject } = this.props;
+
+        if (!currentProject) {
+          return;
+        }
+
         query = this.props.client.query({
-          query: SOURCES_QUERY
+          query: SOURCES_QUERY,
+          variables: {
+            source: {
+              projectId: currentProject ? currentProject.projectId : "0"
+            }
+          }
         });
       }
 
@@ -246,69 +254,46 @@ export class NewQuote extends React.Component<NewQuoteProps, NewQuoteState> {
     );
   };
 
-  writeQuoteToCache: CreateQuoteUpdateFn = (cache, { data: createQuote }) => {
-    if (!createQuote) {
+  writeQuoteToCache: CreateQuoteUpdateFn = async (
+    cache,
+    { data: quoteData }
+  ) => {
+    if (!quoteData || !quoteData.createQuote) {
       return;
     }
 
-    // tslint:disable-next-line:no-any
-    const cacheWithData = cache as any;
-    const rootQuery = cacheWithData.data.data.ROOT_QUERY;
-
-    // no component has already fetched quotes so we do not have any in the
-    // cache
-    if (!rootQuery) {
-      return;
-    }
+    const { createQuote } = quoteData;
 
     const sourceId = this.state.formOutputs.sourceId;
 
-    const variables = {
-      quote: {
-        source: sourceId
+    const query = {
+      query: QUOTES_QUERY,
+      variables: {
+        quote: {
+          source: sourceId
+        }
       }
     };
 
     try {
-      const quotesQuery = cache.readQuery({
-        query: QUOTES_QUERY,
-        variables
-      }) as Quotes1Query;
+      const quotesQuery = cache.readQuery(query) as Quotes1Query;
+      const quotes = quotesQuery.quotes || [];
 
-      const quotes = quotesQuery.quotes;
-
-      if (quotes) {
-        cache.writeQuery({
-          query: QUOTES_QUERY,
-          variables,
-          data: {
-            quotes: [createQuote.createQuote, ...quotes]
-          }
-        });
-      }
+      cache.writeQuery({
+        ...query,
+        data: {
+          quotes: [createQuote, ...quotes]
+        }
+      });
     } catch (error) {
       const message = error.message;
-      const queryErrorStart = `Can't find field quotes({"quote":{"source":"${sourceId}"}}) on object (ROOT_QUERY)`;
+      const queryErrorStart = `Can't find field quotes({"quote":{"source":"${sourceId}"}})`;
 
       if (message.startsWith(queryErrorStart)) {
-        // Will remove when Apollo graphql allows us to check if query exists
-        //  tslint:disable-next-line:no-console
-        return console.log(
-          `
-
-
-                logging starts
-
-
-                error writing new quote to cache:\n`,
-          error.message,
-          `
-
-                logging ends
-
-
-                `
-        );
+        // We read the query to cache for the first time. We don't write to
+        // cache again because this read involves the newly created quote
+        await this.props.client.query(query);
+        return;
       }
 
       throw error;

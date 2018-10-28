@@ -3,7 +3,7 @@ import { Icon } from "semantic-ui-react";
 import { Modal } from "semantic-ui-react";
 import { Button } from "semantic-ui-react";
 
-import { ShouldReUseSource } from "../utils";
+import { ShouldReUseSource } from "../new-quote";
 import { modalStyle } from "./styles";
 import { contentStyle } from "./styles";
 import { messageIconStyle } from "./styles";

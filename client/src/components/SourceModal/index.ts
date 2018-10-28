@@ -66,7 +66,8 @@ const createSourceGraphql = graphql<
                 source: { projectId }
               }
             };
-            const writeToStore = () => {
+
+            try {
               const data = store.readQuery(query) as Sources1Query;
 
               const newData = update(data, {
@@ -79,10 +80,6 @@ const createSourceGraphql = graphql<
                 ...query,
                 data: newData
               });
-            };
-
-            try {
-              writeToStore();
             } catch (error) {
               const msg = error.message.startsWith(
                 `Can't find field sources({"source":{"projectId":"${projectId}"}})`

@@ -3,7 +3,7 @@ import { withApollo } from "react-apollo";
 import { compose } from "react-apollo";
 
 import Quote from "./route";
-import { OwnProps } from "./utils";
+import { OwnProps } from "./quote";
 import { QuoteFull as QuoteFullQuery } from "../../graphql/gen.types";
 import { QuoteFullVariables } from "../../graphql/gen.types";
 import QUOTE_QUERY from "../../graphql/quote-full.query";

@@ -1,6 +1,5 @@
 import { ApolloError } from "apollo-client/errors/ApolloError";
-import { WithApolloClient } from "react-apollo";
-import { GraphqlQueryControls } from "react-apollo";
+import { WithApolloClient, DataValue } from "react-apollo";
 import { ApolloQueryResult } from "apollo-client";
 
 import { TagsMinimal as TagsMinimalQuery } from "../../graphql/gen.types";
@@ -13,6 +12,7 @@ import { DateType } from "./date.component";
 import { SourceFullFrag } from "../../graphql/gen.types";
 import { Sources1Query } from "../../graphql/gen.types";
 import { Source1 as Source1Query } from "../../graphql/gen.types";
+import { CurrentProjectLocalData } from "../../state/project.local.query";
 
 export interface FormValues {
   tags: TagFrag[];
@@ -24,14 +24,18 @@ export interface FormValues {
   extras: string;
 }
 
-export type OwnProps = WithApolloClient<{}> & {
-  sourceId?: string;
-} & TagsMinimalQuery &
-  RouteComponentProps<{ sourceId?: string }>;
+export type OwnProps = WithApolloClient<{}> &
+  RouteComponentProps<{ sourceId?: string }> & {
+    sourceId?: string;
+  };
 
-export type NewQuoteProps = OwnProps & GraphqlQueryControls;
+export type TagsMinimalGqlProps = DataValue<TagsMinimalQuery>;
 
-export interface NewQuoteState {
+export type CurrentProjectGqlProps = DataValue<CurrentProjectLocalData>;
+
+export type Props = OwnProps & TagsMinimalGqlProps & CurrentProjectGqlProps;
+
+export interface State {
   initialFormValues: FormValues;
   formOutputs: CreateQuoteInput;
   sourceId?: string;
