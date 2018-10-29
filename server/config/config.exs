@@ -32,7 +32,9 @@ config :ex_admin,
     ThisesWeb.ExAdmin.Quote,
     ThisesWeb.ExAdmin.Tag,
     ThisesWeb.ExAdmin.QuoteTag,
-    ThisesWeb.ExAdmin.Author
+    ThisesWeb.ExAdmin.Author,
+    ThisesWeb.ExAdmin.Project,
+    ThisesWeb.ExAdmin.User
   ]
 
 config :thises, ThisesWeb.Auth.Guardian,
