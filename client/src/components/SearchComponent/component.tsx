@@ -2,17 +2,19 @@ import React from "react";
 import { Cancelable } from "lodash";
 import debounce from "lodash-es/debounce";
 import update from "immutability-helper";
-import { ApolloQueryResult } from "apollo-client";
 import { Input } from "semantic-ui-react";
 import { List } from "semantic-ui-react";
 import { Message } from "semantic-ui-react";
 import { Icon } from "semantic-ui-react";
 import { NavLink } from "react-router-dom";
 
-import { AllMatchingTexts as AllMatchingTextsQuery } from "../../graphql/gen.types";
+import {
+  AllMatchingTexts,
+  AllMatchingTextsVariables
+} from "../../graphql/gen.types";
 import { AllMatchingTexts_quoteFullSearch } from "../../graphql/gen.types";
-import { State } from "./utils";
-import { SearchQuotesProps } from "./utils";
+import { State } from "./search-component";
+import { Props } from "./search-component";
 import ALL_MATCHING_TEXT_QUERY from "../../graphql/text-search.query";
 import { classes } from "./styles";
 import ErrorBoundary from "../../containers/error-boundary.container";
@@ -31,24 +33,37 @@ const RENDER_ROW_PROPS = {
   AUTHORS: makeAuthorRouteURL
 };
 
-export class SearchQuotesComponent extends React.Component<
-  SearchQuotesProps,
-  State
-> {
-  state: State = {
-    searchText: "",
-    searchLoading: false
-  };
+const initialState = {
+  searchText: "",
+  searchLoading: false
+};
+
+export class SearchQuotesComponent extends React.Component<Props, State> {
+  static getDerivedStateFromProps(nextProps: Props, state: State) {
+    const { searchComponentState } = nextProps;
+    if (searchComponentState && state === initialState) {
+      return searchComponentState;
+    }
+
+    return null;
+  }
+
+  state: State = initialState;
 
   doSearchDebounced: (() => void) & Cancelable;
 
-  constructor(props: SearchQuotesProps) {
+  constructor(props: Props) {
     super(props);
 
     this.doSearchDebounced = debounce(this.doSearch, 700);
   }
 
   componentWillUnmount() {
+    this.props.updateSCSLocal({
+      variables: {
+        searchComponentState: this.state
+      }
+    });
     this.doSearchDebounced.cancel();
   }
 
@@ -148,14 +163,17 @@ export class SearchQuotesComponent extends React.Component<
     );
 
     try {
-      const result = (await this.props.client.query({
+      const result = await this.props.client.query<
+        AllMatchingTexts,
+        AllMatchingTextsVariables
+      >({
         query: ALL_MATCHING_TEXT_QUERY,
         variables: {
           text: {
             text: searchText
           }
         }
-      })) as ApolloQueryResult<AllMatchingTextsQuery>;
+      });
 
       const data = result.data;
 

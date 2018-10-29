@@ -4,6 +4,8 @@ import { ApolloError } from "apollo-client/errors/ApolloError";
 
 import { AllMatchingTextsVariables } from "../../graphql/gen.types";
 import { TextSearchResultFrag } from "../../graphql/gen.types";
+import { SCSLMutateProps } from "../../state/search-component-state.local.mutation";
+import { SCSLQueryProps } from "../../state/search-component-state.local.query";
 
 export interface State {
   searchText: string;
@@ -12,10 +14,11 @@ export interface State {
   searchError?: ApolloError;
 }
 
-export interface OwnProps {
+export interface OwnProps extends SCSLMutateProps {
   ignore?: boolean;
 }
 
-export type SearchQuotesProps = OwnProps &
+export type Props = OwnProps &
   GraphqlQueryControls<AllMatchingTextsVariables> &
-  WithApolloClient<OwnProps>;
+  WithApolloClient<OwnProps> &
+  SCSLQueryProps;

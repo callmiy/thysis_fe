@@ -5,6 +5,7 @@ import { UserFragment } from "./../graphql/gen.types";
 import { ProjectFragment } from "./../graphql/gen.types";
 import { TOKEN_KEY } from "./../constants";
 import { CURRENT_PROJECT_KEY } from "./../constants";
+import { State as SearchComponentState } from "../components/SearchComponent/search-component";
 
 type ClientStateFn<TVariables> = (
   fieldName: string,
@@ -43,6 +44,26 @@ const projectMutation: ClientStateFn<{
   return null;
 };
 
+const searchComponentStateMutation: ClientStateFn<{
+  searchComponentState: SearchComponentState;
+}> = (_, { searchComponentState: d }, { cache }) => {
+  const toSave = {
+    searchText: d.searchText || "",
+    searchLoading: d.searchLoading || false,
+    result: d.result || null,
+    searchError: d.searchError || null,
+    __typename: "SearchComponentState"
+  };
+
+  const data = {
+    searchComponentState: toSave
+  };
+
+  cache.writeData({ data });
+
+  return null;
+};
+
 export const initState = (cache: InMemoryCache) => {
   return withClientState({
     cache,
@@ -50,13 +71,15 @@ export const initState = (cache: InMemoryCache) => {
       Mutation: {
         updateNetworkStatus,
         user: userMutation,
-        currentProject: projectMutation
+        currentProject: projectMutation,
+        searchComponentState: searchComponentStateMutation
       }
     },
     defaults: {
       staleToken: getToken(),
       user: null,
-      currentProject: getProject()
+      currentProject: getProject(),
+      searchComponentState: null
     }
   });
 };
@@ -72,5 +95,5 @@ export const getProject = (): ProjectFragment | null => {
   return project ? JSON.parse(project) : null;
 };
 
-export const storeProject = (project: ProjectFragment) =>
+export const storeProject = async (project: ProjectFragment) =>
   localStorage.setItem(CURRENT_PROJECT_KEY, JSON.stringify(project));

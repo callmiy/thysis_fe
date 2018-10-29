@@ -10,11 +10,14 @@ import { RouteComponentProps } from "react-router-dom";
 
 import { messageIconStyle } from "./styles";
 import { classes } from "./styles";
-import { Quote1Frag } from "../../../graphql/gen.types";
+import {
+  Quote1Frag,
+  Quotes1,
+  Quotes1Variables,
+  TagsMinimal
+} from "../../../graphql/gen.types";
 import { TagFrag } from "../../../graphql/gen.types";
 import { SourceFullFrag } from "../../../graphql/gen.types";
-import { Quotes1QueryClientResult } from "../../../graphql/ops.types";
-import { TagsMinimalQueryClientResult } from "../../../graphql/ops.types";
 import { Sources1QueryClientResult } from "../../../graphql/ops.types";
 import QUOTES_QUERY from "../../../graphql/quotes-1.query";
 import TAGS_QUERY from "../../../graphql/tags-mini.query";
@@ -23,6 +26,7 @@ import { sourceDisplay } from "../../../graphql/utils";
 import SearchQuotesComponent from "../../../components/SearchComponent";
 import { makeSourceURL } from "../../../routes/util";
 import { makeTagURL } from "../../../routes/util";
+import Loading from "../../../components/Loading";
 
 enum ResourceName {
   QUOTES = "quotes",
@@ -36,9 +40,9 @@ interface OwnProps extends RouteComponentProps<{}> {
   className?: string;
 }
 
-type QuotesSidebarProps = WithApolloClient<OwnProps>;
+type Props = WithApolloClient<OwnProps>;
 
-interface QuotesSidebarState {
+interface State {
   quotes?: Quote1Frag[];
   tags?: TagFrag[];
   sources?: SourceFullFrag[];
@@ -46,11 +50,8 @@ interface QuotesSidebarState {
   graphQlError?: ApolloError;
 }
 
-export class QuotesSidebar extends React.Component<
-  QuotesSidebarProps,
-  QuotesSidebarState
-> {
-  state: QuotesSidebarState = {};
+export class QuotesSidebar extends React.Component<Props, State> {
+  state: State = {};
 
   render() {
     const className = this.props.className || "";
@@ -61,8 +62,8 @@ export class QuotesSidebar extends React.Component<
         menu={{
           pointing: true,
           inverted: true,
-          color: "green",
-          tabular: false
+          tabular: false,
+          style: { backgroundColor: "#5faac7" }
         }}
         panes={[
           this.renderQuotes(),
@@ -117,17 +118,18 @@ export class QuotesSidebar extends React.Component<
 
   renderResourcesOr(resourcesName: ResourceName) {
     const { loading, graphQlError } = this.state;
-    const resources = this.state[resourcesName] as Resources;
 
     if (graphQlError) {
       return this.renderError("Quotes");
     }
 
-    if (loading || !resources) {
-      return undefined;
+    const resources = this.state[resourcesName] as Resources;
+
+    if (loading && !resources) {
+      return <Loading />;
     }
 
-    if (resources.length) {
+    if (resources && resources.length) {
       return (
         <List divided={true} relaxed={true} ordered={true}>
           {resources.map(this["render" + resourcesName.slice(0, -1)])}
@@ -236,14 +238,15 @@ export class QuotesSidebar extends React.Component<
     this.fetching();
 
     try {
-      const result = (await this.props.client.query({
+      const result = await this.props.client.query<Quotes1, Quotes1Variables>({
         query: QUOTES_QUERY,
         variables: {
           quote: {
             source: null
           }
         }
-      })) as Quotes1QueryClientResult;
+      });
+
       const data = result.data.quotes as Quote1Frag[];
       this.fetching(ResourceName.QUOTES, data);
     } catch (error) {
@@ -255,9 +258,9 @@ export class QuotesSidebar extends React.Component<
     this.fetching();
 
     try {
-      const result = (await this.props.client.query({
+      const result = await this.props.client.query<TagsMinimal>({
         query: TAGS_QUERY
-      })) as TagsMinimalQueryClientResult;
+      });
 
       const data = result.data.tags as TagFrag[];
       this.fetching(ResourceName.TAGS, data);

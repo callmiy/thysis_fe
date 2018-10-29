@@ -75,8 +75,6 @@ export class Quotes1QueryComponent extends Query<
   Quotes1Variables
 > {}
 
-export type Quotes1QueryClientResult = ApolloQueryResult<Quotes1Query>;
-
 export type CreateAuthorFn = MutationFn<
   CreateAuthorMutation,
   CreateAuthorVariables

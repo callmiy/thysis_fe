@@ -43,6 +43,9 @@
       "_build": true,
       "build": true,
       ".elixir_ls": true
-    }
+    },
+    "cSpell.words": [
+      "SCSL"
+    ]
   }
 }

@@ -10,10 +10,14 @@ import update from "immutability-helper";
 import isEqual from "lodash/isEqual";
 import isEmpty from "lodash/isEmpty";
 
-import { AuthorFrag, SourceTypeFrag } from "../../../graphql/gen.types";
+import {
+  AuthorFrag,
+  SourceTypeFrag,
+  Quotes1,
+  Quotes1Variables
+} from "../../../graphql/gen.types";
 import { Quotes1_quotes } from "../../../graphql/gen.types";
 import QUOTES_QUERY from "../../../graphql/quotes-1.query";
-import { Quotes1QueryClientResult } from "../../../graphql/ops.types";
 import { authorDisplay } from "../../../graphql/utils";
 import { authorFullName } from "../../../graphql/utils";
 import { classes } from "./styles";
@@ -456,14 +460,14 @@ export class SourceAccordion extends React.Component<Props, State> {
         })
       );
 
-      const result = (await this.props.client.query({
+      const result = await this.props.client.query<Quotes1, Quotes1Variables>({
         query: QUOTES_QUERY,
         variables: {
           quote: {
             source: this.props.source.id
           }
         }
-      })) as Quotes1QueryClientResult;
+      });
 
       const quotes = result.data.quotes as Quotes1_quotes[];
 
