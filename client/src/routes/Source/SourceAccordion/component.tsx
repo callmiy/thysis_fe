@@ -9,6 +9,7 @@ import { Input } from "semantic-ui-react";
 import update from "immutability-helper";
 import isEqual from "lodash/isEqual";
 import isEmpty from "lodash/isEmpty";
+import { NavLink } from "react-router-dom";
 
 import {
   AuthorFrag,
@@ -34,6 +35,7 @@ import SourceTypeControlComponent from "../../../components/SourceTypeControl";
 import SOURCE_QUERY from "../../../graphql/source-full.query";
 import SuccessModal from "./SuccessModal";
 import ErrorModal from "./ErrorModal";
+import { makeAuthorRouteURL } from 'src/routes/util';
 
 export class SourceAccordion extends React.Component<Props, State> {
   state: State = initialState;
@@ -177,7 +179,11 @@ export class SourceAccordion extends React.Component<Props, State> {
   renderAuthor = (author: AuthorFrag) => {
     return (
       <div key={author.id}>
-        {authorFullName(author)} ({authorDisplay(author)})
+      <NavLink  to={makeAuthorRouteURL(author.id)} >
+      {authorFullName(author)} ({authorDisplay(author)})
+      </NavLink>
+
+
       </div>
     );
   };
