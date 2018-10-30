@@ -15,19 +15,19 @@ export default class Header extends React.PureComponent<Props> {
       <div className={`${className} app-header`} style={style} color="green">
         <div className="top">
           <div className="title">{title}</div>
-
-          {this.shouldDisplayProject() && (
-            <div className="project-title">
-              {currentProject && currentProject.title}
-            </div>
-          )}
         </div>
 
         <div className="bottom">
           {this.shouldDisplayProject() && (
-            <NavLink to={PROJECTS_URL} className="to-projects">
-              Projects
-            </NavLink>
+            <div>
+              <NavLink to={PROJECTS_URL} className="to-projects">
+                Projects
+              </NavLink>
+
+              <div className="project-title">
+                {currentProject && currentProject.title}
+              </div>
+            </div>
           )}
         </div>
       </div>

@@ -22,6 +22,10 @@
   .app-header .bottom {
     margin-bottom: 5px;
     min-height: 20px; }
+    .app-header .bottom > div {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end; }
   .app-header .to-projects {
     color: #f2f2f2;
     text-decoration: none;
