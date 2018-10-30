@@ -4,8 +4,8 @@ import { FormikErrors } from "formik";
 import { AuthorFrag } from "../../../graphql/gen.types";
 import { authorFullName } from "../../../graphql/utils";
 import { AuthorWithFullName } from "../../../graphql/utils";
-import { Props } from "./utils";
-import { FormOutput } from "./utils";
+import { Props } from "./source-accordion";
+import { FormOutput } from "./source-accordion";
 
 export const config: WithFormikConfig<Props, FormOutput> = {
   handleSubmit: async values => null,

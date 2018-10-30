@@ -1,5 +1,6 @@
 import { withRouter } from "react-router-dom";
 import { graphql, compose } from "react-apollo";
+import { withFormik } from "formik";
 import update from "immutability-helper";
 
 import SourceModal from "./component";
@@ -9,7 +10,12 @@ import CREATE_SOURCE_MUTATION, {
   CreateSourceFn
 } from "../../graphql/source.mutation";
 import SOURCES_QUERY from "../../graphql/sources-1.query";
-import { OwnProps, CreateSourceProps, FormValues } from "./source-modal";
+import {
+  OwnProps,
+  CreateSourceProps,
+  FormValues,
+  formikConfig
+} from "./source-modal";
 
 const createSourceGraphql = graphql<
   OwnProps,
@@ -98,5 +104,6 @@ const createSourceGraphql = graphql<
 
 export default compose(
   withRouter,
-  createSourceGraphql
+  createSourceGraphql,
+  withFormik(formikConfig)
 )(SourceModal);

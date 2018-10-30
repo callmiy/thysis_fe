@@ -1,9 +1,7 @@
 import React from "react";
-import { Formik } from "formik";
 import { FormikProps } from "formik";
 import { Field } from "formik";
 import { FieldProps } from "formik";
-import { FormikErrors } from "formik";
 import { Form } from "semantic-ui-react";
 import { Button } from "semantic-ui-react";
 import { Icon } from "semantic-ui-react";
@@ -15,7 +13,6 @@ import { Card } from "semantic-ui-react";
 import update from "immutability-helper";
 import isEmpty from "lodash/isEmpty";
 
-import { SourceTypeFrag } from "../../graphql/gen.types";
 import { CreateSource_createSource } from "../../graphql/gen.types";
 import { AuthorFrag } from "../../graphql/gen.types";
 import { sourceDisplay } from "../../graphql/utils";
@@ -28,7 +25,6 @@ import { modalStyle } from "./styles";
 import { Props } from "./source-modal";
 import { State } from "./source-modal";
 import { initialState } from "./source-modal";
-import { initialFormValues } from "./source-modal";
 import { FormValues } from "./source-modal";
 
 export class SourceModal extends React.Component<Props, State> {
@@ -50,21 +46,13 @@ export class SourceModal extends React.Component<Props, State> {
 
         <Header icon="user" content="Create quote source" />
 
-        <Modal.Content>
-          <Formik
-            initialValues={initialFormValues}
-            enableReinitialize={true}
-            onSubmit={this.submit}
-            render={this.renderForm}
-            validate={this.validate}
-          />
-        </Modal.Content>
+        <Modal.Content>{this.renderForm()}</Modal.Content>
       </Modal>
     );
   }
 
-  submit = async (values: FormValues, formikBag: FormikProps<FormValues>) => {
-    const { createSource } = this.props;
+  submit = async () => {
+    const { createSource, values, setSubmitting, resetForm } = this.props;
 
     if (!createSource) {
       this.setState(s =>
@@ -78,13 +66,13 @@ export class SourceModal extends React.Component<Props, State> {
       return;
     }
 
-    formikBag.setSubmitting(true);
+    setSubmitting(true);
 
     try {
       const result = await createSource(values);
 
-      formikBag.setSubmitting(false);
-      formikBag.resetForm();
+      setSubmitting(false);
+      resetForm();
 
       if (!result) {
         return;
@@ -114,39 +102,17 @@ export class SourceModal extends React.Component<Props, State> {
         })
       );
 
-      formikBag.setSubmitting(false);
+      setSubmitting(false);
     }
   };
 
-  validate = (values: FormValues) => {
-    const errors: FormikErrors<FormValues> = {};
-
-    for (const key of Object.keys(values)) {
-      const error = this[
-        `validate${key.charAt(0).toUpperCase()}${key.slice(1)}`
-      ](values[key]);
-
-      if (error) {
-        errors[key] = error;
-        return errors;
-      }
-    }
-
-    return errors;
-  };
-
-  renderForm = ({
-    handleReset,
-    dirty,
-    isSubmitting,
-    errors,
-    handleSubmit
-  }: FormikProps<FormValues>) => {
+  renderForm = () => {
+    const { handleReset, dirty, isSubmitting, errors } = this.props;
     const dirtyOrSubmitting = !dirty || isSubmitting;
     const disableSubmit = dirtyOrSubmitting || !isEmpty(errors);
 
     return (
-      <Form className={classes.form} onSubmit={handleSubmit}>
+      <Form className={classes.form} onSubmit={this.submit}>
         <Field name="sourceType" render={this.renderSourceTypeControl} />
         <Field name="authors" render={this.renderAuthorsControl} />
 
@@ -374,54 +340,6 @@ export class SourceModal extends React.Component<Props, State> {
     await this.setState(initialState);
     this.props.dismissModal();
     this.props.history.push(makeSourceURL(id));
-  };
-
-  validateSourceType = (sourceType: SourceTypeFrag | null) => {
-    if (!sourceType) {
-      return "Select a source type";
-    }
-
-    return "";
-  };
-
-  validateAuthors = (authors: AuthorFrag[]) => {
-    if (!authors || !authors.length) {
-      return "Select at least one author";
-    }
-
-    return "";
-  };
-
-  validateTopic = (topic: string | null) => {
-    if (!topic || !topic.trim()) {
-      return "Enter source topic according to author(s)";
-    }
-
-    return "";
-  };
-
-  validateYear = (year: string | null) => {
-    if (!year || !year.trim()) {
-      return "";
-    }
-
-    return "";
-  };
-
-  validatePublication = (publication: string | null) => {
-    if (!publication || !publication.trim()) {
-      return "";
-    }
-
-    return "";
-  };
-
-  validateUrl = (url: string | null) => {
-    if (!url || !url.trim()) {
-      return "";
-    }
-
-    return "";
   };
 }
 

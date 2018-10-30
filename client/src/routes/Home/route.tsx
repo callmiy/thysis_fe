@@ -11,7 +11,7 @@ import TagsModal from "../../components/TagsModal";
 import SourcesModal from "../../components/SourcesModal";
 import NewTagModalForm from "../../components/NewTagModalForm";
 import SourceModal from "../../components/SourceModal";
-import NewAuthorModal from "../../components/NewAuthorModal";
+import HomeNewAuthor from "./HomeNewAuthor";
 import NewSourceTypeModal from "../../components/NewSourceTypeModal";
 import styles from "./styles";
 import { classes } from "./styles";
@@ -30,6 +30,18 @@ export class Home extends React.Component<Props, State> {
 
   render() {
     const { user, currentProject } = this.props;
+    const newAuthorModalProps = {
+      open: this.state.modalOpened[MenuItem.NEW_AUTHOR],
+      dismissModal: this.toggleModalOpen(MenuItem.NEW_AUTHOR, false),
+      style: { marginTop: 0 }
+    };
+
+    const newSourceModalProps = {
+      open: this.state.modalOpened[MenuItem.NEW_SOURCE],
+      dismissModal: this.toggleModalOpen(MenuItem.NEW_SOURCE, false),
+      style: { marginTop: 0 },
+      currentProject
+    };
 
     return (
       <div className={`${classes.homeRoot}`}>
@@ -126,10 +138,9 @@ export class Home extends React.Component<Props, State> {
         )}
 
         {this.state.modalOpened[MenuItem.NEW_AUTHOR] && (
-          <NewAuthorModal
-            open={this.state.modalOpened[MenuItem.NEW_AUTHOR]}
-            dismissModal={this.toggleModalOpen(MenuItem.NEW_AUTHOR, false)}
-            style={{ marginTop: 0 }}
+          <HomeNewAuthor
+            childProps={newAuthorModalProps}
+            newSourceModalProps={newSourceModalProps}
           />
         )}
 
@@ -142,12 +153,7 @@ export class Home extends React.Component<Props, State> {
         )}
 
         {this.state.modalOpened[MenuItem.NEW_SOURCE] && (
-          <SourceModal
-            open={this.state.modalOpened[MenuItem.NEW_SOURCE]}
-            dismissModal={this.toggleModalOpen(MenuItem.NEW_SOURCE, false)}
-            style={{ marginTop: 0 }}
-            currentProject={currentProject}
-          />
+          <SourceModal {...newSourceModalProps} />
         )}
 
         {this.state.modalOpened[MenuItem.NEW_SOURCE_TYPE] && (

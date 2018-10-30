@@ -4,7 +4,7 @@ import { withFormik } from "formik";
 import { graphql } from "react-apollo";
 
 import { config } from "./formik.config";
-import { OwnProps } from "./utils";
+import { OwnProps } from "./source-accordion";
 import UPDATE_SOURCE_MUTATION from "../../../graphql/update-source.mutation";
 import { UpdateSource as UpdateSourceMutation } from "../../../graphql/gen.types";
 import { UpdateSourceVariables } from "../../../graphql/gen.types";
@@ -14,7 +14,7 @@ const updateSourceGraphql = graphql<
   OwnProps,
   UpdateSourceMutation,
   UpdateSourceVariables,
-  {} // graphql props such as data, mutate, loading etc.
+  {}
 >(UPDATE_SOURCE_MUTATION, {
   props: ({ mutate, ownProps }) => {
     return {

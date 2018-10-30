@@ -1,7 +1,7 @@
 import { graphql, compose } from "react-apollo";
 import update from "immutability-helper";
 
-import NewAuthorModal from "./component";
+import NewAuthorForm from "./component";
 import {
   CreateAuthorMutationProps,
   OwnProps,
@@ -155,4 +155,4 @@ export default compose(
   userLocalGql,
   createAuthorGql,
   authorUpdateGql
-)(NewAuthorModal);
+)(NewAuthorForm);

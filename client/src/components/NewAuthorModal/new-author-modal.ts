@@ -31,6 +31,7 @@ export interface OwnProps {
   style: React.CSSProperties;
   onAuthorCreated?: AuthorModalCreatedCb;
   author?: AuthorFrag;
+  modal?: boolean;
 }
 
 export type Props = CurrProjLocalGqlProps &
@@ -55,7 +56,6 @@ export interface State {
   initialFormOutput: FormValues;
   graphQlError?: ApolloError;
   submitting: boolean;
-  submitSuccess: boolean;
   author?: AuthorFrag;
   open?: boolean;
 }
@@ -67,6 +67,5 @@ export const initialState: State = {
     [FORM_OUTPUT_KEY.MIDDLE_NAMES]: ""
   },
   graphQlError: undefined,
-  submitting: false,
-  submitSuccess: false
+  submitting: false
 };

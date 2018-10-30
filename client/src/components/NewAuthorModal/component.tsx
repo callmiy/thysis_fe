@@ -41,10 +41,10 @@ export class NewAuthorModal extends React.Component<Props, State> {
   }
 
   render() {
-    const { style } = this.props;
+    const { style, modal } = this.props;
     const { open } = this.state;
 
-    return (
+    return modal ? (
       <Modal
         style={{ ...(style || {}), ...{ background: "#fff" } }}
         basic={true}
@@ -55,20 +55,28 @@ export class NewAuthorModal extends React.Component<Props, State> {
       >
         <Header icon="user" content="Author Details" />
 
-        <Modal.Content>
-          {this.renderErrorOrSuccess()}
-
-          <Formik
-            initialValues={this.state.initialFormOutput}
-            enableReinitialize={true}
-            onSubmit={this.submit}
-            render={this.renderForm}
-            validate={this.validate}
-          />
-        </Modal.Content>
+        <Modal.Content>{this.renderContent()}</Modal.Content>
       </Modal>
+    ) : (
+      this.renderContent()
     );
   }
+
+  renderContent = () => {
+    return (
+      <div>
+        {this.renderError()}
+
+        <Formik
+          initialValues={this.state.initialFormOutput}
+          enableReinitialize={true}
+          onSubmit={this.submit}
+          render={this.renderForm}
+          validate={this.validate}
+        />
+      </div>
+    );
+  };
 
   validate = (values: FormValues) => {
     const errors: FormikErrors<FormValues> = {};
@@ -115,8 +123,8 @@ export class NewAuthorModal extends React.Component<Props, State> {
     return "";
   };
 
-  renderErrorOrSuccess = () => {
-    const { graphQlError, submitSuccess } = this.state;
+  renderError = () => {
+    const { graphQlError } = this.state;
 
     if (graphQlError) {
       return (
@@ -129,16 +137,6 @@ export class NewAuthorModal extends React.Component<Props, State> {
             {graphQlError.message}
           </Message.Content>
         </Message>
-      );
-    }
-
-    if (submitSuccess) {
-      return (
-        <Message
-          error={true}
-          success={true}
-          content="Author created successfully!"
-        />
       );
     }
 
@@ -157,28 +155,30 @@ export class NewAuthorModal extends React.Component<Props, State> {
 
     try {
       if (!author) {
-        await (createAuthor && createAuthor(this.eliminateEmptyFields(values)));
+        const authorCreated = await (createAuthor &&
+          createAuthor(this.eliminateEmptyFields(values)));
 
-        this.setState(s =>
-          update(s, {
-            submitSuccess: {
-              $set: true
-            }
-          })
-        );
+        if (
+          authorCreated &&
+          authorCreated.data &&
+          authorCreated.data.createAuthor &&
+          onAuthorCreated
+        ) {
+          onAuthorCreated(authorCreated.data.createAuthor);
+        }
 
         formikBag.resetForm();
       } else {
-        const result = await (authorUpdate &&
+        const authorUpdated = await (authorUpdate &&
           authorUpdate(author.id, this.prepFormForUpdate(values)));
 
         if (
-          result &&
-          result.data &&
-          result.data.updateAuthor &&
+          authorUpdated &&
+          authorUpdated.data &&
+          authorUpdated.data.updateAuthor &&
           onAuthorCreated
         ) {
-          onAuthorCreated(result.data.updateAuthor);
+          onAuthorCreated(authorUpdated.data.updateAuthor);
         }
 
         this.setState(s =>
@@ -320,10 +320,6 @@ export class NewAuthorModal extends React.Component<Props, State> {
       return update(s, {
         graphQlError: {
           $set: undefined
-        },
-
-        submitSuccess: {
-          $set: false
         }
       });
     });

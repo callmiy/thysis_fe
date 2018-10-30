@@ -23,19 +23,19 @@ import { authorDisplay } from "../../../graphql/utils";
 import { authorFullName } from "../../../graphql/utils";
 import { classes } from "./styles";
 import { accordionContentStyle } from "./styles";
-import { initialState } from "./utils";
-import { DetailAction } from "./utils";
-import { AccordionTitleClickCb } from "./utils";
-import { Props } from "./utils";
-import { State } from "./utils";
-import { SourceAccordionIndex } from "./utils";
+import { initialState } from "./source-accordion";
+import { DetailAction } from "./source-accordion";
+import { AccordionTitleClickCb } from "./source-accordion";
+import { Props } from "./source-accordion";
+import { State } from "./source-accordion";
+import { SourceAccordionIndex } from "./source-accordion";
 import renderQuote from "../../../components/QuoteItem";
 import AuthorsControlComponent from "../../../components/AuthorsControl";
 import SourceTypeControlComponent from "../../../components/SourceTypeControl";
 import SOURCE_QUERY from "../../../graphql/source-full.query";
 import SuccessModal from "./SuccessModal";
 import ErrorModal from "./ErrorModal";
-import { makeAuthorRouteURL } from 'src/routes/util';
+import { makeAuthorRouteURL } from "src/routes/util";
 
 export class SourceAccordion extends React.Component<Props, State> {
   state: State = initialState;
@@ -179,11 +179,9 @@ export class SourceAccordion extends React.Component<Props, State> {
   renderAuthor = (author: AuthorFrag) => {
     return (
       <div key={author.id}>
-      <NavLink  to={makeAuthorRouteURL(author.id)} >
-      {authorFullName(author)} ({authorDisplay(author)})
-      </NavLink>
-
-
+        <NavLink to={makeAuthorRouteURL(author.id)}>
+          {authorFullName(author)} ({authorDisplay(author)})
+        </NavLink>
       </div>
     );
   };
