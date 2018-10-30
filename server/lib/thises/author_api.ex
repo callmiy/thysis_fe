@@ -78,7 +78,7 @@ defmodule Thises.AuthorApi do
           {k, nil}
 
         {k, v} when k in [:first_name, :middle_name, :last_name] ->
-          {k, String.capitalize(v)}
+          {k, v |> String.trim() |> String.capitalize()}
 
         others ->
           others

@@ -329,9 +329,13 @@ export class NewAuthorModal extends React.Component<Props, State> {
   private eliminateEmptyFields = (values: FormValues) => {
     const data = {} as FormValues;
 
-    for (const [k, val] of Object.entries(values)) {
+    for (let [k, val] of Object.entries(values)) {
       if (val) {
-        data[k] = val;
+        val = val.trim();
+
+        if (val) {
+          data[k] = val;
+        }
       }
     }
 
