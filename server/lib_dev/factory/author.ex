@@ -12,7 +12,8 @@ defmodule Thises.Factory.Author do
     :first_name,
     :middle_name,
     :project_id,
-    :user_id
+    :user_id,
+    :id
   ]
 
   def insert(attrs) do

@@ -55,8 +55,15 @@ defmodule Thises.AuthorApi do
       ** (Ecto.NoResultsError)
 
   """
+
   def get!(id), do: Repo.get!(Author, id)
   def get(id), do: Repo.get(Author, id)
+
+  def get(author_id, user_id) do
+    Author
+    |> where([a], a.id == ^author_id and a.user_id == ^user_id)
+    |> Repo.one()
+  end
 
   @doc """
   Creates a author.

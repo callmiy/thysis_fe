@@ -44,6 +44,15 @@ defmodule ThisesWeb.Schema.Author do
     field(:middle_name, :string)
   end
 
+  @desc "Input for updating an author"
+  input_object :update_author_input do
+    @desc "ID of author to be updated"
+    field(:id, :id |> non_null())
+    field(:first_name, :string)
+    field(:last_name, :string)
+    field(:middle_name, :string)
+  end
+
   @desc "Queries allowed on the Author object"
   object :author_query do
     @desc "Get a single author"
@@ -66,6 +75,13 @@ defmodule ThisesWeb.Schema.Author do
       arg(:author, non_null(:create_author_input))
 
       resolve(&Resolver.create_author/3)
+    end
+
+    @desc "Update an author"
+    field :update_author, type: :author do
+      arg(:author, non_null(:update_author_input))
+
+      resolve(&Resolver.update/3)
     end
   end
 end

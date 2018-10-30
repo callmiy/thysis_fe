@@ -57,4 +57,18 @@ defmodule ThisesWeb.Query.Author do
     #{frag}
     """
   end
+
+  def update() do
+    {frag_name, frag} = all_fields_fragment()
+
+    """
+    mutation UpdateAuthor($author: UpdateAuthorInput!) {
+      updateAuthor(author: $author) {
+        ...#{frag_name}
+      }
+    }
+
+    #{frag}
+    """
+  end
 end

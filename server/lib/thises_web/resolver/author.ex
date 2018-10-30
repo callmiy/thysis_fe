@@ -41,4 +41,22 @@ defmodule ThisesWeb.Resolver.Author do
   end
 
   def create_author(_, _, _), do: Resolver.unauthorized()
+
+  def update(_, %{author: %{id: id} = input}, %{context: %{current_user: user}}) do
+    case Api.get(id, user.id) do
+      nil ->
+        {:error, "Unknown author"}
+
+      author ->
+        case Api.update_(author, Map.delete(input, :id)) do
+          {:ok, author} ->
+            {:ok, author}
+
+          {:error, changeset} ->
+            {:error, Resolver.changeset_errors_to_string(changeset)}
+        end
+    end
+  end
+
+  def update(_, _, _), do: Resolver.unauthorized()
 end
