@@ -15,12 +15,12 @@ import { CreateTagFn, CreateTagUpdateFn } from "../../graphql/ops.types";
 import { TagsMinimal as TagsMinimalQuery } from "../../graphql/gen.types";
 import { TagFrag } from "../../graphql/gen.types";
 import TAGS_QUERY from "../../graphql/tags-mini.query";
-import { initalState } from "./utils";
+import { initialState } from "./utils";
 import { Props } from "./utils";
 import { State } from "./utils";
 
 export class NewTagModalForm extends React.Component<Props, State> {
-  state = initalState;
+  state = initialState;
 
   render() {
     const { open, style } = this.props;
@@ -210,7 +210,7 @@ export class NewTagModalForm extends React.Component<Props, State> {
     }
   };
 
-  writeTagsToCache: CreateTagUpdateFn = (cache, { data: createTag }) => {
+  writeTagsToCache: CreateTagUpdateFn = async (cache, { data: createTag }) => {
     if (!createTag) {
       return;
     }
@@ -219,51 +219,32 @@ export class NewTagModalForm extends React.Component<Props, State> {
 
     if (this.props.onTagCreated) {
       this.props.onTagCreated(tag);
-    }
-
-    // tslint:disable-next-line:no-any
-    const cacheWithData = cache as any;
-    const rootQuery = cacheWithData.data.data.ROOT_QUERY;
-
-    // no component has already fetched tags so we do not have any in the
-    // cache
-    if (!rootQuery) {
+    } else {
       return;
     }
 
+    const query = {
+      query: TAGS_QUERY
+    };
+
     try {
-      const tagsQuery = cache.readQuery({
-        query: TAGS_QUERY
-      }) as TagsMinimalQuery;
+      const tagsQuery = cache.readQuery(query) as TagsMinimalQuery;
 
-      const tags = tagsQuery.tags as TagFrag[];
-
-      if (tags) {
-        cache.writeQuery({
-          query: TAGS_QUERY,
-          data: {
-            tags: [tag, ...tags]
+      cache.writeQuery({
+        ...query,
+        data: update(tagsQuery, {
+          tags: {
+            $push: [tag]
           }
-        });
-      }
+        })
+      });
     } catch (error) {
-      //  tslint:disable-next-line:no-console
-      console.log(
-        `
+      if (error.message.startsWith("Can't find field tags on object")) {
+        await cache.readQuery(query);
+        return;
+      }
 
-
-      logging starts
-
-
-      error writing new tag to cache:\n`,
-        error,
-        `
-
-      logging ends
-
-
-      `
-      );
+      throw error;
     }
   };
 }

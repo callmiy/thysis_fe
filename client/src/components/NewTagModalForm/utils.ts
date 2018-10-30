@@ -20,7 +20,7 @@ export interface State {
   submitSuccess: boolean;
 }
 
-export const initalState: State = {
+export const initialState: State = {
   text: "",
   formError: undefined,
   submitting: false,

@@ -24,7 +24,7 @@ import { UpdateSourceVariables } from "./gen.types";
 import { UserRegMutation } from "./gen.types";
 import { UserRegMutationVariables } from "./gen.types";
 import { LoginMutation } from "./gen.types";
-import { LoginMutationVariables } from "./gen.types";
+import { LoginMutationVariables, GetAllAuthorsVariables } from "./gen.types";
 
 export class TagsMinimalQueryComponent extends Query<TagsMinimalQuery, {}> {}
 export type TagsMinimalQueryResult = QueryResult<TagsMinimalQuery>;
@@ -33,7 +33,7 @@ export type TagsMinimalQueryClientResult = ApolloQueryResult<TagsMinimalQuery>;
 // tslint:disable-next-line:max-classes-per-file
 export class GetAllAuthorsQueryComponent extends Query<
   GetAllAuthorsQuery,
-  {}
+  GetAllAuthorsVariables
 > {}
 
 // tslint:disable-next-line:max-classes-per-file

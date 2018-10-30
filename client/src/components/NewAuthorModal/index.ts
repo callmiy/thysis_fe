@@ -12,7 +12,8 @@ import AUTHORS_QUERY from "../../graphql/authors.query";
 import {
   CreateAuthor,
   CreateAuthorVariables,
-  GetAllAuthors
+  GetAllAuthors,
+  GetAllAuthorsVariables
 } from "../../graphql/gen.types";
 import { CreateAuthorFn } from "src/graphql/ops.types";
 
@@ -54,14 +55,19 @@ const createAuthorGql = graphql<
                 return;
               }
 
-              const data = client.readQuery({
+              const query = {
                 query: AUTHORS_QUERY,
                 variables: {
                   author: {
                     projectId
                   }
                 }
-              }) as GetAllAuthors;
+              };
+
+              const data = client.readQuery<
+                GetAllAuthors,
+                GetAllAuthorsVariables
+              >(query);
 
               const newData = update(data, {
                 authors: {
@@ -69,16 +75,7 @@ const createAuthorGql = graphql<
                 }
               });
 
-              client.writeQuery({
-                query: AUTHORS_QUERY,
-                variables: {
-                  author: {
-                    projectId
-                  }
-                },
-
-                data: newData
-              });
+              client.writeQuery({ ...query, data: newData });
             }
           })
       };

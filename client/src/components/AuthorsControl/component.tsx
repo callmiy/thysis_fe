@@ -1,25 +1,38 @@
 import Select from "react-select";
 import React from "react";
 
-import { AuthorFrag } from "../../graphql/gen.types";
 import { GetAllAuthorsQueryComponent } from "../../graphql/ops.types";
 import AUTHORS_QUERY from "../../graphql/authors.query";
 import { authorFullName } from "../../graphql/utils";
 import { AuthorWithFullName } from "../../graphql/utils";
+import { Props } from "./authors-control";
+import Loading from "../Loading";
 
-interface AuthorsControlProps {
-  selectError: boolean;
-  handleChange: (value: AuthorFrag[]) => void;
-  handleBlur: () => void;
-  name: string;
-  value: AuthorFrag[];
-}
-
-export class AuthorsControl extends React.Component<AuthorsControlProps> {
+export class AuthorsControl extends React.Component<Props> {
   render() {
-    const { name, value, selectError, handleChange, handleBlur } = this.props;
+    const {
+      name,
+      value,
+      selectError,
+      handleChange,
+      handleBlur,
+      loading,
+      currentProject
+    } = this.props;
+
+    if (loading || !currentProject) {
+      return <Loading />;
+    }
+
     return (
-      <GetAllAuthorsQueryComponent query={AUTHORS_QUERY}>
+      <GetAllAuthorsQueryComponent
+        query={AUTHORS_QUERY}
+        variables={{
+          author: {
+            projectId: currentProject.projectId
+          }
+        }}
+      >
         {({ data }) => {
           let authors = [] as AuthorWithFullName[];
 
