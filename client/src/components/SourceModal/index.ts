@@ -1,5 +1,5 @@
 import { withRouter } from "react-router-dom";
-import { graphql, compose, withApollo } from "react-apollo";
+import { graphql, compose } from "react-apollo";
 import update from "immutability-helper";
 
 import SourceModal from "./component";
@@ -88,9 +88,6 @@ const createSourceGraphql = graphql<
               if (!msg) {
                 throw error;
               }
-
-              // if we did not fetch sources previously, then we do it now
-              props.ownProps.client.query(query);
             }
           }
         });
@@ -101,6 +98,5 @@ const createSourceGraphql = graphql<
 
 export default compose(
   withRouter,
-  withApollo,
   createSourceGraphql
 )(SourceModal);

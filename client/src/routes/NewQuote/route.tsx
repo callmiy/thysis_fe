@@ -19,7 +19,11 @@ import update from "immutability-helper";
 import { Mutation } from "react-apollo";
 import { NavLink } from "react-router-dom";
 
-import { Quotes1 as Quotes1Query } from "../../graphql/gen.types";
+import {
+  Quotes1 as Quotes1Query,
+  Sources1QueryVariables,
+  Source1Variables
+} from "../../graphql/gen.types";
 import { TagFrag } from "../../graphql/gen.types";
 import { SourceFullFrag } from "../../graphql/gen.types";
 import { Sources1Query } from "../../graphql/gen.types";
@@ -102,7 +106,7 @@ export class NewQuote extends React.Component<Props, State> {
     try {
       let query;
       if (this.state.sourceId) {
-        query = this.props.client.query({
+        query = this.props.client.query<Source1Query, Source1Variables>({
           query: SOURCE_QUERY,
           variables: {
             source: {
@@ -117,7 +121,7 @@ export class NewQuote extends React.Component<Props, State> {
           return;
         }
 
-        query = this.props.client.query({
+        query = this.props.client.query<Sources1Query, Sources1QueryVariables>({
           query: SOURCES_QUERY,
           variables: {
             source: {
@@ -290,9 +294,6 @@ export class NewQuote extends React.Component<Props, State> {
       const queryErrorStart = `Can't find field quotes({"quote":{"source":"${sourceId}"}})`;
 
       if (message.startsWith(queryErrorStart)) {
-        // We read the query to cache for the first time. We don't write to
-        // cache again because this read involves the newly created quote
-        await this.props.client.query(query);
         return;
       }
 

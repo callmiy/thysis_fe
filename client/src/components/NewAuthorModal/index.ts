@@ -44,14 +44,14 @@ const createAuthorGql = graphql<
               }
             },
 
-            update: (client, { data: newAuthorData }) => {
+            update: async (store, { data: newAuthorData }) => {
               if (!newAuthorData) {
                 return;
               }
 
               const newAuthor = newAuthorData.createAuthor;
 
-              if (newAuthor) {
+              if (!newAuthor) {
                 return;
               }
 
@@ -64,18 +64,28 @@ const createAuthorGql = graphql<
                 }
               };
 
-              const data = client.readQuery<
-                GetAllAuthors,
-                GetAllAuthorsVariables
-              >(query);
+              try {
+                const data = store.readQuery<
+                  GetAllAuthors,
+                  GetAllAuthorsVariables
+                >(query);
 
-              const newData = update(data, {
-                authors: {
-                  $push: [newAuthor]
+                const newData = update(data, {
+                  authors: {
+                    $push: [newAuthor]
+                  }
+                });
+
+                store.writeQuery({ ...query, data: newData });
+              } catch (error) {
+                const msg = `Can't find field authors({"author":{"projectId":"${projectId}"}})`;
+
+                if (error.message.startsWith(msg)) {
+                  return;
                 }
-              });
 
-              client.writeQuery({ ...query, data: newData });
+                throw error;
+              }
             }
           })
       };

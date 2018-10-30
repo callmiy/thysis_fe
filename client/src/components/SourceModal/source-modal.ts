@@ -1,6 +1,6 @@
 import { RouteComponentProps } from "react-router-dom";
 import { ApolloError } from "apollo-client";
-import { FetchResult, WithApolloClient } from "react-apollo";
+import { FetchResult } from "react-apollo";
 
 import { SourceFullFrag } from "../../graphql/gen.types";
 import { SourceTypeFrag } from "../../graphql/gen.types";
@@ -36,8 +36,7 @@ export const initialState: State = {};
 
 export interface OwnProps
   extends RouteComponentProps<{}>,
-    CurrentProjectLocalData,
-    WithApolloClient<{}> {
+    CurrentProjectLocalData {
   open: boolean;
   dismissModal: () => void;
   style?: React.CSSProperties;

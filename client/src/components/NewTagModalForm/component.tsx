@@ -228,7 +228,7 @@ export class NewTagModalForm extends React.Component<Props, State> {
     };
 
     try {
-      const tagsQuery = cache.readQuery(query) as TagsMinimalQuery;
+      const tagsQuery = cache.readQuery<TagsMinimalQuery>(query);
 
       cache.writeQuery({
         ...query,
@@ -240,7 +240,6 @@ export class NewTagModalForm extends React.Component<Props, State> {
       });
     } catch (error) {
       if (error.message.startsWith("Can't find field tags on object")) {
-        await cache.readQuery(query);
         return;
       }
 
