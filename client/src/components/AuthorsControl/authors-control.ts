@@ -1,6 +1,5 @@
 import { AuthorFrag } from "../../graphql/gen.types";
-import { CurrentProjectLocalData } from "../../state/project.local.query";
-import { DataValue } from "react-apollo";
+import { CurrProjLocalGqlProps } from "../../state/project.local.query";
 
 export interface OwnProps {
   selectError: boolean;
@@ -10,6 +9,4 @@ export interface OwnProps {
   value: AuthorFrag[];
 }
 
-export type CurrentProjGqlProps = DataValue<CurrentProjectLocalData>;
-
-export type Props = OwnProps & CurrentProjGqlProps;
+export type Props = OwnProps & CurrProjLocalGqlProps;

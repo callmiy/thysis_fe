@@ -2,9 +2,13 @@ import React from "react";
 import { ApolloError } from "apollo-client";
 import { FetchResult } from "react-apollo";
 
-import { AuthorFrag, CreateAuthor } from "../../graphql/gen.types";
-import { CurrentProjectLocalData } from "../../state/project.local.query";
-import { UserLocalGqlData } from "../../state/auth-user.local.query";
+import {
+  AuthorFrag,
+  CreateAuthor,
+  AuthorUpdate
+} from "../../graphql/gen.types";
+import { CurrProjLocalGqlProps } from "../../state/project.local.query";
+import { UserLocalGqlProps } from "../../state/auth-user.local.query";
 
 export interface CreateAuthorMutationProps {
   createAuthor: (
@@ -14,15 +18,26 @@ export interface CreateAuthorMutationProps {
 
 type AuthorModalCreatedCb = (tag: AuthorFrag) => void;
 
-export type OwnProps = CurrentProjectLocalData &
-  UserLocalGqlData & {
-    open: boolean;
-    dismissModal: () => void;
-    style: React.CSSProperties;
-    onAuthorCreated?: AuthorModalCreatedCb;
-  };
+export interface AuthorUpdateGqlProps {
+  authorUpdate: (
+    id: string,
+    form: FormValues
+  ) => Promise<void | FetchResult<AuthorUpdate>>;
+}
 
-export type Props = CreateAuthorMutationProps & OwnProps;
+export interface OwnProps {
+  open: boolean;
+  dismissModal: () => void;
+  style: React.CSSProperties;
+  onAuthorCreated?: AuthorModalCreatedCb;
+  author?: AuthorFrag;
+}
+
+export type Props = CurrProjLocalGqlProps &
+  UserLocalGqlProps &
+  CreateAuthorMutationProps &
+  AuthorUpdateGqlProps &
+  OwnProps;
 
 export interface FormValues {
   lastName: string;
@@ -36,23 +51,21 @@ export enum FORM_OUTPUT_KEY {
   MIDDLE_NAMES = "middleName"
 }
 
-export const initialFormOutput = {
-  [FORM_OUTPUT_KEY.LAST_NAME]: "",
-  [FORM_OUTPUT_KEY.FIRST_NAME]: "",
-  [FORM_OUTPUT_KEY.MIDDLE_NAMES]: ""
-};
-
 export interface State {
   initialFormOutput: FormValues;
-  formOutputs: FormValues;
   graphQlError?: ApolloError;
   submitting: boolean;
   submitSuccess: boolean;
+  author?: AuthorFrag;
+  open?: boolean;
 }
 
 export const initialState: State = {
-  formOutputs: initialFormOutput,
-  initialFormOutput,
+  initialFormOutput: {
+    [FORM_OUTPUT_KEY.LAST_NAME]: "",
+    [FORM_OUTPUT_KEY.FIRST_NAME]: "",
+    [FORM_OUTPUT_KEY.MIDDLE_NAMES]: ""
+  },
   graphQlError: undefined,
   submitting: false,
   submitSuccess: false

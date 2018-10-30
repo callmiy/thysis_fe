@@ -4,7 +4,10 @@ import { WithApolloClient } from "react-apollo";
 import { ChildProps } from "react-apollo";
 import { GraphqlQueryControls } from "react-apollo";
 
-import { AuthorRouteQuery } from "../../graphql/gen.types";
+import {
+  AuthorRouteQuery,
+  AuthorRouteQuery_author
+} from "../../graphql/gen.types";
 import { AuthorRouteQueryVariables } from "../../graphql/gen.types";
 
 export type OwnProps = RouteComponentProps<{ id: string }> & AuthorRouteQuery;
@@ -18,4 +21,6 @@ export type Props = GraphqlQueryControls<AuthorRouteQueryVariables> &
 
 export interface State {
   fetchAuthorsError?: ApolloError;
+  isEditing: boolean;
+  author?: AuthorRouteQuery_author;
 }

@@ -1,6 +1,7 @@
 import gql from "graphql-tag";
 import { projectFragment } from "../graphql/project.fragment";
 import { ProjectFragment } from "src/graphql/gen.types";
+import { DataValue } from "react-apollo";
 
 export const currentProjectLocalQuery = gql`
   query CurrentProjectLocalQuery {
@@ -17,3 +18,5 @@ export default currentProjectLocalQuery;
 export interface CurrentProjectLocalData {
   currentProject?: ProjectFragment | null;
 }
+
+export type CurrProjLocalGqlProps = DataValue<CurrentProjectLocalData>;

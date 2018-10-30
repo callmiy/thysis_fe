@@ -3,7 +3,7 @@ import { withApollo } from "react-apollo";
 import { compose } from "react-apollo";
 
 import Author from "./route";
-import { OwnProps } from "./utils";
+import { OwnProps } from "./author";
 import { AuthorRouteQuery } from "../../graphql/gen.types";
 import { AuthorRouteQueryVariables } from "../../graphql/gen.types";
 import AUTHORS_QUERY from "../../graphql/author-route.query";

@@ -1,11 +1,12 @@
-import { graphql } from "react-apollo";
+import { graphql, compose } from "react-apollo";
 import update from "immutability-helper";
 
 import NewAuthorModal from "./component";
 import {
   CreateAuthorMutationProps,
   OwnProps,
-  FormValues
+  FormValues,
+  AuthorUpdateGqlProps
 } from "./new-author-modal";
 import CREATE_AUTHOR_MUTATION from "../../graphql/create-author.mutation";
 import AUTHORS_QUERY from "../../graphql/authors.query";
@@ -13,12 +14,25 @@ import {
   CreateAuthor,
   CreateAuthorVariables,
   GetAllAuthors,
-  GetAllAuthorsVariables
+  GetAllAuthorsVariables,
+  AuthorUpdate,
+  AuthorUpdateVariables
 } from "../../graphql/gen.types";
 import { CreateAuthorFn } from "src/graphql/ops.types";
+import USER_LOCAL_QUERY, {
+  UserLocalGqlData,
+  UserLocalGqlProps
+} from "../../state/auth-user.local.query";
+import CURRENT_PROJECT_QUERY, {
+  CurrentProjectLocalData,
+  CurrProjLocalGqlProps
+} from "../../state/project.local.query";
+import AUTHOR_UPDATE_MUTATION, {
+  AuthorUpdateFn
+} from "../../graphql/update-author.mutation";
 
 const createAuthorGql = graphql<
-  OwnProps,
+  OwnProps & UserLocalGqlData & CurrentProjectLocalData,
   CreateAuthor,
   CreateAuthorVariables,
   CreateAuthorMutationProps | undefined
@@ -95,4 +109,50 @@ const createAuthorGql = graphql<
   }
 });
 
-export default createAuthorGql(NewAuthorModal);
+const userLocalGql = graphql<
+  OwnProps,
+  UserLocalGqlData,
+  {},
+  UserLocalGqlProps | undefined
+>(USER_LOCAL_QUERY, {
+  props: props => props.data
+});
+
+const currentProLocalGql = graphql<
+  OwnProps,
+  CurrentProjectLocalData,
+  {},
+  CurrProjLocalGqlProps | undefined
+>(CURRENT_PROJECT_QUERY, {
+  props: props => props.data
+});
+
+const authorUpdateGql = graphql<
+  OwnProps,
+  AuthorUpdate,
+  AuthorUpdateVariables,
+  AuthorUpdateGqlProps | void
+>(AUTHOR_UPDATE_MUTATION, {
+  props: props => {
+    const mutate = props.mutate as AuthorUpdateFn;
+
+    return {
+      authorUpdate: (id: string, form: FormValues) =>
+        mutate({
+          variables: {
+            author: {
+              id,
+              ...form
+            }
+          }
+        })
+    };
+  }
+});
+
+export default compose(
+  currentProLocalGql,
+  userLocalGql,
+  createAuthorGql,
+  authorUpdateGql
+)(NewAuthorModal);

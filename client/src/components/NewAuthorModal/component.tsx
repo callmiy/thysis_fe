@@ -14,17 +14,35 @@ import { FormikErrors } from "formik";
 import isEmpty from "lodash/isEmpty";
 import update from "immutability-helper";
 
-import { initialState, initialFormOutput } from "./new-author-modal";
-import { Props } from "./new-author-modal";
-import { State } from "./new-author-modal";
-import { FORM_OUTPUT_KEY } from "./new-author-modal";
-import { FormValues } from "./new-author-modal";
+import {
+  FORM_OUTPUT_KEY,
+  Props,
+  State,
+  FormValues,
+  initialState
+} from "./new-author-modal";
+import { AuthorFrag } from "../../graphql/gen.types";
 
 export class NewAuthorModal extends React.Component<Props, State> {
-  state = initialState;
+  constructor(props: Props) {
+    super(props);
+
+    this.state = update(initialState, {
+      open: {
+        $set: props.open
+      }
+    });
+
+    const { author } = props;
+
+    if (author) {
+      this.initStateWithAuthor(author);
+    }
+  }
 
   render() {
-    const { open, style } = this.props;
+    const { style } = this.props;
+    const { open } = this.state;
 
     return (
       <Modal
@@ -78,16 +96,6 @@ export class NewAuthorModal extends React.Component<Props, State> {
       return "Too short";
     }
 
-    this.setState(prev =>
-      update(prev, {
-        formOutputs: {
-          lastName: {
-            $set: lastName
-          }
-        }
-      })
-    );
-
     return "";
   };
 
@@ -96,16 +104,6 @@ export class NewAuthorModal extends React.Component<Props, State> {
       return "";
     }
 
-    this.setState(prev =>
-      update(prev, {
-        formOutputs: {
-          firstName: {
-            $set: firstName
-          }
-        }
-      })
-    );
-
     return "";
   };
 
@@ -113,16 +111,6 @@ export class NewAuthorModal extends React.Component<Props, State> {
     if (!middleName) {
       return "";
     }
-
-    this.setState(prev =>
-      update(prev, {
-        formOutputs: {
-          middleName: {
-            $set: middleName
-          }
-        }
-      })
-    );
 
     return "";
   };
@@ -162,41 +150,45 @@ export class NewAuthorModal extends React.Component<Props, State> {
     this.props.dismissModal();
   };
 
-  handleChange = (key: FORM_OUTPUT_KEY) => (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const { target } = e;
-    this.setState(s =>
-      update(s, {
-        formOutputs: {
-          [key]: {
-            $set: target.value
-          }
-        }
-      })
-    );
-  };
-
   submit = async (values: FormValues, formikBag: FormikProps<FormValues>) => {
     formikBag.setSubmitting(true);
+    const { author } = this.state;
+    const { onAuthorCreated, createAuthor, authorUpdate } = this.props;
 
     try {
-      await (this.props.createAuthor &&
-        this.props.createAuthor(this.eliminateEmptyFields(values)));
+      if (!author) {
+        await (createAuthor && createAuthor(this.eliminateEmptyFields(values)));
 
-      this.setState(s =>
-        update(s, {
-          submitSuccess: {
-            $set: true
-          },
+        this.setState(s =>
+          update(s, {
+            submitSuccess: {
+              $set: true
+            }
+          })
+        );
 
-          formOutputs: {
-            $set: initialFormOutput
-          }
-        })
-      );
+        formikBag.resetForm();
+      } else {
+        const result = await (authorUpdate &&
+          authorUpdate(author.id, this.prepFormForUpdate(values)));
 
-      formikBag.resetForm();
+        if (
+          result &&
+          result.data &&
+          result.data.updateAuthor &&
+          onAuthorCreated
+        ) {
+          onAuthorCreated(result.data.updateAuthor);
+        }
+
+        this.setState(s =>
+          update(s, {
+            open: {
+              $set: false
+            }
+          })
+        );
+      }
     } catch (error) {
       formikBag.setSubmitting(false);
 
@@ -248,6 +240,17 @@ export class NewAuthorModal extends React.Component<Props, State> {
             disabled={dirtyOrSubmitting}
           >
             <Icon name="remove" /> Dismiss
+          </Button>
+
+          <Button
+            id="author-modal-reset"
+            color="olive"
+            basic={true}
+            disabled={dirtyOrSubmitting}
+            onClick={handleReset}
+            type="button"
+          >
+            <Icon name="repeat" /> Reset
           </Button>
 
           <Button
@@ -340,6 +343,34 @@ export class NewAuthorModal extends React.Component<Props, State> {
     }
 
     return data;
+  };
+
+  private prepFormForUpdate = (values: FormValues) => {
+    const data = {} as FormValues;
+
+    for (const [k, val] of Object.entries(values)) {
+      data[k] = val.trim() || null;
+    }
+
+    return data;
+  };
+
+  private initStateWithAuthor = (author: AuthorFrag) => {
+    const start = {} as FormValues;
+    Object.values(FORM_OUTPUT_KEY).forEach(k => {
+      const val = author[k];
+      start[k] = val || "";
+    });
+
+    this.state = update(this.state, {
+      initialFormOutput: {
+        $set: start
+      },
+
+      author: {
+        $set: author
+      }
+    });
   };
 }
 

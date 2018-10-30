@@ -606,6 +606,29 @@ export interface AllMatchingTextsVariables {
 // This file was automatically generated and should not be edited.
 
 // ====================================================
+// GraphQL mutation operation: AuthorUpdate
+// ====================================================
+
+export interface AuthorUpdate_updateAuthor {
+  id: string;
+  firstName: string | null;
+  lastName: string;
+  middleName: string | null;
+}
+
+export interface AuthorUpdate {
+  updateAuthor: AuthorUpdate_updateAuthor | null;  // Update an author
+}
+
+export interface AuthorUpdateVariables {
+  author: UpdateAuthorInput;
+}
+
+
+/* tslint:disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
 // GraphQL mutation operation: UpdateSource
 // ====================================================
 
@@ -1066,6 +1089,14 @@ export interface CreateTagInput {
 //  types
 export interface QuoteFullSearchInput {
   text: string;
+}
+
+// Input for updating an author
+export interface UpdateAuthorInput {
+  firstName?: string | null;
+  id: string;
+  lastName?: string | null;
+  middleName?: string | null;
 }
 
 // Inputs for updating a source

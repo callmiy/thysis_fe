@@ -130,8 +130,6 @@ export class Home extends React.Component<Props, State> {
             open={this.state.modalOpened[MenuItem.NEW_AUTHOR]}
             dismissModal={this.toggleModalOpen(MenuItem.NEW_AUTHOR, false)}
             style={{ marginTop: 0 }}
-            currentProject={currentProject}
-            user={user}
           />
         )}
 

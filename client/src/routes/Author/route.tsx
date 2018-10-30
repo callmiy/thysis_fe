@@ -1,21 +1,39 @@
 import * as React from "react";
-import { Dimmer } from "semantic-ui-react";
-import { Loader } from "semantic-ui-react";
+import { Icon } from "semantic-ui-react";
 import { List } from "semantic-ui-react";
 import { NavLink } from "react-router-dom";
+import update from "immutability-helper";
 
 import "./author-route.css";
 import RootHeader from "../../components/Header";
+import NewAuthorModal from "../../components/NewAuthorModal";
 import { setTitle } from "../../routes/util";
 import { makeSourceURL } from "../../routes/util";
-import { Props } from "./utils";
-import { State } from "./utils";
+import { Props } from "./author";
+import { State } from "./author";
 import MobileBottomMenu from "../../components/mobile-bottom-menu.component";
 import { MenuItem } from "../../components/mobile-bottom-menu.component";
-import { AuthorRouteFrag_sources } from "../../graphql/gen.types";
+import { AuthorRouteFrag_sources, AuthorFrag } from "../../graphql/gen.types";
 import { authorFullName } from "../../graphql/utils";
+import Loading from "src/components/Loading";
 
 export class Author extends React.Component<Props, State> {
+  static getDerivedStateFromProps(nextProps: Props, currentState: State) {
+    const { author } = nextProps;
+
+    if (author && !currentState.author) {
+      return update(currentState, {
+        author: {
+          $set: author
+        }
+      });
+    }
+
+    return null;
+  }
+
+  state: State = { isEditing: false };
+
   componentDidMount() {
     setTitle("Author");
   }
@@ -37,23 +55,37 @@ export class Author extends React.Component<Props, State> {
   }
 
   renderMainOrLoading = () => {
-    const { loading, author, error } = this.props;
+    const { loading, error } = this.props;
+    const { author } = this.state;
 
     if (error) {
       return <div className="">{error.message}</div>;
     }
 
     if (loading || !author) {
-      return (
-        <Dimmer inverted={true} className="" active={true}>
-          <Loader size="medium">Loading..</Loader>
-        </Dimmer>
-      );
+      return <Loading />;
     }
 
     return (
       <div className="main">
-        <div className="text">{authorFullName(author)}</div>
+        {this.state.isEditing && (
+          <NewAuthorModal
+            author={author}
+            open={this.state.isEditing}
+            dismissModal={this.toggleEditModal}
+            onAuthorCreated={this.authorEdited}
+          />
+        )}
+
+        <div className="text">
+          <span className="author-full-name">{authorFullName(author)}</span>
+
+          <Icon
+            name="edit"
+            className="edit-author-icon"
+            onClick={this.toggleEditModal}
+          />
+        </div>
 
         <hr />
 
@@ -75,6 +107,36 @@ export class Author extends React.Component<Props, State> {
       <List.Item as={NavLink} to={makeSourceURL(id)} key={id} className="text">
         <div>{display}</div>
       </List.Item>
+    );
+  };
+
+  private toggleEditModal = () => {
+    this.setState(s =>
+      update(s, {
+        isEditing: {
+          $set: !this.state.isEditing
+        }
+      })
+    );
+  };
+
+  private authorEdited = ({ firstName, middleName, lastName }: AuthorFrag) => {
+    this.setState(s =>
+      update(s, {
+        author: {
+          firstName: {
+            $set: firstName
+          },
+
+          middleName: {
+            $set: middleName
+          },
+
+          lastName: {
+            $set: lastName
+          }
+        }
+      })
     );
   };
 }

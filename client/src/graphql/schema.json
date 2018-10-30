@@ -1615,6 +1615,61 @@
         },
         {
           "possibleTypes": null,
+          "name": "UpdateAuthorInput",
+          "kind": "INPUT_OBJECT",
+          "interfaces": null,
+          "inputFields": [
+            {
+              "type": {
+                "ofType": null,
+                "name": "String",
+                "kind": "SCALAR"
+              },
+              "name": "firstName",
+              "description": null,
+              "defaultValue": null
+            },
+            {
+              "type": {
+                "ofType": {
+                  "ofType": null,
+                  "name": "ID",
+                  "kind": "SCALAR"
+                },
+                "name": null,
+                "kind": "NON_NULL"
+              },
+              "name": "id",
+              "description": "ID of author to be updated",
+              "defaultValue": null
+            },
+            {
+              "type": {
+                "ofType": null,
+                "name": "String",
+                "kind": "SCALAR"
+              },
+              "name": "lastName",
+              "description": null,
+              "defaultValue": null
+            },
+            {
+              "type": {
+                "ofType": null,
+                "name": "String",
+                "kind": "SCALAR"
+              },
+              "name": "middleName",
+              "description": null,
+              "defaultValue": null
+            }
+          ],
+          "fields": null,
+          "enumValues": null,
+          "description": "Input for updating an author"
+        },
+        {
+          "possibleTypes": null,
           "name": "QuoteFullSearchResultRow",
           "kind": "OBJECT",
           "interfaces": [],
@@ -2671,6 +2726,33 @@
                     "kind": "NON_NULL"
                   },
                   "name": "user",
+                  "description": null,
+                  "defaultValue": null
+                }
+              ]
+            },
+            {
+              "type": {
+                "ofType": null,
+                "name": "Author",
+                "kind": "OBJECT"
+              },
+              "name": "updateAuthor",
+              "isDeprecated": false,
+              "description": "Update an author",
+              "deprecationReason": null,
+              "args": [
+                {
+                  "type": {
+                    "ofType": {
+                      "ofType": null,
+                      "name": "UpdateAuthorInput",
+                      "kind": "INPUT_OBJECT"
+                    },
+                    "name": null,
+                    "kind": "NON_NULL"
+                  },
+                  "name": "author",
                   "description": null,
                   "defaultValue": null
                 }

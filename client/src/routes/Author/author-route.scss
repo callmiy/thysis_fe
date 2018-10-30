@@ -21,4 +21,14 @@
   .text {
     display: block;
   }
+
+  .edit-author-icon {
+    cursor: pointer;
+    margin-left: 10px;
+  }
+
+  .author-full-name {
+    font-weight: 900;
+    font-size: 1.5em;
+  }
 }

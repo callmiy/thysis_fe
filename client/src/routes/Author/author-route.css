@@ -15,3 +15,9 @@
     color: #012d58; }
   .author-route .text {
     display: block; }
+  .author-route .edit-author-icon {
+    cursor: pointer;
+    margin-left: 10px; }
+  .author-route .author-full-name {
+    font-weight: 900;
+    font-size: 1.5em; }
