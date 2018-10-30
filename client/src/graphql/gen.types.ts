@@ -86,6 +86,7 @@ export interface CreateProjectMutation_project {
   _id: string;
   projectId: string;
   title: string;
+  insertedAt: any;
 }
 
 export interface CreateProjectMutation {
@@ -154,6 +155,7 @@ export interface ProjectsQuery_projects {
   _id: string;
   projectId: string;
   title: string;
+  insertedAt: any;
 }
 
 export interface ProjectsQuery {
@@ -711,6 +713,7 @@ export interface ProjectFragment {
   _id: string;
   projectId: string;
   title: string;
+  insertedAt: any;
 }
 
 

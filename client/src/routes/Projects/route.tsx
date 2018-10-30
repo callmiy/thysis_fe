@@ -7,11 +7,12 @@ import update from "immutability-helper";
 
 import "./projects.css";
 import Header from "../../components/Header";
+import Loading from "../../components/Loading";
 import { Props, State, initialState } from "./projects";
 import { SemanticOnInputChangeFunc } from "../../utils";
 import { ProjectFragment } from "src/graphql/gen.types";
 import { ROOT_URL } from "../util";
-import Loading from "../../components/Loading";
+import { format as dateFormat } from "date-fns";
 
 export class SelectProject extends React.Component<Props, State> {
   state: State = initialState;
@@ -93,7 +94,8 @@ export class SelectProject extends React.Component<Props, State> {
           {project.title}
         </List.Header>
         <List.Description className="project-row__desc">
-          Updated 10 mins ago
+          Created: &nbsp; &nbsp;{" "}
+          {dateFormat(project.insertedAt, "eeee, M/MMM/yyyy HH:mm a")}
         </List.Description>
       </List.Content>
     </List.Item>

@@ -23,3 +23,6 @@
 
 .select-project .main > .form > .message {
   color: red; }
+
+.select-project .main .project-row {
+  cursor: pointer; }

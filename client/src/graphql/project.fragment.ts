@@ -5,6 +5,7 @@ export const projectFragment = gql`
     _id
     projectId
     title
+    insertedAt
   }
 `;
 
