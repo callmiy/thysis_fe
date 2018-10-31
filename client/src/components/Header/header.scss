@@ -12,8 +12,25 @@
 
   .top {
     display: flex;
-    justify-content: space-between;
     margin-bottom: 10px;
+    align-items: center;
+
+    & > .sidebar-trigger {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 40px;
+      min-height: 40px;
+      margin-right: 8px;
+
+      &:hover {
+        background-color: darken($color: $app-color, $amount: 8%);
+      }
+
+      & > .icon {
+        color: white !important;
+      }
+    }
   }
 
   .title {

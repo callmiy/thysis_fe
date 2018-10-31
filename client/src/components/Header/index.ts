@@ -1,4 +1,4 @@
-import { graphql } from "react-apollo";
+import { graphql, compose } from "react-apollo";
 import { withRouter } from "react-router-dom";
 
 import Header from "./component";
@@ -16,4 +16,7 @@ const currentProjectGql = graphql<
   props: props => props.data
 });
 
-export default withRouter(currentProjectGql(Header));
+export default compose(
+  withRouter,
+  currentProjectGql
+)(Header);

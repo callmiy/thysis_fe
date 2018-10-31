@@ -6,6 +6,7 @@ import { Route } from "react-router-dom";
 import Refresh from "./../Refresh";
 import { Props } from "./auth-required";
 import { LOGIN_URL, PROJECTS_URL } from "./../../../routes/util";
+import AppSideBar from "../AppSidebar";
 
 export const AuthRequired = ({
   component: AuthComponent,
@@ -26,16 +27,22 @@ export const AuthRequired = ({
         return <Redirect to={PROJECTS_URL} {...data} {...childProps} />;
       }
 
-      return <AuthComponent {...data} {...childProps} />;
+      return (
+        <AppSideBar>
+          <AuthComponent {...data} {...childProps} />
+        </AppSideBar>
+      );
     }
 
     if (staleToken) {
       return (
-        <Refresh
-          componentProps={{ component: AuthComponent, ...childProps }}
-          jwt={staleToken}
-          currentProject={currentProject}
-        />
+        <AppSideBar>
+          <Refresh
+            componentProps={{ component: AuthComponent, ...childProps }}
+            jwt={staleToken}
+            currentProject={currentProject}
+          />
+        </AppSideBar>
       );
     }
 

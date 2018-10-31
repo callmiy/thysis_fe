@@ -9,3 +9,11 @@ export type Props = RouteComponentProps<{}> &
     style?: React.CSSProperties;
     className?: string;
   };
+
+export interface State {
+  showingSidebar: boolean;
+}
+
+export const INITIAL_STATE: State = {
+  showingSidebar: false
+};

@@ -4,17 +4,21 @@ import { BrowserRouter } from "react-router-dom";
 import { Switch } from "react-router-dom";
 import { Route } from "react-router-dom";
 
-import { ROOT_URL, PROJECTS_URL } from "./../../routes/util";
-import { TAG_URL } from "./../../routes/util";
-import { SOURCE_URL } from "./../../routes/util";
-import { NEW_QUOTE_URL } from "./../../routes/util";
-import { SEARCH_QUOTES_URL } from "./../../routes/util";
-import { QUOTE_URL } from "./../../routes/util";
-import { AUTHOR_ROUTE_URL } from "./../../routes/util";
-import { USER_REG_URL } from "./../../routes/util";
-import { LOGIN_URL } from "./../../routes/util";
+import {
+  ROOT_URL,
+  PROJECTS_URL,
+  TAG_URL,
+  SOURCE_URL,
+  NEW_QUOTE_URL,
+  SEARCH_QUOTES_URL,
+  QUOTE_URL,
+  AUTHOR_ROUTE_URL,
+  USER_REG_URL,
+  LOGIN_URL
+} from "./../../routes/util";
 import Loading from "./../../components/Loading";
 import AuthRequired from "./AuthRequired";
+import { AppSidebarContext, State } from "./app.utils";
 
 const Home = Loadable({
   loading: Loading,
@@ -66,49 +70,67 @@ const ProjectsRoute = Loadable({
   loader: () => import("./../../routes/Projects")
 });
 
-export class App extends React.Component<{}> {
+export class App extends React.Component<{}, State> {
+  state: State = { showSidebar: false };
+
   render() {
     return (
-      <BrowserRouter>
-        <Switch>
-          <Route exact={true} path={USER_REG_URL} component={UserRegRoute} />
-          <Route exact={true} path={LOGIN_URL} component={LoginRoute} />
-          <AuthRequired exact={true} path={SOURCE_URL} component={Source} />
-          <AuthRequired exact={true} path={QUOTE_URL} component={Quote} />
+      <AppSidebarContext.Provider
+        value={{
+          showSidebar: this.state.showSidebar,
+          onShowClicked: this.handleShowSidebar,
+          onHide: this.handleHideSidebar
+        }}
+      >
+        <BrowserRouter>
+          <Switch>
+            <Route exact={true} path={USER_REG_URL} component={UserRegRoute} />
+            <Route exact={true} path={LOGIN_URL} component={LoginRoute} />
+            <AuthRequired exact={true} path={SOURCE_URL} component={Source} />
+            <AuthRequired exact={true} path={QUOTE_URL} component={Quote} />
 
-          <AuthRequired
-            exact={true}
-            path={AUTHOR_ROUTE_URL}
-            component={AuthorRoute}
-          />
+            <AuthRequired
+              exact={true}
+              path={AUTHOR_ROUTE_URL}
+              component={AuthorRoute}
+            />
 
-          <AuthRequired
-            exact={true}
-            path={PROJECTS_URL}
-            component={ProjectsRoute}
-          />
+            <AuthRequired
+              exact={true}
+              path={PROJECTS_URL}
+              component={ProjectsRoute}
+            />
 
-          <AuthRequired
-            exact={true}
-            path={SEARCH_QUOTES_URL}
-            component={SearchQuotes}
-          />
+            <AuthRequired
+              exact={true}
+              path={SEARCH_QUOTES_URL}
+              component={SearchQuotes}
+            />
 
-          <AuthRequired exact={true} path={TAG_URL} component={TagDetail} />
+            <AuthRequired exact={true} path={TAG_URL} component={TagDetail} />
 
-          <AuthRequired
-            exact={true}
-            path={NEW_QUOTE_URL}
-            component={NewQuote}
-          />
+            <AuthRequired
+              exact={true}
+              path={NEW_QUOTE_URL}
+              component={NewQuote}
+            />
 
-          <AuthRequired exact={true} path={ROOT_URL} component={Home} />
+            <AuthRequired exact={true} path={ROOT_URL} component={Home} />
 
-          <Route component={LoginRoute} />
-        </Switch>
-      </BrowserRouter>
+            <Route component={LoginRoute} />
+          </Switch>
+        </BrowserRouter>
+      </AppSidebarContext.Provider>
     );
   }
+
+  private handleShowSidebar = () => {
+    this.setState(s => ({ ...s, showSidebar: true }));
+  };
+
+  private handleHideSidebar = () => {
+    this.setState(s => ({ ...s, showSidebar: false }));
+  };
 }
 
 export default App;
