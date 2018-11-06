@@ -27,11 +27,26 @@ const updateNetworkStatus: ClientStateFn<{
 };
 
 const userMutation: ClientStateFn<{
-  user: UserFragment;
+  user: UserFragment | null;
 }> = (_, { user }, { cache }) => {
   const data = { user, staleToken: null };
-  cache.writeData({ data });
-  storeToken(user.jwt);
+
+  if (user) {
+    cache.writeData({ data });
+    storeToken(user.jwt);
+  } else {
+    // MEANS WE HAVE LOGGED OUT
+    cache.writeData({
+      data: {
+        ...data,
+        currentProject: null,
+        searchComponentState: null
+      }
+    });
+    clearToken();
+    clearProject();
+  }
+
   return null;
 };
 
@@ -40,7 +55,9 @@ const projectMutation: ClientStateFn<{
 }> = (_, { currentProject }, { cache }) => {
   const data = { currentProject };
   cache.writeData({ data });
+
   storeProject(currentProject);
+
   return null;
 };
 
@@ -87,13 +104,16 @@ export const initState = (cache: InMemoryCache) => {
 export const getToken = (): string | null =>
   localStorage.getItem(TOKEN_KEY) || null;
 
-export const storeToken = (token: string) =>
-  localStorage.setItem(TOKEN_KEY, token);
+const storeToken = (token: string) => localStorage.setItem(TOKEN_KEY, token);
 
-export const getProject = (): ProjectFragment | null => {
+const clearToken = () => localStorage.removeItem(TOKEN_KEY);
+
+const getProject = (): ProjectFragment | null => {
   const project = localStorage.getItem(CURRENT_PROJECT_KEY);
   return project ? JSON.parse(project) : null;
 };
 
-export const storeProject = async (project: ProjectFragment) =>
+const storeProject = async (project: ProjectFragment) =>
   localStorage.setItem(CURRENT_PROJECT_KEY, JSON.stringify(project));
+
+const clearProject = () => localStorage.removeItem(CURRENT_PROJECT_KEY);

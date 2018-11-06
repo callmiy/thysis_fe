@@ -2,30 +2,29 @@ import * as React from "react";
 import { Sidebar, Segment, Menu, Icon } from "semantic-ui-react";
 import { NavLink } from "react-router-dom";
 
-import { Props } from "./app-sidebar.utils";
-import { AppSidebarContext, SideBarContextProps } from "../app.utils";
+import { Props } from "./app-sidebar";
+import { AppSidebarConsumer, SideBarContextProps } from "../app.utils";
 import {
   ROOT_URL,
   PROJECTS_URL,
   SEARCH_QUOTES_URL,
-  makeNewQuoteURL
+  makeNewQuoteURL,
+  NEW_QUOTE_URL,
+  LOGIN_URL,
+  USER_REG_URL
 } from "../../../routes/util";
 
+const AUTH_URLS = [LOGIN_URL, USER_REG_URL];
 export class AppSideBar extends React.Component<Props> {
   render() {
-    return (
-      <AppSidebarContext.Consumer>
-        {this.renderSideBar}
-      </AppSidebarContext.Consumer>
-    );
+    return <AppSidebarConsumer>{this.renderSideBar}</AppSidebarConsumer>;
   }
 
   private renderSideBar = (context: SideBarContextProps) => {
     const {
-      match: { path }
+      match: { path },
+      currentProject
     } = this.props;
-
-    const newQuoteUrl = makeNewQuoteURL();
 
     return (
       <Sidebar.Pushable as={Segment}>
@@ -38,7 +37,7 @@ export class AppSideBar extends React.Component<Props> {
           visible={context.showSidebar}
           width="thin"
         >
-          {path !== ROOT_URL ? (
+          {currentProject && path !== ROOT_URL ? (
             <Menu.Item as={NavLink} to={ROOT_URL} onClick={context.onHide}>
               <Icon name="home" />
               Home
@@ -56,7 +55,7 @@ export class AppSideBar extends React.Component<Props> {
             undefined
           )}
 
-          {path !== SEARCH_QUOTES_URL ? (
+          {currentProject && path !== SEARCH_QUOTES_URL ? (
             <Menu.Item
               as={NavLink}
               to={SEARCH_QUOTES_URL}
@@ -69,10 +68,23 @@ export class AppSideBar extends React.Component<Props> {
             undefined
           )}
 
-          {path !== newQuoteUrl ? (
-            <Menu.Item as={NavLink} to={newQuoteUrl} onClick={context.onHide}>
+          {currentProject && path !== NEW_QUOTE_URL ? (
+            <Menu.Item
+              as={NavLink}
+              to={makeNewQuoteURL()}
+              onClick={context.onHide}
+            >
               <Icon name="quote right" />
               New Quote
+            </Menu.Item>
+          ) : (
+            undefined
+          )}
+
+          {!AUTH_URLS.includes(path) ? (
+            <Menu.Item onClick={this.logout(context.onHide)}>
+              <Icon name="sign-out" />
+              Logout
             </Menu.Item>
           ) : (
             undefined
@@ -84,6 +96,20 @@ export class AppSideBar extends React.Component<Props> {
         </Sidebar.Pusher>
       </Sidebar.Pushable>
     );
+  };
+
+  private logout = (onHide: () => void) => async () => {
+    onHide();
+
+    const { history, updateLocalUser } = this.props;
+
+    await updateLocalUser({
+      variables: {
+        user: null
+      }
+    });
+
+    history.replace(LOGIN_URL);
   };
 }
 

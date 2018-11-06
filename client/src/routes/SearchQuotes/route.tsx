@@ -17,7 +17,7 @@ export class SearchQuotes extends React.Component {
   render() {
     return (
       <div className={classes.root}>
-        <RootHeader title="Search Quotes" />
+        <RootHeader title="Search" />
 
         <SearchQuotesComponent />
       </div>

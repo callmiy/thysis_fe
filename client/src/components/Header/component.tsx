@@ -1,38 +1,51 @@
 import * as React from "react";
 import { Icon } from "semantic-ui-react";
+import { NavLink } from "react-router-dom";
 
 import "./header.css";
 import { Props, State, INITIAL_STATE } from "./header.utils";
 import {
-  AppSidebarContext,
+  AppSidebarConsumer,
   SideBarContextProps
 } from "../../containers/App/app.utils";
+import { LOGIN_URL, USER_REG_URL, ROOT_URL } from "src/routes/util";
+
+const NO_SIDE_BAR_ROUTES = [LOGIN_URL, USER_REG_URL];
 
 export default class Header extends React.Component<Props, State> {
   state = INITIAL_STATE;
 
   render() {
-    return (
-      <AppSidebarContext.Consumer>
-        {this.renderWithContext}
-      </AppSidebarContext.Consumer>
-    );
+    return <AppSidebarConsumer>{this.renderWithContext}</AppSidebarConsumer>;
   }
 
   private renderWithContext = (context: SideBarContextProps) => {
-    const { className = "", style, currentProject, title } = this.props;
+    const {
+      className = "",
+      style,
+      currentProject,
+      title,
+      match: { path }
+    } = this.props;
 
     return (
       <div className={`${className} app-header`} style={style} color="green">
         <div className="top">
-          <a className="sidebar-trigger item" onClick={context.onShowClicked}>
-            <Icon name="content" />
-          </a>
+          {!NO_SIDE_BAR_ROUTES.includes(path) && (
+            <a className="sidebar-trigger item" onClick={context.onShowClicked}>
+              <Icon name="content" />
+            </a>
+          )}
 
           <div className="title">{title}</div>
 
           {currentProject && (
-            <div className="project-title">currentProject.title</div>
+            <NavLink
+              to={path === ROOT_URL ? "#" : ROOT_URL}
+              className="project-title"
+            >
+              {currentProject.title}
+            </NavLink>
           )}
         </div>
       </div>

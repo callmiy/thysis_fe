@@ -12,6 +12,8 @@ export const AppSidebarContext = React.createContext<SideBarContextProps>({
   onHide: () => null
 });
 
+export const AppSidebarConsumer = AppSidebarContext.Consumer;
+
 export interface State {
   showSidebar: boolean;
 }

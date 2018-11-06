@@ -8,7 +8,7 @@
   position: relative;
   background-color: $app-color;
   color: white;
-  padding: 5px 8px;
+  padding: 3px 0 0 3px;
 
   .top {
     display: flex;
@@ -20,6 +20,7 @@
       align-items: center;
       justify-content: center;
       min-width: 40px;
+      min-height: 36px;
       margin-right: 8px;
 
       &:hover {
@@ -43,6 +44,7 @@
     padding: 1px 3px;
     font-style: italic;
     font-weight: bolder;
+    color: #fff;
   }
 
   .bottom {

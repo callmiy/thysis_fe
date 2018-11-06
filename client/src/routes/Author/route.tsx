@@ -11,8 +11,6 @@ import { setTitle } from "../../routes/util";
 import { makeSourceURL } from "../../routes/util";
 import { Props } from "./author";
 import { State } from "./author";
-import MobileBottomMenu from "../../components/mobile-bottom-menu.component";
-import { MenuItem } from "../../components/mobile-bottom-menu.component";
 import { AuthorRouteFrag_sources, AuthorFrag } from "../../graphql/gen.types";
 import { authorFullName } from "../../graphql/utils";
 import Loading from "src/components/Loading";
@@ -48,8 +46,6 @@ export class Author extends React.Component<Props, State> {
         <RootHeader title="Author" />
 
         {this.renderMainOrLoading()}
-
-        <MobileBottomMenu items={[MenuItem.HOME, MenuItem.SEARCH]} />
       </div>
     );
   }
