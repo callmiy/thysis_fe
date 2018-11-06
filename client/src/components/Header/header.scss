@@ -20,7 +20,6 @@
       align-items: center;
       justify-content: center;
       min-width: 40px;
-      min-height: 40px;
       margin-right: 8px;
 
       &:hover {
@@ -36,6 +35,7 @@
   .title {
     font-weight: 700;
     font-size: 1.6rem;
+    flex: 1;
   }
 
   .project-title {
