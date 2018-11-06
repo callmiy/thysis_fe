@@ -8,9 +8,9 @@
     {
       "label": "start backend",
       "type": "shell",
-      "command": "pg_ctl start && iex -S mix phx.server",
+      "command": "pg_ctl start && iex --dot-iex .iexa.exs -S mix phx.server",
       "windows": {
-        "command": "iex --werl -S mix phx.server"
+        "command": "iex --dot-iex .iexa.exs --werl -S mix phx.server"
       },
       "options": {
         "env": {
