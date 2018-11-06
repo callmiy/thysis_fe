@@ -1,15 +1,12 @@
 import React from "react";
 import { Menu, Icon } from "semantic-ui-react";
 import update from "immutability-helper";
-import { NavLink } from "react-router-dom";
 
 import NewTagModalForm from "../../components/NewTagModalForm";
 import { TagModalCreatedCb } from "../../components/NewTagModalForm/utils";
 import SourceModal from "../../components/SourceModal";
 import TagsModal from "../../components/TagsModal";
 import { MenuItemNames } from "../../constants";
-import { SEARCH_QUOTES_URL } from "../../routes/util";
-import { ROOT_URL } from "../../routes/util";
 
 const styles = {
   container: {
@@ -59,11 +56,6 @@ class NewQuoteMenu extends React.Component<
           style={styles.container}
           widths={4}
         >
-          <Menu.Item style={{ background: "none" }} as={NavLink} to={ROOT_URL}>
-            <Icon name="home" />
-            Home
-          </Menu.Item>
-
           <Menu.Item
             onClick={this.toggleModalOpen(MenuItemNames.NEW_SOURCE, true)}
           >
@@ -76,11 +68,6 @@ class NewQuoteMenu extends React.Component<
           >
             <Icon name="tag" />
             New Tag
-          </Menu.Item>
-
-          <Menu.Item style={{}} as={NavLink} to={SEARCH_QUOTES_URL}>
-            <Icon name="search" />
-            Search
           </Menu.Item>
         </Menu>
 
