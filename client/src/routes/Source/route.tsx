@@ -10,7 +10,6 @@ import { makeNewQuoteURL } from "../../routes/util";
 import { classes } from "./styles";
 import { SourceProps } from "./utils";
 import { SourceState } from "./utils";
-import SourceMenu from "./bottom-menu.component";
 import SourceAccordion from "./SourceAccordion";
 
 export class Source extends React.Component<SourceProps, SourceState> {
@@ -33,10 +32,6 @@ export class Source extends React.Component<SourceProps, SourceState> {
         <RootHeader title="Source" className={classes.RootHeader} />
 
         {this.renderMainOrLoading()}
-
-        <div className={classes.bottomMenu}>
-          <SourceMenu />
-        </div>
       </div>
     );
   }
