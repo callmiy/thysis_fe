@@ -28,7 +28,7 @@ import { DetailAction } from "./source-accordion";
 import { AccordionTitleClickCb } from "./source-accordion";
 import { Props } from "./source-accordion";
 import { State } from "./source-accordion";
-import { SourceAccordionIndex } from "./source-accordion";
+import { AccordionIndex } from "./source-accordion";
 import renderQuote from "../../../components/QuoteItem";
 import AuthorsControlComponent from "../../../components/AuthorsControl";
 import SourceTypeControlComponent from "../../../components/SourceTypeControl";
@@ -62,47 +62,54 @@ export class SourceAccordion extends React.Component<Props, State> {
   }
 
   render() {
-    const { activeIndex } = this.state;
+    const { accordionProps } = this.state;
 
     return (
-      <Accordion fluid={true} styled={true} className={classes.accordion}>
+      <Accordion
+        fluid={true}
+        styled={true}
+        className={classes.accordion}
+        exclusive={false}
+      >
         {this.renderEditViewControls()}
 
         <Accordion.Title
-          active={activeIndex === SourceAccordionIndex.DETAIL}
-          index={SourceAccordionIndex.DETAIL}
+          active={accordionProps[AccordionIndex.DETAIL]}
+          index={AccordionIndex.DETAIL}
           onClick={this.handleAccordionClick}
         >
           <Icon name="dropdown" />
           Details
         </Accordion.Title>
 
-        {this.renderDetail(activeIndex)}
+        {this.renderDetail()}
 
         <Accordion.Title
-          active={activeIndex === SourceAccordionIndex.LIST_QUOTES}
-          index={SourceAccordionIndex.LIST_QUOTES}
+          active={accordionProps[AccordionIndex.LIST_QUOTES]}
+          index={AccordionIndex.LIST_QUOTES}
           onClick={this.handleAccordionClick}
         >
           <Icon name="dropdown" />
           Quotes
         </Accordion.Title>
 
-        {this.renderAccordionQuotes(activeIndex)}
+        {this.renderAccordionQuotes()}
       </Accordion>
     );
   }
 
-  renderDetail = (activeIndex: number) => {
+  renderDetail = () => {
     const {
       source: { sourceType, authors, year, topic, publication, url }
     } = this.props;
+
+    const { accordionProps } = this.state;
 
     return (
       <Accordion.Content
         style={accordionContentStyle}
         className={classes.detailsAccordionContent}
-        active={activeIndex === 0}
+        active={accordionProps[AccordionIndex.DETAIL]}
       >
         {this.renderUpdatingUI()}
 
@@ -136,7 +143,9 @@ export class SourceAccordion extends React.Component<Props, State> {
   };
 
   renderEditViewControls = () => {
-    if (this.state.activeIndex !== SourceAccordionIndex.DETAIL) {
+    const { accordionProps } = this.state;
+
+    if (!accordionProps[AccordionIndex.DETAIL]) {
       return undefined;
     }
 
@@ -216,12 +225,13 @@ export class SourceAccordion extends React.Component<Props, State> {
     return undefined;
   };
 
-  renderAccordionQuotes = (activeIndex: number) => {
+  renderAccordionQuotes = () => {
+    const { accordionProps } = this.state;
     return (
       <Accordion.Content
         className={classes.quotesAccordion}
         style={accordionContentStyle}
-        active={activeIndex === 1}
+        active={accordionProps[AccordionIndex.LIST_QUOTES]}
       >
         {this.renderAccordionContentQuotes()}
       </Accordion.Content>
@@ -400,17 +410,20 @@ export class SourceAccordion extends React.Component<Props, State> {
   };
 
   handleAccordionClick: AccordionTitleClickCb = (event, titleProps) => {
-    const index = titleProps.index as SourceAccordionIndex;
-    const { activeIndex } = this.state;
+    const index = titleProps.index as AccordionIndex;
 
-    if (index === SourceAccordionIndex.LIST_QUOTES) {
+    if (index === AccordionIndex.LIST_QUOTES) {
       this.fetchQuotes();
     }
 
+    const { accordionProps } = this.state;
+
     this.setState(s =>
       update(s, {
-        activeIndex: {
-          $set: activeIndex === index ? SourceAccordionIndex.NO_MATCH : index
+        accordionProps: {
+          [index]: {
+            $set: !accordionProps[index]
+          }
         },
         ...this.getNewDetailState(index as number)
       })
@@ -581,9 +594,14 @@ export class SourceAccordion extends React.Component<Props, State> {
     }
   };
 
-  private isEditing = () =>
-    this.state.activeIndex === SourceAccordionIndex.DETAIL &&
-    this.state.detailAction === DetailAction.EDITING;
+  private isEditing = () => {
+    const { detailAction, accordionProps } = this.state;
+
+    return (
+      accordionProps[AccordionIndex.DETAIL] &&
+      detailAction === DetailAction.EDITING
+    );
+  };
 
   private shouldResetEditSourceForm = () => {
     const { source } = this.props;
@@ -593,7 +611,7 @@ export class SourceAccordion extends React.Component<Props, State> {
   };
 
   private getNewDetailState = (index: number) => {
-    if (index !== SourceAccordionIndex.DETAIL) {
+    if (index !== AccordionIndex.DETAIL) {
       return {};
     }
 

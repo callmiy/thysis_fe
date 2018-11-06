@@ -36,24 +36,26 @@ export type PropsWithFormikProps = InjectedFormikProps<
 
 export type Props = PropsWithFormikProps;
 
+export enum AccordionIndex {
+  DETAIL = 0,
+  LIST_QUOTES = 1
+}
+
 export interface State {
-  activeIndex: SourceAccordionIndex;
   detailAction: DetailAction;
   loadingQuotes?: boolean;
   quotes?: Quote1Frag[];
   fetchQuotesError?: ApolloError;
   updateSourceError?: ApolloError;
   openUpdateSourceSuccessModal: boolean;
+  accordionProps: { [T in AccordionIndex]: boolean };
 }
 
 export const initialState: State = {
-  activeIndex: 0,
   detailAction: DetailAction.VIEWING,
-  openUpdateSourceSuccessModal: false
+  openUpdateSourceSuccessModal: false,
+  accordionProps: {
+    [AccordionIndex.DETAIL]: true,
+    [AccordionIndex.LIST_QUOTES]: false
+  }
 };
-
-export enum SourceAccordionIndex {
-  DETAIL = 0,
-  LIST_QUOTES = 1,
-  NO_MATCH = -1
-}
