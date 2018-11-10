@@ -18,56 +18,75 @@ export class SelectProject extends React.Component<Props, State> {
   state: State = initialState;
 
   render() {
-    const { form } = this.state;
-
-    const formError = this.formError();
-
     return (
       <div className="select-project">
         <Header title="Select Project" />
 
         <div className="main">
-          <Form className="form">
-            <div className="control">
-              <Form.Field
-                control={Input}
-                className="input"
-                name="title"
-                autoComplete="off"
-                placeholder="Project title"
-                autoFocus={true}
-                onChange={this.onProjectInputChange}
-                value={this.state.form.title}
-                error={formError}
-              />
-
-              {form.title && !formError ? (
-                <Icon name="checkmark" color="green" onClick={this.submit} />
-              ) : (
-                undefined
-              )}
-
-              {form.title ? (
-                <Icon name="times" color="red" onClick={this.resetForm} />
-              ) : (
-                undefined
-              )}
-            </div>
-
-            {formError && <div className="message">Too short</div>}
-          </Form>
-
+          {this.renderForm()}
           {this.renderProjects()}
         </div>
       </div>
     );
   }
 
+  private renderForm = () => {
+    const { loading, error } = this.props;
+
+    if (loading || error) {
+      return undefined;
+    }
+
+    const { form } = this.state;
+    const formError = this.formError();
+
+    return (
+      <Form className="form">
+        <div className="control">
+          <Form.Field
+            control={Input}
+            className="input"
+            name="title"
+            autoComplete="off"
+            placeholder="Project title"
+            autoFocus={true}
+            onChange={this.onProjectInputChange}
+            value={this.state.form.title}
+            error={formError}
+          />
+
+          {form.title && !formError ? (
+            <Icon name="checkmark" color="green" onClick={this.submit} />
+          ) : (
+            undefined
+          )}
+
+          {form.title ? (
+            <Icon name="times" color="red" onClick={this.resetForm} />
+          ) : (
+            undefined
+          )}
+        </div>
+
+        {formError && <div className="message">Too short</div>}
+      </Form>
+    );
+  };
+
   private renderProjects = () => {
-    const { projects, loading } = this.props;
+    const { projects, loading, error } = this.props;
 
     if (loading) {
       return <Loading />;
+    }
+
+    if (error) {
+      return (
+        <div>
+          Unable to load projects
+          <div>{error.message}</div>
+        </div>
+      );
     }
 
     if (!projects || !projects.length) {

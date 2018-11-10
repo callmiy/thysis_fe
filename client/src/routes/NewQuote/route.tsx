@@ -89,6 +89,7 @@ export class NewQuote extends React.Component<Props, State> {
 
   componentDidMount() {
     this.fetchSource();
+
     setTitle("New quote");
   }
 
@@ -105,8 +106,9 @@ export class NewQuote extends React.Component<Props, State> {
   fetchSource = async () => {
     try {
       let query;
+
       if (this.state.sourceId) {
-        query = this.props.client.query<Source1Query, Source1Variables>({
+        query = await this.props.client.query<Source1Query, Source1Variables>({
           query: SOURCE_QUERY,
           variables: {
             source: {
@@ -121,7 +123,10 @@ export class NewQuote extends React.Component<Props, State> {
           return;
         }
 
-        query = this.props.client.query<Sources1Query, Sources1QueryVariables>({
+        query = await this.props.client.query<
+          Sources1Query,
+          Sources1QueryVariables
+        >({
           query: SOURCES_QUERY,
           variables: {
             source: {
@@ -153,10 +158,17 @@ export class NewQuote extends React.Component<Props, State> {
         })
       );
     } catch (error) {
+      // tslint:disable-next-line:no-any
+      const result = { data: { sources: [] } } as any;
+
       this.setState(s =>
         update(s, {
           graphqlError: {
             $set: error
+          },
+
+          queryResult: {
+            $set: result
           }
         })
       );
