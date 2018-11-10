@@ -4,6 +4,7 @@ import { ApolloLink, NextLink } from "apollo-link";
 import { Operation } from "apollo-link";
 import { onError } from "apollo-link-error";
 import { HttpLink } from "apollo-link-http";
+import { CachePersistor } from "apollo-cache-persist";
 
 import { initState } from "./state";
 import { getToken } from "./state";
@@ -27,6 +28,28 @@ export const client = new ApolloClient({
 });
 
 export default client;
+
+export async function persistCache() {
+  const persistor = new CachePersistor({
+    cache,
+    storage: localStorage
+  });
+
+  const SCHEMA_VERSION = "1"; // Must be a string.
+  const SCHEMA_VERSION_KEY = "thysis-apollo-schema-version";
+  const currentVersion = localStorage.getItem(SCHEMA_VERSION_KEY);
+
+  if (currentVersion === SCHEMA_VERSION) {
+    // If the current version matches the latest version,
+    // we're good to go and can restore the cache.
+    await persistor.restore();
+  } else {
+    // Otherwise, we'll want to purge the outdated persisted cache
+    // and mark ourselves as having updated to the latest version.
+    await persistor.purge();
+    await localStorage.setItem(SCHEMA_VERSION_KEY, SCHEMA_VERSION);
+  }
+}
 
 // HELPER FUNCTIONS
 

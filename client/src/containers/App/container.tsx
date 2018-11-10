@@ -3,7 +3,9 @@ import Loadable from "react-loadable";
 import { BrowserRouter } from "react-router-dom";
 import { Switch } from "react-router-dom";
 import { Route } from "react-router-dom";
+import { ApolloProvider } from "react-apollo";
 
+import { client, persistCache } from "../../apollo-setup";
 import {
   ROOT_URL,
   PROJECTS_URL,
@@ -73,54 +75,78 @@ const ProjectsRoute = Loadable({
 export class App extends React.Component<{}, State> {
   state: State = { showSidebar: false };
 
+  async componentDidMount() {
+    try {
+      // See above for additional options, including other storage providers.
+      await persistCache();
+    } catch (error) {
+      // tslint:disable-next-line:no-console
+      console.error("Error restoring Apollo cache", error);
+    }
+
+    this.setState({ cacheLoaded: true });
+  }
+
   render() {
+    const { cacheLoaded } = this.state;
+
+    if (!cacheLoaded) {
+      return <Loading />;
+    }
+
     return (
-      <AppSidebarContext.Provider
-        value={{
-          showSidebar: this.state.showSidebar,
-          onShowClicked: this.handleShowSidebar,
-          onHide: this.handleHideSidebar
-        }}
-      >
-        <BrowserRouter>
-          <Switch>
-            <Route exact={true} path={USER_REG_URL} component={UserRegRoute} />
-            <Route exact={true} path={LOGIN_URL} component={LoginRoute} />
-            <AuthRequired exact={true} path={SOURCE_URL} component={Source} />
-            <AuthRequired exact={true} path={QUOTE_URL} component={Quote} />
+      <ApolloProvider client={client}>
+        <AppSidebarContext.Provider
+          value={{
+            showSidebar: this.state.showSidebar,
+            onShowClicked: this.handleShowSidebar,
+            onHide: this.handleHideSidebar
+          }}
+        >
+          <BrowserRouter>
+            <Switch>
+              <Route
+                exact={true}
+                path={USER_REG_URL}
+                component={UserRegRoute}
+              />
+              <Route exact={true} path={LOGIN_URL} component={LoginRoute} />
+              <AuthRequired exact={true} path={SOURCE_URL} component={Source} />
+              <AuthRequired exact={true} path={QUOTE_URL} component={Quote} />
 
-            <AuthRequired
-              exact={true}
-              path={AUTHOR_ROUTE_URL}
-              component={AuthorRoute}
-            />
+              <AuthRequired
+                exact={true}
+                path={AUTHOR_ROUTE_URL}
+                component={AuthorRoute}
+              />
 
-            <AuthRequired
-              exact={true}
-              path={PROJECTS_URL}
-              component={ProjectsRoute}
-            />
+              <AuthRequired
+                exact={true}
+                path={PROJECTS_URL}
+                component={ProjectsRoute}
+              />
 
-            <AuthRequired
-              exact={true}
-              path={SEARCH_QUOTES_URL}
-              component={SearchQuotes}
-            />
+              <AuthRequired
+                exact={true}
+                path={SEARCH_QUOTES_URL}
+                component={SearchQuotes}
+              />
 
-            <AuthRequired exact={true} path={TAG_URL} component={TagDetail} />
+              <AuthRequired exact={true} path={TAG_URL} component={TagDetail} />
 
-            <AuthRequired
-              exact={true}
-              path={NEW_QUOTE_URL}
-              component={NewQuote}
-            />
+              <AuthRequired
+                exact={true}
+                path={NEW_QUOTE_URL}
+                component={NewQuote}
+              />
 
-            <AuthRequired exact={true} path={ROOT_URL} component={Home} />
+              <AuthRequired exact={true} path={ROOT_URL} component={Home} />
 
-            <Route component={LoginRoute} />
-          </Switch>
-        </BrowserRouter>
-      </AppSidebarContext.Provider>
+              <Route component={LoginRoute} />
+            </Switch>
+          </BrowserRouter>
+        </AppSidebarContext.Provider>
+      </ApolloProvider>
     );
   }
 
