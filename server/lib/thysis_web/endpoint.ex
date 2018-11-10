@@ -16,7 +16,7 @@ defmodule ThysisWeb.Endpoint do
   plug(
     Plug.Static,
     at: "/",
-    gzip: false,
+    gzip: true,
     from: "priv/web-client",
     only_matching: ~w(
       index
@@ -29,6 +29,7 @@ defmodule ThysisWeb.Endpoint do
       js
       fonts
       images
+      icon
     )
   )
 
