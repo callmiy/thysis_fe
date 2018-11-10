@@ -15,7 +15,8 @@ fs.readdirSync(deployDir).forEach(file => {
 const rewriteServiceWorkerFile = filePath => {
   const file = fs.readFileSync(filePath, "utf8");
   const match = /\[\[.+?\]\]/.exec(file)[0];
-  const statics = JSON.parse(match).map(static => {
+  const originalStatics = JSON.parse(match);
+  const statics = originalStatics.map(static => {
     const [name, hash] = static;
     if (name === "/index.html") {
       return static;
@@ -28,7 +29,8 @@ const rewriteServiceWorkerFile = filePath => {
 
   // we fake the hash of the font and favicon with new Date calls
   const staticsToString = JSON.stringify(
-    statics.concat([
+    originalStatics.concat([
+      ...statics,
       [
         "https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic&subset=latin",
         new Date().getTime()
@@ -64,6 +66,7 @@ const rewriteServiceWorkerFile = filePath => {
       ["/icon-512x512.png", new Date().getTime()]
     ])
   );
+
   fs.writeFileSync(filePath, file.replace(match, staticsToString));
 };
 
