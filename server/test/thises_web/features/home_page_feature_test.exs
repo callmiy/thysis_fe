@@ -1,13 +1,13 @@
-defmodule ThisesWeb.HomePageFeatureTest do
-  use Thises.FeatureCase
+defmodule ThysisWeb.HomePageFeatureTest do
+  use Thysis.FeatureCase
 
-  alias Thises.Factory.Tag, as: TagFactory
-  alias Thises.Factory.Source, as: SourceFactory
-  alias Thises.Factory.Author, as: AuthorFactory
-  alias Thises.SourceApi
-  alias Thises.Repo
-  alias Thises.Author
-  alias Thises.Tag
+  alias Thysis.Factory.Tag, as: TagFactory
+  alias Thysis.Factory.Source, as: SourceFactory
+  alias Thysis.Factory.Author, as: AuthorFactory
+  alias Thysis.SourceApi
+  alias Thysis.Repo
+  alias Thysis.Author
+  alias Thysis.Tag
 
   @moduletag :integration
   @page_title "Gasifier"

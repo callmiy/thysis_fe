@@ -1,6 +1,6 @@
-defmodule Thises.Factory.QuoteTag do
-  use Thises.Factory
-  alias Thises.QuoteTagApi
+defmodule Thysis.Factory.QuoteTag do
+  use Thysis.Factory
+  alias Thysis.QuoteTagApi
 
   def insert(attrs) do
     {:ok, qt} =

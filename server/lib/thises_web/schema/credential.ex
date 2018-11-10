@@ -1,7 +1,7 @@
-defmodule ThisesWeb.Schema.Credential do
+defmodule ThysisWeb.Schema.Credential do
   use Absinthe.Schema.Notation
 
-  alias ThisesWeb.Schema
+  alias ThysisWeb.Schema
 
   @desc "User credential"
   object :credential do

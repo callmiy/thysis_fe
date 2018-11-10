@@ -1,4 +1,4 @@
-defmodule ThisesWeb.Query.Project do
+defmodule ThysisWeb.Query.Project do
   @fragment_name "ProjectAllFieldsFragment"
 
   def all_fields_fragment do

@@ -1,6 +1,6 @@
-defmodule ThisesWeb.ExAdmin.Source do
+defmodule ThysisWeb.ExAdmin.Source do
   use ExAdmin.Register
 
-  register_resource Thises.Sources.Source do
+  register_resource Thysis.Sources.Source do
   end
 end

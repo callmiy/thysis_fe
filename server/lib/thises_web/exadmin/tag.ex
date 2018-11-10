@@ -1,6 +1,6 @@
-defmodule ThisesWeb.ExAdmin.Tag do
+defmodule ThysisWeb.ExAdmin.Tag do
   use ExAdmin.Register
 
-  register_resource Thises.Tag do
+  register_resource Thysis.Tag do
   end
 end

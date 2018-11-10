@@ -1,11 +1,11 @@
-defmodule ThisesWeb.Schema.SourceType do
+defmodule ThysisWeb.Schema.SourceType do
   @moduledoc """
   Schema types for source_type
   """
 
   use Absinthe.Schema.Notation
 
-  alias ThisesWeb.Resolver.SourceType, as: Resolver
+  alias ThysisWeb.Resolver.SourceType, as: Resolver
 
   @desc "A source type"
   object :source_type do

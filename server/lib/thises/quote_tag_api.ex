@@ -1,12 +1,12 @@
-defmodule Thises.QuoteTagApi do
+defmodule Thysis.QuoteTagApi do
   @moduledoc """
   The QuoteTags context.
   """
 
   import Ecto.Query, warn: false
-  alias Thises.Repo
+  alias Thysis.Repo
 
-  alias Thises.QuoteTag
+  alias Thysis.QuoteTag
 
   @doc """
   Returns the list of quote_tags.

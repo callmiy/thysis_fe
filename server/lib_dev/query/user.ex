@@ -1,4 +1,4 @@
-defmodule ThisesWeb.Query.User do
+defmodule ThysisWeb.Query.User do
   def all_fields_fragment do
     name = "UserAllFieldsFragment"
 

@@ -1,9 +1,9 @@
-defmodule ThisesWeb.TagSchemaTest do
-  use Thises.DataCase
-  alias ThisesWeb.Schema
-  alias ThisesWeb.Query.Tag, as: Query
-  alias Thises.Tag
-  alias Thises.Factory.Tag, as: Factory
+defmodule ThysisWeb.TagSchemaTest do
+  use Thysis.DataCase
+  alias ThysisWeb.Schema
+  alias ThysisWeb.Query.Tag, as: Query
+  alias Thysis.Tag
+  alias Thysis.Factory.Tag, as: Factory
 
   describe "query" do
     test "get tag by id" do

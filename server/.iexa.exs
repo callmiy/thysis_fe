@@ -1,45 +1,45 @@
 require Integer
 import Ecto.Query, warn: false
-alias Thises.Repo
-alias Thises.QuoteApi
-alias Thises.Quote
-alias Thises.Sources.Source
-alias Thises.Sources
-alias Thises.SourceTypeApi
-alias Thises.SourceType
-alias Thises.Tag
-alias Thises.TagApi
-alias Thises.QuoteTag
-alias Thises.QuoteTagApi
-alias ThisesWeb.Schema
-alias Thises.Author
-alias Thises.AuthorApi
-alias ThisesWeb.Auth.Guardian, as: GuardianApp
-alias Thises.Accounts
-alias Thises.Accounts.CredentialApi
-alias Thises.Accounts.Credential
-alias Thises.Accounts.Registration
-alias Thises.Accounts.UserApi
-alias Thises.Accounts.User
-alias Thises.Projects
-alias Thises.Projects.Project
+alias Thysis.Repo
+alias Thysis.QuoteApi
+alias Thysis.Quote
+alias Thysis.Sources.Source
+alias Thysis.Sources
+alias Thysis.SourceTypeApi
+alias Thysis.SourceType
+alias Thysis.Tag
+alias Thysis.TagApi
+alias Thysis.QuoteTag
+alias Thysis.QuoteTagApi
+alias ThysisWeb.Schema
+alias Thysis.Author
+alias Thysis.AuthorApi
+alias ThysisWeb.Auth.Guardian, as: GuardianApp
+alias Thysis.Accounts
+alias Thysis.Accounts.CredentialApi
+alias Thysis.Accounts.Credential
+alias Thysis.Accounts.Registration
+alias Thysis.Accounts.UserApi
+alias Thysis.Accounts.User
+alias Thysis.Projects
+alias Thysis.Projects.Project
 
 ########################### DEV ONLY ##########################
 
-alias ThisesWeb.Query.Quote, as: QuoteQuery
-alias ThisesWeb.Query.Author, as: AuthorQuery
-alias ThisesWeb.Query.Source, as: SourceQuery
-alias ThisesWeb.Query.SourceType, as: SourceTypeQuery
-alias ThisesWeb.Query.Tag, as: TagQuery
-alias Thises.Query.Registration, as: RegistrationQuery
-alias ThisesWeb.Query.User, as: UserQuery
-alias Thises.Factory
-alias Thises.Factory.Author, as: AuthorFactory
-alias Thises.Factory.User, as: UserFactory
-alias Thises.Factory.Source, as: SourceFactory
-alias Thises.Factory.Registration, as: RegFactory
-alias Thises.Factory.Project, as: ProjectFactory
-alias Thises.Factory.SourceType, as: SourceTypeFactory
-alias Thises.Factory.Tag, as: TagFactory
-alias Thises.Factory.Quote, as: QuoteFactory
-alias Thises.Factory.QuoteTag, as: QuoteTagFactory
+alias ThysisWeb.Query.Quote, as: QuoteQuery
+alias ThysisWeb.Query.Author, as: AuthorQuery
+alias ThysisWeb.Query.Source, as: SourceQuery
+alias ThysisWeb.Query.SourceType, as: SourceTypeQuery
+alias ThysisWeb.Query.Tag, as: TagQuery
+alias Thysis.Query.Registration, as: RegistrationQuery
+alias ThysisWeb.Query.User, as: UserQuery
+alias Thysis.Factory
+alias Thysis.Factory.Author, as: AuthorFactory
+alias Thysis.Factory.User, as: UserFactory
+alias Thysis.Factory.Source, as: SourceFactory
+alias Thysis.Factory.Registration, as: RegFactory
+alias Thysis.Factory.Project, as: ProjectFactory
+alias Thysis.Factory.SourceType, as: SourceTypeFactory
+alias Thysis.Factory.Tag, as: TagFactory
+alias Thysis.Factory.Quote, as: QuoteFactory
+alias Thysis.Factory.QuoteTag, as: QuoteTagFactory

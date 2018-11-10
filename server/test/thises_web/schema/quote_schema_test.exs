@@ -1,13 +1,13 @@
-defmodule Thises.QuoteSchemaTest do
-  use Thises.DataCase
+defmodule Thysis.QuoteSchemaTest do
+  use Thysis.DataCase
 
-  alias ThisesWeb.Schema
-  alias ThisesWeb.Query.Quote, as: Query
-  alias Thises.Factory.Source, as: SourceFactory
-  alias Thises.Factory.Quote, as: Factory
-  alias Thises.Factory.SourceType, as: SourceTypeFactory
-  alias Thises.Factory.Tag, as: TagFactory
-  alias Thises.Factory.Author, as: AuthorFactory
+  alias ThysisWeb.Schema
+  alias ThysisWeb.Query.Quote, as: Query
+  alias Thysis.Factory.Source, as: SourceFactory
+  alias Thysis.Factory.Quote, as: Factory
+  alias Thysis.Factory.SourceType, as: SourceTypeFactory
+  alias Thysis.Factory.Tag, as: TagFactory
+  alias Thysis.Factory.Author, as: AuthorFactory
 
   describe "mutation" do
     # @tag :skip

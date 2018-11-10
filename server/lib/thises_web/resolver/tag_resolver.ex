@@ -1,10 +1,10 @@
-defmodule ThisesWeb.TagResolver do
+defmodule ThysisWeb.TagResolver do
   @moduledoc """
   A resolver for the tag schema
   """
-  alias Thises.Tag
-  alias Thises.TagApi, as: Api
-  alias ThisesWeb.Resolver
+  alias Thysis.Tag
+  alias Thysis.TagApi, as: Api
+  alias ThysisWeb.Resolver
 
   @doc """
   Get a single tag either by tag text or id or both.

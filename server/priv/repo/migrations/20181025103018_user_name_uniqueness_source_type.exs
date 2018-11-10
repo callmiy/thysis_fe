@@ -1,4 +1,4 @@
-defmodule Thises.Repo.Migrations.UserNameUniquenessSourceType do
+defmodule Thysis.Repo.Migrations.UserNameUniquenessSourceType do
   use Ecto.Migration
 
   def change do

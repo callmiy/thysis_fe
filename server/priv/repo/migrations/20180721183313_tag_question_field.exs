@@ -1,4 +1,4 @@
-defmodule Thises.Repo.Migrations.TagQuestionField do
+defmodule Thysis.Repo.Migrations.TagQuestionField do
   use Ecto.Migration
 
   def change do

@@ -1,10 +1,10 @@
-defmodule ThisesWeb.Resolver.SourceType do
+defmodule ThysisWeb.Resolver.SourceType do
   @moduledoc """
   A resolver for the source type schema
   """
-  alias Thises.SourceType
-  alias Thises.SourceTypeApi, as: Api
-  alias ThisesWeb.Resolver
+  alias Thysis.SourceType
+  alias Thysis.SourceTypeApi, as: Api
+  alias ThysisWeb.Resolver
 
   def source_type(_root, %{source_type: params}, %{context: %{current_user: user}}) do
     case Api.get_source_type_by(params, user.id) do

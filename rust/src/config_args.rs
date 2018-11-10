@@ -3,7 +3,7 @@ extern crate structopt;
 use std::path::PathBuf;
 
 #[derive(Debug, StructOpt)]
-#[structopt(name = "thises experiment")]
+#[structopt(name = "thysis experiment")]
 pub struct Opt {
   /// Activate debug mode
   #[structopt(short = "d", long = "debug")]
@@ -11,7 +11,7 @@ pub struct Opt {
 
   /// The experiment folder to process. If relative path is given, then it is
   /// assumed to be relative to
-  /// F:\google_drive\master-thesis-thises\Experiments
+  /// F:\google_drive\master-thesis-thysis\Experiments
   #[structopt(parse(from_os_str))]
   exp_path_string: PathBuf,
   /*
@@ -31,7 +31,7 @@ impl Config {
     let path = if args.exp_path_string.is_absolute() {
       args.exp_path_string
     } else {
-      let mut p = PathBuf::from("F:\\google_drive\\master-thesis-thises\\Experiments");
+      let mut p = PathBuf::from("F:\\google_drive\\master-thesis-thysis\\Experiments");
 
       p.push(args.exp_path_string);
 

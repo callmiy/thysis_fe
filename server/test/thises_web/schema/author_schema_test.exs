@@ -1,11 +1,11 @@
-defmodule ThisesWeb.AuthorSchemaTest do
-  use Thises.DataCase
-  alias ThisesWeb.Schema
-  alias ThisesWeb.Query.Author, as: Query
-  alias Thises.Author
-  alias Thises.Factory.Author, as: Factory
-  alias Thises.Factory.Project, as: ProjectFactory
-  alias Thises.Factory.Registration, as: RegFactory
+defmodule ThysisWeb.AuthorSchemaTest do
+  use Thysis.DataCase
+  alias ThysisWeb.Schema
+  alias ThysisWeb.Query.Author, as: Query
+  alias Thysis.Author
+  alias Thysis.Factory.Author, as: Factory
+  alias Thysis.Factory.Project, as: ProjectFactory
+  alias Thysis.Factory.Registration, as: RegFactory
 
   describe "query" do
     # @tag :skip

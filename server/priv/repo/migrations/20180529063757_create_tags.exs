@@ -1,4 +1,4 @@
-defmodule Thises.Repo.Migrations.CreateTags do
+defmodule Thysis.Repo.Migrations.CreateTags do
   use Ecto.Migration
 
   def change do

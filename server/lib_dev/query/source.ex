@@ -1,9 +1,9 @@
-defmodule ThisesWeb.Query.Source do
+defmodule ThysisWeb.Query.Source do
   @frag_name "SourceAllFieldsFragment"
 
-  alias ThisesWeb.Query.Author, as: AuthorQuery
-  alias ThisesWeb.Query.SourceType, as: SourceTypeQuery
-  alias ThisesWeb.Query.Quote, as: QuoteQuery
+  alias ThysisWeb.Query.Author, as: AuthorQuery
+  alias ThysisWeb.Query.SourceType, as: SourceTypeQuery
+  alias ThysisWeb.Query.Quote, as: QuoteQuery
 
   def all_fields_fragment do
     fragment = """

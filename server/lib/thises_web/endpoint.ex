@@ -1,15 +1,15 @@
-defmodule ThisesWeb.Endpoint do
-  use Phoenix.Endpoint, otp_app: :thises
+defmodule ThysisWeb.Endpoint do
+  use Phoenix.Endpoint, otp_app: :thysis
 
-  if Application.get_env(:thises, :sql_sandbox) do
+  if Application.get_env(:thysis, :sql_sandbox) do
     plug(Phoenix.Ecto.SQL.Sandbox)
   end
 
-  socket("/socket", ThisesWeb.UserSocket)
+  socket("/socket", ThysisWeb.UserSocket)
 
   # Serve frontend at /index.html (root path). Static files will be served from
   # priv/web-client
-  plug(ThisesWeb.FrontEnd)
+  plug(ThysisWeb.FrontEnd)
 
   # You should set gzip to true if you are running phoenix.digest
   # when deploying your static files in production.
@@ -64,7 +64,7 @@ defmodule ThisesWeb.Endpoint do
   plug(
     Plug.Session,
     store: :cookie,
-    key: "_thises_key",
+    key: "_thysis_key",
     signing_salt: "eyu4EJuz"
   )
 
@@ -74,7 +74,7 @@ defmodule ThisesWeb.Endpoint do
     allow_headers: ~w(Accept Content-Type Authorization Origin)
   )
 
-  plug(ThisesWeb.Router)
+  plug(ThysisWeb.Router)
 
   @doc """
   Callback invoked for dynamically configuring the endpoint.

@@ -1,6 +1,6 @@
-defmodule ThisesWeb.ExAdmin.QuoteTag do
+defmodule ThysisWeb.ExAdmin.QuoteTag do
   use ExAdmin.Register
 
-  register_resource Thises.QuoteTag do
+  register_resource Thysis.QuoteTag do
   end
 end

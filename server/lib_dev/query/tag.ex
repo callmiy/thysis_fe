@@ -1,4 +1,4 @@
-defmodule ThisesWeb.Query.Tag do
+defmodule ThysisWeb.Query.Tag do
   def query(:tag) do
     {frag_name, frag} = all_fields_fragment()
 

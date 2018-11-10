@@ -1,4 +1,4 @@
-defmodule ThisesWeb.ExAdmin.Dashboard do
+defmodule ThysisWeb.ExAdmin.Dashboard do
   use ExAdmin.Register
 
   register_page "Dashboard" do

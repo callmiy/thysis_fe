@@ -1,10 +1,10 @@
-defmodule Thises.Factory.Quote do
-  use Thises.Factory
+defmodule Thysis.Factory.Quote do
+  use Thysis.Factory
 
-  alias Thises.Factory
-  alias Thises.QuoteApi
-  alias Thises.Quote
-  alias Thises.Factory.Tag, as: TagFactory
+  alias Thysis.Factory
+  alias Thysis.QuoteApi
+  alias Thysis.Quote
+  alias Thysis.Factory.Tag, as: TagFactory
 
   @simple_attrs [
     :page_start,

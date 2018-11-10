@@ -1,7 +1,7 @@
-defmodule ThisesWeb.Resolver.Project do
-  alias Thises.Projects.Project
-  alias Thises.Projects
-  alias ThisesWeb.Resolver
+defmodule ThysisWeb.Resolver.Project do
+  alias Thysis.Projects.Project
+  alias Thysis.Projects
+  alias ThysisWeb.Resolver
 
   def create(_root, %{project: attrs}, _info) do
     case Projects.create_(attrs) do

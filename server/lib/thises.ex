@@ -1,6 +1,6 @@
-defmodule Thises do
+defmodule Thysis do
   @moduledoc """
-  Thises keeps the contexts that define your domain
+  Thysis keeps the contexts that define your domain
   and business logic.
 
   Contexts are also responsible for managing your data, regardless

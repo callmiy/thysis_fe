@@ -1,9 +1,9 @@
-defmodule Thises.QuoteTag do
+defmodule Thysis.QuoteTag do
   use Ecto.Schema
   import Ecto.Changeset
 
-  alias Thises.Quote
-  alias Thises.Tag
+  alias Thysis.Quote
+  alias Thysis.Tag
 
   schema "quote_tags" do
     belongs_to(:quote, Quote)

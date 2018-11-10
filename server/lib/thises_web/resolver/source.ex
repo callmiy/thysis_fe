@@ -1,13 +1,13 @@
-defmodule ThisesWeb.Resolver.Source do
+defmodule ThysisWeb.Resolver.Source do
   @moduledoc """
   A resolver for the source schema
   """
 
   import Absinthe.Resolution.Helpers, only: [on_load: 2]
 
-  alias Thises.Sources.Source
-  alias Thises.Sources
-  alias ThisesWeb.Resolver
+  alias Thysis.Sources.Source
+  alias Thysis.Sources
+  alias ThysisWeb.Resolver
 
   @doc """
   Get all sources.

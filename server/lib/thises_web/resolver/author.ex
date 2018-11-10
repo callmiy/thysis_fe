@@ -1,10 +1,10 @@
-defmodule ThisesWeb.Resolver.Author do
+defmodule ThysisWeb.Resolver.Author do
   @moduledoc """
   A resolver for the author schema
   """
-  alias Thises.Author
-  alias Thises.AuthorApi, as: Api
-  alias ThisesWeb.Resolver
+  alias Thysis.Author
+  alias Thysis.AuthorApi, as: Api
+  alias ThysisWeb.Resolver
 
   def author(_, %{author: params}, %{context: %{current_user: user}}) do
     case params

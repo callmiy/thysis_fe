@@ -1,4 +1,4 @@
-defmodule ThisesWeb.Schema.Tag do
+defmodule ThysisWeb.Schema.Tag do
   @moduledoc """
   Schema types for Tag
   """
@@ -7,7 +7,7 @@ defmodule ThisesWeb.Schema.Tag do
 
   import Absinthe.Resolution.Helpers, only: [dataloader: 1]
 
-  alias ThisesWeb.TagResolver
+  alias ThysisWeb.TagResolver
 
   @desc "A Tag"
   object :tag do
@@ -16,7 +16,7 @@ defmodule ThisesWeb.Schema.Tag do
     field(:question, :string)
     field(:inserted_at, non_null(:iso_datetime))
     field(:updated_at, non_null(:iso_datetime))
-    field(:quotes, list_of(:quote), resolve: dataloader(Thises.QuoteApi))
+    field(:quotes, list_of(:quote), resolve: dataloader(Thysis.QuoteApi))
   end
 
   @desc "Get tag input"

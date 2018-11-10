@@ -1,7 +1,7 @@
-defmodule ThisesWeb.Auth.Guardian do
-  use Guardian, otp_app: :thises
+defmodule ThysisWeb.Auth.Guardian do
+  use Guardian, otp_app: :thysis
 
-  alias Thises.Accounts.UserApi
+  alias Thysis.Accounts.UserApi
 
   def subject_for_token(%{id: id} = _resource, _claims) do
     # You can use any value for the subject of your token but

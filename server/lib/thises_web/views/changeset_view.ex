@@ -1,11 +1,11 @@
-defmodule ThisesWeb.ChangesetView do
-  use ThisesWeb, :view
+defmodule ThysisWeb.ChangesetView do
+  use ThysisWeb, :view
 
   @doc """
   Traverses and translates changeset errors.
 
   See `Ecto.Changeset.traverse_errors/2` and
-  `ThisesWeb.ErrorHelpers.translate_error/1` for more details.
+  `ThysisWeb.ErrorHelpers.translate_error/1` for more details.
   """
   def translate_errors(changeset) do
     Ecto.Changeset.traverse_errors(changeset, &translate_error/1)

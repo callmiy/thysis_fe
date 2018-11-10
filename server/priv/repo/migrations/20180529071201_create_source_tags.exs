@@ -1,4 +1,4 @@
-defmodule Thises.Repo.Migrations.CreateQuoteTags do
+defmodule Thysis.Repo.Migrations.CreateQuoteTags do
   use Ecto.Migration
 
   def change do

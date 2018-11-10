@@ -1,4 +1,4 @@
-defmodule ThisesWeb.ChannelCase do
+defmodule ThysisWeb.ChannelCase do
   @moduledoc """
   This module defines the test case to be used by
   channel tests.
@@ -21,15 +21,15 @@ defmodule ThisesWeb.ChannelCase do
       use Phoenix.ChannelTest
 
       # The default endpoint for testing
-      @endpoint ThisesWeb.Endpoint
+      @endpoint ThysisWeb.Endpoint
     end
   end
 
 
   setup tags do
-    :ok = Ecto.Adapters.SQL.Sandbox.checkout(Thises.Repo)
+    :ok = Ecto.Adapters.SQL.Sandbox.checkout(Thysis.Repo)
     unless tags[:async] do
-      Ecto.Adapters.SQL.Sandbox.mode(Thises.Repo, {:shared, self()})
+      Ecto.Adapters.SQL.Sandbox.mode(Thysis.Repo, {:shared, self()})
     end
     :ok
   end

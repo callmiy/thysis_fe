@@ -1,12 +1,12 @@
-defmodule Thises.Accounts.User do
+defmodule Thysis.Accounts.User do
   use Ecto.Schema
   use Timex.Ecto.Timestamps
 
   import Ecto.Changeset
 
   alias Ecto.Changeset
-  alias Thises.Accounts.Credential
-  alias Thises.Projects.Project
+  alias Thysis.Accounts.Credential
+  alias Thysis.Projects.Project
 
   schema "users" do
     field(:_rev, :string)

@@ -1,6 +1,6 @@
-defmodule ThisesWeb.ExAdmin.Author do
+defmodule ThysisWeb.ExAdmin.Author do
   use ExAdmin.Register
 
-  register_resource Thises.Author do
+  register_resource Thysis.Author do
   end
 end

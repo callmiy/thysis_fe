@@ -1,12 +1,12 @@
-defmodule Thises.Projects do
+defmodule Thysis.Projects do
   @moduledoc """
   The Projects context.
   """
 
   import Ecto.Query, warn: false
 
-  alias Thises.Repo
-  alias Thises.Projects.Project
+  alias Thysis.Repo
+  alias Thysis.Projects.Project
 
   @doc """
   Returns the list of projects.

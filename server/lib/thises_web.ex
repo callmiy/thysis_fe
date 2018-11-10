@@ -1,12 +1,12 @@
-defmodule ThisesWeb do
+defmodule ThysisWeb do
   @moduledoc """
   The entrypoint for defining your web interface, such
   as controllers, views, channels and so on.
 
   This can be used in your application as:
 
-      use ThisesWeb, :controller
-      use ThisesWeb, :view
+      use ThysisWeb, :controller
+      use ThysisWeb, :view
 
   The definitions below will be executed for every view,
   controller, etc, so keep them short and clean, focused
@@ -19,17 +19,17 @@ defmodule ThisesWeb do
 
   def controller do
     quote do
-      use Phoenix.Controller, namespace: ThisesWeb
+      use Phoenix.Controller, namespace: ThysisWeb
       import Plug.Conn
-      import ThisesWeb.Router.Helpers
-      import ThisesWeb.Gettext
+      import ThysisWeb.Router.Helpers
+      import ThysisWeb.Gettext
     end
   end
 
   def view do
     quote do
-      use Phoenix.View, root: "lib/thises_web/templates",
-                        namespace: ThisesWeb
+      use Phoenix.View, root: "lib/thysis_web/templates",
+                        namespace: ThysisWeb
 
       # Import convenience functions from controllers
       import Phoenix.Controller, only: [get_flash: 2, view_module: 1]
@@ -37,9 +37,9 @@ defmodule ThisesWeb do
       # Use all HTML functionality (forms, tags, etc)
       use Phoenix.HTML
 
-      import ThisesWeb.Router.Helpers
-      import ThisesWeb.ErrorHelpers
-      import ThisesWeb.Gettext
+      import ThysisWeb.Router.Helpers
+      import ThysisWeb.ErrorHelpers
+      import ThysisWeb.Gettext
     end
   end
 
@@ -54,7 +54,7 @@ defmodule ThisesWeb do
   def channel do
     quote do
       use Phoenix.Channel
-      import ThisesWeb.Gettext
+      import ThysisWeb.Gettext
     end
   end
 

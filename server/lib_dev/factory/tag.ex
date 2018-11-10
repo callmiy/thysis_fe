@@ -1,9 +1,9 @@
-defmodule Thises.Factory.Tag do
-  use Thises.Factory
+defmodule Thysis.Factory.Tag do
+  use Thysis.Factory
 
-  alias Thises.TagApi
-  alias Thises.Factory
-  alias Thises.Tag
+  alias Thysis.TagApi
+  alias Thysis.Factory
+  alias Thysis.Tag
 
   @simple_attrs [:text, :question]
 

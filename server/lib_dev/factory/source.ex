@@ -1,15 +1,15 @@
-defmodule Thises.Factory.Source do
-  use Thises.Factory
+defmodule Thysis.Factory.Source do
+  use Thysis.Factory
 
   @dialyzer {:no_return, [insert: 1, insert: 0]}
 
-  alias Thises.Factory
-  alias Thises.Factory.SourceType, as: SourceTypeFactory
-  alias Thises.Factory.Author, as: AuthorFactory
-  alias Thises.Sources
-  alias Thises.Sources.Source
-  alias Thises.Factory.Project, as: ProjectFactory
-  alias Thises.Factory.Registration, as: RegFactory
+  alias Thysis.Factory
+  alias Thysis.Factory.SourceType, as: SourceTypeFactory
+  alias Thysis.Factory.Author, as: AuthorFactory
+  alias Thysis.Sources
+  alias Thysis.Sources.Source
+  alias Thysis.Factory.Project, as: ProjectFactory
+  alias Thysis.Factory.Registration, as: RegFactory
 
   @simple_attrs [
     :topic,

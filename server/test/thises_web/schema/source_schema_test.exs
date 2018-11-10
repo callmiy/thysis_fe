@@ -1,14 +1,14 @@
-defmodule ThisesWeb.SourceSchemaTest do
-  use Thises.DataCase
-  alias ThisesWeb.Schema
-  alias ThisesWeb.Query.Source, as: Query
-  alias Thises.Sources.Source
-  alias Thises.Sources
-  alias Thises.Factory.Author, as: AuthorFactory
-  alias Thises.Factory.Registration, as: RegFactory
-  alias Thises.Factory.Project, as: ProjectFactory
-  alias Thises.Factory.Source, as: Factory
-  alias Thises.Factory.SourceType, as: SourceTypeFactory
+defmodule ThysisWeb.SourceSchemaTest do
+  use Thysis.DataCase
+  alias ThysisWeb.Schema
+  alias ThysisWeb.Query.Source, as: Query
+  alias Thysis.Sources.Source
+  alias Thysis.Sources
+  alias Thysis.Factory.Author, as: AuthorFactory
+  alias Thysis.Factory.Registration, as: RegFactory
+  alias Thysis.Factory.Project, as: ProjectFactory
+  alias Thysis.Factory.Source, as: Factory
+  alias Thysis.Factory.SourceType, as: SourceTypeFactory
 
   describe "query" do
     # @tag :skip

@@ -1,10 +1,10 @@
-defmodule Thises.Projects.Project do
+defmodule Thysis.Projects.Project do
   use Ecto.Schema
   use Timex.Ecto.Timestamps
 
   import Ecto.Changeset
 
-  alias Thises.Accounts.User
+  alias Thysis.Accounts.User
 
   schema "projects" do
     field(:title, :string)

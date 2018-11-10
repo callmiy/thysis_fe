@@ -1,9 +1,9 @@
-defmodule Thises.SourceAuthor do
+defmodule Thysis.SourceAuthor do
   use Ecto.Schema
   import Ecto.Changeset
 
-  alias Thises.Sources.Source
-  alias Thises.Author
+  alias Thysis.Sources.Source
+  alias Thysis.Author
 
   schema "source_authors" do
     belongs_to(:source, Source)

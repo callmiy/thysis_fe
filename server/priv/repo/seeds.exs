@@ -5,29 +5,29 @@
 # Inside the script, you can read and write to any of your
 # repositories directly:
 #
-#     Thises.Repo.insert!(%Thises.SomeSchema{})
+#     Thysis.Repo.insert!(%Thysis.SomeSchema{})
 #
 # We recommend using the bang functions (`insert!`, `update!`
 # and so on) as they will fail if something goes wrong.
 
 defmodule Seed do
-  alias Thises.Repo
-  alias Thises.SourceType
-  alias Thises.Sources.Source
-  alias Thises.Quote
-  alias Thises.Tag
-  alias Thises.QuoteTag
-  alias Thises.SourceAuthor
-  alias Thises.Factory.Source, as: SourceFactory
-  alias Thises.Factory.Registration, as: RegFactory
-  alias Thises.Factory.Project, as: ProjectFactory
-  alias Thises.Factory.SourceType, as: SourceTypeFactory
-  alias Thises.Factory.Tag, as: TagFactory
-  alias Thises.Factory.Quote, as: QuoteFactory
-  alias Thises.Factory.QuoteTag, as: QuoteTagFactory
-  alias Thises.Accounts.User
-  alias Thises.Projects.Project
-  alias Thises.Author
+  alias Thysis.Repo
+  alias Thysis.SourceType
+  alias Thysis.Sources.Source
+  alias Thysis.Quote
+  alias Thysis.Tag
+  alias Thysis.QuoteTag
+  alias Thysis.SourceAuthor
+  alias Thysis.Factory.Source, as: SourceFactory
+  alias Thysis.Factory.Registration, as: RegFactory
+  alias Thysis.Factory.Project, as: ProjectFactory
+  alias Thysis.Factory.SourceType, as: SourceTypeFactory
+  alias Thysis.Factory.Tag, as: TagFactory
+  alias Thysis.Factory.Quote, as: QuoteFactory
+  alias Thysis.Factory.QuoteTag, as: QuoteTagFactory
+  alias Thysis.Accounts.User
+  alias Thysis.Projects.Project
+  alias Thysis.Author
 
   @source_type_names ["Journal", "Book", "Oral discussion", "Website"]
 

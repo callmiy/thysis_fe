@@ -1,5 +1,5 @@
-defmodule Thises.Repo do
-  use Ecto.Repo, otp_app: :thises
+defmodule Thysis.Repo do
+  use Ecto.Repo, otp_app: :thysis
   use Scrivener, page_size: 10
 
   @doc """

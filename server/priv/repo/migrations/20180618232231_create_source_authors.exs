@@ -1,4 +1,4 @@
-defmodule Thises.Repo.Migrations.CreateSourceAuthors do
+defmodule Thysis.Repo.Migrations.CreateSourceAuthors do
   use Ecto.Migration
 
   def change do

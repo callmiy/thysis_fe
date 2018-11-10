@@ -1,4 +1,4 @@
-defmodule Thises.FeatureCase do
+defmodule Thysis.FeatureCase do
   @moduledoc """
   This module defines the setup for tests requiring
   access to the application's data layer.
@@ -22,19 +22,19 @@ defmodule Thises.FeatureCase do
 
       import Ecto
       import Ecto.Changeset
-      import Thises.FeatureCase
+      import Thysis.FeatureCase
     end
   end
 
   setup tags do
-    :ok = Ecto.Adapters.SQL.Sandbox.checkout(Thises.Repo)
+    :ok = Ecto.Adapters.SQL.Sandbox.checkout(Thysis.Repo)
     parent = self()
 
     unless tags[:async] do
-      Ecto.Adapters.SQL.Sandbox.mode(Thises.Repo, {:shared, parent})
+      Ecto.Adapters.SQL.Sandbox.mode(Thysis.Repo, {:shared, parent})
     end
 
-    # metadata = Phoenix.Ecto.SQL.Sandbox.metadata_for(Thises.Repo, self())
+    # metadata = Phoenix.Ecto.SQL.Sandbox.metadata_for(Thysis.Repo, self())
 
     # user_agent =
     #   Hound.Browser.user_agent(:chrome)

@@ -1,4 +1,4 @@
-defmodule ThisesWeb.Query.SourceType do
+defmodule ThysisWeb.Query.SourceType do
   @name "SourceTypeFieldsFragment"
 
   @fragment """

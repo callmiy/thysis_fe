@@ -1,8 +1,8 @@
-defmodule Thises.SourceAuthorApi do
+defmodule Thysis.SourceAuthorApi do
   import Ecto.Query, warn: false
 
-  alias Thises.Repo
-  alias Thises.SourceAuthor
+  alias Thysis.Repo
+  alias Thysis.SourceAuthor
 
   def delete_(author_ids) when is_list(author_ids) do
     {_, deleted} =

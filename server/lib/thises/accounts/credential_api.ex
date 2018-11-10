@@ -1,8 +1,8 @@
-defmodule Thises.Accounts.CredentialApi do
+defmodule Thysis.Accounts.CredentialApi do
   import Ecto.Query, warn: false
 
-  alias Thises.Repo
-  alias Thises.Accounts.Credential
+  alias Thysis.Repo
+  alias Thysis.Accounts.Credential
 
   @doc """
   Returns the list of credentials.

@@ -1,10 +1,10 @@
-defmodule ThisesWeb.SourceTypeSchemaTest do
-  use Thises.DataCase
-  alias ThisesWeb.Schema
-  alias ThisesWeb.Query.SourceType, as: Query
-  alias Thises.SourceType
-  alias Thises.Factory.SourceType, as: Factory
-  alias Thises.Factory.Registration, as: RegFactory
+defmodule ThysisWeb.SourceTypeSchemaTest do
+  use Thysis.DataCase
+  alias ThysisWeb.Schema
+  alias ThysisWeb.Query.SourceType, as: Query
+  alias Thysis.SourceType
+  alias Thysis.Factory.SourceType, as: Factory
+  alias Thysis.Factory.Registration, as: RegFactory
 
   describe "query" do
     test "get source type by id" do

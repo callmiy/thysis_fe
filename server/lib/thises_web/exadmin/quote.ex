@@ -1,6 +1,6 @@
-defmodule ThisesWeb.ExAdmin.Quote do
+defmodule ThysisWeb.ExAdmin.Quote do
   use ExAdmin.Register
 
-  register_resource Thises.Quote do
+  register_resource Thysis.Quote do
   end
 end

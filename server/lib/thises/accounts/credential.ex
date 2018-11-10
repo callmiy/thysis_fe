@@ -1,4 +1,4 @@
-defmodule Thises.Accounts.Credential do
+defmodule Thysis.Accounts.Credential do
   use Ecto.Schema
   use Timex.Ecto.Timestamps
 
@@ -6,7 +6,7 @@ defmodule Thises.Accounts.Credential do
   import Comeonin.Bcrypt, only: [hashpwsalt: 1]
 
   alias Ecto.Changeset
-  alias Thises.Accounts.User
+  alias Thysis.Accounts.User
 
   schema "credentials" do
     field(:source, :string)

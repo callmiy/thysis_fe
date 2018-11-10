@@ -1,13 +1,13 @@
-defmodule Thises.Accounts.Registration do
+defmodule Thysis.Accounts.Registration do
   use Ecto.Schema
 
   import Ecto.Changeset
 
   alias Ecto.Multi
-  alias Thises.Accounts.User
-  alias Thises.Accounts.UserApi
-  alias Thises.Accounts.Credential
-  alias Thises.Accounts.CredentialApi
+  alias Thysis.Accounts.User
+  alias Thysis.Accounts.UserApi
+  alias Thysis.Accounts.Credential
+  alias Thysis.Accounts.CredentialApi
 
   @required_fields [
     :name,

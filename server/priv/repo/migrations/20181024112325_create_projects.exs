@@ -1,4 +1,4 @@
-defmodule Thises.Repo.Migrations.CreateProjects do
+defmodule Thysis.Repo.Migrations.CreateProjects do
   use Ecto.Migration
 
   def change do

@@ -1,4 +1,4 @@
-defmodule ThisesWeb.Resolver do
+defmodule ThysisWeb.Resolver do
   @moduledoc """
   Helper utilities for resolvers
   """

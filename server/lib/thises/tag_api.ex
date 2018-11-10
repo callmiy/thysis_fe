@@ -1,12 +1,12 @@
-defmodule Thises.TagApi do
+defmodule Thysis.TagApi do
   @moduledoc """
   The Tags context.
   """
 
   import Ecto.Query, warn: false
-  alias Thises.Repo
+  alias Thysis.Repo
 
-  alias Thises.Tag
+  alias Thysis.Tag
 
   @doc """
   Returns the list of tags.
@@ -132,7 +132,7 @@ defmodule Thises.TagApi do
   end
 
   def data() do
-    Dataloader.Ecto.new(Thises.Repo, query: &query/2)
+    Dataloader.Ecto.new(Thysis.Repo, query: &query/2)
   end
 
   def query(queryable, _params) do

@@ -6,44 +6,44 @@
 use Mix.Config
 
 # General application configuration
-config :thises, ecto_repos: [Thises.Repo]
+config :thysis, ecto_repos: [Thysis.Repo]
 
 # Configures the endpoint
-config :thises, ThisesWeb.Endpoint,
+config :thysis, ThysisWeb.Endpoint,
   url: [host: "localhost"],
   secret_key_base: "P03sJpvcH4I94Sh1CsEXXpxuvtFzJPxQ1FsFjc/eze4omKteoCcEOQMW8CMbifDs",
-  render_errors: [view: ThisesWeb.ErrorView, accepts: ~w(html json)],
-  pubsub: [name: Thises.PubSub, adapter: Phoenix.PubSub.PG2]
+  render_errors: [view: ThysisWeb.ErrorView, accepts: ~w(html json)],
+  pubsub: [name: Thysis.PubSub, adapter: Phoenix.PubSub.PG2]
 
 # Configures Elixir's Logger
 config :logger, :console,
   format: "$time $metadata[$level] $message\n",
   metadata: [:request_id]
 
-config :absinthe, schema: ThisesWeb.Schema
+config :absinthe, schema: ThysisWeb.Schema
 
 config :ex_admin,
-  repo: Thises.Repo,
-  module: ThisesWeb,
+  repo: Thysis.Repo,
+  module: ThysisWeb,
   modules: [
-    ThisesWeb.ExAdmin.Dashboard,
-    ThisesWeb.ExAdmin.SourceType,
-    ThisesWeb.ExAdmin.Source,
-    ThisesWeb.ExAdmin.Quote,
-    ThisesWeb.ExAdmin.Tag,
-    ThisesWeb.ExAdmin.QuoteTag,
-    ThisesWeb.ExAdmin.Author,
-    ThisesWeb.ExAdmin.Project,
-    ThisesWeb.ExAdmin.User
+    ThysisWeb.ExAdmin.Dashboard,
+    ThysisWeb.ExAdmin.SourceType,
+    ThysisWeb.ExAdmin.Source,
+    ThysisWeb.ExAdmin.Quote,
+    ThysisWeb.ExAdmin.Tag,
+    ThysisWeb.ExAdmin.QuoteTag,
+    ThysisWeb.ExAdmin.Author,
+    ThysisWeb.ExAdmin.Project,
+    ThysisWeb.ExAdmin.User
   ]
 
-config :thises, ThisesWeb.Auth.Guardian,
-  issuer: "thises",
+config :thysis, ThysisWeb.Auth.Guardian,
+  issuer: "thysis",
   secret_key: "18mCuUrkr04Qd3hwHrLGAVzs6cxVZT3tNXtmkH8MvFJUOUD2LFh6sajhuFtPlvhm"
 
-config :thises, ThisesWeb.Auth.AccessPipeline,
-  module: ThisesWeb.Auth.Guardian,
-  error_handler: ThisesWeb.Auth.Guardian
+config :thysis, ThysisWeb.Auth.AccessPipeline,
+  module: ThysisWeb.Auth.Guardian,
+  error_handler: ThysisWeb.Auth.Guardian
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.

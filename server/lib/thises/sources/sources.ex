@@ -1,17 +1,17 @@
-defmodule Thises.Sources do
+defmodule Thysis.Sources do
   @moduledoc """
   The Sources context.
   """
 
   import Ecto.Query, warn: false
   alias Ecto.Multi
-  alias Thises.Repo
-  alias Thises.Sources.Source
-  alias Thises.SourceAuthor
-  alias Thises.Author
-  alias Thises.SourceType
-  alias Thises.SourceTypeApi
-  alias Thises.SourceAuthorApi
+  alias Thysis.Repo
+  alias Thysis.Sources.Source
+  alias Thysis.SourceAuthor
+  alias Thysis.Author
+  alias Thysis.SourceType
+  alias Thysis.SourceTypeApi
+  alias Thysis.SourceAuthorApi
 
   @doc """
   Returns the list of sources.

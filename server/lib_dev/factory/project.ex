@@ -1,8 +1,8 @@
-defmodule Thises.Factory.Project do
-  alias Thises.Accounts.User
-  alias Thises.Factory.Registration, as: RegFactory
-  alias Thises.Projects
-  alias Thises.Projects.Project
+defmodule Thysis.Factory.Project do
+  alias Thysis.Accounts.User
+  alias Thysis.Factory.Registration, as: RegFactory
+  alias Thysis.Projects
+  alias Thysis.Projects.Project
 
   def insert_list(how_many, attrs \\ %{}) when how_many > 0,
     do:

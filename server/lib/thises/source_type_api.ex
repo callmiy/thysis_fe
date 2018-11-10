@@ -1,12 +1,12 @@
-defmodule Thises.SourceTypeApi do
+defmodule Thysis.SourceTypeApi do
   @moduledoc """
   The SourceTypes context.
   """
 
   import Ecto.Query, warn: false
-  alias Thises.Repo
+  alias Thysis.Repo
 
-  alias Thises.SourceType
+  alias Thysis.SourceType
 
   @doc """
   Returns the list of source_types.

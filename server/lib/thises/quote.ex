@@ -1,9 +1,9 @@
-defmodule Thises.Quote do
+defmodule Thysis.Quote do
   use Ecto.Schema
   import Ecto.Changeset
 
-  alias Thises.Sources.Source
-  alias Thises.Tag
+  alias Thysis.Sources.Source
+  alias Thysis.Tag
 
   @timestamps_opts [
     type: Timex.Ecto.DateTime,

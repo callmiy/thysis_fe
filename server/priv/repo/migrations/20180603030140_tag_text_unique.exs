@@ -1,4 +1,4 @@
-defmodule Thises.Repo.Migrations.TagTextUnique do
+defmodule Thysis.Repo.Migrations.TagTextUnique do
   use Ecto.Migration
 
   def change do

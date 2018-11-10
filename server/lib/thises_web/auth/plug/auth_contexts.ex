@@ -1,7 +1,7 @@
-defmodule ThisesWeb.Plug.AuthContexts do
+defmodule ThysisWeb.Plug.AuthContexts do
   @behaviour Plug
 
-  alias ThisesWeb.Auth.Guardian, as: GuardianApp
+  alias ThysisWeb.Auth.Guardian, as: GuardianApp
 
   @doc false
   def init(opts), do: opts

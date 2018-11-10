@@ -1,15 +1,15 @@
-defmodule Thises.Sources.Source do
+defmodule Thysis.Sources.Source do
   use Ecto.Schema
   import Ecto.Changeset
 
-  alias Thises.Quote
-  alias Thises.SourceType
-  alias Thises.Author
-  alias Thises.AuthorApi
-  alias Thises.SourceAuthor
-  alias Thises.Sources
-  alias Thises.Projects.Project
-  alias Thises.Accounts.User
+  alias Thysis.Quote
+  alias Thysis.SourceType
+  alias Thysis.Author
+  alias Thysis.AuthorApi
+  alias Thysis.SourceAuthor
+  alias Thysis.Sources
+  alias Thysis.Projects.Project
+  alias Thysis.Accounts.User
 
   @timestamps_opts [
     type: Timex.Ecto.DateTime,

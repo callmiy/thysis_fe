@@ -60,7 +60,7 @@
       "command": "yarn deploy",
       "options": {
         "env": {
-          "REACT_APP_API_URL": "https://thises.herokuapp.com/__api"
+          "REACT_APP_API_URL": "https://thysis.herokuapp.com/__api"
         }
       },
       "group": "build",
@@ -73,7 +73,7 @@
       "command": "yarn deploy && cd .. && git add . && git cm -m \"Production build\" && git co master && git merge dev && git subtree push --prefix=server heroku master && heroku run \"POOL_SIZE=2 mix ecto.migrate\" && git co dev",
       "options": {
         "env": {
-          "REACT_APP_API_URL": "https://thises.herokuapp.com/__api"
+          "REACT_APP_API_URL": "https://thysis.herokuapp.com/__api"
         }
       },
       "problemMatcher": []

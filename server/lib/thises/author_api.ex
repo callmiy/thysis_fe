@@ -1,12 +1,12 @@
-defmodule Thises.AuthorApi do
+defmodule Thysis.AuthorApi do
   @moduledoc """
   The Authors context.
   """
 
   import Ecto.Query, warn: false
-  alias Thises.Repo
+  alias Thysis.Repo
 
-  alias Thises.Author
+  alias Thysis.Author
 
   @doc """
   Returns the list of authors.

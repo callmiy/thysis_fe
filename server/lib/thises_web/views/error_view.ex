@@ -1,5 +1,5 @@
-defmodule ThisesWeb.ErrorView do
-  use ThisesWeb, :view
+defmodule ThysisWeb.ErrorView do
+  use ThysisWeb, :view
 
   def render("404.html", _assigns) do
     "Page not found"

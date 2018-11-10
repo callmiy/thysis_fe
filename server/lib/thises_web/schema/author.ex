@@ -1,4 +1,4 @@
-defmodule ThisesWeb.Schema.Author do
+defmodule ThysisWeb.Schema.Author do
   @moduledoc """
   Schema types for Author
   """
@@ -7,7 +7,7 @@ defmodule ThisesWeb.Schema.Author do
 
   import Absinthe.Resolution.Helpers, only: [dataloader: 1]
 
-  alias ThisesWeb.Resolver.Author, as: Resolver
+  alias ThysisWeb.Resolver.Author, as: Resolver
 
   @desc "An Author"
   object :author do
@@ -21,7 +21,7 @@ defmodule ThisesWeb.Schema.Author do
     field(
       :sources,
       list_of(:source) |> non_null(),
-      resolve: dataloader(Thises.Sources)
+      resolve: dataloader(Thysis.Sources)
     )
   end
 

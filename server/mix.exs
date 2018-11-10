@@ -1,9 +1,9 @@
-defmodule Thises.Mixfile do
+defmodule Thysis.Mixfile do
   use Mix.Project
 
   def project do
     [
-      app: :thises,
+      app: :thysis,
       version: "0.0.1",
       elixir: "~> 1.7",
       elixirc_paths: elixirc_paths(Mix.env()),
@@ -19,7 +19,7 @@ defmodule Thises.Mixfile do
   # Type `mix help compile.app` for more information.
   def application do
     [
-      mod: {Thises.Application, []},
+      mod: {Thysis.Application, []},
       extra_applications: [:logger, :runtime_tools]
     ]
   end

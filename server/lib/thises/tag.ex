@@ -1,8 +1,8 @@
-defmodule Thises.Tag do
+defmodule Thysis.Tag do
   use Ecto.Schema
   import Ecto.Changeset
 
-  alias Thises.Quote
+  alias Thysis.Quote
 
   schema "tags" do
     field(:text, :string)

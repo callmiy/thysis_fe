@@ -1,7 +1,7 @@
-defmodule Thises.Factory.User do
-  use Thises.Factory
+defmodule Thysis.Factory.User do
+  use Thysis.Factory
 
-  alias Thises.Factory
+  alias Thysis.Factory
 
   @simple_attrs [:name, :email, :_rev]
 

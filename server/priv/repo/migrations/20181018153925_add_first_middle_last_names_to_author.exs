@@ -1,4 +1,4 @@
-defmodule Thises.Repo.Migrations.AddFirstMiddleLastNamesToAuthor do
+defmodule Thysis.Repo.Migrations.AddFirstMiddleLastNamesToAuthor do
   use Ecto.Migration
 
   def change do

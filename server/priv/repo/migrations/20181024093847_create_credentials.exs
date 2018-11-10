@@ -1,4 +1,4 @@
-defmodule Thises.Repo.Migrations.CreateCredentials do
+defmodule Thysis.Repo.Migrations.CreateCredentials do
   use Ecto.Migration
 
   def change do

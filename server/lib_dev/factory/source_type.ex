@@ -1,11 +1,11 @@
-defmodule Thises.Factory.SourceType do
-  use Thises.Factory
+defmodule Thysis.Factory.SourceType do
+  use Thysis.Factory
 
-  alias Thises.Accounts.User
-  alias Thises.Factory.Registration, as: RegFactory
-  alias Thises.SourceTypeApi
-  alias Thises.Factory
-  alias Thises.Factory.User, as: UserFactory
+  alias Thysis.Accounts.User
+  alias Thysis.Factory.Registration, as: RegFactory
+  alias Thysis.SourceTypeApi
+  alias Thysis.Factory
+  alias Thysis.Factory.User, as: UserFactory
 
   @simple_attrs [:name, :user_id]
 

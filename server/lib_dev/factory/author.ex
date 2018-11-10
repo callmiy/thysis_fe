@@ -1,11 +1,11 @@
-defmodule Thises.Factory.Author do
-  use Thises.Factory
+defmodule Thysis.Factory.Author do
+  use Thysis.Factory
 
-  alias Thises.AuthorApi, as: Api
-  alias Thises.Factory
-  alias Thises.Author
-  alias Thises.Factory.Registration, as: RegFactory
-  alias Thises.Factory.Project, as: ProjectFactory
+  alias Thysis.AuthorApi, as: Api
+  alias Thysis.Factory
+  alias Thysis.Author
+  alias Thysis.Factory.Registration, as: RegFactory
+  alias Thysis.Factory.Project, as: ProjectFactory
 
   @simple_attrs [
     :last_name,

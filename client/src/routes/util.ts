@@ -34,14 +34,14 @@ export const PROJECTS_URL = "/projects";
 
 // END ROUTE URLS
 
-let titleEl = document.getElementById("thises-title");
+let titleEl = document.getElementById("thysis-title");
 
 export const setTitle = (title?: string) => {
   if (!titleEl) {
-    titleEl = document.getElementById("thises-title");
+    titleEl = document.getElementById("thysis-title");
   }
 
   if (titleEl) {
-    titleEl.innerText = title ? `Thises | ${title}` : "Thises";
+    titleEl.innerText = title ? `Thysis | ${title}` : "Thysis";
   }
 };

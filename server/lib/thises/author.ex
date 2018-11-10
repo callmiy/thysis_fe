@@ -1,10 +1,10 @@
-defmodule Thises.Author do
+defmodule Thysis.Author do
   use Ecto.Schema
   import Ecto.Changeset
 
-  alias Thises.Sources.Source
-  alias Thises.Projects.Project
-  alias Thises.Accounts.User
+  alias Thysis.Sources.Source
+  alias Thysis.Projects.Project
+  alias Thysis.Accounts.User
 
   schema "authors" do
     field(:first_name, :string)

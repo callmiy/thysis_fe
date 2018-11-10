@@ -1,4 +1,4 @@
-defmodule Thises.Repo.Migrations.SourceDeleteAuthorField do
+defmodule Thysis.Repo.Migrations.SourceDeleteAuthorField do
   use Ecto.Migration
 
   def change do

@@ -1,4 +1,4 @@
-defmodule ThisesWeb.Query.Credential do
+defmodule ThysisWeb.Query.Credential do
   def all_fields_fragment do
     name = "CredentialAllFieldsFragment"
 

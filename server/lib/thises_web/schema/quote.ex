@@ -1,4 +1,4 @@
-defmodule ThisesWeb.Schema.Quote do
+defmodule ThysisWeb.Schema.Quote do
   @moduledoc """
   Schema definition for Quote resource
   """
@@ -7,7 +7,7 @@ defmodule ThisesWeb.Schema.Quote do
 
   import Absinthe.Resolution.Helpers, only: [dataloader: 1]
 
-  alias ThisesWeb.Resolver.Quote , as: Resolver
+  alias ThysisWeb.Resolver.Quote , as: Resolver
 
   @desc "A Quote"
   object :quote do
@@ -22,8 +22,8 @@ defmodule ThisesWeb.Schema.Quote do
     field(:inserted_at, non_null(:iso_datetime))
     field(:updated_at, non_null(:iso_datetime))
 
-    field(:source, :source, resolve: dataloader(Thises.Sources))
-    field(:tags, list_of(:tag), resolve: dataloader(Thises.TagApi))
+    field(:source, :source, resolve: dataloader(Thysis.Sources))
+    field(:tags, list_of(:tag), resolve: dataloader(Thysis.TagApi))
   end
 
   @desc "When we do full text search, the result returned will contain name of

@@ -1,25 +1,25 @@
-defmodule ThisesWeb.Schema do
+defmodule ThysisWeb.Schema do
   use Absinthe.Schema
 
   import_types(Absinthe.Type.Custom)
-  import_types(ThisesWeb.Schema.Types)
-  import_types(ThisesWeb.Schema.Tag)
-  import_types(ThisesWeb.Schema.SourceType)
-  import_types(ThisesWeb.Schema.Source)
-  import_types(ThisesWeb.Schema.Quote)
-  import_types(ThisesWeb.Schema.Author)
-  import_types(ThisesWeb.Schema.Credential)
-  import_types(ThisesWeb.Schema.User)
-  import_types(ThisesWeb.Schema.Project)
+  import_types(ThysisWeb.Schema.Types)
+  import_types(ThysisWeb.Schema.Tag)
+  import_types(ThysisWeb.Schema.SourceType)
+  import_types(ThysisWeb.Schema.Source)
+  import_types(ThysisWeb.Schema.Quote)
+  import_types(ThysisWeb.Schema.Author)
+  import_types(ThysisWeb.Schema.Credential)
+  import_types(ThysisWeb.Schema.User)
+  import_types(ThysisWeb.Schema.Project)
 
-  alias Thises.QuoteApi
-  alias Thises.TagApi
-  alias Thises.Sources
-  alias Thises.AuthorApi
-  alias Thises.SourceTypeApi
-  alias Thises.Accounts.CredentialApi
-  alias Thises.Accounts.UserApi
-  alias Thises.Projects
+  alias Thysis.QuoteApi
+  alias Thysis.TagApi
+  alias Thysis.Sources
+  alias Thysis.AuthorApi
+  alias Thysis.SourceTypeApi
+  alias Thysis.Accounts.CredentialApi
+  alias Thysis.Accounts.UserApi
+  alias Thysis.Projects
 
   query do
     import_fields(:tag_query)

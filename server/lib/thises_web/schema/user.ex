@@ -1,11 +1,11 @@
-defmodule ThisesWeb.Schema.User do
+defmodule ThysisWeb.Schema.User do
   use Absinthe.Schema.Notation
 
   import Absinthe.Resolution.Helpers, only: [dataloader: 1]
 
-  alias ThisesWeb.Schema
-  alias ThisesWeb.User.Resolver
-  alias Thises.Projects
+  alias ThysisWeb.Schema
+  alias ThysisWeb.User.Resolver
+  alias Thysis.Projects
 
   @desc "A User"
   object :user do

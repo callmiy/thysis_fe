@@ -1,12 +1,12 @@
-defmodule Thises.Accounts.UserApi do
+defmodule Thysis.Accounts.UserApi do
   @moduledoc """
   The Account context.
   """
 
   import Ecto.Query, warn: false
 
-  alias Thises.Repo
-  alias Thises.Accounts.User
+  alias Thysis.Repo
+  alias Thysis.Accounts.User
 
   @doc """
   Returns the list of users.

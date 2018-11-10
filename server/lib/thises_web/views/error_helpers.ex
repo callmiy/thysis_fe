@@ -1,4 +1,4 @@
-defmodule ThisesWeb.ErrorHelpers do
+defmodule ThysisWeb.ErrorHelpers do
   @moduledoc """
   Conveniences for translating and building error messages.
   """
@@ -32,9 +32,9 @@ defmodule ThisesWeb.ErrorHelpers do
     #     dgettext "errors", "is invalid"
     #
     if count = opts[:count] do
-      Gettext.dngettext(ThisesWeb.Gettext, "errors", msg, msg, count, opts)
+      Gettext.dngettext(ThysisWeb.Gettext, "errors", msg, msg, count, opts)
     else
-      Gettext.dgettext(ThisesWeb.Gettext, "errors", msg, opts)
+      Gettext.dgettext(ThysisWeb.Gettext, "errors", msg, opts)
     end
   end
 end

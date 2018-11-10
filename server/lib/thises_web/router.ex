@@ -1,5 +1,5 @@
-defmodule ThisesWeb.Router do
-  use ThisesWeb, :router
+defmodule ThysisWeb.Router do
+  use ThysisWeb, :router
   use ExAdmin.Router
 
   pipeline :browser do
@@ -12,8 +12,8 @@ defmodule ThisesWeb.Router do
 
   pipeline :api do
     plug(:accepts, ["json"])
-    plug(ThisesWeb.Auth.AccessPipeline)
-    plug(ThisesWeb.Plug.AuthContexts)
+    plug(ThysisWeb.Auth.AccessPipeline)
+    plug(ThysisWeb.Plug.AuthContexts)
   end
 
   scope "/__admin", ExAdmin do
@@ -27,16 +27,16 @@ defmodule ThisesWeb.Router do
     forward(
       "/__api",
       Absinthe.Plug,
-      schema: ThisesWeb.Schema,
-      context: %{pubsub: ThisesWeb.Endpoint}
+      schema: ThysisWeb.Schema,
+      context: %{pubsub: ThysisWeb.Endpoint}
     )
 
     if Mix.env() == :dev do
       forward(
         "/__graphql",
         Absinthe.Plug.GraphiQL,
-        schema: ThisesWeb.Schema,
-        context: %{pubsub: ThisesWeb.Endpoint}
+        schema: ThysisWeb.Schema,
+        context: %{pubsub: ThysisWeb.Endpoint}
       )
     end
   end

@@ -1,9 +1,9 @@
-defmodule ThisesWeb.Schema.ProjectTest do
-  use Thises.DataCase, async: false
+defmodule ThysisWeb.Schema.ProjectTest do
+  use Thysis.DataCase, async: false
 
-  alias Thises.Factory.Project, as: Factory
-  alias ThisesWeb.Schema
-  alias ThisesWeb.Query.Project, as: Query
+  alias Thysis.Factory.Project, as: Factory
+  alias ThysisWeb.Schema
+  alias ThysisWeb.Query.Project, as: Query
 
   describe "Mutation" do
     test "creating a project succeeds" do

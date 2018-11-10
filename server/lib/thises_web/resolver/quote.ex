@@ -1,13 +1,13 @@
-defmodule ThisesWeb.Resolver.Quote do
+defmodule ThysisWeb.Resolver.Quote do
   @moduledoc """
   Resolver for the Quote Schema
   """
 
-  alias Thises.Quote
-  alias Thises.QuoteApi, as: Api
-  alias ThisesWeb.Resolver
-  alias Thises.Sources
-  # alias Thises.Sources.Source
+  alias Thysis.Quote
+  alias Thysis.QuoteApi, as: Api
+  alias ThysisWeb.Resolver
+  alias Thysis.Sources
+  # alias Thysis.Sources.Source
 
   def create_quote(_, %{quote: inputs}, %{context: %{current_user: _user}}) do
     case Api.create_with_tags(inputs) do

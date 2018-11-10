@@ -1,4 +1,4 @@
-defmodule Thises.Repo.Migrations.ProjectUniquenessSource do
+defmodule Thysis.Repo.Migrations.ProjectUniquenessSource do
   use Ecto.Migration
 
   def up do

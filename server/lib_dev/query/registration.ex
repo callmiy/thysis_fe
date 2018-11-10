@@ -1,6 +1,6 @@
-defmodule Thises.Query.Registration do
-  alias ThisesWeb.Query.Credential
-  alias ThisesWeb.Query.User
+defmodule Thysis.Query.Registration do
+  alias ThysisWeb.Query.Credential
+  alias ThysisWeb.Query.User
 
   @doc "Register"
   def register do

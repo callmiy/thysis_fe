@@ -1,4 +1,4 @@
-defmodule ThisesWeb.FrontEnd do
+defmodule ThysisWeb.FrontEnd do
   # all paths not beginning with __ or has filename will be served from frontend
   @pattern ~r/^\/__.*$|^\/.+\.[^\.]+$/
 

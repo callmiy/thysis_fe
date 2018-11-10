@@ -1,10 +1,10 @@
-defmodule Thises.Accounts do
+defmodule Thysis.Accounts do
   import Ecto.Query, warn: false
   import Comeonin.Bcrypt, only: [{:dummy_checkpw, 0}, {:checkpw, 2}]
 
-  alias Thises.Accounts.Registration
-  alias Thises.Repo
-  alias Thises.Accounts.Credential
+  alias Thysis.Accounts.Registration
+  alias Thysis.Repo
+  alias Thysis.Accounts.Credential
 
   def register(params) do
     Ecto.Multi.new()

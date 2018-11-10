@@ -1,5 +1,5 @@
-defmodule Thises.Factory.Registration do
-  alias Thises.Accounts
+defmodule Thysis.Factory.Registration do
+  alias Thysis.Accounts
 
   @doc "insert"
   def insert(params \\ %{})

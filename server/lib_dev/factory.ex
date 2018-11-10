@@ -1,4 +1,4 @@
-defmodule Thises.Factory do
+defmodule Thysis.Factory do
   @start_date ~D[1998-01-01]
   @end_date ~D[2018-12-31]
 

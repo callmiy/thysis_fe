@@ -1,4 +1,4 @@
-defmodule Thises.QuoteApi do
+defmodule Thysis.QuoteApi do
   @moduledoc """
   The Quotes context.
   """
@@ -6,9 +6,9 @@ defmodule Thises.QuoteApi do
   import Ecto.Query, warn: false
 
   alias Ecto.Multi
-  alias Thises.Repo
-  alias Thises.Quote
-  alias Thises.QuoteTag
+  alias Thysis.Repo
+  alias Thysis.Quote
+  alias Thysis.QuoteTag
 
   @doc """
   Returns the list of quotes.
@@ -210,7 +210,7 @@ defmodule Thises.QuoteApi do
       |> Enum.group_by(& &1.source)
 
     authors =
-      Thises.Author
+      Thysis.Author
       |> where([a], ilike(a.last_name, ^param))
       |> or_where([a], ilike(a.first_name, ^param))
       |> or_where([a], ilike(a.middle_name, ^param))

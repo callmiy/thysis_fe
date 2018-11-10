@@ -1,8 +1,8 @@
-defmodule ThisesWeb.User.Resolver do
-  alias Thises.Accounts
-  alias ThisesWeb.Resolver
-  alias ThisesWeb.Auth.Guardian, as: GuardianApp
-  alias Thises.Accounts.UserApi
+defmodule ThysisWeb.User.Resolver do
+  alias Thysis.Accounts
+  alias ThysisWeb.Resolver
+  alias ThysisWeb.Auth.Guardian, as: GuardianApp
+  alias Thysis.Accounts.UserApi
 
   def create(_root, %{registration: params}, _info) do
     with {:ok, user} <- Accounts.register(params),

@@ -1,12 +1,12 @@
-defmodule Thises.Schema.UserTest do
-  use Thises.DataCase, async: false
+defmodule Thysis.Schema.UserTest do
+  use Thysis.DataCase, async: false
 
-  alias ThisesWeb.Schema
-  alias Thises.Query.Registration, as: RegQuery
-  alias Thises.Factory.Registration, as: RegFactory
-  alias ThisesWeb.Query.User, as: Query
-  alias Thises.Factory.User, as: Factory
-  alias ThisesWeb.Auth.Guardian, as: GuardianApp
+  alias ThysisWeb.Schema
+  alias Thysis.Query.Registration, as: RegQuery
+  alias Thysis.Factory.Registration, as: RegFactory
+  alias ThysisWeb.Query.User, as: Query
+  alias Thysis.Factory.User, as: Factory
+  alias ThysisWeb.Auth.Guardian, as: GuardianApp
 
   describe "mutation" do
     # @tag :skip

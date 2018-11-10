@@ -1,4 +1,4 @@
-defmodule Thises.MapHelpers do
+defmodule Thysis.MapHelpers do
   @moduledoc """
   Functions to transform maps
   """

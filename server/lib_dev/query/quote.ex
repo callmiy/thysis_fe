@@ -1,7 +1,7 @@
-defmodule ThisesWeb.Query.Quote do
-  alias ThisesWeb.Query.Tag, as: TagQuery
-  alias ThisesWeb.Query.Source, as: SourceQuery
-  alias ThisesWeb.Query.Author, as: AuthorQuery
+defmodule ThysisWeb.Query.Quote do
+  alias ThysisWeb.Query.Tag, as: TagQuery
+  alias ThysisWeb.Query.Source, as: SourceQuery
+  alias ThysisWeb.Query.Author, as: AuthorQuery
 
   def all_fields_fragment do
     name = "QuoteAllFieldsFragment"

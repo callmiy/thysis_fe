@@ -1,4 +1,4 @@
-defmodule ThisesWeb.Schema.Source do
+defmodule ThysisWeb.Schema.Source do
   @moduledoc """
   Schema for source
   """
@@ -7,7 +7,7 @@ defmodule ThisesWeb.Schema.Source do
 
   import Absinthe.Resolution.Helpers, only: [dataloader: 1]
 
-  alias ThisesWeb.Resolver.Source, as: Resolver
+  alias ThysisWeb.Resolver.Source, as: Resolver
 
   @desc "A source"
   object :source do
@@ -22,16 +22,16 @@ defmodule ThisesWeb.Schema.Source do
     field(
       :authors,
       list_of(:author) |> non_null(),
-      resolve: dataloader(Thises.AuthorApi)
+      resolve: dataloader(Thysis.AuthorApi)
     )
 
     field(
       :source_type,
       non_null(:source_type),
-      resolve: dataloader(Thises.SourceTypeApi)
+      resolve: dataloader(Thysis.SourceTypeApi)
     )
 
-    field(:quotes, list_of(:quote), resolve: dataloader(Thises.QuoteApi))
+    field(:quotes, list_of(:quote), resolve: dataloader(Thysis.QuoteApi))
 
     # field(:display, :string, do: resolve(&Resolver.display/3))
     field(
