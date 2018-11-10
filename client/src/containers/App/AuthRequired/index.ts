@@ -9,6 +9,7 @@ import { LocalUserGqlProps } from "./auth-required";
 import { OwnProps } from "./auth-required";
 import { CurrentProjectLocalGqlProps } from "./auth-required";
 import { AuthRequired } from "./component";
+import { userLocalMutationGql } from "src/state/user.local.mutation";
 
 const authUserLocalGraphQl = graphql<
   OwnProps,
@@ -34,5 +35,6 @@ const currentProjectLocalGql = graphql<
 
 export default compose(
   authUserLocalGraphQl,
-  currentProjectLocalGql
+  currentProjectLocalGql,
+  userLocalMutationGql
 )(AuthRequired);

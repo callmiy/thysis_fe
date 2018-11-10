@@ -140,9 +140,7 @@ export class NewQuote extends React.Component<Props, State> {
         return;
       }
 
-      const result = (await query) as ApolloQueryResult<
-        Sources1Query & Source1Query
-      >;
+      const result = query as ApolloQueryResult<Sources1Query & Source1Query>;
 
       this.setState(s =>
         update(s, {
@@ -602,6 +600,7 @@ export class NewQuote extends React.Component<Props, State> {
 
   getSources = () => {
     const { queryResult } = this.state;
+
     if (!queryResult) {
       return [] as SourceFullFrag[];
     }

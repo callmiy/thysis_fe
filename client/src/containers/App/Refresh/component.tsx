@@ -7,29 +7,31 @@ import Loading from "../../../components/Loading";
 
 export class Refresh extends React.Component<Props, {}> {
   render() {
-    const { loading, refresh: user, currentProject } = this.props;
+    const { loading, refresh: user, currentProject, error } = this.props;
     if (loading && !user) {
       return <Loading />;
     }
 
     const { component: Component, ...rest } = this.props.componentProps;
 
+    if (error && !error.message.includes("Network")) {
+      return <Redirect to={LOGIN_URL} {...rest} />;
+    }
+
     if (user) {
       this.props.updateLocalUser({
         variables: { user }
       });
-
-      if (
-        !currentProject &&
-        (rest.location && rest.location.pathname) !== PROJECTS_URL
-      ) {
-        return <Redirect to={PROJECTS_URL} {...rest} />;
-      }
-
-      return <Component {...rest} />;
     }
 
-    return <Redirect to={LOGIN_URL} {...rest} />;
+    if (
+      !currentProject &&
+      (rest.location && rest.location.pathname) !== PROJECTS_URL
+    ) {
+      return <Redirect to={PROJECTS_URL} {...rest} />;
+    }
+
+    return <Component {...rest} />;
   }
 }
 

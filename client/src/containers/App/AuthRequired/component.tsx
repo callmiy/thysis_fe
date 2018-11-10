@@ -13,6 +13,7 @@ export const AuthRequired = ({
   user,
   staleToken,
   currentProject,
+  updateLocalUser,
   ...rest
 }: Props) => {
   const data = {
@@ -45,6 +46,12 @@ export const AuthRequired = ({
         </AppSideBar>
       );
     }
+
+    updateLocalUser({
+      variables: {
+        user: null
+      }
+    });
 
     return <Redirect to={LOGIN_URL} {...childProps} />;
   };
