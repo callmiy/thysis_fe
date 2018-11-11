@@ -4,6 +4,7 @@ export const sourceTypeFrag = gql`
   fragment SourceTypeFrag on SourceType {
     id
     name
+    __typename
   }
 `;
 

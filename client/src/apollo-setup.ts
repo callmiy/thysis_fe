@@ -8,8 +8,9 @@ import { CachePersistor } from "apollo-cache-persist";
 
 import { initState } from "./state";
 import { getToken } from "./state";
+import getBackendUrls from "./get-backend-urls";
 
-const HTTP_URL = process.env.REACT_APP_API_URL || "";
+const HTTP_URL = getBackendUrls().apiUrl;
 
 let httpLink;
 httpLink = new HttpLink({ uri: HTTP_URL }) as ApolloLink;
@@ -32,7 +33,8 @@ export default client;
 export async function persistCache() {
   const persistor = new CachePersistor({
     cache,
-    storage: localStorage
+    storage: localStorage,
+    key: "thysis-apollo-cache-persist"
   });
 
   const SCHEMA_VERSION = "1"; // Must be a string.
@@ -49,6 +51,8 @@ export async function persistCache() {
     await persistor.purge();
     await localStorage.setItem(SCHEMA_VERSION_KEY, SCHEMA_VERSION);
   }
+
+  return persistor;
 }
 
 // HELPER FUNCTIONS

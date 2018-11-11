@@ -5,19 +5,10 @@ export type SemanticOnInputChangeFunc = (
   data: InputOnChangeData
 ) => void;
 
-export const logData = async <T>(tag: string, ...data: T[]) => {
+// tslint:disable-next-line:no-any
+export const logger = async (prefix: string, tag: string, ...data: any) => {
   if (process.env.NODE_ENV === "development") {
     // tslint:disable-next-line:no-console
-    console.log(
-      `
-                  =======logging starts======
-      ${tag}:
-
-      `,
-      data,
-      `
-                  =======logging ends========
-      `
-    );
+    console[prefix]("\n\n =======logging starts======\n", tag, "\n", ...data);
   }
 };

@@ -22,6 +22,7 @@ import { FormValues } from "./login";
 import { setTitle, PROJECTS_URL } from "../../routes/util";
 import { USER_REG_URL } from "./../../routes/util";
 import RootHeader from "../../components/Header";
+import socket from "src/socket";
 
 export class Login extends React.Component<Props, State> {
   state = initialState;
@@ -154,6 +155,10 @@ export class Login extends React.Component<Props, State> {
       if (result && result.data) {
         const user = result.data.login;
 
+        if (user) {
+          socket.connect(user.jwt);
+        }
+
         await this.props.updateLocalUser({
           variables: { user }
         });
@@ -260,19 +265,18 @@ export class Login extends React.Component<Props, State> {
           {...field}
         />
 
-        {booleanError &&
-          touched && (
-            <Message
-              style={{
-                display: "block",
-                padding: "0.5em",
-                marginBottom: "1em",
-                marginTop: "-10px"
-              }}
-              error={true}
-              header={error}
-            />
-          )}
+        {booleanError && touched && (
+          <Message
+            style={{
+              display: "block",
+              padding: "0.5em",
+              marginBottom: "1em",
+              marginTop: "-10px"
+            }}
+            error={true}
+            header={error}
+          />
+        )}
       </div>
     );
   };

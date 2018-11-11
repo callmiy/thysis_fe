@@ -1,8 +1,10 @@
 {
   "dependencies": {
+    "phoenix": "^1.4.0",
     "randomcolor": "^0.5.3"
   },
   "devDependencies": {
+    "@types/phoenix": "^0.0.4",
     "@types/randomcolor": "^0.4.3"
   }
 }

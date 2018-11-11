@@ -1,6 +1,6 @@
 import gql from "graphql-tag";
 
-import authorFrag from "./author.fragment";
+import { authorFrag } from "./author.fragment";
 
 export const authorsQuery = gql`
   query GetAllAuthors($author: GetAuthorsInput) {

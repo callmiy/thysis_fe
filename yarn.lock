@@ -2,9 +2,17 @@
 # yarn lockfile v1
 
 
+"@types/phoenix@^0.0.4":
+  version "0.0.4"
+  resolved "http://registry.npmjs.org/@types/phoenix/-/phoenix-0.0.4.tgz#6ada6be91dfdc1fa77ed57691f92821920f71d12"
+
 "@types/randomcolor@^0.4.3":
   version "0.4.3"
   resolved "https://registry.yarnpkg.com/@types/randomcolor/-/randomcolor-0.4.3.tgz#66bf69fdf43ea7b73ae4c378f660442c8e236e93"
+
+phoenix@^1.4.0:
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/phoenix/-/phoenix-1.4.0.tgz#9cec8dbd8cbc59ecd2147bc09ca8ceb56b860d75"
 
 randomcolor@^0.5.3:
   version "0.5.3"

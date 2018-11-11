@@ -1,11 +1,18 @@
 defmodule ThysisWeb.UserSocket do
   use Phoenix.Socket
 
+  alias ThysisWeb.Auth.Guardian, as: GuardianApp
+
   ## Channels
-  # channel "room:*", ThysisWeb.RoomChannel
+  channel("data:*", ThysisWeb.DataChannel)
 
   ## Transports
-  transport :websocket, Phoenix.Transports.WebSocket
+  transport(
+    :websocket,
+    Phoenix.Transports.WebSocket,
+    timeout: 45_000
+  )
+
   # transport :longpoll, Phoenix.Transports.LongPoll
 
   # Socket params are passed from the client and can
@@ -19,9 +26,17 @@ defmodule ThysisWeb.UserSocket do
   #
   # See `Phoenix.Token` documentation for examples in
   # performing token verification on connect.
-  def connect(_params, socket) do
-    {:ok, socket}
+  def connect(%{"token" => token}, socket) do
+    case GuardianApp.resource_from_token(token) do
+      {:ok, user, _claims} ->
+        {:ok, assign(socket, :user, user)}
+
+      _ ->
+        :error
+    end
   end
+
+  def connect(_params, socket), do: {:ok, socket}
 
   # Socket id's are topics that allow you to identify all sockets for a given user:
   #

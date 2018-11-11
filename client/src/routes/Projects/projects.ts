@@ -1,4 +1,4 @@
-import { DataValue } from "react-apollo";
+import { DataValue, WithApolloClient } from "react-apollo";
 import { RouteComponentProps } from "react-router-dom";
 
 import { ProjectsQuery, ProjectFragment } from "../../graphql/gen.types";
@@ -6,7 +6,8 @@ import { ProjectLocalMutationProps } from "../../state/project.local.mutation";
 import { CreateProjectMutationProps } from "../../graphql/create-project.mutation";
 import { UserLocalGqlData } from "../../state/auth-user.local.query";
 
-export type OwnProps = RouteComponentProps &
+export type OwnProps = WithApolloClient<{}> &
+  RouteComponentProps &
   CreateProjectMutationProps &
   ProjectLocalMutationProps &
   UserLocalGqlData;

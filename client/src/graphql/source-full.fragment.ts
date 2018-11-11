@@ -11,6 +11,7 @@ export const sourceFullFrag = gql`
     publication
     url
     insertedAt
+    __typename
 
     authors {
       ...AuthorFrag

@@ -6,6 +6,7 @@ export const authorFrag = gql`
     firstName
     lastName
     middleName
+    __typename
   }
 `;
 

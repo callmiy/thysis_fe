@@ -13,8 +13,17 @@ import { SemanticOnInputChangeFunc } from "../../utils";
 import { ProjectFragment } from "src/graphql/gen.types";
 import { ROOT_URL } from "../util";
 import { format as dateFormat } from "date-fns";
+import loadInitialData from "./initial-data";
 
 export class SelectProject extends React.Component<Props, State> {
+  static getDerivedStateFromProps(nextProps: Props) {
+    if (nextProps.projects) {
+      loadInitialData(nextProps.projects, nextProps.client);
+    }
+
+    return null;
+  }
+
   state: State = initialState;
 
   render() {
@@ -121,8 +130,10 @@ export class SelectProject extends React.Component<Props, State> {
   );
 
   private projectSelected = (currentProject: ProjectFragment) => async () => {
-    await this.props.updateLocalProject({ variables: { currentProject } });
-    this.props.history.push(ROOT_URL);
+    const { history, updateLocalProject } = this.props;
+
+    await updateLocalProject({ variables: { currentProject } });
+    history.push(ROOT_URL);
   };
 
   private submit = async () => {

@@ -1,5 +1,4 @@
-import { graphql } from "react-apollo";
-import { compose } from "react-apollo";
+import { graphql, compose, withApollo } from "react-apollo";
 import update from "immutability-helper";
 
 import PROJECTS_QUERY from "../../graphql/projects.query";
@@ -78,6 +77,7 @@ const createProjectGql = graphql<
 });
 
 export default compose(
+  withApollo,
   projectsGql,
   projectLocalMutationGql,
   createProjectGql

@@ -5,6 +5,7 @@ export const tagFrag = gql`
     id
     text
     question
+    __typename
   }
 `;
 

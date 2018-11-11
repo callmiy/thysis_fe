@@ -6,6 +6,7 @@ export const authorRouteFrag = gql`
     lastName
     firstName
     middleName
+    __typename
     sources {
       id
       display
