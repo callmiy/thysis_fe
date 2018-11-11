@@ -14,6 +14,8 @@ defmodule Thysis.SourceType do
     field(:name, :string)
     has_many(:sources, Source)
     belongs_to(:user, User)
+
+    # timestamps()
   end
 
   @doc "changeset"

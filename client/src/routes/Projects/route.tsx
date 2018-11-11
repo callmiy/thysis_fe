@@ -13,17 +13,8 @@ import { SemanticOnInputChangeFunc } from "../../utils";
 import { ProjectFragment } from "src/graphql/gen.types";
 import { ROOT_URL } from "../util";
 import { format as dateFormat } from "date-fns";
-import loadInitialData from "./initial-data";
 
 export class SelectProject extends React.Component<Props, State> {
-  static getDerivedStateFromProps(nextProps: Props) {
-    if (nextProps.projects) {
-      loadInitialData(nextProps.projects, nextProps.client);
-    }
-
-    return null;
-  }
-
   state: State = initialState;
 
   render() {

@@ -2,6 +2,7 @@ defmodule ThysisWeb.Schema.Project do
   use Absinthe.Schema.Notation
 
   import Absinthe.Resolution.Helpers, only: [dataloader: 1]
+  import ThysisWeb.Schema.Types, only: [iso_datetime_to_str: 1]
 
   alias ThysisWeb.Schema
   alias Thysis.Accounts.UserApi
@@ -63,5 +64,17 @@ defmodule ThysisWeb.Schema.Project do
 
       resolve(&Resolver.create/3)
     end
+  end
+
+  def projects_query(projects) do
+    Enum.map(projects, fn p ->
+      %{
+        "projectId" => Integer.to_string(p.id),
+        "title" => p.title,
+        "insertedAt" => iso_datetime_to_str(p.inserted_at),
+        "updatedAt" => iso_datetime_to_str(p.updated_at),
+        "__typename" => "Project"
+      }
+    end)
   end
 end

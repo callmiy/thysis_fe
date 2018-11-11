@@ -4,9 +4,15 @@ defmodule Thysis.Accounts.UserApi do
   """
 
   import Ecto.Query, warn: false
+  import ThysisWeb.Schema.Project, only: [projects_query: 1]
+  import ThysisWeb.Schema.Author, only: [authors_project_query: 1]
+  import ThysisWeb.Schema.Source, only: [sources_project_query: 1]
+  import ThysisWeb.Schema.SourceType, only: [source_types_query: 1]
+  import ThysisWeb.Schema.Tag, only: [tags_query: 1]
 
   alias Thysis.Repo
   alias Thysis.Accounts.User
+  alias Thysis.Tag
 
   @doc """
   Returns the list of users.
@@ -108,5 +114,44 @@ defmodule Thysis.Accounts.UserApi do
 
   def query(queryable, _params) do
     queryable
+  end
+
+  def get_all_user_data(id) do
+    user =
+      User
+      |> where([u], u.id == ^id)
+      |> join(:inner, [u], p in assoc(u, :projects))
+      |> join(:inner, [u, p], a in assoc(p, :authors))
+      |> join(:inner, [u, p], s in assoc(p, :sources))
+      |> join(:inner, [u], st in assoc(u, :source_types))
+      |> join(:inner, [..., s, _], sa in assoc(s, :authors))
+      |> join(:inner, [u, p, a, s, ...], sst in assoc(s, :source_type))
+      |> preload(
+        [u, p, a, s, st, sa, sst],
+        projects: {p, authors: a, sources: {s, authors: sa, source_type: sst}},
+        source_types: st
+      )
+      |> Repo.one()
+
+    projects = user.projects
+
+    [authors, sources] =
+      Enum.reduce(projects, [[], []], fn p, [a, s] ->
+        authors = p.authors
+        sources = p.sources
+
+        [
+          [authors | a],
+          [sources | s]
+        ]
+      end)
+
+    %{
+      "projects" => projects_query(projects),
+      "authorsProject" => authors_project_query(authors),
+      "sourcesProject" => sources_project_query(sources),
+      "sourceTypes" => source_types_query(user.source_types),
+      "tags" => Tag |> Repo.all() |> tags_query()
+    }
   end
 end

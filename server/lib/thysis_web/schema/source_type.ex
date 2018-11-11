@@ -5,12 +5,16 @@ defmodule ThysisWeb.Schema.SourceType do
 
   use Absinthe.Schema.Notation
 
+  # import ThysisWeb.Schema.Types, only: [iso_datetime_to_str: 1]
+
   alias ThysisWeb.Resolver.SourceType, as: Resolver
 
   @desc "A source type"
   object :source_type do
     field(:id, non_null(:id))
     field(:name, :string)
+    field(:inserted_at, non_null(:iso_datetime))
+    field(:updated_at, non_null(:iso_datetime))
   end
 
   # INPUTS
@@ -47,5 +51,18 @@ defmodule ThysisWeb.Schema.SourceType do
 
       resolve(&Resolver.create/3)
     end
+  end
+
+  def source_types_query(sts) do
+    Enum.map(sts, &source_type_query/1)
+  end
+
+  def source_type_query(st) do
+    %{
+      "id" => Integer.to_string(st.id),
+      "name" => st.name,
+      "__typename" => "SourceType"
+      # "updatedAt" => iso_datetime_to_str(st.updated_at)
+    }
   end
 end

@@ -6,6 +6,7 @@ defmodule ThysisWeb.Schema.Author do
   use Absinthe.Schema.Notation
 
   import Absinthe.Resolution.Helpers, only: [dataloader: 1]
+  import ThysisWeb.Schema.Types, only: [iso_datetime_to_str: 1]
 
   alias ThysisWeb.Resolver.Author, as: Resolver
 
@@ -83,5 +84,26 @@ defmodule ThysisWeb.Schema.Author do
 
       resolve(&Resolver.update/3)
     end
+  end
+
+  def authors_project_query(authors) do
+    authors
+    |> Enum.flat_map(fn outer ->
+      Enum.map(outer, &author_project_query/1)
+    end)
+    |> Enum.group_by(& &1["projectId"])
+
+  end
+
+  def author_project_query(a) do
+    %{
+      "id" => Integer.to_string(a.id),
+      "updatedAt" => iso_datetime_to_str(a.updated_at),
+      "firstName" => a.first_name,
+      "lastName" => a.last_name,
+      "middleName" => a.middle_name,
+      "__typename" => "Author",
+      "projectId" => Integer.to_string(a.project_id)
+    }
   end
 end

@@ -7,6 +7,7 @@ defmodule Thysis.Accounts.User do
   alias Ecto.Changeset
   alias Thysis.Accounts.Credential
   alias Thysis.Projects.Project
+  alias Thysis.SourceType
 
   schema "users" do
     field(:_rev, :string)
@@ -15,6 +16,7 @@ defmodule Thysis.Accounts.User do
 
     has_one(:credential, Credential)
     has_many(:projects, Project)
+    has_many(:source_types, SourceType)
     timestamps()
   end
 

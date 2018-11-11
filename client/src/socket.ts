@@ -3,6 +3,7 @@ import { Channel } from "phoenix";
 import { logger } from "./utils";
 import { getToken } from "src/state";
 import getBackendUrls from "./get-backend-urls";
+import { load } from "./routes/Projects/initial-data";
 
 enum CHANNEL {
   "DATA_PLAIN" = "data:pxy",
@@ -73,6 +74,8 @@ export const defineSocket = () => {
       .join()
       .receive("ok", message => {
         socketDisconnectedCount = 0;
+        load(message);
+
         logger("log", "Data plain channel joined", message);
       })
       .receive("error", reason => {

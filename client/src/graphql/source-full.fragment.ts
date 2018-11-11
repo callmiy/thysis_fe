@@ -16,6 +16,7 @@ export const sourceFullFrag = gql`
     authors {
       ...AuthorFrag
     }
+
     sourceType {
       ...SourceTypeFrag
     }

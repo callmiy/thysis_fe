@@ -54,4 +54,17 @@ defmodule ThysisWeb.Schema.Tag do
       resolve(&TagResolver.create_tag/3)
     end
   end
+
+  def tags_query(tags) do
+    Enum.map(tags, &tag_query/1)
+  end
+
+  defp tag_query(t) do
+    %{
+      "id" => Integer.to_string(t.id),
+      "text" => t.text,
+      "question" => t.question,
+      "__typename" => "Tag"
+    }
+  end
 end

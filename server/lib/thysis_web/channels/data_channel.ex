@@ -2,6 +2,7 @@ defmodule ThysisWeb.DataChannel do
   use ThysisWeb, :channel
 
   alias Thysis.Accounts.User
+  alias Thysis.Accounts.UserApi
 
   @dialyzer {:no_return, run_query: 2, handle_in: 3}
 
@@ -14,10 +15,12 @@ defmodule ThysisWeb.DataChannel do
   def join("data:pxy", _params, socket), do: {:ok, socket}
 
   def join("data:pxz", _params, socket) do
-    if can_join?(socket) do
-      {:ok, socket}
+    user = socket.assigns[:user]
+
+    if can_join?(user) do
+      {:ok, UserApi.get_all_user_data(user.id), socket}
     else
-      {:error}
+      {:error, %{reason: "unauthorized"}}
     end
   end
 
@@ -49,8 +52,8 @@ defmodule ThysisWeb.DataChannel do
     {:reply, response, socket}
   end
 
-  defp can_join?(socket) do
-    case socket.assigns.user do
+  defp can_join?(user) do
+    case user do
       %User{} -> true
       _ -> false
     end

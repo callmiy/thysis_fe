@@ -7,7 +7,7 @@ defmodule ThysisWeb.Schema.Types do
 
   scalar :iso_datetime, name: "ISODatime" do
     parse(&parse_iso_datetime/1)
-    serialize(&Timex.format!(&1, "{ISO:Extended:Z}"))
+    serialize(&iso_datetime_to_str/1)
   end
 
   @spec parse_iso_datetime(Absinthe.Blueprint.Input.String.t()) ::
@@ -26,5 +26,9 @@ defmodule ThysisWeb.Schema.Types do
 
   defp parse_iso_datetime(_) do
     :error
+  end
+
+  def iso_datetime_to_str(value) do
+    Timex.format!(value, "{ISO:Extended:Z}")
   end
 end

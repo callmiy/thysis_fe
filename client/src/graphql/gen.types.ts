@@ -4,73 +4,6 @@
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL query operation: AllQueries
-// ====================================================
-
-export interface AllQueries_sources_authors {
-  id: string;
-  firstName: string | null;
-  lastName: string;
-  middleName: string | null;
-  __typename: "Author";
-}
-
-export interface AllQueries_sources_sourceType {
-  id: string;
-  name: string | null;
-  __typename: "SourceType";
-}
-
-export interface AllQueries_sources {
-  id: string;
-  year: string | null;
-  topic: string;
-  publication: string | null;
-  url: string | null;
-  insertedAt: any;
-  __typename: "Source";
-  authors: (AllQueries_sources_authors | null)[];
-  sourceType: AllQueries_sources_sourceType;
-}
-
-export interface AllQueries_tags {
-  id: string;
-  text: string;
-  question: string | null;
-  __typename: "Tag";
-}
-
-export interface AllQueries_sourceTypes {
-  id: string;
-  name: string | null;
-  __typename: "SourceType";
-}
-
-export interface AllQueries_authors {
-  id: string;
-  firstName: string | null;
-  lastName: string;
-  middleName: string | null;
-  __typename: "Author";
-}
-
-export interface AllQueries {
-  sources: (AllQueries_sources | null)[] | null;  // Query for all sources
-  tags: (AllQueries_tags | null)[] | null;
-  sourceTypes: (AllQueries_sourceTypes | null)[] | null;
-  authors: (AllQueries_authors | null)[] | null;
-}
-
-export interface AllQueriesVariables {
-  source?: GetSourcesInput | null;
-  author?: GetAuthorsInput | null;
-}
-
-
-/* tslint:disable */
-// This file was automatically generated and should not be edited.
-
-// ====================================================
 // GraphQL query operation: AuthorRouteQuery
 // ====================================================
 
@@ -1090,19 +1023,14 @@ export enum QuoteFullSearchTable {
   TAGS = "TAGS",
 }
 
-// Input for getting a sources belonging to a project or user
-export interface GetSourcesInput {
-  projectId?: string | null;
+// Get author input
+export interface GetAuthorInput {
+  id: string;
 }
 
 // Get authors input
 export interface GetAuthorsInput {
   projectId?: string | null;
-}
-
-// Get author input
-export interface GetAuthorInput {
-  id: string;
 }
 
 // Input for creating an author
@@ -1174,6 +1102,11 @@ export interface CreateSourceInput {
   topic: string;
   url?: string | null;
   year?: string | null;
+}
+
+// Input for getting a sources belonging to a project or user
+export interface GetSourcesInput {
+  projectId?: string | null;
 }
 
 // Get tag input

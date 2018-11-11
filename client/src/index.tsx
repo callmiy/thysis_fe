@@ -6,7 +6,12 @@ import "react-select/dist/react-select.css";
 import App from "./containers/App";
 import "./index.css";
 import "./socket";
+import { client } from "src/apollo-setup";
 import registerServiceWorker from "./registerServiceWorker";
 
-ReactDOM.render(<App />, document.getElementById("root") as HTMLElement);
+export const appClient = client;
+
+ReactDOM.render(<App client={client} />, document.getElementById(
+  "root"
+) as HTMLElement);
 registerServiceWorker();

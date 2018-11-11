@@ -6,6 +6,9 @@ defmodule ThysisWeb.Schema.Source do
   use Absinthe.Schema.Notation
 
   import Absinthe.Resolution.Helpers, only: [dataloader: 1]
+  import ThysisWeb.Schema.Types, only: [iso_datetime_to_str: 1]
+  import ThysisWeb.Schema.Author, only: [author_project_query: 1]
+  import ThysisWeb.Schema.SourceType, only: [source_type_query: 1]
 
   alias ThysisWeb.Resolver.Source, as: Resolver
 
@@ -147,5 +150,32 @@ defmodule ThysisWeb.Schema.Source do
       arg(:source, non_null(:update_source_input))
       resolve(&Resolver.update/3)
     end
+  end
+
+  def sources_project_query(sources) do
+    Enum.flat_map(sources, fn outer ->
+      Enum.map(outer, &source_project_query/1)
+    end)
+    |> Enum.group_by(& &1["projectId"])
+  end
+
+  defp source_project_query(source) do
+    source_type = source.source_type
+
+    %{
+      "id" => Integer.to_string(source.id),
+      "updatedAt" => iso_datetime_to_str(source.updated_at),
+      "year" => source.year,
+      "topic" => source.topic,
+      "publication" => source.publication,
+      "url" => source.url,
+      "insertedAt" => iso_datetime_to_str(source.inserted_at),
+      "__typename" => "Source",
+      "authors" => Enum.map(source.authors, &author_project_query/1),
+      "projectId" => Integer.to_string(source.project_id),
+      "sourceType" => if(
+        source_type, do: source_type_query(source_type), else: nil
+        )
+    }
   end
 end

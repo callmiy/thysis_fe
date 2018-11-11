@@ -5,7 +5,7 @@ import { Switch } from "react-router-dom";
 import { Route } from "react-router-dom";
 import { ApolloProvider } from "react-apollo";
 
-import { client, persistCache } from "../../apollo-setup";
+import { persistCache } from "../../apollo-setup";
 import {
   ROOT_URL,
   PROJECTS_URL,
@@ -20,7 +20,7 @@ import {
 } from "./../../routes/util";
 import Loading from "./../../components/Loading";
 import AuthRequired from "./AuthRequired";
-import { AppSidebarContext, State } from "./app.utils";
+import { AppSidebarContext, State, Props } from "./app.utils";
 
 const Home = Loadable({
   loading: Loading,
@@ -72,7 +72,7 @@ const ProjectsRoute = Loadable({
   loader: () => import("./../../routes/Projects")
 });
 
-export class App extends React.Component<{}, State> {
+export class App extends React.Component<Props, State> {
   state: State = { showSidebar: false };
 
   async componentDidMount() {
@@ -95,7 +95,7 @@ export class App extends React.Component<{}, State> {
     }
 
     return (
-      <ApolloProvider client={client}>
+      <ApolloProvider client={this.props.client}>
         <AppSidebarContext.Provider
           value={{
             showSidebar: this.state.showSidebar,

@@ -5,11 +5,15 @@ defmodule Thysis.Projects.Project do
   import Ecto.Changeset
 
   alias Thysis.Accounts.User
+  alias Thysis.Author
+  alias Thysis.Sources.Source
 
   schema "projects" do
     field(:title, :string)
 
     belongs_to(:user, User)
+    has_many(:authors, Author)
+    has_many(:sources, Source)
 
     timestamps()
   end
