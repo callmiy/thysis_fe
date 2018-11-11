@@ -307,7 +307,9 @@ export class SourceAccordion extends React.Component<Props, State> {
           <div className={classes.labels}> {label} </div>
 
           {name === "url" ? (
-            <a href={value}>{value}</a>
+            <a style={{ paddingLeft: "15px" }} href={value}>
+              {value}
+            </a>
           ) : (
             <div className={classes.details}>{value}</div>
           )}
