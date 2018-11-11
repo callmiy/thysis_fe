@@ -34,7 +34,9 @@ export const defineSocket = () => {
     socket = new Socket(getBackendUrls().websocketUrl, params);
     socket.connect();
 
-    socket.onOpen(joinDataAuthChannel);
+    if (token) {
+      socket.onOpen(joinDataAuthChannel);
+    }
 
     socket.onError(() => {
       dispatchDisconnected();
@@ -73,15 +75,15 @@ export const defineSocket = () => {
       .join()
       .receive("ok", message => {
         socketDisconnectedCount = 0;
-        logger("log", "Data plain channel joined", message);
+        logger("log", "Data auth channel joined", message);
       })
       .receive("error", reason => {
         dispatchDisconnected();
-        logger("error", "Data plain channel join error", reason);
+        logger("error", "Data auth channel join error", reason);
       })
       .receive("timeout", () => {
         dispatchDisconnected();
-        logger("warn", "Data plain channel join timeout");
+        logger("warn", "Data auth channel join timeout");
       });
   }
 

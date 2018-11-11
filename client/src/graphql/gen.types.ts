@@ -28,6 +28,7 @@ export interface AllQueries_sources {
   publication: string | null;
   url: string | null;
   insertedAt: any;
+  updatedAt: any;
   __typename: "Source";
   authors: (AllQueries_sources_authors | null)[];
   sourceType: AllQueries_sources_sourceType;
@@ -74,9 +75,31 @@ export interface AllQueriesVariables {
 // GraphQL query operation: AuthorRouteQuery
 // ====================================================
 
+export interface AuthorRouteQuery_author_sources_authors {
+  id: string;
+  firstName: string | null;
+  lastName: string;
+  middleName: string | null;
+  __typename: "Author";
+}
+
+export interface AuthorRouteQuery_author_sources_sourceType {
+  id: string;
+  name: string | null;
+  __typename: "SourceType";
+}
+
 export interface AuthorRouteQuery_author_sources {
   id: string;
-  display: string | null;
+  year: string | null;
+  topic: string;
+  publication: string | null;
+  url: string | null;
+  insertedAt: any;
+  updatedAt: any;
+  __typename: "Source";
+  authors: (AuthorRouteQuery_author_sources_authors | null)[];
+  sourceType: AuthorRouteQuery_author_sources_sourceType;
 }
 
 export interface AuthorRouteQuery_author {
@@ -241,9 +264,31 @@ export interface ProjectsQuery {
 // GraphQL query operation: QuoteFull
 // ====================================================
 
+export interface QuoteFull_quote_source_authors {
+  id: string;
+  firstName: string | null;
+  lastName: string;
+  middleName: string | null;
+  __typename: "Author";
+}
+
+export interface QuoteFull_quote_source_sourceType {
+  id: string;
+  name: string | null;
+  __typename: "SourceType";
+}
+
 export interface QuoteFull_quote_source {
   id: string;
-  display: string | null;
+  year: string | null;
+  topic: string;
+  publication: string | null;
+  url: string | null;
+  insertedAt: any;
+  updatedAt: any;
+  __typename: "Source";
+  authors: (QuoteFull_quote_source_authors | null)[];
+  sourceType: QuoteFull_quote_source_sourceType;
 }
 
 export interface QuoteFull_quote_tags {
@@ -301,6 +346,7 @@ export interface CreateQuote_createQuote_source {
   publication: string | null;
   url: string | null;
   insertedAt: any;
+  updatedAt: any;
   __typename: "Source";
   authors: (CreateQuote_createQuote_source_authors | null)[];
   sourceType: CreateQuote_createQuote_source_sourceType;
@@ -397,6 +443,7 @@ export interface SourceFull_source {
   publication: string | null;
   url: string | null;
   insertedAt: any;
+  updatedAt: any;
   __typename: "Source";
   authors: (SourceFull_source_authors | null)[];
   sourceType: SourceFull_source_sourceType;
@@ -457,6 +504,7 @@ export interface CreateSource_createSource {
   publication: string | null;
   url: string | null;
   insertedAt: any;
+  updatedAt: any;
   __typename: "Source";
   authors: (CreateSource_createSource_authors | null)[];
   sourceType: CreateSource_createSource_sourceType;
@@ -499,6 +547,7 @@ export interface Source1_source {
   publication: string | null;
   url: string | null;
   insertedAt: any;
+  updatedAt: any;
   __typename: "Source";
   authors: (Source1_source_authors | null)[];
   sourceType: Source1_source_sourceType;
@@ -541,6 +590,7 @@ export interface Sources1Query_sources {
   publication: string | null;
   url: string | null;
   insertedAt: any;
+  updatedAt: any;
   __typename: "Source";
   authors: (Sources1Query_sources_authors | null)[];
   sourceType: Sources1Query_sources_sourceType;
@@ -744,6 +794,7 @@ export interface UpdateSource_updateSource {
   publication: string | null;
   url: string | null;
   insertedAt: any;
+  updatedAt: any;
   __typename: "Source";
   authors: (UpdateSource_updateSource_authors | null)[];
   sourceType: UpdateSource_updateSource_sourceType;
@@ -790,9 +841,31 @@ export interface UserRegMutationVariables {
 // GraphQL fragment: AuthorRouteFrag
 // ====================================================
 
+export interface AuthorRouteFrag_sources_authors {
+  id: string;
+  firstName: string | null;
+  lastName: string;
+  middleName: string | null;
+  __typename: "Author";
+}
+
+export interface AuthorRouteFrag_sources_sourceType {
+  id: string;
+  name: string | null;
+  __typename: "SourceType";
+}
+
 export interface AuthorRouteFrag_sources {
   id: string;
-  display: string | null;
+  year: string | null;
+  topic: string;
+  publication: string | null;
+  url: string | null;
+  insertedAt: any;
+  updatedAt: any;
+  __typename: "Source";
+  authors: (AuthorRouteFrag_sources_authors | null)[];
+  sourceType: AuthorRouteFrag_sources_sourceType;
 }
 
 export interface AuthorRouteFrag {
@@ -877,9 +950,31 @@ export interface QuoteFromtagFrag {
 // GraphQL fragment: QuoteFullFrag
 // ====================================================
 
+export interface QuoteFullFrag_source_authors {
+  id: string;
+  firstName: string | null;
+  lastName: string;
+  middleName: string | null;
+  __typename: "Author";
+}
+
+export interface QuoteFullFrag_source_sourceType {
+  id: string;
+  name: string | null;
+  __typename: "SourceType";
+}
+
 export interface QuoteFullFrag_source {
   id: string;
-  display: string | null;
+  year: string | null;
+  topic: string;
+  publication: string | null;
+  url: string | null;
+  insertedAt: any;
+  updatedAt: any;
+  __typename: "Source";
+  authors: (QuoteFullFrag_source_authors | null)[];
+  sourceType: QuoteFullFrag_source_sourceType;
 }
 
 export interface QuoteFullFrag_tags {
@@ -898,6 +993,41 @@ export interface QuoteFullFrag {
   volume: string | null;
   source: QuoteFullFrag_source | null;
   tags: (QuoteFullFrag_tags | null)[] | null;
+}
+
+
+/* tslint:disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL fragment: SourceForDisplayFrag
+// ====================================================
+
+export interface SourceForDisplayFrag_authors {
+  id: string;
+  firstName: string | null;
+  lastName: string;
+  middleName: string | null;
+  __typename: "Author";
+}
+
+export interface SourceForDisplayFrag_sourceType {
+  id: string;
+  name: string | null;
+  __typename: "SourceType";
+}
+
+export interface SourceForDisplayFrag {
+  id: string;
+  year: string | null;
+  topic: string;
+  publication: string | null;
+  url: string | null;
+  insertedAt: any;
+  updatedAt: any;
+  __typename: "Source";
+  authors: (SourceForDisplayFrag_authors | null)[];
+  sourceType: SourceForDisplayFrag_sourceType;
 }
 
 
@@ -929,6 +1059,7 @@ export interface SourceFullFrag {
   publication: string | null;
   url: string | null;
   insertedAt: any;
+  updatedAt: any;
   __typename: "Source";
   authors: (SourceFullFrag_authors | null)[];
   sourceType: SourceFullFrag_sourceType;

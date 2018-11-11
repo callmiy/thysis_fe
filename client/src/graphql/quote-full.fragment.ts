@@ -1,5 +1,7 @@
 import gql from "graphql-tag";
 
+import { sourceForDisplayFrag } from "src/graphql/source-for-display.fragment";
+
 export const quoteFullFrag = gql`
   fragment QuoteFullFrag on Quote {
     id
@@ -11,14 +13,15 @@ export const quoteFullFrag = gql`
     pageEnd
     volume
     source {
-      id
-      display
+      ...SourceForDisplayFrag
     }
     tags {
       id
       text
     }
   }
+
+  ${sourceForDisplayFrag}
 `;
 
 export default quoteFullFrag;

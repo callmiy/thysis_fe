@@ -1,5 +1,7 @@
 import gql from "graphql-tag";
 
+import { sourceForDisplayFrag } from "src/graphql/source-for-display.fragment";
+
 export const authorRouteFrag = gql`
   fragment AuthorRouteFrag on Author {
     id
@@ -8,10 +10,11 @@ export const authorRouteFrag = gql`
     middleName
     __typename
     sources {
-      id
-      display
+      ...SourceForDisplayFrag
     }
   }
+
+  ${sourceForDisplayFrag}
 `;
 
 export default authorRouteFrag;

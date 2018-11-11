@@ -24,20 +24,23 @@ export const authorDisplay = (author: AuthorFrag) => {
 };
 
 export const sourceDisplay = (source: SourceFullFrag) => {
-  let display = source.authors.map(authorDisplay).join(", ") + ".";
-  display = display + " | " + source.sourceType.name + " | " + source.topic;
-
-  if (source.publication) {
-    display += " | " + source.publication;
-  }
+  let display = source.authors.map(authorDisplay).join(", ");
 
   if (source.year) {
-    display += " | " + source.year;
+    display += ` (${source.year})`;
+  }
+
+  display += ", " + source.topic;
+
+  if (source.publication) {
+    display += ", " + source.publication;
   }
 
   if (source.url) {
     display += " | " + source.url;
   }
+
+  display += " | " + source.sourceType.name;
 
   return display;
 };

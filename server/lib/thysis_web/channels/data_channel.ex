@@ -17,7 +17,7 @@ defmodule ThysisWeb.DataChannel do
     if can_join?(socket) do
       {:ok, socket}
     else
-      {:error}
+      {:error, %{}}
     end
   end
 
@@ -50,7 +50,7 @@ defmodule ThysisWeb.DataChannel do
   end
 
   defp can_join?(socket) do
-    case socket.assigns.user do
+    case socket.assigns[:user] do
       %User{} -> true
       _ -> false
     end

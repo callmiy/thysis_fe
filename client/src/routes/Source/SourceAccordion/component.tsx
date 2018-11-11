@@ -19,7 +19,7 @@ import {
 } from "../../../graphql/gen.types";
 import { Quotes1_quotes } from "../../../graphql/gen.types";
 import QUOTES_QUERY from "../../../graphql/quotes-1.query";
-import { authorDisplay } from "../../../graphql/utils";
+import { authorDisplay, sourceDisplay } from "../../../graphql/utils";
 import { authorFullName } from "../../../graphql/utils";
 import { classes } from "./styles";
 import { accordionContentStyle } from "./styles";
@@ -99,9 +99,9 @@ export class SourceAccordion extends React.Component<Props, State> {
   }
 
   renderDetail = () => {
-    const {
-      source: { sourceType, authors, year, topic, publication, url }
-    } = this.props;
+    const { source } = this.props;
+
+    const { sourceType, authors, year, topic, publication, url } = source;
 
     const { accordionProps } = this.state;
 
@@ -138,6 +138,13 @@ export class SourceAccordion extends React.Component<Props, State> {
         {this.renderTextField(publication, "publication")}
 
         {this.renderTextField(url, "url", "URL")}
+
+        <div>
+          <div style={{ fontWeight: "bolder", fontSize: "1.2rem" }}>
+            Citation
+          </div>
+          <div>{sourceDisplay(source)}</div>
+        </div>
       </Accordion.Content>
     );
   };
@@ -161,15 +168,14 @@ export class SourceAccordion extends React.Component<Props, State> {
             onClick={this.handleToggleEditView}
           />
 
-          {!isEqual(source, values) &&
-            isEmpty(errors) && (
-              <Icon
-                className="editing-icon"
-                name="checkmark"
-                color="green"
-                onClick={this.submit}
-              />
-            )}
+          {!isEqual(source, values) && isEmpty(errors) && (
+            <Icon
+              className="editing-icon"
+              name="checkmark"
+              color="green"
+              onClick={this.submit}
+            />
+          )}
         </div>
       );
     }

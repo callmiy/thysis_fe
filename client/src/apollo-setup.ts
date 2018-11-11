@@ -37,7 +37,7 @@ export async function persistCache() {
     key: "thysis-apollo-cache-persist"
   });
 
-  const SCHEMA_VERSION = "1"; // Must be a string.
+  const SCHEMA_VERSION = "2"; // Must be a string.
   const SCHEMA_VERSION_KEY = "thysis-apollo-schema-version";
   const currentVersion = localStorage.getItem(SCHEMA_VERSION_KEY);
 
@@ -49,7 +49,7 @@ export async function persistCache() {
     // Otherwise, we'll want to purge the outdated persisted cache
     // and mark ourselves as having updated to the latest version.
     await persistor.purge();
-    await localStorage.setItem(SCHEMA_VERSION_KEY, SCHEMA_VERSION);
+    localStorage.setItem(SCHEMA_VERSION_KEY, SCHEMA_VERSION);
   }
 
   return persistor;
@@ -125,7 +125,7 @@ function middlewareLoggerLink(l: ApolloLink) {
 function middlewareErrorLink() {
   return onError(({ graphQLErrors, networkError, response, operation }) => {
     // tslint:disable-next-line:ban-types
-    const loggError = (errorName: string, obj: Object) => {
+    const logError = (errorName: string, obj: Object) => {
       if (process.env.NODE_ENV === "production") {
         return;
       }
@@ -135,7 +135,7 @@ function middlewareErrorLink() {
       }`;
 
       // tslint:disable-next-line:no-console
-      console.log(
+      console.error(
         "\n\n\n",
         getNow(),
         `============================${operationName}=======================\n`,
@@ -145,11 +145,11 @@ function middlewareErrorLink() {
     };
 
     if (response) {
-      loggError("Response", response);
+      logError("Response", response);
     }
 
     if (networkError) {
-      loggError("Network", networkError);
+      logError("Network", networkError);
     }
   });
 }

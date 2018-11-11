@@ -12,7 +12,7 @@ import { makeSourceURL } from "../../routes/util";
 import { Props } from "./author";
 import { State } from "./author";
 import { AuthorRouteFrag_sources, AuthorFrag } from "../../graphql/gen.types";
-import { authorFullName } from "../../graphql/utils";
+import { authorFullName, sourceDisplay } from "../../graphql/utils";
 import Loading from "src/components/Loading";
 
 export class Author extends React.Component<Props, State> {
@@ -98,10 +98,15 @@ export class Author extends React.Component<Props, State> {
     );
   };
 
-  private renderSource = ({ id, display }: AuthorRouteFrag_sources) => {
+  private renderSource = (source: AuthorRouteFrag_sources) => {
     return (
-      <List.Item as={NavLink} to={makeSourceURL(id)} key={id} className="text">
-        <div>{display}</div>
+      <List.Item
+        as={NavLink}
+        to={makeSourceURL(source.id)}
+        key={source.id}
+        className="text"
+      >
+        <div>{sourceDisplay(source)}</div>
       </List.Item>
     );
   };

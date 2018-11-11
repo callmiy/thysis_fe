@@ -1,28 +1,13 @@
 import gql from "graphql-tag";
 
-import sourceTypeFrag from "./source-type.fragment";
-import authorFrag from "./author.fragment";
+import { sourceForDisplayFrag } from "src/graphql/source-for-display.fragment";
 
 export const sourceFullFrag = gql`
   fragment SourceFullFrag on Source {
-    id
-    year
-    topic
-    publication
-    url
-    insertedAt
-    __typename
-
-    authors {
-      ...AuthorFrag
-    }
-    sourceType {
-      ...SourceTypeFrag
-    }
+    ...SourceForDisplayFrag
   }
 
-  ${sourceTypeFrag}
-  ${authorFrag}
+  ${sourceForDisplayFrag}
 `;
 
 export default sourceFullFrag;

@@ -14,6 +14,7 @@ import { State } from "./quote";
 import { QuoteFull_quote_tags } from "../../graphql/gen.types";
 import MobileBottomMenu from "../../components/mobile-bottom-menu.component";
 import { MenuItem } from "../../components/mobile-bottom-menu.component";
+import { sourceDisplay } from "src/graphql/utils";
 
 export class Quote extends React.Component<Props, State> {
   componentDidMount() {
@@ -79,7 +80,7 @@ export class Quote extends React.Component<Props, State> {
 
         {quote.source && (
           <NavLink to={makeSourceURL(quote.source.id)} className="quote-text">
-            {quote.source.display}
+            {sourceDisplay(quote.source)}
           </NavLink>
         )}
 
