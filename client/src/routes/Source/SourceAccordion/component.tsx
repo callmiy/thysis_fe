@@ -306,7 +306,11 @@ export class SourceAccordion extends React.Component<Props, State> {
         <div className={`${classes.root}`}>
           <div className={classes.labels}> {label} </div>
 
-          <div className={classes.details}>{value}</div>
+          {name === "url" ? (
+            <a href={value}>{value}</a>
+          ) : (
+            <div className={classes.details}>{value}</div>
+          )}
         </div>
       );
     }
