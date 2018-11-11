@@ -37,7 +37,7 @@ export const sourceDisplay = (source: SourceFullFrag) => {
   }
 
   if (source.url) {
-    display += " | " + source.url;
+    display += " , " + source.url;
   }
 
   display += " | " + source.sourceType.name;
