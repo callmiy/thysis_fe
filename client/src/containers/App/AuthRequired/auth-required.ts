@@ -1,4 +1,3 @@
-import { LoadableComponent } from "react-loadable";
 import { RouteProps } from "react-router-dom";
 import { DataValue } from "react-apollo";
 
@@ -23,7 +22,5 @@ export type Props = OwnProps &
   LocalUserGqlProps &
   CurrentProjectLocalGqlProps &
   UserLocalMutationProps & {
-    component:
-      | (React.ComponentClass<{}> & LoadableComponent)
-      | (React.StatelessComponent<{}> & LoadableComponent);
+    component: React.ComponentClass<{}> | React.StatelessComponent<{}>;
   };

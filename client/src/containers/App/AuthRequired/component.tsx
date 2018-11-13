@@ -25,7 +25,7 @@ export const AuthRequired = ({
   const render = (childProps: RouteProps) => {
     if (user) {
       if (!currentProject && rest.path !== PROJECTS_URL) {
-        return <Redirect to={PROJECTS_URL} {...data} {...childProps} />;
+        return <Redirect to={PROJECTS_URL} />;
       }
 
       return (
@@ -53,7 +53,7 @@ export const AuthRequired = ({
       }
     });
 
-    return <Redirect to={LOGIN_URL} {...childProps} />;
+    return <Redirect to={LOGIN_URL} />;
   };
 
   return <Route {...data} render={render} />;

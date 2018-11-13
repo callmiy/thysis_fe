@@ -1,5 +1,4 @@
 import * as React from "react";
-import Loadable from "react-loadable";
 import { BrowserRouter } from "react-router-dom";
 import { Switch } from "react-router-dom";
 import { Route } from "react-router-dom";
@@ -21,56 +20,26 @@ import {
 import Loading from "./../../components/Loading";
 import AuthRequired from "./AuthRequired";
 import { AppSidebarContext, State } from "./app.utils";
+import { logger } from "src/utils";
 
-const Home = Loadable({
-  loading: Loading,
-  loader: () => import("./../../routes/Home")
-});
+// tslint:disable-next-line:no-any
+const ReactLazy = React as any;
+const Home = ReactLazy.lazy(() => import("./../../routes/Home"));
+const TagDetail = ReactLazy.lazy(() => import("./../../routes/TagDetail"));
+const Source = ReactLazy.lazy(() => import("./../../routes/Source"));
+const NewQuote = ReactLazy.lazy(() => import("./../../routes/NewQuote"));
+const Quote = ReactLazy.lazy(() => import("./../../routes/Quote"));
+const AuthorRoute = ReactLazy.lazy(() => import("./../../routes/Author"));
+const LoginRoute = ReactLazy.lazy(() => import("./../../routes/Login"));
+const ProjectsRoute = ReactLazy.lazy(() => import("./../../routes/Projects"));
 
-const TagDetail = Loadable({
-  loading: Loading,
-  loader: () => import("./../../routes/TagDetail")
-});
+const SearchQuotes = ReactLazy.lazy(() =>
+  import("./../../routes/SearchQuotes")
+);
 
-const Source = Loadable({
-  loading: Loading,
-  loader: () => import("./../../routes/Source")
-});
-
-const NewQuote = Loadable({
-  loading: Loading,
-  loader: () => import("./../../routes/NewQuote")
-});
-
-const SearchQuotes = Loadable({
-  loading: Loading,
-  loader: () => import("./../../routes/SearchQuotes")
-});
-
-const Quote = Loadable({
-  loading: Loading,
-  loader: () => import("./../../routes/Quote")
-});
-
-const AuthorRoute = Loadable({
-  loading: Loading,
-  loader: () => import("./../../routes/Author")
-});
-
-const UserRegRoute = Loadable({
-  loading: Loading,
-  loader: () => import("./../../routes/Registration")
-});
-
-const LoginRoute = Loadable({
-  loading: Loading,
-  loader: () => import("./../../routes/Login")
-});
-
-const ProjectsRoute = Loadable({
-  loading: Loading,
-  loader: () => import("./../../routes/Projects")
-});
+const UserRegRoute = ReactLazy.lazy(() =>
+  import("./../../routes/Registration")
+);
 
 export class App extends React.Component<{}, State> {
   state: State = { showSidebar: false };
@@ -80,8 +49,7 @@ export class App extends React.Component<{}, State> {
       // See above for additional options, including other storage providers.
       await persistCache();
     } catch (error) {
-      // tslint:disable-next-line:no-console
-      console.error("Error restoring Apollo cache", error);
+      logger("error", "Error restoring Apollo cache", error);
     }
 
     this.setState({ cacheLoaded: true });
@@ -95,58 +63,68 @@ export class App extends React.Component<{}, State> {
     }
 
     return (
-      <ApolloProvider client={client}>
-        <AppSidebarContext.Provider
-          value={{
-            showSidebar: this.state.showSidebar,
-            onShowClicked: this.handleShowSidebar,
-            onHide: this.handleHideSidebar
-          }}
-        >
-          <BrowserRouter>
-            <Switch>
-              <Route
-                exact={true}
-                path={USER_REG_URL}
-                component={UserRegRoute}
-              />
-              <Route exact={true} path={LOGIN_URL} component={LoginRoute} />
-              <AuthRequired exact={true} path={SOURCE_URL} component={Source} />
-              <AuthRequired exact={true} path={QUOTE_URL} component={Quote} />
+      <ReactLazy.Suspense fallback={<Loading />}>
+        <ApolloProvider client={client}>
+          <AppSidebarContext.Provider
+            value={{
+              showSidebar: this.state.showSidebar,
+              onShowClicked: this.handleShowSidebar,
+              onHide: this.handleHideSidebar
+            }}
+          >
+            <BrowserRouter>
+              <Switch>
+                <Route
+                  exact={true}
+                  path={USER_REG_URL}
+                  component={UserRegRoute}
+                />
+                <Route exact={true} path={LOGIN_URL} component={LoginRoute} />
+                <AuthRequired
+                  exact={true}
+                  path={SOURCE_URL}
+                  component={Source}
+                />
+                <AuthRequired exact={true} path={QUOTE_URL} component={Quote} />
 
-              <AuthRequired
-                exact={true}
-                path={AUTHOR_ROUTE_URL}
-                component={AuthorRoute}
-              />
+                <AuthRequired
+                  exact={true}
+                  path={AUTHOR_ROUTE_URL}
+                  component={AuthorRoute}
+                />
 
-              <AuthRequired
-                exact={true}
-                path={PROJECTS_URL}
-                component={ProjectsRoute}
-              />
+                <AuthRequired
+                  exact={true}
+                  path={PROJECTS_URL}
+                  component={ProjectsRoute}
+                />
 
-              <AuthRequired
-                exact={true}
-                path={SEARCH_QUOTES_URL}
-                component={SearchQuotes}
-              />
+                <AuthRequired
+                  exact={true}
+                  path={SEARCH_QUOTES_URL}
+                  component={SearchQuotes}
+                />
 
-              <AuthRequired exact={true} path={TAG_URL} component={TagDetail} />
+                <AuthRequired
+                  exact={true}
+                  path={TAG_URL}
+                  component={TagDetail}
+                />
 
-              <AuthRequired
-                exact={true}
-                path={NEW_QUOTE_URL}
-                component={NewQuote}
-              />
+                <AuthRequired
+                  exact={true}
+                  path={NEW_QUOTE_URL}
+                  component={NewQuote}
+                />
 
-              <AuthRequired exact={true} path={ROOT_URL} component={Home} />
+                <AuthRequired exact={true} path={ROOT_URL} component={Home} />
 
-              <Route component={LoginRoute} />
-            </Switch>
-          </BrowserRouter>
-        </AppSidebarContext.Provider>
-      </ApolloProvider>
+                <Route component={LoginRoute} />
+              </Switch>
+            </BrowserRouter>
+          </AppSidebarContext.Provider>
+        </ApolloProvider>
+      </ReactLazy.Suspense>
     );
   }
 

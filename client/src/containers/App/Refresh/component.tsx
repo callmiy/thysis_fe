@@ -15,7 +15,7 @@ export class Refresh extends React.Component<Props, {}> {
     const { component: Component, ...rest } = this.props.componentProps;
 
     if (error && !error.message.includes("Network")) {
-      return <Redirect to={LOGIN_URL} {...rest} />;
+      return <Redirect to={LOGIN_URL} />;
     }
 
     if (user) {
@@ -28,7 +28,7 @@ export class Refresh extends React.Component<Props, {}> {
       !currentProject &&
       (rest.location && rest.location.pathname) !== PROJECTS_URL
     ) {
-      return <Redirect to={PROJECTS_URL} {...rest} />;
+      return <Redirect to={PROJECTS_URL} />;
     }
 
     return <Component {...rest} />;
