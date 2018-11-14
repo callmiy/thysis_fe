@@ -9,12 +9,11 @@ import RootHeader from "../../components/Header";
 import { TagQuoteQueryComponent } from "../../graphql/ops.types";
 import TAG_QUOTE_QUERY from "../../graphql/tag-with-quotes.query";
 import { TagQuote as TagQuoteQuery } from "../../graphql/gen.types";
-import MobileBottomMenu from "../../components/mobile-bottom-menu.component";
-import { MenuItem } from "../../components/mobile-bottom-menu.component";
 import renderQuote from "../../components/QuoteItem";
 import { setTitle } from "../../routes/util";
 import { styles } from "./styles";
 import { classes } from "./styles";
+import AppSideBar from "src/components/AppSidebar";
 
 type TagDetailProps = RouteComponentProps<{ id: string }>;
 
@@ -31,48 +30,48 @@ export class TagDetail extends React.Component<TagDetailProps> {
     const id = this.props.match.params.id;
 
     return (
-      <div className={`${classes.tagDetailRoot}`}>
-        <RootHeader title="Tag Detail" />
+      <AppSideBar>
+        <div className={`${classes.tagDetailRoot}`}>
+          <RootHeader title="Tag Detail" showSideBarTrigger={true} />
 
-        <TagQuoteQueryComponent
-          query={TAG_QUOTE_QUERY}
-          variables={{ tag: { id } }}
-        >
-          {({ data, loading, error }) => {
-            if (error) {
+          <TagQuoteQueryComponent
+            query={TAG_QUOTE_QUERY}
+            variables={{ tag: { id } }}
+          >
+            {({ data, loading, error }) => {
+              if (error) {
+                return (
+                  <div
+                    className={`${classes.tagDetailMain} ${
+                      classes.errorContainer
+                    }`}
+                  >
+                    {error.message}
+                  </div>
+                );
+              }
+
+              if (loading) {
+                return (
+                  <Dimmer
+                    className={`${classes.tagDetailRoot}`}
+                    active={true}
+                    inverted={true}
+                  >
+                    <Loader size="mini">Loading</Loader>
+                  </Dimmer>
+                );
+              }
+
               return (
-                <div
-                  className={`${classes.tagDetailMain} ${
-                    classes.errorContainer
-                  }`}
-                >
-                  {error.message}
+                <div className={`${classes.tagDetailRoot}`}>
+                  {this.renderMain(data)}
                 </div>
               );
-            }
-
-            if (loading) {
-              return (
-                <Dimmer
-                  className={`${classes.tagDetailRoot}`}
-                  active={true}
-                  inverted={true}
-                >
-                  <Loader size="mini">Loading</Loader>
-                </Dimmer>
-              );
-            }
-
-            return (
-              <div className={`${classes.tagDetailRoot}`}>
-                {this.renderMain(data)}
-              </div>
-            );
-          }}
-        </TagQuoteQueryComponent>
-
-        <MobileBottomMenu items={[MenuItem.HOME, MenuItem.TAG_LIST]} />
-      </div>
+            }}
+          </TagQuoteQueryComponent>
+        </div>
+      </AppSideBar>
     );
   }
 

@@ -14,6 +14,7 @@ import { State } from "./author";
 import { AuthorRouteFrag_sources, AuthorFrag } from "../../graphql/gen.types";
 import { authorFullName, sourceDisplay } from "../../graphql/utils";
 import Loading from "src/components/Loading";
+import AppSideBar from "src/components/AppSidebar";
 
 export class Author extends React.Component<Props, State> {
   static getDerivedStateFromProps(nextProps: Props, currentState: State) {
@@ -42,11 +43,13 @@ export class Author extends React.Component<Props, State> {
 
   render() {
     return (
-      <div className="author-route">
-        <RootHeader title="Author" />
+      <AppSideBar>
+        <div className="author-route">
+          <RootHeader title="Author" showSideBarTrigger={true} />
 
-        {this.renderMainOrLoading()}
-      </div>
+          {this.renderMainOrLoading()}
+        </div>
+      </AppSideBar>
     );
   }
 
@@ -115,7 +118,7 @@ export class Author extends React.Component<Props, State> {
     this.setState(s =>
       update(s, {
         isEditing: {
-          $set: !this.state.isEditing
+          $set: !s.isEditing
         }
       })
     );

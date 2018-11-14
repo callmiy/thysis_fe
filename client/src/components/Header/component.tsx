@@ -8,9 +8,7 @@ import {
   AppSidebarConsumer,
   SideBarContextProps
 } from "../../containers/App/app.utils";
-import { LOGIN_URL, USER_REG_URL, ROOT_URL } from "src/routes/util";
-
-const NO_SIDE_BAR_ROUTES = [LOGIN_URL, USER_REG_URL];
+import { ROOT_URL } from "src/routes/util";
 
 export default class Header extends React.Component<Props, State> {
   state = INITIAL_STATE;
@@ -25,13 +23,14 @@ export default class Header extends React.Component<Props, State> {
       style,
       currentProject,
       title,
-      match: { path }
+      match: { path },
+      showSideBarTrigger
     } = this.props;
 
     return (
       <div className={`${className} app-header`} style={style} color="green">
         <div className="top">
-          {!NO_SIDE_BAR_ROUTES.includes(path) && (
+          {showSideBarTrigger && (
             <a className="sidebar-trigger item" onClick={context.onShowClicked}>
               <Icon name="content" />
             </a>

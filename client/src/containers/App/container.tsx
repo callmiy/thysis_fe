@@ -79,12 +79,15 @@ export class App extends React.Component<{}, State> {
                   path={USER_REG_URL}
                   component={UserRegRoute}
                 />
+
                 <Route exact={true} path={LOGIN_URL} component={LoginRoute} />
+
                 <AuthRequired
                   exact={true}
                   path={SOURCE_URL}
                   component={Source}
                 />
+
                 <AuthRequired exact={true} path={QUOTE_URL} component={Quote} />
 
                 <AuthRequired
@@ -129,11 +132,11 @@ export class App extends React.Component<{}, State> {
   }
 
   private handleShowSidebar = () => {
-    this.setState(s => ({ ...s, showSidebar: true }));
+    this.setState({ showSidebar: true });
   };
 
   private handleHideSidebar = () => {
-    this.setState(s => ({ ...s, showSidebar: false }));
+    this.setState({ showSidebar: false });
   };
 }
 

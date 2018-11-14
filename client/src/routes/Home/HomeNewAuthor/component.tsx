@@ -98,15 +98,8 @@ export class HomeNewAuthor extends React.Component<Props, State> {
     this.props.childProps.dismissModal();
   };
 
-  private showCreateSourceModal = () => {
-    this.setState(s =>
-      update(s, {
-        showSourceModal: {
-          $set: true
-        }
-      })
-    );
-  };
+  private showCreateSourceModal = () =>
+    this.setState({ showSourceModal: true });
 }
 
 export default HomeNewAuthor;

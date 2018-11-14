@@ -243,14 +243,7 @@ export class UserReg extends React.Component<Props, State> {
       }
     } catch (error) {
       formikBag.setSubmitting(false);
-
-      this.setState(s =>
-        update(s, {
-          graphQlError: {
-            $set: error
-          }
-        })
-      );
+      this.setState({ graphQlError: error });
     }
   };
 
@@ -340,19 +333,18 @@ export class UserReg extends React.Component<Props, State> {
           {...field}
         />
 
-        {booleanError &&
-          touched && (
-            <Message
-              style={{
-                display: "block",
-                padding: "0.5em",
-                marginBottom: "1em",
-                marginTop: "-10px"
-              }}
-              error={true}
-              header={error}
-            />
-          )}
+        {booleanError && touched && (
+          <Message
+            style={{
+              display: "block",
+              padding: "0.5em",
+              marginBottom: "1em",
+              marginTop: "-10px"
+            }}
+            error={true}
+            header={error}
+          />
+        )}
       </div>
     );
   };
@@ -365,13 +357,7 @@ export class UserReg extends React.Component<Props, State> {
   };
 
   private handleFocus = () => {
-    this.setState(s => {
-      return update(s, {
-        graphQlError: {
-          $set: undefined
-        }
-      });
-    });
+    this.setState({ graphQlError: undefined });
   };
 }
 

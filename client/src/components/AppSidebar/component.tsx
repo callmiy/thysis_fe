@@ -3,7 +3,10 @@ import { Sidebar, Segment, Menu, Icon } from "semantic-ui-react";
 import { NavLink } from "react-router-dom";
 
 import { Props } from "./app-sidebar";
-import { AppSidebarConsumer, SideBarContextProps } from "../app.utils";
+import {
+  AppSidebarConsumer,
+  SideBarContextProps
+} from "src/containers/App/app.utils";
 import {
   ROOT_URL,
   PROJECTS_URL,
@@ -12,9 +15,10 @@ import {
   NEW_QUOTE_URL,
   LOGIN_URL,
   USER_REG_URL
-} from "../../../routes/util";
+} from "src/routes/util";
 
 const AUTH_URLS = [LOGIN_URL, USER_REG_URL];
+
 export class AppSideBar extends React.Component<Props> {
   render() {
     return <AppSidebarConsumer>{this.renderSideBar}</AppSidebarConsumer>;

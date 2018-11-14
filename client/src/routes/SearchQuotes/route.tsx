@@ -4,6 +4,7 @@ import RootHeader from "../../components/Header";
 import { setTitle } from "../../routes/util";
 import { classes } from "./styles";
 import SearchQuotesComponent from "../../components/SearchComponent";
+import AppSideBar from "src/components/AppSidebar";
 
 export class SearchQuotes extends React.Component {
   componentDidMount() {
@@ -16,11 +17,13 @@ export class SearchQuotes extends React.Component {
 
   render() {
     return (
-      <div className={classes.root}>
-        <RootHeader title="Search" />
+      <AppSideBar>
+        <div className={classes.root}>
+          <RootHeader title="Search" showSideBarTrigger={true} />
 
-        <SearchQuotesComponent />
-      </div>
+          <SearchQuotesComponent />
+        </div>
+      </AppSideBar>
     );
   }
 }

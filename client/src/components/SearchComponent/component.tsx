@@ -1,7 +1,6 @@
 import React from "react";
 import { Cancelable } from "lodash";
 import debounce from "lodash-es/debounce";
-import update from "immutability-helper";
 import { Input } from "semantic-ui-react";
 import { List } from "semantic-ui-react";
 import { Message } from "semantic-ui-react";
@@ -123,26 +122,15 @@ export class SearchQuotesComponent extends React.Component<Props, State> {
   onSearchInputChange: SemanticOnInputChangeFunc = (e, { value }) => {
     // if user is pressing backspace or clearing texts in any other way, when
     // the text input is clear, we clear search results. This fixes the bug
-    // where after user clears input and then begin typing again, we render the
+    // where after user clears input and then begins typing again, we render the
     // stale search result before hitting network
     let { result } = this.state;
     result = value ? result : undefined;
-
-    this.setState(s =>
-      update(s, {
-        searchText: {
-          $set: value
-        },
-
-        searchError: {
-          $set: undefined
-        },
-
-        result: {
-          $set: result
-        }
-      })
-    );
+    this.setState({
+      searchText: value,
+      searchError: undefined,
+      result
+    });
 
     this.doSearchDebounced();
   };
@@ -154,13 +142,7 @@ export class SearchQuotesComponent extends React.Component<Props, State> {
       return;
     }
 
-    this.setState(s =>
-      update(s, {
-        searchLoading: {
-          $set: true
-        }
-      })
-    );
+    this.setState({ searchLoading: true });
 
     try {
       const result = await this.props.client.query<
@@ -183,29 +165,9 @@ export class SearchQuotesComponent extends React.Component<Props, State> {
 
       const quoteFullSearch = data.quoteFullSearch as AllMatchingTexts_quoteFullSearch;
 
-      this.setState(s =>
-        update(s, {
-          searchLoading: {
-            $set: false
-          },
-
-          result: {
-            $set: quoteFullSearch
-          }
-        })
-      );
+      this.setState({ searchLoading: false, result: quoteFullSearch });
     } catch (error) {
-      this.setState(s =>
-        update(s, {
-          searchLoading: {
-            $set: false
-          },
-
-          searchError: {
-            $set: error
-          }
-        })
-      );
+      this.setState({ searchLoading: false, searchError: error });
     }
   };
 

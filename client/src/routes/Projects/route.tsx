@@ -14,6 +14,7 @@ import { ProjectFragment } from "src/graphql/gen.types";
 import { ROOT_URL } from "../util";
 import { format as dateFormat } from "date-fns";
 import loadInitialData from "./initial-data";
+import AppSideBar from "src/components/AppSidebar";
 
 export class SelectProject extends React.Component<Props, State> {
   static getDerivedStateFromProps(nextProps: Props) {
@@ -28,14 +29,16 @@ export class SelectProject extends React.Component<Props, State> {
 
   render() {
     return (
-      <div className="select-project">
-        <Header title="Select Project" />
+      <AppSideBar>
+        <div className="select-project">
+          <Header title="Select Project" showSideBarTrigger={true} />
 
-        <div className="main">
-          {this.renderForm()}
-          {this.renderProjects()}
+          <div className="main">
+            {this.renderForm()}
+            {this.renderProjects()}
+          </div>
         </div>
-      </div>
+      </AppSideBar>
     );
   }
 

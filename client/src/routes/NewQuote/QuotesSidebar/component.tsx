@@ -290,17 +290,8 @@ export class QuotesSidebar extends React.Component<Props, State> {
     error?: ApolloError
   ) => {
     if (error) {
-      return this.setState(s =>
-        update(s, {
-          loading: {
-            $set: false
-          },
-
-          graphQlError: {
-            $set: error
-          }
-        })
-      );
+      this.setState({ loading: false, graphQlError: error });
+      return;
     }
 
     if (resource && result) {
@@ -318,13 +309,8 @@ export class QuotesSidebar extends React.Component<Props, State> {
     }
 
     if (!result || !error) {
-      return this.setState(s =>
-        update(s, {
-          loading: {
-            $set: true
-          }
-        })
-      );
+      this.setState({ loading: false });
+      return;
     }
   };
 

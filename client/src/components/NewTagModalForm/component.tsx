@@ -143,23 +143,14 @@ export class NewTagModalForm extends React.Component<Props, State> {
   };
 
   reset = async () => {
-    // React complained I'm calling set state on an unmounted componnent?
-    // await this.setState(initalStateNewTagModalFormState);
     this.props.dismissModal();
   };
 
   handleFocus = () =>
-    this.setState(s =>
-      update(s, {
-        formError: {
-          $set: undefined
-        },
-
-        submitSuccess: {
-          $set: false
-        }
-      })
-    );
+    this.setState({
+      formError: undefined,
+      submitSuccess: false
+    });
 
   handleChange = (name: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
     const { target } = e;
@@ -174,39 +165,11 @@ export class NewTagModalForm extends React.Component<Props, State> {
 
   handleSubmit = (createTag: CreateTagFn) => async () => {
     try {
-      this.setState(s =>
-        update(s, {
-          submitting: {
-            $set: true
-          }
-        })
-      );
-
+      this.setState({ submitting: true });
       await createTag();
-
-      this.setState(s =>
-        update(s, {
-          submitSuccess: {
-            $set: true
-          },
-
-          submitting: {
-            $set: false
-          }
-        })
-      );
+      this.setState({ submitSuccess: true, submitting: false });
     } catch (error) {
-      this.setState(s =>
-        update(s, {
-          formError: {
-            $set: error
-          },
-
-          submitting: {
-            $set: false
-          }
-        })
-      );
+      this.setState({ formError: error, submitting: false });
     }
   };
 

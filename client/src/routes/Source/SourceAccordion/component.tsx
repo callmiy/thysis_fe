@@ -443,51 +443,28 @@ export class SourceAccordion extends React.Component<Props, State> {
   };
 
   handleToggleEditView = () => {
-    this.setState(s =>
-      update(s, {
-        detailAction: {
-          $set:
-            this.state.detailAction === DetailAction.VIEWING
-              ? DetailAction.EDITING
-              : DetailAction.VIEWING
-        }
-      })
-    );
+    this.setState({
+      detailAction:
+        this.state.detailAction === DetailAction.VIEWING
+          ? DetailAction.EDITING
+          : DetailAction.VIEWING
+    });
   };
 
   handleDismissSuccessModal = () => {
-    this.setState(s =>
-      update(s, {
-        openUpdateSourceSuccessModal: {
-          $set: false
-        },
-
-        detailAction: {
-          $set: DetailAction.VIEWING
-        }
-      })
-    );
+    this.setState({
+      openUpdateSourceSuccessModal: false,
+      detailAction: DetailAction.VIEWING
+    });
   };
 
   handleDismissErrorModal = () => {
-    this.setState(s =>
-      update(s, {
-        updateSourceError: {
-          $set: undefined
-        }
-      })
-    );
+    this.setState({ updateSourceError: undefined });
   };
 
   private fetchQuotes = async () => {
     try {
-      this.setState(s =>
-        update(s, {
-          loadingQuotes: {
-            $set: true
-          }
-        })
-      );
+      this.setState({ loadingQuotes: true });
 
       const result = await this.props.client.query<Quotes1, Quotes1Variables>({
         query: QUOTES_QUERY,
@@ -499,30 +476,9 @@ export class SourceAccordion extends React.Component<Props, State> {
       });
 
       const quotes = result.data.quotes as Quotes1_quotes[];
-
-      this.setState(s =>
-        update(s, {
-          quotes: {
-            $set: quotes
-          },
-
-          loadingQuotes: {
-            $set: false
-          }
-        })
-      );
+      this.setState({ quotes, loadingQuotes: false });
     } catch (error) {
-      this.setState(s =>
-        update(s, {
-          loadingQuotes: {
-            $set: false
-          },
-
-          fetchQuotesError: {
-            $set: error
-          }
-        })
-      );
+      this.setState({ loadingQuotes: false, fetchQuotesError: error });
     }
   };
 
@@ -585,24 +541,10 @@ export class SourceAccordion extends React.Component<Props, State> {
       });
 
       setSubmitting(false);
-
-      this.setState(s =>
-        update(s, {
-          openUpdateSourceSuccessModal: {
-            $set: true
-          }
-        })
-      );
+      this.setState({ openUpdateSourceSuccessModal: true });
     } catch (error) {
       setSubmitting(false);
-
-      this.setState(s =>
-        update(s, {
-          updateSourceError: {
-            $set: error
-          }
-        })
-      );
+      this.setState({ updateSourceError: error });
     }
   };
 

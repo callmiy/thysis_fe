@@ -25,8 +25,12 @@ export const config: WithFormikConfig<Props, FormOutput> = {
 
   enableReinitialize: true,
 
-  validate: ({ authors, topic }) => {
+  validate: ({ authors, topic, sourceType }) => {
     const errors: FormikErrors<FormOutput> = {};
+
+    if (!sourceType) {
+      errors.sourceType = "Select a source type";
+    }
 
     if (!authors || !authors.length) {
       errors.authors = "Select at least one author";

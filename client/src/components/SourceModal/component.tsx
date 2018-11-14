@@ -10,7 +10,6 @@ import { Message } from "semantic-ui-react";
 import { Input } from "semantic-ui-react";
 import { Modal } from "semantic-ui-react";
 import { Card } from "semantic-ui-react";
-import update from "immutability-helper";
 import isEmpty from "lodash/isEmpty";
 
 import { CreateSource_createSource } from "../../graphql/gen.types";
@@ -55,13 +54,9 @@ export class SourceModal extends React.Component<Props, State> {
     const { createSource, values, setSubmitting, resetForm } = this.props;
 
     if (!createSource) {
-      this.setState(s =>
-        update(s, {
-          formError: {
-            $set: { message: "You have not selected a project" }
-          }
-        })
-      );
+      this.setState({
+        formError: { message: "You have not selected a project" }
+      });
 
       return;
     }
@@ -85,23 +80,9 @@ export class SourceModal extends React.Component<Props, State> {
       }
 
       const source = data.createSource as CreateSource_createSource;
-
-      this.setState(s =>
-        update(s, {
-          source: {
-            $set: source
-          }
-        })
-      );
+      this.setState({ source });
     } catch (error) {
-      this.setState(s =>
-        update(s, {
-          formError: {
-            $set: error
-          }
-        })
-      );
-
+      this.setState({ formError: error });
       setSubmitting(false);
     }
   };
@@ -210,17 +191,7 @@ export class SourceModal extends React.Component<Props, State> {
   };
 
   handleFocus = () =>
-    this.setState(s =>
-      update(s, {
-        formError: {
-          $set: undefined
-        },
-
-        source: {
-          $set: undefined
-        }
-      })
-    );
+    this.setState({ formError: undefined, source: undefined });
 
   renderSourceTypeControl = (formProps: FieldProps<FormValues>) => {
     const {

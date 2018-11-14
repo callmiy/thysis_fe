@@ -18,6 +18,7 @@ import { classes } from "./styles";
 import { Props } from "./home";
 import { State } from "./home";
 import { MenuItem } from "./home";
+import AppSideBar from "src/components/AppSidebar";
 
 export class Home extends React.Component<Props, State> {
   state: State = {
@@ -44,127 +45,132 @@ export class Home extends React.Component<Props, State> {
     };
 
     return (
-      <div className={`${classes.homeRoot}`}>
-        <Header title="Home" />
+      <AppSideBar>
+        <div className={`${classes.homeRoot}`}>
+          <Header title="Home" showSideBarTrigger={true} />
 
-        <div className={classes.homeMain}>
-          <Menu
-            pointing={true}
-            compact={true}
-            icon="labeled"
-            style={styles.menu}
-            id="menu-items"
-          >
-            <Menu.Item
-              style={styles.menuAnchor}
-              as={NavLink}
-              to={SEARCH_QUOTES_URL}
+          <div className={classes.homeMain}>
+            <Menu
+              pointing={true}
+              compact={true}
+              icon="labeled"
+              style={styles.menu}
+              id="menu-items"
             >
-              <Icon name="search" />
-              Search
-            </Menu.Item>
+              <Menu.Item
+                style={styles.menuAnchor}
+                as={NavLink}
+                to={SEARCH_QUOTES_URL}
+              >
+                <Icon name="search" />
+                Search
+              </Menu.Item>
 
-            <Menu.Item
-              style={styles.menuAnchor}
-              as={NavLink}
-              to={makeNewQuoteURL()}
-            >
-              <Icon name="quote right" />
-              New Quote
-            </Menu.Item>
+              <Menu.Item
+                style={styles.menuAnchor}
+                as={NavLink}
+                to={makeNewQuoteURL()}
+              >
+                <Icon name="quote right" />
+                New Quote
+              </Menu.Item>
 
-            <Menu.Item
-              style={styles.menuAnchor}
-              onClick={this.toggleModalOpen(MenuItem.TAG_LIST, true)}
-            >
-              <Icon name="numbered list" />
-              List Tags
-            </Menu.Item>
+              <Menu.Item
+                style={styles.menuAnchor}
+                onClick={this.toggleModalOpen(MenuItem.TAG_LIST, true)}
+              >
+                <Icon name="numbered list" />
+                List Tags
+              </Menu.Item>
 
-            <Menu.Item
-              style={styles.menuAnchor}
-              onClick={this.toggleModalOpen(MenuItem.SOURCE_LIST, true)}
-            >
-              <Icon name="numbered list" />
-              List Sources
-            </Menu.Item>
+              <Menu.Item
+                style={styles.menuAnchor}
+                onClick={this.toggleModalOpen(MenuItem.SOURCE_LIST, true)}
+              >
+                <Icon name="numbered list" />
+                List Sources
+              </Menu.Item>
 
-            <Menu.Item
-              style={styles.menuAnchor}
-              onClick={this.toggleModalOpen(MenuItem.NEW_AUTHOR, true)}
-            >
-              <Icon name="user" />
-              New Author
-            </Menu.Item>
+              <Menu.Item
+                style={styles.menuAnchor}
+                onClick={this.toggleModalOpen(MenuItem.NEW_AUTHOR, true)}
+              >
+                <Icon name="user" />
+                New Author
+              </Menu.Item>
 
-            <Menu.Item
-              style={styles.menuAnchor}
-              onClick={this.toggleModalOpen(MenuItem.NEW_TAG, true)}
-            >
-              <Icon name="tag" />
-              New Tag
-            </Menu.Item>
+              <Menu.Item
+                style={styles.menuAnchor}
+                onClick={this.toggleModalOpen(MenuItem.NEW_TAG, true)}
+              >
+                <Icon name="tag" />
+                New Tag
+              </Menu.Item>
 
-            <Menu.Item
-              style={styles.menuAnchor}
-              onClick={this.toggleModalOpen(MenuItem.NEW_SOURCE, true)}
-            >
-              <Icon name="user" />
-              New Source
-            </Menu.Item>
+              <Menu.Item
+                style={styles.menuAnchor}
+                onClick={this.toggleModalOpen(MenuItem.NEW_SOURCE, true)}
+              >
+                <Icon name="user" />
+                New Source
+              </Menu.Item>
 
-            <Menu.Item
-              style={styles.menuAnchor}
-              onClick={this.toggleModalOpen(MenuItem.NEW_SOURCE_TYPE, true)}
-            >
-              <Icon name="tree" />
-              New Source Type
-            </Menu.Item>
-          </Menu>
+              <Menu.Item
+                style={styles.menuAnchor}
+                onClick={this.toggleModalOpen(MenuItem.NEW_SOURCE_TYPE, true)}
+              >
+                <Icon name="tree" />
+                New Source Type
+              </Menu.Item>
+            </Menu>
+          </div>
+
+          {this.state.modalOpened[MenuItem.TAG_LIST] && (
+            <TagsModal
+              open={this.state.modalOpened[MenuItem.TAG_LIST]}
+              dismissModal={this.toggleModalOpen(MenuItem.TAG_LIST, false)}
+            />
+          )}
+
+          {this.state.modalOpened[MenuItem.SOURCE_LIST] && (
+            <SourcesModal
+              open={this.state.modalOpened[MenuItem.SOURCE_LIST]}
+              dismissModal={this.toggleModalOpen(MenuItem.SOURCE_LIST, false)}
+            />
+          )}
+
+          {this.state.modalOpened[MenuItem.NEW_AUTHOR] && (
+            <HomeNewAuthor
+              childProps={newAuthorModalProps}
+              newSourceModalProps={newSourceModalProps}
+            />
+          )}
+
+          {this.state.modalOpened[MenuItem.NEW_TAG] && (
+            <NewTagModalForm
+              open={this.state.modalOpened[MenuItem.NEW_TAG]}
+              dismissModal={this.toggleModalOpen(MenuItem.NEW_TAG, false)}
+              style={{ marginTop: 0 }}
+            />
+          )}
+
+          {this.state.modalOpened[MenuItem.NEW_SOURCE] && (
+            <SourceModal {...newSourceModalProps} />
+          )}
+
+          {this.state.modalOpened[MenuItem.NEW_SOURCE_TYPE] && (
+            <NewSourceTypeModal
+              open={this.state.modalOpened[MenuItem.NEW_SOURCE_TYPE]}
+              dismissModal={this.toggleModalOpen(
+                MenuItem.NEW_SOURCE_TYPE,
+                false
+              )}
+              style={{ marginTop: 0 }}
+              user={user}
+            />
+          )}
         </div>
-
-        {this.state.modalOpened[MenuItem.TAG_LIST] && (
-          <TagsModal
-            open={this.state.modalOpened[MenuItem.TAG_LIST]}
-            dismissModal={this.toggleModalOpen(MenuItem.TAG_LIST, false)}
-          />
-        )}
-
-        {this.state.modalOpened[MenuItem.SOURCE_LIST] && (
-          <SourcesModal
-            open={this.state.modalOpened[MenuItem.SOURCE_LIST]}
-            dismissModal={this.toggleModalOpen(MenuItem.SOURCE_LIST, false)}
-          />
-        )}
-
-        {this.state.modalOpened[MenuItem.NEW_AUTHOR] && (
-          <HomeNewAuthor
-            childProps={newAuthorModalProps}
-            newSourceModalProps={newSourceModalProps}
-          />
-        )}
-
-        {this.state.modalOpened[MenuItem.NEW_TAG] && (
-          <NewTagModalForm
-            open={this.state.modalOpened[MenuItem.NEW_TAG]}
-            dismissModal={this.toggleModalOpen(MenuItem.NEW_TAG, false)}
-            style={{ marginTop: 0 }}
-          />
-        )}
-
-        {this.state.modalOpened[MenuItem.NEW_SOURCE] && (
-          <SourceModal {...newSourceModalProps} />
-        )}
-
-        {this.state.modalOpened[MenuItem.NEW_SOURCE_TYPE] && (
-          <NewSourceTypeModal
-            open={this.state.modalOpened[MenuItem.NEW_SOURCE_TYPE]}
-            dismissModal={this.toggleModalOpen(MenuItem.NEW_SOURCE_TYPE, false)}
-            style={{ marginTop: 0 }}
-            user={user}
-          />
-        )}
-      </div>
+      </AppSideBar>
     );
   }
 

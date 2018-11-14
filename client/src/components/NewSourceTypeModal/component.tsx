@@ -12,7 +12,6 @@ import { Field } from "formik";
 import { FieldProps } from "formik";
 import { FormikErrors } from "formik";
 import isEmpty from "lodash/isEmpty";
-import update from "immutability-helper";
 
 import { initialState } from "./new-source-type-modal";
 import { Props } from "./new-source-type-modal";
@@ -121,26 +120,12 @@ export class NewSourceTypeModal extends React.Component<Props, State> {
     try {
       await (this.props.createSourceType &&
         this.props.createSourceType(values.name.trim()));
-
-      this.setState(s =>
-        update(s, {
-          submitSuccess: {
-            $set: true
-          }
-        })
-      );
+      this.setState({ submitSuccess: true });
 
       formikBag.resetForm();
     } catch (error) {
       formikBag.setSubmitting(false);
-
-      this.setState(s =>
-        update(s, {
-          graphQlError: {
-            $set: error
-          }
-        })
-      );
+      this.setState({ graphQlError: error });
     }
   };
 
@@ -218,19 +203,18 @@ export class NewSourceTypeModal extends React.Component<Props, State> {
           {...field}
         />
 
-        {booleanError &&
-          touched && (
-            <Message
-              style={{
-                display: "block",
-                padding: "0.5em",
-                marginBottom: "1em",
-                marginTop: "-10px"
-              }}
-              error={true}
-              header={error}
-            />
-          )}
+        {booleanError && touched && (
+          <Message
+            style={{
+              display: "block",
+              padding: "0.5em",
+              marginBottom: "1em",
+              marginTop: "-10px"
+            }}
+            error={true}
+            header={error}
+          />
+        )}
       </div>
     );
   };
@@ -243,16 +227,9 @@ export class NewSourceTypeModal extends React.Component<Props, State> {
   };
 
   private handleFocus = () => {
-    this.setState(s => {
-      return update(s, {
-        graphQlError: {
-          $set: undefined
-        },
-
-        submitSuccess: {
-          $set: false
-        }
-      });
+    this.setState({
+      graphQlError: undefined,
+      submitSuccess: false
     });
   };
 }

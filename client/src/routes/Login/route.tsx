@@ -167,14 +167,7 @@ export class Login extends React.Component<Props, State> {
       }
     } catch (error) {
       formikBag.setSubmitting(false);
-
-      this.setState(s =>
-        update(s, {
-          graphQlError: {
-            $set: error
-          }
-        })
-      );
+      this.setState({ graphQlError: error });
     }
   };
 
@@ -289,13 +282,7 @@ export class Login extends React.Component<Props, State> {
   };
 
   private handleFocus = () => {
-    this.setState(s => {
-      return update(s, {
-        graphQlError: {
-          $set: undefined
-        }
-      });
-    });
+    this.setState({ graphQlError: undefined });
   };
 
   private formValuesEmpty = (values: FormValues) => {

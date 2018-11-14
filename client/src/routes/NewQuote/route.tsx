@@ -14,10 +14,10 @@ import { Message } from "semantic-ui-react";
 import { Icon } from "semantic-ui-react";
 import { Dimmer } from "semantic-ui-react";
 import { Loader } from "semantic-ui-react";
-import moment from "moment";
 import update from "immutability-helper";
 import { Mutation } from "react-apollo";
 import { NavLink } from "react-router-dom";
+import dateIsValid from "date-fns/isValid";
 
 import {
   Quotes1 as Quotes1Query,
@@ -60,6 +60,7 @@ import { Props } from "./new-quote";
 import QuotesSidebar from "./QuotesSidebar";
 import { initialFormValues } from "./new-quote";
 import { formOutputs } from "./new-quote";
+import AppSideBar from "src/components/AppSidebar";
 
 export class NewQuote extends React.Component<Props, State> {
   static getDerivedStateFromProps(nextProps: Props, currentState: State) {
@@ -158,67 +159,59 @@ export class NewQuote extends React.Component<Props, State> {
     } catch (error) {
       // tslint:disable-next-line:no-any
       const result = { data: { sources: [] } } as any;
-
-      this.setState(s =>
-        update(s, {
-          graphqlError: {
-            $set: error
-          },
-
-          queryResult: {
-            $set: result
-          }
-        })
-      );
+      this.setState({ graphqlError: error, queryResult: result });
     }
   };
 
   render() {
     return (
-      <div className={classes.newQuoteRoot}>
-        <RootHeader
-          className={classes.rootHeader}
-          style={{ margin: 0 }}
-          title="New Quote"
-        />
+      <AppSideBar>
+        <div className={classes.newQuoteRoot}>
+          <RootHeader
+            className={classes.rootHeader}
+            style={{ margin: 0 }}
+            title="New Quote"
+            showSideBarTrigger={true}
+          />
 
-        <div className={classes.rootInner}>
-          <div className={classes.formWithHeader}>
-            {this.state.sourceId && this.renderSourceQuoteHeader()}
+          <div className={classes.rootInner}>
+            <div className={classes.formWithHeader}>
+              {this.state.sourceId && this.renderSourceQuoteHeader()}
 
-            <div
-              className={`${classes.mainContent}`}
-              ref={this.formContainerRef}
-            >
-              {this.renderErrorOrSuccess()}
-
-              <Mutation
-                mutation={QUOTE_MUTATION}
-                variables={{ quote: this.state.formOutputs }}
-                update={this.writeQuoteToCache}
+              <div
+                className={`${classes.mainContent}`}
+                ref={this.formContainerRef}
               >
-                {createQuote => {
-                  return (
-                    <Formik
-                      initialValues={this.state.initialFormValues}
-                      enableReinitialize={true}
-                      onSubmit={this.submit(createQuote)}
-                      render={this.renderForm}
-                      validate={this.validate}
-                    />
-                  );
-                }}
-              </Mutation>
+                {this.renderErrorOrSuccess()}
+
+                <Mutation
+                  mutation={QUOTE_MUTATION}
+                  variables={{ quote: this.state.formOutputs }}
+                  update={this.writeQuoteToCache}
+                >
+                  {createQuote => {
+                    return (
+                      <Formik
+                        initialValues={this.state.initialFormValues}
+                        enableReinitialize={true}
+                        onSubmit={this.submit(createQuote)}
+                        render={this.renderForm}
+                        validate={this.validate}
+                      />
+                    );
+                  }}
+                </Mutation>
+              </div>
             </div>
+
+            <QuotesSidebar className={classes.quotesSidebar} />
           </div>
 
-          <QuotesSidebar className={classes.quotesSidebar} />
-        </div>
-
-        <div className={classes.bottomMenu}>
-          <NewQuoteMenu onTagCreated={this.onTagCreated} />
-        </div>
-      </div>
+          <div className={classes.bottomMenu}>
+            <NewQuoteMenu onTagCreated={this.onTagCreated} />
+          </div>
+        </div>{" "}
+      </AppSideBar>
     );
   }
 
@@ -408,13 +401,7 @@ export class NewQuote extends React.Component<Props, State> {
       this.scrollToTopOfForm();
     } catch (error) {
       formikBag.setSubmitting(false);
-      this.setState(s =>
-        update(s, {
-          graphqlError: {
-            $set: error
-          }
-        })
-      );
+      this.setState({ graphqlError: error });
     }
   };
 
@@ -719,32 +706,22 @@ export class NewQuote extends React.Component<Props, State> {
       return error;
     }
 
-    const year = date.year as number;
+    const { year, month, day: noPaddedDay } = date;
 
-    if (!year) {
+    if (!(year && month && noPaddedDay)) {
       return error;
     }
 
-    const month = date.month as number;
+    const day = `${noPaddedDay}`.padStart(2, "0");
 
-    if (!month) {
-      return error;
-    }
-
-    const day = date.day as number;
-
-    if (!day) {
-      return error;
-    }
-
-    const datec = moment({ year, month: month - 1, day });
-    const isValid = datec.isValid();
+    const inputDate = `${year}-${month}-${day}`;
+    const isValid = dateIsValid(inputDate);
 
     this.setState(prev =>
       update(prev, {
         formOutputs: {
           date: {
-            $set: isValid ? datec.format("YYYY-MM-DD") : undefined
+            $set: isValid ? inputDate : undefined
           }
         }
       })
@@ -824,14 +801,7 @@ export class NewQuote extends React.Component<Props, State> {
 
   onSuccessModalDismissed = (val: ShouldReUseSource) => () => {
     const { sourceId, submittedSourceId } = this.state;
-
-    this.setState(s =>
-      update(s, {
-        submittedSourceId: {
-          $set: undefined
-        }
-      })
-    );
+    this.setState({ submittedSourceId: undefined });
 
     if (
       !sourceId &&

@@ -11,6 +11,7 @@ import { classes } from "./styles";
 import { SourceProps } from "./utils";
 import { SourceState } from "./utils";
 import SourceAccordion from "./SourceAccordion";
+import AppSideBar from "src/components/AppSidebar";
 
 export class Source extends React.Component<SourceProps, SourceState> {
   state: SourceState = {
@@ -28,11 +29,17 @@ export class Source extends React.Component<SourceProps, SourceState> {
 
   render() {
     return (
-      <div className={`${classes.SourceRoot}`}>
-        <RootHeader title="Source" className={classes.RootHeader} />
+      <AppSideBar>
+        <div className={`${classes.SourceRoot}`}>
+          <RootHeader
+            title="Source"
+            className={classes.RootHeader}
+            showSideBarTrigger={true}
+          />
 
-        {this.renderMainOrLoading()}
-      </div>
+          {this.renderMainOrLoading()}
+        </div>
+      </AppSideBar>
     );
   }
 

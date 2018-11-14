@@ -8,6 +8,7 @@ export type Props = RouteComponentProps<{}> &
     title: string;
     style?: React.CSSProperties;
     className?: string;
+    showSideBarTrigger?: boolean;
   };
 
 export interface State {

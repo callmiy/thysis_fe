@@ -181,24 +181,11 @@ export class NewAuthorModal extends React.Component<Props, State> {
           onAuthorCreated(authorUpdated.data.updateAuthor);
         }
 
-        this.setState(s =>
-          update(s, {
-            open: {
-              $set: false
-            }
-          })
-        );
+        this.setState({ open: false });
       }
     } catch (error) {
       formikBag.setSubmitting(false);
-
-      this.setState(s =>
-        update(s, {
-          graphQlError: {
-            $set: error
-          }
-        })
-      );
+      this.setState({ graphQlError: error });
     }
   };
 
@@ -291,19 +278,18 @@ export class NewAuthorModal extends React.Component<Props, State> {
           {...field}
         />
 
-        {booleanError &&
-          touched && (
-            <Message
-              style={{
-                display: "block",
-                padding: "0.5em",
-                marginBottom: "1em",
-                marginTop: "-10px"
-              }}
-              error={true}
-              header={error}
-            />
-          )}
+        {booleanError && touched && (
+          <Message
+            style={{
+              display: "block",
+              padding: "0.5em",
+              marginBottom: "1em",
+              marginTop: "-10px"
+            }}
+            error={true}
+            header={error}
+          />
+        )}
       </div>
     );
   };
@@ -316,13 +302,7 @@ export class NewAuthorModal extends React.Component<Props, State> {
   };
 
   private handleFocus = () => {
-    this.setState(s => {
-      return update(s, {
-        graphQlError: {
-          $set: undefined
-        }
-      });
-    });
+    this.setState({ graphQlError: undefined });
   };
 
   private eliminateEmptyFields = (values: FormValues) => {
