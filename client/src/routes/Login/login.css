@@ -12,9 +12,14 @@
   overflow-x: hidden;
   overflow-y: auto; }
 
-.login-route .ui.to-reg-button {
+.login-route .to-reg-button {
   display: block;
   width: 100%;
-  margin-top: 10px;
+  margin-top: 20px;
   text-decoration: none;
-  color: initial; }
+  color: #fff;
+  background-color: #5faac7;
+  padding: 8px;
+  text-align: center;
+  border-radius: 0.3rem;
+  font-weight: bolder; }

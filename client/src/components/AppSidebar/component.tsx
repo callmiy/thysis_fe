@@ -102,16 +102,10 @@ export class AppSideBar extends React.Component<Props> {
     );
   };
 
-  private logout = (onHide: () => void) => async () => {
+  private logout = (onHide: () => void) => () => {
     onHide();
 
-    const { history, updateLocalUser } = this.props;
-
-    await updateLocalUser({
-      variables: {
-        user: null
-      }
-    });
+    const { history } = this.props;
 
     history.replace(LOGIN_URL);
   };

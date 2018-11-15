@@ -2,11 +2,16 @@ import { AccordionTitleProps } from "semantic-ui-react";
 import { WithApolloClient } from "react-apollo";
 import { ApolloError } from "apollo-client";
 import { InjectedFormikProps } from "formik";
+import { WithFormikConfig } from "formik";
+import { FormikErrors } from "formik";
 
-import { SourceFullFrag } from "../../../graphql/gen.types";
-import { Quote1Frag } from "../../../graphql/gen.types";
+import {
+  SourceFullFrag,
+  Quote1Frag,
+  AuthorFrag
+} from "../../../graphql/gen.types";
 import { UpdateSourceMutationFn } from "../../../graphql/ops.types";
-import { AuthorWithFullName } from "../../../graphql/utils";
+import { AuthorWithFullName, authorFullName } from "../../../graphql/utils";
 
 export enum DetailAction {
   EDITING = "editing", // when we are editing source
@@ -27,14 +32,13 @@ export interface OwnProps {
   updateSource: UpdateSourceMutationFn;
 }
 
+export type FormErrors = { [k in keyof FormOutput]: string };
+
 export type PropsWithApolloClient = WithApolloClient<OwnProps>;
 
-export type PropsWithFormikProps = InjectedFormikProps<
-  PropsWithApolloClient,
-  FormOutput
->;
-
-export type Props = PropsWithFormikProps;
+export type Props = InjectedFormikProps<PropsWithApolloClient, FormOutput> & {
+  errors: FormErrors;
+};
 
 export enum AccordionIndex {
   DETAIL = 0,
@@ -57,5 +61,42 @@ export const initialState: State = {
   accordionProps: {
     [AccordionIndex.DETAIL]: true,
     [AccordionIndex.LIST_QUOTES]: false
+  }
+};
+
+export const formikConfig: WithFormikConfig<Props, FormOutput> = {
+  handleSubmit: async values => null,
+
+  mapPropsToValues: ({ source }) => {
+    let authors = [] as AuthorWithFullName[];
+
+    if (source.authors) {
+      authors = source.authors.map((a: AuthorFrag) => ({
+        ...a,
+        fullName: authorFullName(a)
+      })) as AuthorWithFullName[];
+    }
+
+    return { ...source, authors };
+  },
+
+  enableReinitialize: true,
+
+  validate: ({ authors, topic, sourceType }) => {
+    const errors: FormikErrors<FormErrors> = {};
+
+    if (!sourceType) {
+      errors.sourceType = "Select a source type";
+    }
+
+    if (!authors || !authors.length) {
+      errors.authors = "Select at least one author";
+    }
+
+    if (!topic || topic.length < 3) {
+      errors.topic = "Enter source topic according to author(s)";
+    }
+
+    return errors;
   }
 };

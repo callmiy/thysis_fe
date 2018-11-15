@@ -1,16 +1,10 @@
 import { RouteProps } from "react-router-dom";
 import { DataValue } from "react-apollo";
 
-import { UserFragment } from "../../../graphql/gen.types";
 import { CurrentProjectLocalData } from "../../../state/project.local.query";
-import { UserLocalMutationProps } from "src/state/user.local.mutation";
+import { UserLocalGqlProps } from "src/state/auth-user.local.query";
 
-export interface LocalGraphQlData {
-  user?: UserFragment;
-  staleToken?: string | null;
-}
-
-export type LocalUserGqlProps = DataValue<LocalGraphQlData> | undefined;
+export type LocalUserGqlProps = DataValue<UserLocalGqlProps> | undefined;
 
 export type CurrentProjectLocalGqlProps =
   | DataValue<CurrentProjectLocalData>
@@ -20,7 +14,6 @@ export type OwnProps = RouteProps;
 
 export type Props = OwnProps &
   LocalUserGqlProps &
-  CurrentProjectLocalGqlProps &
-  UserLocalMutationProps & {
+  CurrentProjectLocalGqlProps & {
     component: React.ComponentClass<{}> | React.StatelessComponent<{}>;
   };

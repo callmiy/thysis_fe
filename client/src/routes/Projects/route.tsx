@@ -17,15 +17,16 @@ import loadInitialData from "./initial-data";
 import AppSideBar from "src/components/AppSidebar";
 
 export class SelectProject extends React.Component<Props, State> {
-  static getDerivedStateFromProps(nextProps: Props) {
-    if (nextProps.projects) {
-      loadInitialData(nextProps.projects, nextProps.client);
+  state: State = initialState;
+
+  componentDidMount() {
+    const { projects, client } = this.props;
+    if (projects && projects.length) {
+      loadInitialData(projects, client);
     }
 
     return null;
   }
-
-  state: State = initialState;
 
   render() {
     return (

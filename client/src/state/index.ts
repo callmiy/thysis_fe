@@ -6,6 +6,7 @@ import { ProjectFragment } from "./../graphql/gen.types";
 import { TOKEN_KEY } from "./../constants";
 import { CURRENT_PROJECT_KEY } from "./../constants";
 import { State as SearchComponentState } from "../components/SearchComponent/search-component";
+import USER_QUERY, { UserLocalGqlData } from "./auth-user.local.query";
 
 type ClientStateFn<TVariables> = (
   fieldName: string,
@@ -29,19 +30,34 @@ const updateNetworkStatus: ClientStateFn<{
 const userMutation: ClientStateFn<{
   user: UserFragment | null;
 }> = (_, { user }, { cache }) => {
-  const data = { user, staleToken: null };
-
   if (user) {
-    cache.writeData({ data });
+    cache.writeData({ data: { user, staleToken: null, loggedOutUser: null } });
     storeToken(user.jwt);
   } else {
-    // MEANS WE HAVE LOGGED OUT
+    // MEANS WE HAVE LOGGED OUT. we store the current user as `loggedOutUser`
+    // so we can pre-fill the sign in form with e.g. user email
+
+    const { user: loggedOutUser } = {
+      ...(cache.readQuery<UserLocalGqlData>({ query: USER_QUERY }) || {
+        user: null
+      })
+    };
+
+    const data = {
+      user: null,
+      staleToken: null,
+      currentProject: null,
+      searchComponentState: null
+    } as {
+      loggedOutUser?: UserFragment | null;
+    };
+
+    if (loggedOutUser) {
+      data.loggedOutUser = loggedOutUser;
+    }
+
     cache.writeData({
-      data: {
-        ...data,
-        currentProject: null,
-        searchComponentState: null
-      }
+      data
     });
     clearToken();
     clearProject();
@@ -50,7 +66,7 @@ const userMutation: ClientStateFn<{
   return null;
 };
 
-const projectMutation: ClientStateFn<{
+const currentProjectMutation: ClientStateFn<{
   currentProject: ProjectFragment;
 }> = (_, { currentProject }, { cache }) => {
   const data = { currentProject };
@@ -88,7 +104,7 @@ export const initState = (cache: InMemoryCache) => {
       Mutation: {
         updateNetworkStatus,
         user: userMutation,
-        currentProject: projectMutation,
+        currentProject: currentProjectMutation,
         searchComponentState: searchComponentStateMutation
       }
     },
@@ -96,7 +112,8 @@ export const initState = (cache: InMemoryCache) => {
       staleToken: getToken(),
       user: null,
       currentProject: getProject(),
-      searchComponentState: null
+      searchComponentState: null,
+      loggedOutUser: null
     }
   });
 };

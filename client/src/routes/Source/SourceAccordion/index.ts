@@ -3,8 +3,7 @@ import { compose } from "react-apollo";
 import { withFormik } from "formik";
 import { graphql } from "react-apollo";
 
-import { config } from "./formik.config";
-import { OwnProps } from "./source-accordion";
+import { OwnProps, formikConfig } from "./source-accordion";
 import UPDATE_SOURCE_MUTATION from "../../../graphql/update-source.mutation";
 import { UpdateSource as UpdateSourceMutation } from "../../../graphql/gen.types";
 import { UpdateSourceVariables } from "../../../graphql/gen.types";
@@ -16,7 +15,7 @@ const updateSourceGraphql = graphql<
   UpdateSourceVariables,
   {}
 >(UPDATE_SOURCE_MUTATION, {
-  props: ({ mutate, ownProps }) => {
+  props: ({ mutate }) => {
     return {
       updateSource: mutate
     };
@@ -24,7 +23,7 @@ const updateSourceGraphql = graphql<
 });
 
 export default compose(
-  withFormik(config),
+  withFormik(formikConfig),
   withApollo,
   updateSourceGraphql
 )(SourceAccordion);

@@ -1,19 +1,19 @@
 import { graphql } from "react-apollo";
 import { compose } from "react-apollo";
 
-import AUTH_USER_LOCAL_QUERY from "../../../state/auth-user.local.query";
+import AUTH_USER_LOCAL_QUERY, {
+  UserLocalGqlData
+} from "../../../state/auth-user.local.query";
 import CURRENT_PROJECT_QUERY from "../../../state/project.local.query";
 import { CurrentProjectLocalData } from "../../../state/project.local.query";
-import { LocalGraphQlData } from "./auth-required";
 import { LocalUserGqlProps } from "./auth-required";
 import { OwnProps } from "./auth-required";
 import { CurrentProjectLocalGqlProps } from "./auth-required";
 import { AuthRequired } from "./component";
-import { userLocalMutationGql } from "src/state/user.local.mutation";
 
 const authUserLocalGraphQl = graphql<
   OwnProps,
-  LocalGraphQlData,
+  UserLocalGqlData,
   {},
   LocalUserGqlProps
 >(AUTH_USER_LOCAL_QUERY, {
@@ -35,6 +35,5 @@ const currentProjectLocalGql = graphql<
 
 export default compose(
   authUserLocalGraphQl,
-  currentProjectLocalGql,
-  userLocalMutationGql
+  currentProjectLocalGql
 )(AuthRequired);

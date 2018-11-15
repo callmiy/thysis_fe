@@ -20,6 +20,7 @@ export default authUserLocalQuery;
 
 export interface UserLocalGqlData {
   user: UserFragment;
+  staleToken: string | null;
 }
 
 export type UserLocalGqlProps = DataValue<UserLocalGqlData>;

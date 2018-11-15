@@ -399,7 +399,7 @@ export class SourceAccordion extends React.Component<Props, State> {
     );
   };
 
-  renderFieldError = (show: boolean, error: string) => {
+  renderFieldError = (show: boolean, error: string | undefined) => {
     return show ? (
       <div className={classes.errorMessage}> {error} </div>
     ) : (

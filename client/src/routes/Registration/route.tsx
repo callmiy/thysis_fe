@@ -4,6 +4,7 @@ import { Input } from "semantic-ui-react";
 import { Message } from "semantic-ui-react";
 import { Icon } from "semantic-ui-react";
 import { Form } from "semantic-ui-react";
+import { NavLink } from "react-router-dom";
 import { Formik } from "formik";
 import { FormikProps } from "formik";
 import { Field } from "formik";
@@ -13,13 +14,11 @@ import isEmpty from "lodash/isEmpty";
 import update from "immutability-helper";
 
 import "./reg.css";
-import { initialState } from "./reg";
-import { Props } from "./reg";
-import { State } from "./reg";
-import { FORM_VALUES_KEY } from "./reg";
-import { FormValues } from "./reg";
-import { setTitle, PROJECTS_URL } from "../../routes/util";
+import { Props, FORM_VALUES_KEY, State, initialState, FormValues } from "./reg";
+import { setTitle, PROJECTS_URL, LOGIN_URL } from "../../routes/util";
 import RootHeader from "../../components/Header";
+import { Registration } from "src/graphql/gen.types";
+import socket from "src/socket";
 
 export class UserReg extends React.Component<Props, State> {
   state = initialState;
@@ -50,140 +49,6 @@ export class UserReg extends React.Component<Props, State> {
     );
   }
 
-  validate = (values: FormValues) => {
-    const errors: FormikErrors<FormValues> = {};
-
-    for (const key of Object.keys(values)) {
-      let error;
-      if (key === FORM_VALUES_KEY.PASSWORD_CONFIRM) {
-        error = this.validatePasswordConfirm(
-          values[FORM_VALUES_KEY.PASSWORD_CONFIRM],
-          values[FORM_VALUES_KEY.PASSWORD]
-        );
-      } else {
-        error = error = this[
-          `validate${key.charAt(0).toUpperCase()}${key.slice(1)}`
-        ](values[key]);
-      }
-
-      if (error) {
-        errors[key] = error;
-        return errors;
-      }
-    }
-
-    return errors;
-  };
-
-  validateName = (name: string | null) => {
-    if (!name) {
-      return "Enter name";
-    }
-
-    if (name.length < 2) {
-      return "Too short";
-    }
-
-    this.setState(prev =>
-      update(prev, {
-        formValues: {
-          name: {
-            $set: name
-          }
-        }
-      })
-    );
-
-    return "";
-  };
-
-  validateEmail = (email: string | null) => {
-    if (
-      !(
-        email &&
-        /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(
-          email
-        )
-      )
-    ) {
-      return "Enter valid email";
-    }
-
-    this.setState(prev =>
-      update(prev, {
-        formValues: {
-          email: {
-            $set: email
-          }
-        }
-      })
-    );
-
-    return "";
-  };
-
-  validatePassword = (password: string | null) => {
-    if (!password) {
-      return "Enter Password";
-    }
-
-    if (password.length < 4) {
-      return "Too short";
-    }
-
-    this.setState(prev =>
-      update(prev, {
-        formValues: {
-          password: {
-            $set: password
-          }
-        }
-      })
-    );
-
-    return "";
-  };
-
-  validatePasswordConfirm = (confirm: string, pwd: string) => {
-    if (!confirm) {
-      return "Confirm Password";
-    }
-
-    if (confirm !== pwd) {
-      return "Passwords don't match";
-    }
-
-    this.setState(prev =>
-      update(prev, {
-        formValues: {
-          [FORM_VALUES_KEY.PASSWORD_CONFIRM]: {
-            $set: confirm
-          }
-        }
-      })
-    );
-
-    return "";
-  };
-
-  validateSource = (source: string | null) => {
-    if (!source) {
-      return "Enter Auth Source";
-    }
-
-    this.setState(prev =>
-      update(prev, {
-        formValues: {
-          [FORM_VALUES_KEY.SOURCE]: {
-            $set: source
-          }
-        }
-      })
-    );
-
-    return "";
-  };
-
   renderErrorOrSuccess = () => {
     const { graphQlError } = this.state;
 
@@ -204,36 +69,31 @@ export class UserReg extends React.Component<Props, State> {
     return undefined;
   };
 
-  handleChange = (key: FORM_VALUES_KEY) => (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const { target } = e;
-    this.setState(s =>
-      update(s, {
-        formValues: {
-          [key]: {
-            $set: target.value
-          }
-        }
-      })
-    );
-  };
-
   private submit = async (
     values: FormValues,
     formikBag: FormikProps<FormValues>
   ) => {
     formikBag.setSubmitting(true);
 
+    let regValues = {} as Registration;
+    regValues = Object.entries(this.state.formValues).reduce(
+      (acc, [k, v]) => ({ ...acc, [k]: v }),
+      regValues
+    );
+
     try {
       const result = await this.props.regUser({
         variables: {
-          registration: values
+          registration: regValues
         }
       });
 
       if (result && result.data) {
         const user = result.data.registration;
+
+        if (user) {
+          socket.connect(user.jwt);
+        }
 
         await this.props.updateLocalUser({
           variables: { user }
@@ -278,21 +138,9 @@ export class UserReg extends React.Component<Props, State> {
 
         <div
           style={{
-            display: "flex",
-            justifyContent: "space-between",
             marginTop: "20px"
           }}
         >
-          <Button
-            id="author-modal-close"
-            basic={true}
-            color="red"
-            onClick={handleReset}
-            disabled={dirtyOrSubmitting}
-          >
-            <Icon name="remove" /> Reset
-          </Button>
-
           <Button
             id="author-modal-submit"
             color="green"
@@ -300,9 +148,14 @@ export class UserReg extends React.Component<Props, State> {
             disabled={disableSubmit}
             loading={isSubmitting}
             type="submit"
+            fluid={true}
           >
             <Icon name="checkmark" /> Ok
           </Button>
+
+          <NavLink className="to-login-button" to={LOGIN_URL}>
+            Already have an account? Login
+          </NavLink>
         </div>
       </Form>
     );
@@ -314,12 +167,16 @@ export class UserReg extends React.Component<Props, State> {
     const { field, form } = formProps;
     const name = field.name as FORM_VALUES_KEY;
     const error = form.errors[name];
-    const booleanError = !!error;
+    const formIsEmpty = this.isFormEmpty();
+    const booleanError = !!error && !formIsEmpty;
     const touched = form.touched[name];
+    const isSourceField = name === FORM_VALUES_KEY.SOURCE;
 
     return (
       <div>
         <Form.Field
+          {...field}
+          className={`form-field ${isSourceField ? "disabled" : ""}`}
           type={type}
           control={Input}
           placeholder={label}
@@ -330,20 +187,11 @@ export class UserReg extends React.Component<Props, State> {
           onBlur={this.handleFormControlBlur(name, form)}
           onFocus={this.handleFocus}
           autoFocus={name === FORM_VALUES_KEY.NAME}
-          {...field}
+          readOnly={isSourceField}
         />
 
-        {booleanError && touched && (
-          <Message
-            style={{
-              display: "block",
-              padding: "0.5em",
-              marginBottom: "1em",
-              marginTop: "-10px"
-            }}
-            error={true}
-            header={error}
-          />
+        {booleanError && touched && !formIsEmpty && (
+          <Message error={true} header={error} />
         )}
       </div>
     );
@@ -358,6 +206,172 @@ export class UserReg extends React.Component<Props, State> {
 
   private handleFocus = () => {
     this.setState({ graphQlError: undefined });
+  };
+
+  private validate = (values: FormValues) => {
+    const errors: FormikErrors<FormValues> = {};
+
+    for (const [key, val] of Object.entries(values)) {
+      let error;
+
+      switch (key) {
+        case FORM_VALUES_KEY.NAME:
+          error = this.validateName(val);
+          break;
+
+        case FORM_VALUES_KEY.EMAIL:
+          error = this.validateEmail(val);
+          break;
+
+        case FORM_VALUES_KEY.PASSWORD:
+          error = this.validatePassword(val);
+          break;
+
+        case FORM_VALUES_KEY.PASSWORD_CONFIRM:
+          error = this.validatePasswordConfirm(
+            val,
+            values[FORM_VALUES_KEY.PASSWORD] || ""
+          );
+          break;
+
+        case FORM_VALUES_KEY.SOURCE:
+          error = this.validateSource(val);
+      }
+
+      if (error) {
+        errors[key] = error;
+        return errors;
+      }
+    }
+
+    return errors;
+  };
+
+  private validateName = (name: string | undefined) => {
+    name = (name || "").trim();
+
+    this.setState(s =>
+      update(s, {
+        formValues: {
+          [FORM_VALUES_KEY.NAME]: {
+            $set: name || undefined
+          }
+        }
+      })
+    );
+
+    if (!name) {
+      return "Enter name";
+    }
+
+    if (name.length < 2) {
+      return "Too short";
+    }
+
+    return "";
+  };
+
+  private validateEmail = (email: string | undefined) => {
+    email = (email || "").trim();
+    let error = "";
+
+    if (
+      !(
+        email &&
+        /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(
+          email
+        )
+      )
+    ) {
+      error = "Enter valid email";
+    }
+
+    this.setState(s =>
+      update(s, {
+        formValues: {
+          [FORM_VALUES_KEY.EMAIL]: {
+            $set: (error && undefined) || email
+          }
+        }
+      })
+    );
+
+    return error;
+  };
+
+  private validatePassword = (password: string | undefined) => {
+    password = (password || "").trim();
+    let error = "";
+
+    if (!password) {
+      error = "Enter Password";
+    } else if (password.length < 4) {
+      error = "Too short";
+    }
+
+    this.setState(s =>
+      update(s, {
+        formValues: {
+          [FORM_VALUES_KEY.PASSWORD]: {
+            $set: (error && undefined) || password
+          }
+        }
+      })
+    );
+
+    return error;
+  };
+
+  private validatePasswordConfirm = (
+    confirm: string | undefined,
+    pwd: string
+  ) => {
+    confirm = (confirm || "").trim();
+    let error = "";
+
+    if (!confirm) {
+      error = "Confirm Password";
+    } else if (confirm !== pwd) {
+      error = "Passwords don't match";
+    }
+
+    this.setState(s =>
+      update(s, {
+        formValues: {
+          [FORM_VALUES_KEY.PASSWORD_CONFIRM]: {
+            $set: (error && undefined) || confirm
+          }
+        }
+      })
+    );
+
+    return error;
+  };
+
+  private validateSource = (source: string | undefined) => {
+    source = (source || "").trim();
+
+    this.setState(s =>
+      update(s, {
+        formValues: {
+          [FORM_VALUES_KEY.SOURCE]: {
+            $set: source || "password"
+          }
+        }
+      })
+    );
+
+    return "";
+  };
+
+  private isFormEmpty = () => {
+    for (const [key, val] of Object.entries(this.state.formValues)) {
+      if (key !== FORM_VALUES_KEY.SOURCE && val !== undefined) {
+        return false;
+      }
+    }
+
+    return true;
   };
 }
 

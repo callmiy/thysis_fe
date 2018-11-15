@@ -25,3 +25,16 @@
   font-weight: 900;
   font-size: 1.2em;
 }
+
+%auth-redirect-btn {
+  display: block;
+  width: 100%;
+  margin-top: 20px;
+  text-decoration: none;
+  color: #fff;
+  background-color: $app-color;
+  padding: 8px;
+  text-align: center;
+  border-radius: 0.3rem;
+  font-weight: bolder;
+}

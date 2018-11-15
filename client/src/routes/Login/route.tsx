@@ -25,10 +25,33 @@ import RootHeader from "../../components/Header";
 import socket from "src/socket";
 
 export class Login extends React.Component<Props, State> {
+  static getDerivedStateFromProps(nextProps: Props, currentState: State) {
+    const { loggedOutUser } = nextProps;
+
+    if (loggedOutUser) {
+      return update(currentState, {
+        initialFormValues: {
+          email: {
+            $set: loggedOutUser.email
+          }
+        }
+      });
+    }
+
+    return null;
+  }
+
   state = initialState;
 
   componentDidMount() {
     setTitle("Sign In");
+
+    const { updateLocalUser } = this.props;
+    updateLocalUser({
+      variables: {
+        user: null
+      }
+    });
   }
 
   componentWillUnmount() {
@@ -157,13 +180,13 @@ export class Login extends React.Component<Props, State> {
 
         if (user) {
           socket.connect(user.jwt);
+
+          await this.props.updateLocalUser({
+            variables: { user }
+          });
+
+          this.props.history.replace(PROJECTS_URL);
         }
-
-        await this.props.updateLocalUser({
-          variables: { user }
-        });
-
-        this.props.history.replace(PROJECTS_URL);
       }
     } catch (error) {
       formikBag.setSubmitting(false);
@@ -205,30 +228,21 @@ export class Login extends React.Component<Props, State> {
           }}
         >
           <Button
-            id="author-modal-close"
-            basic={true}
-            color="red"
-            onClick={handleReset}
-            disabled={dirtyOrSubmitting}
-          >
-            <Icon name="remove" /> Reset
-          </Button>
-
-          <Button
             id="author-modal-submit"
             color="green"
             inverted={true}
             disabled={disableSubmit}
             loading={isSubmitting}
             type="submit"
+            fluid={true}
           >
             <Icon name="checkmark" /> Ok
           </Button>
         </div>
 
-        <Button className="to-reg-button">
-          <NavLink to={USER_REG_URL}>Don't have an account? Sign Up</NavLink>
-        </Button>
+        <NavLink className="to-reg-button" to={USER_REG_URL}>
+          Don't have an account? Sign Up
+        </NavLink>
       </Form>
     );
   };

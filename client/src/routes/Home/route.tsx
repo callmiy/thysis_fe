@@ -30,7 +30,7 @@ export class Home extends React.Component<Props, State> {
   }
 
   render() {
-    const { user, currentProject } = this.props;
+    const { user, currentProject, staleToken } = this.props;
     const newAuthorModalProps = {
       open: this.state.modalOpened[MenuItem.NEW_AUTHOR],
       dismissModal: this.toggleModalOpen(MenuItem.NEW_AUTHOR, false),
@@ -167,6 +167,7 @@ export class Home extends React.Component<Props, State> {
               )}
               style={{ marginTop: 0 }}
               user={user}
+              staleToken={staleToken}
             />
           )}
         </div>

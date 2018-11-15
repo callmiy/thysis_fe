@@ -18,10 +18,10 @@ export type Props = ChildProps<
 >;
 
 export interface FormValues {
-  email: string;
-  name: string;
-  password: string;
-  passwordConfirmation: string;
+  email: string | undefined;
+  name: string | undefined;
+  password: string | undefined;
+  passwordConfirmation: string | undefined;
   source: string;
 }
 
@@ -33,6 +33,12 @@ export enum FORM_VALUES_KEY {
   SOURCE = "source"
 }
 
+const formValuesAcc = {} as FormValues;
+const formValues = Object.values(FORM_VALUES_KEY).reduce(
+  (acc, k) => ({ ...acc, [k]: undefined }),
+  formValuesAcc
+);
+
 export const initialFormValues = {
   [FORM_VALUES_KEY.NAME]: "",
   [FORM_VALUES_KEY.EMAIL]: "",
@@ -43,11 +49,11 @@ export const initialFormValues = {
 
 export interface State {
   initialFormValues: FormValues;
-  formValues: FormValues;
   graphQlError?: ApolloError;
+  formValues: FormValues;
 }
 
 export const initialState: State = {
-  formValues: initialFormValues,
-  initialFormValues
+  initialFormValues,
+  formValues
 };

@@ -21,6 +21,8 @@ export interface FormValues {
   year: string;
 }
 
+type FormErrors = { [k in keyof FormValues]: string };
+
 export const initialFormValues: FormValues = {
   sourceType: null,
   authors: [],
@@ -74,7 +76,7 @@ export const formikConfig: WithFormikConfig<Props, FormValues> = {
   enableReinitialize: true,
 
   validate: values => {
-    const errors: FormikErrors<FormValues> = {};
+    const errors: FormikErrors<FormErrors> = {};
 
     if (!values.sourceType) {
       errors.sourceType = "Select a source type";

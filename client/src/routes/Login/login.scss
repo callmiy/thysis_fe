@@ -1,4 +1,5 @@
 @import "../../styles/extensions";
+@import "../../styles/variables";
 
 .login-route {
   @extend %route;
@@ -7,13 +8,7 @@
     @extend %route-main;
   }
 
-  .ui {
-    &.to-reg-button {
-      display: block;
-      width: 100%;
-      margin-top: 10px;
-      text-decoration: none;
-      color: initial;
-    }
+  .to-reg-button {
+    @extend %auth-redirect-btn;
   }
 }

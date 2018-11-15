@@ -6,11 +6,12 @@ import { LoginMutation } from "../../graphql/gen.types";
 import { LoginMutationVariables } from "../../graphql/gen.types";
 import { LoginMutationProps } from "../../graphql/ops.types";
 import { UserLocalMutationProps } from "../../state/user.local.mutation";
+import { LoggedOutUserProps } from "src/state/logged-out-user.local.query";
 
 export type OwnProps = RouteComponentProps<{}> & LoginMutation;
 
 export type Props = ChildProps<
-  OwnProps & LoginMutationProps & UserLocalMutationProps,
+  OwnProps & LoginMutationProps & UserLocalMutationProps & LoggedOutUserProps,
   LoginMutation,
   LoginMutationVariables
 >;
