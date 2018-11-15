@@ -29,7 +29,7 @@ export class AuthorsControl extends React.Component<Props> {
         query={AUTHORS_QUERY}
         variables={{
           author: {
-            projectId: currentProject.projectId
+            projectId: currentProject.id
           }
         }}
       >

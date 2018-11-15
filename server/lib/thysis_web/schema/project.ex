@@ -3,26 +3,12 @@ defmodule ThysisWeb.Schema.Project do
 
   import Absinthe.Resolution.Helpers, only: [dataloader: 1]
 
-  alias ThysisWeb.Schema
   alias Thysis.Accounts.UserApi
   alias ThysisWeb.Resolver.Project, as: Resolver
 
   @desc "A Project"
   object :project do
-    field :project_id, non_null(:id) do
-      resolve(fn project, _, _ ->
-        {:ok, project.id}
-      end)
-    end
-
-    field :_id, non_null(:string) do
-      resolve(fn project, _, _ -> {:ok, Schema.get_datetime_id(project.id)} end)
-    end
-
-    field :schema_type, non_null(:string) do
-      resolve(fn _, _, _ -> {:ok, "Project"} end)
-    end
-
+    field(:id, non_null(:id))
     field(:title, non_null(:string))
     field(:user, non_null(:user), resolve: dataloader(UserApi))
     field(:inserted_at, non_null(:iso_datetime))
@@ -37,6 +23,7 @@ defmodule ThysisWeb.Schema.Project do
 
   @desc "Variables for getting a user Project"
   input_object :get_project_input do
+    @desc "ID of the project"
     field(:id, non_null(:id))
   end
 

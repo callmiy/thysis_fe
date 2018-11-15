@@ -3,31 +3,13 @@ defmodule ThysisWeb.Schema.User do
 
   import Absinthe.Resolution.Helpers, only: [dataloader: 1]
 
-  alias ThysisWeb.Schema
   alias ThysisWeb.User.Resolver
   alias Thysis.Projects
 
   @desc "A User"
   object :user do
-    @desc "PouchDb revision field"
-    field(:_rev, non_null(:string))
-
-    field :user_id, non_null(:id) do
-      resolve(fn user, _, _ ->
-        {:ok, user.id}
-      end)
-    end
-
-    field :_id, non_null(:string) do
-      resolve(fn user, _, _ -> {:ok, Schema.get_datetime_id(user.id)} end)
-    end
-
-    field :schema_type, non_null(:string) do
-      resolve(fn _, _, _ -> {:ok, "User"} end)
-    end
-
+    field(:id, non_null(:id))
     field(:jwt, non_null(:string))
-
     field(:email, non_null(:string))
     field(:name, non_null(:string))
     field(:credential, :credential)

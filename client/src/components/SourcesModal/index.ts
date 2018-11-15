@@ -55,7 +55,7 @@ const sourcesGraphQl = graphql<
   options: ({ currentProject }) => ({
     variables: {
       source: {
-        projectId: (currentProject && currentProject.projectId) || "0"
+        projectId: (currentProject && currentProject.id) || "0"
       }
     }
   })

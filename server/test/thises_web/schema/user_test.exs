@@ -33,12 +33,12 @@ defmodule Thysis.Schema.UserTest do
               %{
                 data: %{
                   "registration" => %{
-                    "userId" => _,
+                    "id" => _,
                     "name" => ^name,
                     "email" => ^email,
                     "jwt" => _jwt,
                     "credential" => %{
-                      "credentialId" => _
+                      "id" => _
                     }
                   }
                 }
@@ -53,6 +53,7 @@ defmodule Thysis.Schema.UserTest do
     # @tag :skip
     test "registers user fails for none unique email" do
       attrs = RegFactory.params()
+
       RegFactory.insert(attrs)
       queryMap = RegQuery.register()
 
@@ -76,7 +77,7 @@ defmodule Thysis.Schema.UserTest do
               }} =
                Absinthe.run(query, Schema,
                  variables: %{
-                   "registration" => Factory.stringify(attrs)
+                   "registration" => RegFactory.stringify(attrs)
                  }
                )
     end
@@ -88,7 +89,7 @@ defmodule Thysis.Schema.UserTest do
 
       attrs =
         Factory.params(jwt: jwt)
-        |> Factory.stringify()
+        |> RegFactory.stringify()
 
       queryMap = Query.update()
 
@@ -104,7 +105,7 @@ defmodule Thysis.Schema.UserTest do
               %{
                 data: %{
                   "update" => %{
-                    "userId" => _,
+                    "id" => _,
                     "name" => name,
                     "email" => email,
                     "jwt" => _jwt
@@ -140,7 +141,7 @@ defmodule Thysis.Schema.UserTest do
               %{
                 data: %{
                   "login" => %{
-                    "userId" => _,
+                    "id" => _,
                     "name" => name,
                     "email" => ^email,
                     "jwt" => _jwt
@@ -208,7 +209,7 @@ defmodule Thysis.Schema.UserTest do
       assert {:ok,
               %{
                 data: %{
-                  "refresh" => %{"userId" => ^user_id, "jwt" => new_jwt}
+                  "refresh" => %{"id" => ^user_id, "jwt" => new_jwt}
                 }
               }} =
                Absinthe.run(query, Schema,

@@ -4,10 +4,7 @@ defmodule ThysisWeb.Query.User do
 
     fragment = """
       fragment #{name} on User {
-        _rev
-        userId
-        _id
-        schemaType
+        id
         name
         email
         jwt

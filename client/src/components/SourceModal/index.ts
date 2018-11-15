@@ -36,7 +36,7 @@ const createSourceGraphql = graphql<
       return;
     }
 
-    const { projectId } = currentProject;
+    const { id: projectId } = currentProject;
 
     return {
       createSource: (values: FormValues) => {

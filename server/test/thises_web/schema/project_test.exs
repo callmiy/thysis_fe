@@ -24,12 +24,10 @@ defmodule ThysisWeb.Schema.ProjectTest do
               %{
                 data: %{
                   "project" => %{
-                    "projectId" => _,
+                    "id" => _,
                     "title" => _,
-                    "schemaType" => _,
-                    "_id" => _,
                     "user" => %{
-                      "userId" => ^user_id_str
+                      "id" => ^user_id_str
                     }
                   }
                 }
@@ -101,7 +99,7 @@ defmodule ThysisWeb.Schema.ProjectTest do
               }} = Absinthe.run(query, Schema, context: context(user))
 
       assert projects
-             |> Enum.map(& &1["projectId"])
+             |> Enum.map(& &1["id"])
              |> Enum.sort()
              |> Kernel.==(ids)
     end
@@ -126,9 +124,9 @@ defmodule ThysisWeb.Schema.ProjectTest do
               %{
                 data: %{
                   "project" => %{
-                    "projectId" => ^id,
+                    "id" => ^id,
                     "user" => %{
-                      "userId" => ^user_id
+                      "id" => ^user_id
                     }
                   }
                 }

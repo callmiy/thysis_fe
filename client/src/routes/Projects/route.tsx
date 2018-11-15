@@ -117,7 +117,7 @@ export class SelectProject extends React.Component<Props, State> {
   };
 
   private renderProject = (project: ProjectFragment) => (
-    <List.Item key={project.projectId}>
+    <List.Item key={project.id}>
       <List.Content
         className="project-row"
         onClick={this.projectSelected(project)}

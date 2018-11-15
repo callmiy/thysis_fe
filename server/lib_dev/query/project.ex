@@ -4,12 +4,10 @@ defmodule ThysisWeb.Query.Project do
   def all_fields_fragment do
     fragment = """
       fragment #{@fragment_name} on Project {
-        projectId
-        _id
-        schemaType
+        id
         title
         user {
-          userId
+          id
         }
       }
 

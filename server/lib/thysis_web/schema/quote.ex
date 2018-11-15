@@ -7,7 +7,7 @@ defmodule ThysisWeb.Schema.Quote do
 
   import Absinthe.Resolution.Helpers, only: [dataloader: 1]
 
-  alias ThysisWeb.Resolver.Quote , as: Resolver
+  alias ThysisWeb.Resolver.Quote, as: Resolver
 
   @desc "A Quote"
   object :quote do
@@ -42,7 +42,7 @@ defmodule ThysisWeb.Schema.Quote do
     @desc "The ID of the row from which the search was obtained"
     field(:tid, non_null(:integer))
 
-    @desc "The table name from which the sarch was obtained"
+    @desc "The table name from which the search was obtained"
     field(:source, non_null(:quote_full_search_table))
 
     @desc "The matched search text"

@@ -37,7 +37,7 @@ const createProjectGql = graphql<
           variables: {
             project: {
               title,
-              userId: props.ownProps.user.userId
+              userId: props.ownProps.user.id
             }
           },
 

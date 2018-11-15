@@ -37,7 +37,7 @@ export async function persistCache() {
     key: "thysis-apollo-cache-persist"
   });
 
-  const SCHEMA_VERSION = "2"; // Must be a string.
+  const SCHEMA_VERSION = "3.1"; // Must be a string.
   const SCHEMA_VERSION_KEY = "thysis-apollo-schema-version";
   const currentVersion = localStorage.getItem(SCHEMA_VERSION_KEY);
 

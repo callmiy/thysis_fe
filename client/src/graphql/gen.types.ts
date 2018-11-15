@@ -176,8 +176,7 @@ export interface CreateAuthorVariables {
 // ====================================================
 
 export interface CreateProjectMutation_project {
-  _id: string;
-  projectId: string;
+  id: string;
   title: string;
   insertedAt: any;
 }
@@ -221,11 +220,9 @@ export interface CreateSourceTypeVariables {
 // ====================================================
 
 export interface LoginMutation_login {
-  _id: string;
-  userId: string;
+  id: string;
   name: string;
   email: string;
-  schemaType: string;
   jwt: string;
 }
 
@@ -246,8 +243,7 @@ export interface LoginMutationVariables {
 // ====================================================
 
 export interface ProjectsQuery_projects {
-  _id: string;
-  projectId: string;
+  id: string;
   title: string;
   insertedAt: any;
 }
@@ -398,11 +394,9 @@ export interface Quotes1Variables {
 // ====================================================
 
 export interface RefreshUserQuery_refresh {
-  _id: string;
-  userId: string;
+  id: string;
   name: string;
   email: string;
-  schemaType: string;
   jwt: string;
 }
 
@@ -693,35 +687,35 @@ export interface TagsMinimal {
 export interface AllMatchingTexts_quoteFullSearch_quotes {
   tid: number;                   // The ID of the row from which the search was obtained
   text: string;                  // The matched search text
-  source: QuoteFullSearchTable;  // The table name from which the sarch was obtained
+  source: QuoteFullSearchTable;  // The table name from which the search was obtained
   column: string;                // The column name of the table from which the search was obtained
 }
 
 export interface AllMatchingTexts_quoteFullSearch_sources {
   tid: number;                   // The ID of the row from which the search was obtained
   text: string;                  // The matched search text
-  source: QuoteFullSearchTable;  // The table name from which the sarch was obtained
+  source: QuoteFullSearchTable;  // The table name from which the search was obtained
   column: string;                // The column name of the table from which the search was obtained
 }
 
 export interface AllMatchingTexts_quoteFullSearch_tags {
   tid: number;                   // The ID of the row from which the search was obtained
   text: string;                  // The matched search text
-  source: QuoteFullSearchTable;  // The table name from which the sarch was obtained
+  source: QuoteFullSearchTable;  // The table name from which the search was obtained
   column: string;                // The column name of the table from which the search was obtained
 }
 
 export interface AllMatchingTexts_quoteFullSearch_authors {
   tid: number;                   // The ID of the row from which the search was obtained
   text: string;                  // The matched search text
-  source: QuoteFullSearchTable;  // The table name from which the sarch was obtained
+  source: QuoteFullSearchTable;  // The table name from which the search was obtained
   column: string;                // The column name of the table from which the search was obtained
 }
 
 export interface AllMatchingTexts_quoteFullSearch_sourceTypes {
   tid: number;                   // The ID of the row from which the search was obtained
   text: string;                  // The matched search text
-  source: QuoteFullSearchTable;  // The table name from which the sarch was obtained
+  source: QuoteFullSearchTable;  // The table name from which the search was obtained
   column: string;                // The column name of the table from which the search was obtained
 }
 
@@ -817,11 +811,9 @@ export interface UpdateSourceVariables {
 // ====================================================
 
 export interface UserRegMutation_registration {
-  _id: string;
-  userId: string;
+  id: string;
   name: string;
   email: string;
-  schemaType: string;
   jwt: string;
 }
 
@@ -902,8 +894,7 @@ export interface AuthorFrag {
 // ====================================================
 
 export interface ProjectFragment {
-  _id: string;
-  projectId: string;
+  id: string;
   title: string;
   insertedAt: any;
 }
@@ -1133,35 +1124,35 @@ export interface TagQuotesFrag {
 export interface TextSearchResultFrag_quotes {
   tid: number;                   // The ID of the row from which the search was obtained
   text: string;                  // The matched search text
-  source: QuoteFullSearchTable;  // The table name from which the sarch was obtained
+  source: QuoteFullSearchTable;  // The table name from which the search was obtained
   column: string;                // The column name of the table from which the search was obtained
 }
 
 export interface TextSearchResultFrag_sources {
   tid: number;                   // The ID of the row from which the search was obtained
   text: string;                  // The matched search text
-  source: QuoteFullSearchTable;  // The table name from which the sarch was obtained
+  source: QuoteFullSearchTable;  // The table name from which the search was obtained
   column: string;                // The column name of the table from which the search was obtained
 }
 
 export interface TextSearchResultFrag_tags {
   tid: number;                   // The ID of the row from which the search was obtained
   text: string;                  // The matched search text
-  source: QuoteFullSearchTable;  // The table name from which the sarch was obtained
+  source: QuoteFullSearchTable;  // The table name from which the search was obtained
   column: string;                // The column name of the table from which the search was obtained
 }
 
 export interface TextSearchResultFrag_authors {
   tid: number;                   // The ID of the row from which the search was obtained
   text: string;                  // The matched search text
-  source: QuoteFullSearchTable;  // The table name from which the sarch was obtained
+  source: QuoteFullSearchTable;  // The table name from which the search was obtained
   column: string;                // The column name of the table from which the search was obtained
 }
 
 export interface TextSearchResultFrag_sourceTypes {
   tid: number;                   // The ID of the row from which the search was obtained
   text: string;                  // The matched search text
-  source: QuoteFullSearchTable;  // The table name from which the sarch was obtained
+  source: QuoteFullSearchTable;  // The table name from which the search was obtained
   column: string;                // The column name of the table from which the search was obtained
 }
 
@@ -1184,7 +1175,7 @@ export interface TextSearchResultFrag {
 export interface TextSearchRowFrag {
   tid: number;                   // The ID of the row from which the search was obtained
   text: string;                  // The matched search text
-  source: QuoteFullSearchTable;  // The table name from which the sarch was obtained
+  source: QuoteFullSearchTable;  // The table name from which the search was obtained
   column: string;                // The column name of the table from which the search was obtained
 }
 
@@ -1197,11 +1188,9 @@ export interface TextSearchRowFrag {
 // ====================================================
 
 export interface UserFragment {
-  _id: string;
-  userId: string;
+  id: string;
   name: string;
   email: string;
-  schemaType: string;
   jwt: string;
 }
 

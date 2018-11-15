@@ -34,7 +34,7 @@ export const load = (
       return "";
     }
 
-    const { projectId } = p;
+    const { id: projectId } = p;
 
     sourcesProjVariables[`source${projectId}`] = { projectId };
     authorsProjectVariables[`${AUTHORS_PROJECT_INPUT_KEY}${projectId}`] = {

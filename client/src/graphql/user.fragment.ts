@@ -2,11 +2,9 @@ import gql from "graphql-tag";
 
 export const userFragment = gql`
   fragment UserFragment on User {
-    _id
-    userId
+    id
     name
     email
-    schemaType
     jwt
   }
 `;

@@ -44,8 +44,7 @@ const createAuthorGql = graphql<
     } = props;
 
     if (currentProject && user) {
-      const projectId = currentProject.projectId;
-      const userId = user.userId;
+      const projectId = currentProject.id;
 
       return {
         createAuthor: (variables: FormValues) =>
@@ -54,7 +53,7 @@ const createAuthorGql = graphql<
               author: {
                 ...variables,
                 projectId,
-                userId
+                userId: user.id
               }
             },
 

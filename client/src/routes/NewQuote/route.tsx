@@ -131,7 +131,7 @@ export class NewQuote extends React.Component<Props, State> {
           query: SOURCES_QUERY,
           variables: {
             source: {
-              projectId: currentProject ? currentProject.projectId : "0"
+              projectId: currentProject ? currentProject.id : "0"
             }
           }
         });

@@ -4,9 +4,7 @@ defmodule ThysisWeb.Query.Credential do
 
     fragment = """
       fragment #{name} on Credential {
-        credentialId
-        _id
-        schemaType
+        id
         source
         insertedAt
         updatedAt
