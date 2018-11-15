@@ -70,7 +70,7 @@
     {
       "label": "deploy to heroku client + server",
       "type": "shell",
-      "command": "yarn deploy && cd .. && git add . && git cm -m \"Production build\" && git co master && git merge dev && git subtree push --prefix=server heroku master && heroku run \"POOL_SIZE=2 mix ecto.migrate\" && git co dev",
+      "command": "yarn deploy && cd .. && git add . && git cm -m \"Production build\" && git co master && git merge dev && git subtree push --prefix=server heroku master && heroku run \"POOL_SIZE=2 mix ecto.migrate\" && git co dev && rimraf server/priv/web-client/static && git add . && git cm -m \"Static folder reset\" ",
       "options": {
         "env": {
           "REACT_APP_API_URL": "https://thysis.herokuapp.com/__api"
