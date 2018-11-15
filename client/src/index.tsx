@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import "semantic-ui-css/semantic.min.css";
+import 'semantic-ui-css-offline';
 import "react-select/dist/react-select.css";
 
 import App from "./containers/App";
