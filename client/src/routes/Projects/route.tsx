@@ -13,20 +13,10 @@ import { SemanticOnInputChangeFunc } from "../../utils";
 import { ProjectFragment } from "src/graphql/gen.types";
 import { ROOT_URL } from "../util";
 import { format as dateFormat } from "date-fns";
-import loadInitialData from "./initial-data";
 import AppSideBar from "src/components/AppSidebar";
 
 export class SelectProject extends React.Component<Props, State> {
   state: State = initialState;
-
-  componentDidMount() {
-    const { projects, client } = this.props;
-    if (projects && projects.length) {
-      loadInitialData(projects, client);
-    }
-
-    return null;
-  }
 
   render() {
     return (

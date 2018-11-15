@@ -12,14 +12,27 @@ import { CreateProjectMutationVariables } from "../../graphql/gen.types";
 import { SelectProject } from "./route";
 import { projectLocalMutationGql } from "../../state/project.local.mutation";
 import { ProjectsGqlDataValue, OwnProps } from "./projects";
+import loadInitialData from "./initial-data";
 
 const projectsGql = graphql<
-  {},
+  OwnProps,
   ProjectsQuery,
   {},
   ProjectsGqlDataValue | undefined
 >(PROJECTS_QUERY, {
-  props: props => props.data
+  props: ({ data, ownProps: { client } }) => {
+    if (!data) {
+      return data;
+    }
+
+    const { projects } = data;
+
+    if (projects && projects.length) {
+      loadInitialData(projects, client);
+    }
+
+    return data;
+  }
 });
 
 const createProjectGql = graphql<
