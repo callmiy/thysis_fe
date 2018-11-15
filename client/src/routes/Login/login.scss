@@ -6,7 +6,22 @@
 
   .main {
     @extend %route-main;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
+
+  .card {
+    min-width: 314px;
+  }
+
+  .form-title {
+    @extend %form-title;
+  }
+
+  @extend %msg-error-close;
+
+  @extend %form;
 
   .to-reg-button {
     @extend %auth-redirect-btn;

@@ -1,5 +1,5 @@
 import React from "react";
-import { Button } from "semantic-ui-react";
+import { Button, Card } from "semantic-ui-react";
 import { Input } from "semantic-ui-react";
 import { Message } from "semantic-ui-react";
 import { Icon } from "semantic-ui-react";
@@ -46,12 +46,17 @@ export class Login extends React.Component<Props, State> {
   componentDidMount() {
     setTitle("Sign In");
 
-    const { updateLocalUser } = this.props;
-    updateLocalUser({
-      variables: {
-        user: null
-      }
-    });
+    const { updateLocalUser, loggedOutUser } = this.props;
+    // If we have loggedOutUser, then it means we have signed out before and
+    // thus will not sign out again
+    if (!loggedOutUser) {
+      // sign out the user
+      updateLocalUser({
+        variables: {
+          user: null
+        }
+      });
+    }
   }
 
   componentWillUnmount() {
@@ -61,17 +66,17 @@ export class Login extends React.Component<Props, State> {
   render() {
     return (
       <div className="login-route">
-        <RootHeader title="Sign in" />
+        <RootHeader title="Thysis" />
 
-        {this.renderError()}
-
-        <Formik
-          initialValues={this.state.initialFormValues}
-          enableReinitialize={true}
-          onSubmit={this.submit}
-          render={this.renderForm}
-          validate={this.validate}
-        />
+        <div className="main">
+          <Formik
+            initialValues={this.state.initialFormValues}
+            enableReinitialize={true}
+            onSubmit={this.submit}
+            render={this.renderForm}
+            validate={this.validate}
+          />
+        </div>
       </div>
     );
   }
@@ -147,15 +152,11 @@ export class Login extends React.Component<Props, State> {
 
     if (graphQlError) {
       return (
-        <Message icon={true} error={true}>
-          <Icon name="ban" />
-
-          <Message.Content>
-            <Message.Header>An error has occurred</Message.Header>
-
-            {graphQlError.message}
-          </Message.Content>
-        </Message>
+        <Card.Content extra={true}>
+          <Message error={true} onDismiss={this.handleErrorMsgDismiss}>
+            <Message.Content>{graphQlError.message}</Message.Content>
+          </Message>
+        </Card.Content>
       );
     }
 
@@ -195,55 +196,62 @@ export class Login extends React.Component<Props, State> {
   };
 
   private renderForm = ({
-    handleReset,
     dirty,
     isSubmitting,
     errors,
     handleSubmit
   }: FormikProps<FormValues>) => {
+    const { graphQlError } = this.state;
     const dirtyOrSubmitting = !dirty || isSubmitting;
-    const disableSubmit = dirtyOrSubmitting || !isEmpty(errors);
+    const disableSubmit =
+      dirtyOrSubmitting || !isEmpty(errors) || !!graphQlError;
 
     return (
-      <Form onSubmit={handleSubmit} className="main">
-        {[
-          ["Email", "email", FORM_VALUES_KEY.EMAIL],
-          ["Password", "password", FORM_VALUES_KEY.PASSWORD]
-        ].map(data => {
-          const [label, type, name] = data;
-          return (
-            <Field
-              key={name}
-              name={name}
-              render={this.renderInput(label, type)}
-            />
-          );
-        })}
+      <Card>
+        <Card.Content className="form-title" extra={true}>
+          Login to Thysis
+        </Card.Content>
 
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            marginTop: "20px"
-          }}
-        >
+        {this.renderError()}
+
+        <Card.Content>
+          <Form>
+            {[
+              ["Email", "email", FORM_VALUES_KEY.EMAIL],
+              ["Password", "password", FORM_VALUES_KEY.PASSWORD]
+            ].map(data => {
+              const [label, type, name] = data;
+              return (
+                <Field
+                  key={name}
+                  name={name}
+                  render={this.renderInput(label, type)}
+                />
+              );
+            })}
+          </Form>
+        </Card.Content>
+
+        <Card.Content extra={true}>
           <Button
             id="author-modal-submit"
             color="green"
             inverted={true}
             disabled={disableSubmit}
             loading={isSubmitting}
-            type="submit"
+            type="button"
+            // tslint:disable-next-line:jsx-no-lambda
+            onClick={() => handleSubmit()}
             fluid={true}
           >
             <Icon name="checkmark" /> Ok
           </Button>
-        </div>
 
-        <NavLink className="to-reg-button" to={USER_REG_URL}>
-          Don't have an account? Sign Up
-        </NavLink>
-      </Form>
+          <NavLink className="to-reg-button" to={USER_REG_URL}>
+            Don't have an account? Sign Up
+          </NavLink>
+        </Card.Content>
+      </Card>
     );
   };
 
@@ -298,6 +306,9 @@ export class Login extends React.Component<Props, State> {
   private handleFocus = () => {
     this.setState({ graphQlError: undefined });
   };
+
+  private handleErrorMsgDismiss = () =>
+    this.setState({ graphQlError: undefined });
 
   private formValuesEmpty = (values: FormValues) => {
     let result = true;

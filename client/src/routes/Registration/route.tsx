@@ -1,5 +1,5 @@
 import React from "react";
-import { Button } from "semantic-ui-react";
+import { Button, Card } from "semantic-ui-react";
 import { Input } from "semantic-ui-react";
 import { Message } from "semantic-ui-react";
 import { Icon } from "semantic-ui-react";
@@ -34,35 +34,31 @@ export class UserReg extends React.Component<Props, State> {
   render() {
     return (
       <div className="user-reg-route">
-        <RootHeader title="Sign Up" />
+        <RootHeader title="Thysis" />
 
-        {this.renderErrorOrSuccess()}
-
-        <Formik
-          initialValues={this.state.initialFormValues}
-          enableReinitialize={true}
-          onSubmit={this.submit}
-          render={this.renderForm}
-          validate={this.validate}
-        />
+        <div className="main">
+          <Formik
+            initialValues={this.state.initialFormValues}
+            enableReinitialize={true}
+            onSubmit={this.submit}
+            render={this.renderForm}
+            validate={this.validate}
+          />
+        </div>
       </div>
     );
   }
 
-  renderErrorOrSuccess = () => {
+  private renderErrorOrSuccess = () => {
     const { graphQlError } = this.state;
 
     if (graphQlError) {
       return (
-        <Message icon={true} error={true}>
-          <Icon name="ban" />
-
-          <Message.Content>
-            <Message.Header>An error has occurred</Message.Header>
-
-            {graphQlError.message}
-          </Message.Content>
-        </Message>
+        <Card.Content extra={true}>
+          <Message error={true} onDismiss={this.handleFormErrorDismissed}>
+            <Message.Content>{graphQlError.message}</Message.Content>
+          </Message>
+        </Card.Content>
       );
     }
 
@@ -108,46 +104,59 @@ export class UserReg extends React.Component<Props, State> {
   };
 
   private renderForm = ({
-    handleReset,
     dirty,
     isSubmitting,
     errors,
     handleSubmit
   }: FormikProps<FormValues>) => {
+    const { graphQlError } = this.state;
     const dirtyOrSubmitting = !dirty || isSubmitting;
-    const disableSubmit = dirtyOrSubmitting || !isEmpty(errors);
+    const disableSubmit =
+      dirtyOrSubmitting || !isEmpty(errors) || !!graphQlError;
 
     return (
-      <Form onSubmit={handleSubmit} className="main">
-        {[
-          ["Name", "text", FORM_VALUES_KEY.NAME],
-          ["Email", "email", FORM_VALUES_KEY.EMAIL],
-          ["Password", "password", FORM_VALUES_KEY.PASSWORD],
-          ["Password Confirm", "password", FORM_VALUES_KEY.PASSWORD_CONFIRM],
-          ["Source", "text", FORM_VALUES_KEY.SOURCE]
-        ].map(data => {
-          const [label, type, name] = data;
-          return (
-            <Field
-              key={name}
-              name={name}
-              render={this.renderInput(label, type)}
-            />
-          );
-        })}
+      <Card>
+        <Card.Content className="form-title" extra={true}>
+          Sign up for Thysis
+        </Card.Content>
 
-        <div
-          style={{
-            marginTop: "20px"
-          }}
-        >
+        {this.renderErrorOrSuccess()}
+
+        <Card.Content>
+          <Form onSubmit={handleSubmit}>
+            {[
+              ["Name", "text", FORM_VALUES_KEY.NAME],
+              ["Email", "email", FORM_VALUES_KEY.EMAIL],
+              ["Password", "password", FORM_VALUES_KEY.PASSWORD],
+              [
+                "Password Confirm",
+                "password",
+                FORM_VALUES_KEY.PASSWORD_CONFIRM
+              ],
+              ["Source", "text", FORM_VALUES_KEY.SOURCE]
+            ].map(data => {
+              const [label, type, name] = data;
+              return (
+                <Field
+                  key={name}
+                  name={name}
+                  render={this.renderInput(label, type)}
+                />
+              );
+            })}
+          </Form>
+        </Card.Content>
+
+        <Card.Content extra={true}>
           <Button
             id="author-modal-submit"
             color="green"
             inverted={true}
             disabled={disableSubmit}
             loading={isSubmitting}
-            type="submit"
+            // tslint:disable-next-line:jsx-no-lambda
+            onClick={() => handleSubmit()}
+            type="button"
             fluid={true}
           >
             <Icon name="checkmark" /> Ok
@@ -156,8 +165,8 @@ export class UserReg extends React.Component<Props, State> {
           <NavLink className="to-login-button" to={LOGIN_URL}>
             Already have an account? Login
           </NavLink>
-        </div>
-      </Form>
+        </Card.Content>
+      </Card>
     );
   };
 
@@ -207,6 +216,9 @@ export class UserReg extends React.Component<Props, State> {
   private handleFocus = () => {
     this.setState({ graphQlError: undefined });
   };
+
+  private handleFormErrorDismissed = () =>
+    this.setState({ graphQlError: undefined });
 
   private validate = (values: FormValues) => {
     const errors: FormikErrors<FormValues> = {};

@@ -1,5 +1,4 @@
-import { Socket } from "phoenix";
-import { Channel } from "phoenix";
+import { Socket, Channel } from "phoenix";
 import { logger } from "./utils";
 import { getToken } from "src/state";
 import getBackendUrls from "./get-backend-urls";
