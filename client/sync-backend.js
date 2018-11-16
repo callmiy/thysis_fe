@@ -5,12 +5,17 @@ const copydir = require("copy-dir");
 const buildDir = path.resolve(".", "build");
 const deployDir = path.resolve("..", "server", "priv", "web-client");
 
-fs.readdirSync(deployDir).forEach(file => {
-  file = path.resolve(deployDir, file);
-  if (fs.lstatSync(file).isFile()) {
-    fs.unlinkSync(file);
-  }
-});
+const deleteStatics = () => {
+  // tslint:disable-next-line:no-console
+  console.log("\n\nDeleting static files\n\n");
+
+  fs.readdirSync(deployDir).forEach(file => {
+    file = path.resolve(deployDir, file);
+    if (fs.lstatSync(file).isFile()) {
+      fs.unlinkSync(file);
+    }
+  });
+};
 
 const rewriteServiceWorkerFile = filePath => {
   const file = fs.readFileSync(filePath, "utf8");
@@ -92,9 +97,20 @@ const rewriteServiceWorkerFile = filePath => {
   fs.writeFileSync(filePath, file.replace(match, staticsToString));
 };
 
-rewriteServiceWorkerFile(path.resolve(buildDir, "service-worker.js"));
+const make = () => {
+  const args = process.argv;
 
-// tslint:disable-next-line:no-console
-console.log("\n\nCopying from: ", buildDir, " to: ", deployDir, "\n");
+  if (args.length === 2) {
+    deleteStatics();
+    rewriteServiceWorkerFile(path.resolve(buildDir, "service-worker.js"));
 
-copydir.sync(buildDir, deployDir);
+    // tslint:disable-next-line:no-console
+    console.log("\n\nCopying from: ", buildDir, " to: ", deployDir, "\n\n");
+
+    copydir.sync(buildDir, deployDir);
+  } else {
+    deleteStatics();
+  }
+};
+
+make();
