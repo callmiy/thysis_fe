@@ -55,6 +55,26 @@ export class Login extends React.Component<Props, State> {
         variables: {
           user: null
         }
+      }).then(result => {
+        if (result) {
+          const { data } = result;
+
+          if (data) {
+            const { user } = data;
+
+            if (user) {
+              this.setState(s =>
+                update(s, {
+                  initialFormValues: {
+                    email: {
+                      $set: user.email
+                    }
+                  }
+                })
+              );
+            }
+          }
+        }
       });
     }
   }

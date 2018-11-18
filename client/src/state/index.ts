@@ -7,6 +7,8 @@ import { TOKEN_KEY } from "./../constants";
 import { CURRENT_PROJECT_KEY } from "./../constants";
 import { State as SearchComponentState } from "../components/SearchComponent/search-component";
 import USER_QUERY, { UserLocalGqlData } from "./auth-user.local.query";
+import { Variable as UserMutationVar } from "./user.local.mutation";
+import { resetClientAndPersistor } from "../apollo-setup";
 
 type ClientStateFn<TVariables> = (
   fieldName: string,
@@ -27,43 +29,47 @@ const updateNetworkStatus: ClientStateFn<{
   return null;
 };
 
-const userMutation: ClientStateFn<{
-  user: UserFragment | null;
-}> = (_, { user }, { cache }) => {
+const userMutation: ClientStateFn<UserMutationVar> = async (
+  _,
+  { user },
+  { cache }
+) => {
   if (user) {
     cache.writeData({ data: { user, staleToken: null, loggedOutUser: null } });
     storeToken(user.jwt);
-  } else {
-    // MEANS WE HAVE LOGGED OUT. we store the current user as `loggedOutUser`
-    // so we can pre-fill the sign in form with e.g. user email
 
-    const { user: loggedOutUser } = {
-      ...(cache.readQuery<UserLocalGqlData>({ query: USER_QUERY }) || {
-        user: null
-      })
-    };
+    return user;
+  }
+  // MEANS WE HAVE LOGGED OUT. we store the current user as `loggedOutUser`
+  // so we can pre-fill the sign in form with e.g. user email
 
-    const data = {
-      user: null,
-      staleToken: null,
-      currentProject: null,
-      searchComponentState: null
-    } as {
-      loggedOutUser?: UserFragment | null;
-    };
+  const { user: loggedOutUser } = {
+    ...(cache.readQuery<UserLocalGqlData>({ query: USER_QUERY }) || {
+      user: null
+    })
+  };
 
-    if (loggedOutUser) {
-      data.loggedOutUser = loggedOutUser;
-    }
+  const data = {
+    user: null,
+    staleToken: null,
+    currentProject: null,
+    searchComponentState: null
+  } as {
+    loggedOutUser?: UserFragment | null;
+  };
 
-    cache.writeData({
-      data
-    });
-    clearToken();
-    clearProject();
+  if (loggedOutUser) {
+    await resetClientAndPersistor();
+    data.loggedOutUser = loggedOutUser;
   }
 
-  return null;
+  await cache.writeData({
+    data
+  });
+  clearToken();
+  clearProject();
+
+  return loggedOutUser;
 };
 
 const currentProjectMutation: ClientStateFn<{

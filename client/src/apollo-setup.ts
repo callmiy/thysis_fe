@@ -30,13 +30,13 @@ export const client = new ApolloClient({
 
 export default client;
 
-export async function persistCache() {
-  const persistor = new CachePersistor({
-    cache,
-    storage: localStorage,
-    key: "thysis-apollo-cache-persist"
-  });
+const persistor = new CachePersistor({
+  cache,
+  storage: localStorage,
+  key: "thysis-apollo-cache-persist"
+});
 
+export async function persistCache() {
   const SCHEMA_VERSION = "3.1"; // Must be a string.
   const SCHEMA_VERSION_KEY = "thysis-apollo-schema-version";
   const currentVersion = localStorage.getItem(SCHEMA_VERSION_KEY);
@@ -54,6 +54,13 @@ export async function persistCache() {
 
   return persistor;
 }
+
+export const resetClientAndPersistor = async () => {
+  await persistor.pause(); // Pause automatic persistence.
+  await persistor.purge(); // Delete everything in the storage provider.
+  await client.clearStore();
+  await persistor.resume();
+};
 
 // HELPER FUNCTIONS
 

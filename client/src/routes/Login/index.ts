@@ -29,7 +29,7 @@ const loginMutationGql = graphql<
   }
 });
 
-const userLocalGql = graphql<
+const loggedOutUserGql = graphql<
   {},
   LoggedOutUserData,
   {},
@@ -39,7 +39,7 @@ const userLocalGql = graphql<
 });
 
 export default compose(
-  userLocalGql,
+  loggedOutUserGql,
   userLocalMutationGql,
   loginMutationGql
 )(Login);
