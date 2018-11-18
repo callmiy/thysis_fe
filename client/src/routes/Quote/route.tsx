@@ -12,9 +12,8 @@ import { makeTagURL } from "../../routes/util";
 import { Props } from "./quote";
 import { State } from "./quote";
 import { QuoteFull_quote_tags } from "../../graphql/gen.types";
-import MobileBottomMenu from "../../components/mobile-bottom-menu.component";
-import { MenuItem } from "../../components/mobile-bottom-menu.component";
 import { sourceDisplay } from "src/graphql/utils";
+import AppSideBar from "src/components/AppSidebar";
 
 export class Quote extends React.Component<Props, State> {
   componentDidMount() {
@@ -27,13 +26,13 @@ export class Quote extends React.Component<Props, State> {
 
   render() {
     return (
-      <div className="quote-route">
-        <RootHeader title="Quote" />
+      <AppSideBar>
+        <div className="quote-route">
+          <RootHeader title="Quote" showSideBarTrigger={true} />
 
-        {this.renderMainOrLoading()}
-
-        <MobileBottomMenu items={[MenuItem.HOME, MenuItem.SEARCH]} />
-      </div>
+          {this.renderMainOrLoading()}
+        </div>
+      </AppSideBar>
     );
   }
 
