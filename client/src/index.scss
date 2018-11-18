@@ -12,6 +12,12 @@ body,
   padding: 0;
 }
 
+#root {
+  max-width: 900px;
+  margin: 0 auto;
+  border: 2px solid $app-color;
+}
+
 /* semantic ui css causes react-select input to be displayed incorrectly */
 #thysis-body .Select-input > input {
   width: 100%;
@@ -52,6 +58,7 @@ body,
   &.small {
     padding: 10px;
     border-radius: 5px;
+    max-width: 350px;
   }
 }
 
