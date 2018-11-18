@@ -5,12 +5,12 @@ const copydir = require("copy-dir");
 const buildDir = path.resolve(".", "build");
 const deployDir = path.resolve("..", "server", "priv", "web-client");
 
-const deleteStatics = () => {
+const deleteStatics = (toDelete = deployDir) => {
   // tslint:disable-next-line:no-console
   console.log("\n\nDeleting static files\n\n");
 
-  fs.readdirSync(deployDir).forEach(file => {
-    file = path.resolve(deployDir, file);
+  fs.readdirSync(toDelete).forEach(file => {
+    file = path.resolve(toDelete, file);
     if (fs.lstatSync(file).isFile()) {
       fs.unlinkSync(file);
     }
@@ -109,7 +109,7 @@ const make = () => {
 
     copydir.sync(buildDir, deployDir);
   } else {
-    deleteStatics();
+    deleteStatics(path.resolve("server", "priv", "web-client"));
   }
 };
 
