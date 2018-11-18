@@ -32,4 +32,24 @@
       cursor: pointer;
     }
   }
+
+  .no-project {
+    text-align: center;
+  }
+
+  .your-projects {
+    width: 100%;
+    border-bottom: 2px solid #ccc7c7;
+    text-align: center;
+    margin-bottom: 20px;
+
+    .label {
+      position: relative;
+      top: 10px;
+      background: #fff;
+      font-weight: 900;
+      font-size: 1.2em;
+      padding: 0 5px;
+    }
+  }
 }

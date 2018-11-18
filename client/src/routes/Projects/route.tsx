@@ -93,12 +93,18 @@ export class SelectProject extends React.Component<Props, State> {
     }
 
     if (!projects || !projects.length) {
-      return <div>You currently have no project. You may create one now.</div>;
+      return (
+        <div className="no-project">
+          You currently have no project. You may create one now.
+        </div>
+      );
     }
 
     return (
       <div>
-        <div>Your Projects</div>
+        <div className="your-projects">
+          <span className="label">Projects</span>
+        </div>
         <List divided={true} relaxed={true}>
           {projects.map(this.renderProject)}
         </List>
