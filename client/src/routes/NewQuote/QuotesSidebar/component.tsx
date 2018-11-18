@@ -309,7 +309,7 @@ export class QuotesSidebar extends React.Component<Props, State> {
     }
 
     if (!result || !error) {
-      this.setState({ loading: false });
+      this.setState({ loading: true });
       return;
     }
   };
