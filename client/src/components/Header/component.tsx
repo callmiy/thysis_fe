@@ -28,7 +28,7 @@ export default class Header extends React.Component<Props, State> {
     } = this.props;
 
     return (
-      <div className={`${className} app-header`} style={style} color="green">
+      <div className={`${className} src-components-header`} style={style}>
         <div className="top">
           {showSideBarTrigger && (
             <a className="sidebar-trigger item" onClick={context.onShowClicked}>
@@ -37,16 +37,19 @@ export default class Header extends React.Component<Props, State> {
           )}
 
           <div className="title">{title}</div>
-
-          {currentProject && (
-            <NavLink
-              to={path === ROOT_URL ? "#" : ROOT_URL}
-              className="project-title"
-            >
-              {currentProject.title}
-            </NavLink>
-          )}
         </div>
+
+        {currentProject && (
+          <div className="bottom">
+            {path === ROOT_URL ? (
+              <span className="project-title">{currentProject.title}</span>
+            ) : (
+              <NavLink to={ROOT_URL} className="project-title">
+                {currentProject.title}
+              </NavLink>
+            )}
+          </div>
+        )}
       </div>
     );
   };

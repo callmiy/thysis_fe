@@ -1,4 +1,4 @@
-.app-header {
+.src-components-header {
   flex-shrink: 0;
   border-radius: 0;
   margin: 0 0 10px 0;
@@ -7,41 +7,24 @@
   background-color: #5faac7;
   color: white;
   padding: 3px 0 0 3px; }
-  .app-header .top {
+  .src-components-header .top {
     display: flex;
-    margin-bottom: 10px;
-    align-items: center; }
-    .app-header .top > .sidebar-trigger {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-width: 40px;
-      min-height: 36px;
-      margin-right: 8px; }
-      .app-header .top > .sidebar-trigger:hover {
+    padding: 5px; }
+    .src-components-header .top > .sidebar-trigger {
+      min-width: 40px; }
+      .src-components-header .top > .sidebar-trigger:hover {
         background-color: #429abc; }
-      .app-header .top > .sidebar-trigger > .icon {
+      .src-components-header .top > .sidebar-trigger > .icon {
         color: white !important; }
-  .app-header .title {
+  .src-components-header .title {
     font-weight: 700;
     font-size: 1.2rem;
     flex: 1; }
-  .app-header .project-title {
-    background-color: #72b4ce;
+  .src-components-header .bottom {
+    display: flex;
+    flex-direction: row-reverse; }
+  .src-components-header .project-title {
     padding: 1px 3px;
     font-style: italic;
     font-weight: bolder;
     color: #fff; }
-  .app-header .bottom {
-    margin-bottom: 5px;
-    min-height: 20px; }
-    .app-header .bottom > div {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-end; }
-  .app-header .to-projects {
-    color: #f2f2f2;
-    text-decoration: none;
-    background-color: #98c8db;
-    padding: 5px 8px;
-    font-weight: 700; }
