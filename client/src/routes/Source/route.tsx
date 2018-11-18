@@ -73,7 +73,7 @@ export class Source extends React.Component<SourceProps, SourceState> {
           className={classes.newQuoteButton}
         >
           <Icon name="add circle" circular={true} />
-          New Quote
+          <span style={{ fontWeight: 100, fontSize: "0.65em" }}>New Quote</span>
         </NavLink>
 
         <SourceAccordion source={source} />

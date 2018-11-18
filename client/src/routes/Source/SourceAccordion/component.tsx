@@ -19,7 +19,7 @@ import {
 } from "../../../graphql/gen.types";
 import { Quotes1_quotes } from "../../../graphql/gen.types";
 import QUOTES_QUERY from "../../../graphql/quotes-1.query";
-import { authorDisplay, sourceDisplay } from "../../../graphql/utils";
+import { sourceDisplay } from "../../../graphql/utils";
 import { authorFullName } from "../../../graphql/utils";
 import { classes } from "./styles";
 import { accordionContentStyle } from "./styles";
@@ -195,7 +195,7 @@ export class SourceAccordion extends React.Component<Props, State> {
     return (
       <div key={author.id}>
         <NavLink to={makeAuthorRouteURL(author.id)}>
-          {authorFullName(author)} ({authorDisplay(author)})
+          {authorFullName(author)}
         </NavLink>
       </div>
     );
