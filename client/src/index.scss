@@ -39,11 +39,20 @@ body,
   overflow: hidden;
 }
 
+.ui.inverted.dimmer {
+  background-color: $inverted-dimmer-color;
+}
+
 .ui.modal.transition.visible.active {
   display: flex !important;
   flex: 1;
   flex-direction: column;
   max-height: 80%;
+
+  &.small {
+    padding: 10px;
+    border-radius: 5px;
+  }
 }
 
 .ui.modal.transition.visible.active > .content {

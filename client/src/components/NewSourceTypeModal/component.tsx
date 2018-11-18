@@ -160,7 +160,8 @@ export class NewSourceTypeModal extends React.Component<Props, State> {
             basic={true}
             color="red"
             onClick={this.onResetClicked(handleReset)}
-            disabled={dirtyOrSubmitting}
+            disabled={isSubmitting}
+            type="button"
           >
             <Icon name="remove" /> Dismiss
           </Button>

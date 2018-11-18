@@ -128,16 +128,17 @@ function refreshEvent(e: MouseEvent) {
 
 function showRefreshUI() {
   const div = document.createElement("div");
-  div.classList.add("ui", "green", "inverted", "menu");
+  div.classList.add("ui", "inverted", "menu");
   const textNode = document.createTextNode(
     "New content is available; please click to refresh."
   );
   div.appendChild(textNode);
   div.style.cssText = `
-  border: 1px solid #b7b7b7;
+  border: 1px solid #07526f;
   padding: 10px;
   border-radius: 3px;
   color: #ffffffe6;
+  background-color: #5faac7;
   `;
 
   const parent = document.createElement("div");

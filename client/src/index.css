@@ -32,11 +32,17 @@ body,
   height: 100%;
   overflow: hidden; }
 
+.ui.inverted.dimmer {
+  background-color: rgba(95, 170, 199, 0.23); }
+
 .ui.modal.transition.visible.active {
   display: flex !important;
   flex: 1;
   flex-direction: column;
   max-height: 80%; }
+  .ui.modal.transition.visible.active.small {
+    padding: 10px;
+    border-radius: 5px; }
 
 .ui.modal.transition.visible.active > .content {
   display: flex !important;

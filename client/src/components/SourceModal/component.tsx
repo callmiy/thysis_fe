@@ -111,6 +111,7 @@ export class SourceModal extends React.Component<Props, State> {
             color="red"
             onClick={this.resetModal}
             disabled={isSubmitting}
+            type="button"
           >
             <Icon name="remove" /> Dismiss
           </Button>

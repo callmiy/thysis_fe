@@ -1,0 +1,21 @@
+.src-components-new-author-modal .form .field {
+  margin-bottom: 15px !important; }
+
+.src-components-new-author-modal .form .field.disabled > label {
+  opacity: 1; }
+
+.src-components-new-author-modal .form .field.disabled input {
+  background-color: #f5f5f5;
+  pointer-events: none; }
+
+.src-components-new-author-modal .form .ui.message.error {
+  display: block;
+  padding: 0.5em;
+  margin-bottom: 1em;
+  margin-top: -10px;
+  background-color: #fff6f6;
+  box-shadow: none;
+  font-size: 1em; }
+  .src-components-new-author-modal .form .ui.message.error .header {
+    font-size: 1em;
+    font-weight: 500; }

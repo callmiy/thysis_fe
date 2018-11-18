@@ -14,6 +14,7 @@ import { FormikErrors } from "formik";
 import isEmpty from "lodash/isEmpty";
 import update from "immutability-helper";
 
+import "./new-author-modal.css";
 import {
   FORM_OUTPUT_KEY,
   Props,
@@ -200,58 +201,61 @@ export class NewAuthorModal extends React.Component<Props, State> {
     const disableSubmit = dirtyOrSubmitting || !isEmpty(errors);
 
     return (
-      <Form onSubmit={handleSubmit}>
-        {[
-          ["Last Name", FORM_OUTPUT_KEY.LAST_NAME],
-          ["First Name", FORM_OUTPUT_KEY.FIRST_NAME],
-          ["Middle Names", FORM_OUTPUT_KEY.MIDDLE_NAMES]
-        ].map(data => {
-          const [label, name] = data;
-          return (
-            <Field key={name} name={name} render={this.renderInput(label)} />
-          );
-        })}
+      <div className="src-components-new-author-modal">
+        <Form onSubmit={handleSubmit}>
+          {[
+            ["Last Name", FORM_OUTPUT_KEY.LAST_NAME],
+            ["First Name", FORM_OUTPUT_KEY.FIRST_NAME],
+            ["Middle Names", FORM_OUTPUT_KEY.MIDDLE_NAMES]
+          ].map(data => {
+            const [label, name] = data;
+            return (
+              <Field key={name} name={name} render={this.renderInput(label)} />
+            );
+          })}
 
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            marginTop: "20px"
-          }}
-        >
-          <Button
-            id="author-modal-close"
-            basic={true}
-            color="red"
-            onClick={this.onResetClicked(handleReset)}
-            disabled={dirtyOrSubmitting}
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              marginTop: "20px"
+            }}
           >
-            <Icon name="remove" /> Dismiss
-          </Button>
+            <Button
+              id="author-modal-close"
+              basic={true}
+              color="red"
+              onClick={this.onResetClicked(handleReset)}
+              disabled={isSubmitting}
+              type="button"
+            >
+              <Icon name="remove" /> Dismiss
+            </Button>
 
-          <Button
-            id="author-modal-reset"
-            color="olive"
-            basic={true}
-            disabled={dirtyOrSubmitting}
-            onClick={handleReset}
-            type="button"
-          >
-            <Icon name="repeat" /> Reset
-          </Button>
+            <Button
+              id="author-modal-reset"
+              color="olive"
+              basic={true}
+              disabled={dirtyOrSubmitting}
+              onClick={handleReset}
+              type="button"
+            >
+              <Icon name="repeat" /> Reset
+            </Button>
 
-          <Button
-            id="author-modal-submit"
-            color="green"
-            inverted={true}
-            disabled={disableSubmit}
-            loading={isSubmitting}
-            type="submit"
-          >
-            <Icon name="checkmark" /> Ok
-          </Button>
-        </div>
-      </Form>
+            <Button
+              id="author-modal-submit"
+              color="green"
+              inverted={true}
+              disabled={disableSubmit}
+              loading={isSubmitting}
+              type="submit"
+            >
+              <Icon name="checkmark" /> Ok
+            </Button>
+          </div>
+        </Form>
+      </div>
     );
   };
 
