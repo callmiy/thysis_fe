@@ -35,13 +35,14 @@ export const initialFormValues: FormValues = {
 export interface State {
   source?: SourceFullFrag;
   formError?: ApolloError | { message: string };
+  open: boolean;
 }
 
-export const initialState: State = {};
+export const initialState: State = { open: true };
 
 export interface OwnProps extends CurrentProjectLocalData {
   open: boolean;
-  dismissModal: () => void;
+  dismissModal?: () => void;
   style?: React.CSSProperties;
   existingSource?: ExistingSourceProps;
   createSource?: CreateSourceFn;

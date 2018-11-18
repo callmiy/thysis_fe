@@ -30,7 +30,9 @@ export class SourceModal extends React.Component<Props, State> {
   state = initialState;
 
   render() {
-    const { open, style } = this.props;
+    const { open, style, dismissModal } = this.props;
+
+    const toggleModal = dismissModal ? open : this.state.open;
 
     return (
       <Modal
@@ -38,7 +40,7 @@ export class SourceModal extends React.Component<Props, State> {
         basic={true}
         size="small"
         dimmer="inverted"
-        open={open}
+        open={toggleModal}
         onClose={this.resetModal}
       >
         {this.renderErrorOrSuccess()}
@@ -141,7 +143,7 @@ export class SourceModal extends React.Component<Props, State> {
 
   resetModal = async () => {
     await this.setState(initialState);
-    this.props.dismissModal();
+    this.dismissModal();
   };
 
   renderErrorOrSuccess = () => {
@@ -310,8 +312,18 @@ export class SourceModal extends React.Component<Props, State> {
 
   goToSource = (id: string) => async () => {
     await this.setState(initialState);
-    this.props.dismissModal();
+    this.dismissModal();
     this.props.history.push(makeSourceURL(id));
+  };
+
+  private dismissModal = () => {
+    const { dismissModal } = this.props;
+
+    if (dismissModal) {
+      dismissModal();
+    } else {
+      this.setState({ open: false });
+    }
   };
 }
 

@@ -19,3 +19,27 @@
   .src-components-new-author-modal .form .ui.message.error .header {
     font-size: 1em;
     font-weight: 500; }
+
+.src-components-new-author-modal .new-author-content {
+  width: 100% !important;
+  overflow-y: auto !important; }
+  .src-components-new-author-modal .new-author-content > * {
+    margin-right: 5px; }
+  .src-components-new-author-modal .new-author-content .ui.message {
+    min-height: initial;
+    margin-bottom: 0;
+    padding: 0.2em 0.5em; }
+  .src-components-new-author-modal .new-author-content .ui.form-header {
+    margin: 0.9em 0; }
+  .src-components-new-author-modal .new-author-content .authors-display-header {
+    display: flex !important;
+    justify-content: space-between;
+    align-items: flex-end; }
+    .src-components-new-author-modal .new-author-content .authors-display-header > .label {
+      font-size: 0.8em !important; }
+  .src-components-new-author-modal .new-author-content .authors-list {
+    padding-left: 20px;
+    margin-top: 10px; }
+  .src-components-new-author-modal .new-author-content .go-create-source {
+    cursor: pointer;
+    background-color: #a3c293; }

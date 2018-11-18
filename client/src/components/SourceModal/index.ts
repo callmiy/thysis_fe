@@ -16,6 +16,19 @@ import {
   FormValues,
   formikConfig
 } from "./source-modal";
+import CURRENT_PROJECT_QUERY, {
+  CurrentProjectLocalData,
+  CurrProjLocalGqlProps
+} from "src/state/project.local.query";
+
+const currentProjGql = graphql<
+  {},
+  CurrentProjectLocalData,
+  {},
+  CurrProjLocalGqlProps | void
+>(CURRENT_PROJECT_QUERY, {
+  props: props => props.data
+});
 
 const createSourceGraphql = graphql<
   OwnProps,
@@ -103,6 +116,7 @@ const createSourceGraphql = graphql<
 });
 
 export default compose(
+  currentProjGql,
   withRouter,
   createSourceGraphql,
   withFormik(formikConfig)

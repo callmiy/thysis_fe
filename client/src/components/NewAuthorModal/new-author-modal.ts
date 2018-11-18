@@ -58,6 +58,8 @@ export interface State {
   submitting: boolean;
   author?: AuthorFrag;
   open?: boolean;
+  createdAuthors: AuthorFrag[];
+  showSourceModal?: boolean;
 }
 
 export const initialState: State = {
@@ -67,5 +69,6 @@ export const initialState: State = {
     [FORM_OUTPUT_KEY.MIDDLE_NAMES]: ""
   },
   graphQlError: undefined,
-  submitting: false
+  submitting: false,
+  createdAuthors: []
 };

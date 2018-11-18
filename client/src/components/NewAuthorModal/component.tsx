@@ -22,9 +22,13 @@ import {
   FormValues,
   initialState
 } from "./new-author-modal";
-import { AuthorFrag } from "../../graphql/gen.types";
+import { AuthorFrag } from "src/graphql/gen.types";
+import { authorFullName } from "src/graphql/utils";
+import SourceModal from "src/components/SourceModal";
 
 export class NewAuthorModal extends React.Component<Props, State> {
+  contentRef = React.createRef<HTMLDivElement>();
+
   constructor(props: Props) {
     super(props);
 
@@ -43,20 +47,31 @@ export class NewAuthorModal extends React.Component<Props, State> {
 
   render() {
     const { style, modal } = this.props;
-    const { open } = this.state;
+    const { open, showSourceModal, createdAuthors } = this.state;
+
+    if (showSourceModal && createdAuthors.length) {
+      return <SourceModal open={true} authors={createdAuthors} />;
+    }
 
     return modal ? (
       <Modal
         style={{ ...(style || {}), ...{ background: "#fff" } }}
+        className="src-components-new-author-modal"
         basic={true}
         size="small"
         dimmer="inverted"
         open={open}
         onClose={this.onResetClicked(() => null)}
       >
-        <Header icon="user" content="Author Details" />
+        <div className="new-author-content" ref={this.contentRef}>
+          <Modal.Content>
+            {this.renderAuthorCreated()}
 
-        <Modal.Content>{this.renderContent()}</Modal.Content>
+            <Header icon="user" content="Author Details" />
+
+            {this.renderContent()}
+          </Modal.Content>
+        </div>
       </Modal>
     ) : (
       this.renderContent()
@@ -162,10 +177,15 @@ export class NewAuthorModal extends React.Component<Props, State> {
         if (
           authorCreated &&
           authorCreated.data &&
-          authorCreated.data.createAuthor &&
-          onAuthorCreated
+          authorCreated.data.createAuthor
         ) {
-          onAuthorCreated(authorCreated.data.createAuthor);
+          const { createAuthor: createdAuthor } = authorCreated.data;
+
+          if (onAuthorCreated) {
+            onAuthorCreated(createdAuthor);
+          } else {
+            this.handleAuthorCreated(createdAuthor);
+          }
         }
 
         formikBag.resetForm();
@@ -176,13 +196,15 @@ export class NewAuthorModal extends React.Component<Props, State> {
         if (
           authorUpdated &&
           authorUpdated.data &&
-          authorUpdated.data.updateAuthor &&
-          onAuthorCreated
+          authorUpdated.data.updateAuthor
         ) {
-          onAuthorCreated(authorUpdated.data.updateAuthor);
-        }
+          if (onAuthorCreated) {
+            onAuthorCreated(authorUpdated.data.updateAuthor);
+          }
 
-        this.setState({ open: false });
+          this.props.dismissModal();
+          return;
+        }
       }
     } catch (error) {
       formikBag.setSubmitting(false);
@@ -201,7 +223,7 @@ export class NewAuthorModal extends React.Component<Props, State> {
     const disableSubmit = dirtyOrSubmitting || !isEmpty(errors);
 
     return (
-      <div className="src-components-new-author-modal">
+      <div>
         <Form onSubmit={handleSubmit}>
           {[
             ["Last Name", FORM_OUTPUT_KEY.LAST_NAME],
@@ -351,6 +373,60 @@ export class NewAuthorModal extends React.Component<Props, State> {
         $set: author
       }
     });
+  };
+
+  private renderAuthorCreated = () => {
+    const { createdAuthors } = this.state;
+    const len = createdAuthors.length;
+
+    if (!len) {
+      return;
+    }
+
+    return (
+      <Message success={true}>
+        <Message.Header className="authors-display-header">
+          <span className="label">
+            New author
+            {len === 1 ? "" : "s"} ({len}
+            ):
+          </span>
+
+          <Button
+            compact={true}
+            className="go-create-source"
+            onClick={this.showCreateSourceModal}
+          >
+            Create source?
+          </Button>
+        </Message.Header>
+
+        <ol className="authors-list">
+          {createdAuthors.map(this.renderAuthor)}
+        </ol>
+      </Message>
+    );
+  };
+
+  private renderAuthor = (author: AuthorFrag) => {
+    return <li key={author.id}>{authorFullName(author)}</li>;
+  };
+
+  private showCreateSourceModal = () =>
+    this.setState({ showSourceModal: true });
+
+  private handleAuthorCreated = (author: AuthorFrag) => {
+    this.setState(s =>
+      update(s, {
+        createdAuthors: {
+          $push: [author]
+        }
+      })
+    );
+
+    if (this.contentRef.current) {
+      this.contentRef.current.scrollTop = 0;
+    }
   };
 }
 
