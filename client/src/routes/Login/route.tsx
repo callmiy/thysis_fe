@@ -215,7 +215,7 @@ export class Login extends React.Component<Props, State> {
         {this.renderError()}
 
         <Card.Content>
-          <Form>
+          <Form onSubmit={handleSubmit}>
             {[
               ["Email", "email", FORM_VALUES_KEY.EMAIL],
               ["Password", "password", FORM_VALUES_KEY.PASSWORD]
@@ -229,24 +229,22 @@ export class Login extends React.Component<Props, State> {
                 />
               );
             })}
+
+            <Button
+              id="author-modal-submit"
+              color="green"
+              inverted={true}
+              disabled={disableSubmit}
+              loading={isSubmitting}
+              type="submit"
+              fluid={true}
+            >
+              <Icon name="checkmark" /> Ok
+            </Button>
           </Form>
         </Card.Content>
 
         <Card.Content extra={true}>
-          <Button
-            id="author-modal-submit"
-            color="green"
-            inverted={true}
-            disabled={disableSubmit}
-            loading={isSubmitting}
-            type="button"
-            // tslint:disable-next-line:jsx-no-lambda
-            onClick={() => handleSubmit()}
-            fluid={true}
-          >
-            <Icon name="checkmark" /> Ok
-          </Button>
-
           <NavLink className="to-reg-button" to={USER_REG_URL}>
             Don't have an account? Sign Up
           </NavLink>
@@ -259,14 +257,26 @@ export class Login extends React.Component<Props, State> {
     formProps: FieldProps<FormValues>
   ) => {
     const { field, form } = formProps;
+    const {
+      initialFormValues: { email }
+    } = this.state;
     const name = field.name as FORM_VALUES_KEY;
     const error = form.errors[name];
     const booleanError = !!error;
     const touched = form.touched[name];
 
+    let autoFocus = false;
+
+    if (name === FORM_VALUES_KEY.EMAIL && !email) {
+      autoFocus = true;
+    } else if (name === FORM_VALUES_KEY.PASSWORD && email) {
+      autoFocus = true;
+    }
+
     return (
       <div>
         <Form.Field
+          {...field}
           type={type}
           control={Input}
           placeholder={label}
@@ -276,8 +286,7 @@ export class Login extends React.Component<Props, State> {
           error={booleanError}
           onBlur={this.handleFormControlBlur(name, form)}
           onFocus={this.handleFocus}
-          autoFocus={name === FORM_VALUES_KEY.EMAIL}
-          {...field}
+          autoFocus={autoFocus}
         />
 
         {booleanError && touched && (

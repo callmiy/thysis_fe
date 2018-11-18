@@ -144,24 +144,22 @@ export class UserReg extends React.Component<Props, State> {
                 />
               );
             })}
+
+            <Button
+              id="author-modal-submit"
+              color="green"
+              inverted={true}
+              disabled={disableSubmit}
+              loading={isSubmitting}
+              type="submit"
+              fluid={true}
+            >
+              <Icon name="checkmark" /> Ok
+            </Button>
           </Form>
         </Card.Content>
 
         <Card.Content extra={true}>
-          <Button
-            id="author-modal-submit"
-            color="green"
-            inverted={true}
-            disabled={disableSubmit}
-            loading={isSubmitting}
-            // tslint:disable-next-line:jsx-no-lambda
-            onClick={() => handleSubmit()}
-            type="button"
-            fluid={true}
-          >
-            <Icon name="checkmark" /> Ok
-          </Button>
-
           <NavLink className="to-login-button" to={LOGIN_URL}>
             Already have an account? Login
           </NavLink>
