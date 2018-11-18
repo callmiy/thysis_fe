@@ -1,0 +1,75 @@
+.src-routes-new-quote .main-content {
+  flex: 1;
+  padding: 5px;
+  overflow-x: hidden;
+  overflow-y: auto; }
+
+.src-routes-new-quote {
+  height: 100%;
+  display: grid;
+  grid-template-areas: "rootHeader" "inner";
+  grid-template-rows: auto minmax(50%, 1fr) auto;
+  grid-template-columns: 100%; }
+  .src-routes-new-quote .route-inner {
+    grid-area: inner; }
+    .src-routes-new-quote .route-inner > div {
+      overflow: hidden; }
+    @media (min-width: 745px) {
+      .src-routes-new-quote .route-inner {
+        display: grid;
+        grid-template-areas: "formWithHeader quotesSidebar";
+        grid-template-columns: minmax(400px, 550px) minmax(40%, 1fr);
+        grid-column-gap: 10px; } }
+  .src-routes-new-quote .route-header {
+    grid-area: rootHeader; }
+  .src-routes-new-quote .form-with-header {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    grid-area: formWithHeader; }
+    @media (min-width: 745px) {
+      .src-routes-new-quote .form-with-header {
+        height: initial;
+        box-shadow: 1px -1px 6px -1px #9e9898; } }
+  .src-routes-new-quote .quotes-sidebar {
+    display: none;
+    grid-area: quotesSidebar;
+    margin: 5px 5px 0; }
+    @media (min-width: 745px) {
+      .src-routes-new-quote .quotes-sidebar {
+        display: flex;
+        flex-direction: column; } }
+  .src-routes-new-quote .ui.dividing.header.quote-source-display-container {
+    padding: 5px;
+    margin: 0;
+    flex-shrink: 0; }
+  .src-routes-new-quote .quote-source-display {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    max-height: 10vh;
+    font-size: 0.7em;
+    text-align: center;
+    line-height: 1; }
+  .src-routes-new-quote .quote-source-label {
+    text-align: center;
+    margin-bottom: 5px;
+    font-weight: 100;
+    font-size: 1.1rem;
+    font-style: italic; }
+  .src-routes-new-quote .quote-link {
+    text-decoration: none;
+    color: initial;
+    cursor: pointer; }
+    .src-routes-new-quote .quote-link:hover {
+      color: initial; }
+  .src-routes-new-quote .submit-button {
+    margin-left: 20px !important; }
+  .src-routes-new-quote .error-border {
+    border-color: #9f3a38; }
+  .src-routes-new-quote .tags-field {
+    margin-top: 15px; }
+  .src-routes-new-quote .submit-reset {
+    margin: 25px 0 40px 0;
+    display: flex;
+    justify-content: center; }

@@ -19,6 +19,7 @@ import { Mutation } from "react-apollo";
 import { NavLink } from "react-router-dom";
 import dateIsValid from "date-fns/isValid";
 
+import "./new-quote.css";
 import {
   Quotes1 as Quotes1Query,
   Sources1QueryVariables,
@@ -49,9 +50,6 @@ import { ErrorModal } from "./error-modal.component";
 import SuccessModal from "./SuccessModal";
 import { setTitle } from "../../routes/util";
 import { makeNewQuoteURL } from "../../routes/util";
-import { styles } from "./styles";
-import { inlineStyle } from "./styles";
-import { classes } from "./styles";
 import { ShouldReUseSource } from "./new-quote";
 import { FormValues } from "./new-quote";
 import { State } from "./new-quote";
@@ -103,84 +101,22 @@ export class NewQuote extends React.Component<Props, State> {
     setTitle();
   }
 
-  fetchSource = async () => {
-    try {
-      let query;
-
-      if (this.state.sourceId) {
-        query = await this.props.client.query<Source1Query, Source1Variables>({
-          query: SOURCE_QUERY,
-          variables: {
-            source: {
-              id: this.state.sourceId
-            }
-          }
-        });
-      } else {
-        const { currentProject } = this.props;
-
-        if (!currentProject) {
-          return;
-        }
-
-        query = await this.props.client.query<
-          Sources1Query,
-          Sources1QueryVariables
-        >({
-          query: SOURCES_QUERY,
-          variables: {
-            source: {
-              projectId: currentProject ? currentProject.id : "0"
-            }
-          }
-        });
-      }
-
-      if (!query) {
-        return;
-      }
-
-      const result = query as ApolloQueryResult<Sources1Query & Source1Query>;
-
-      this.setState(s =>
-        update(s, {
-          queryResult: {
-            $set: result
-          },
-
-          initialFormValues: {
-            source: {
-              $set: result.data.source
-            }
-          }
-        })
-      );
-    } catch (error) {
-      // tslint:disable-next-line:no-any
-      const result = { data: { sources: [] } } as any;
-      this.setState({ graphqlError: error, queryResult: result });
-    }
-  };
-
   render() {
     return (
       <AppSideBar onTagCreated={this.onTagCreated}>
-        <div className={classes.newQuoteRoot}>
+        <div className="src-routes-new-quote">
           <RootHeader
-            className={classes.rootHeader}
+            className="route-header"
             style={{ margin: 0 }}
             title="New Quote"
             showSideBarTrigger={true}
           />
 
-          <div className={classes.rootInner}>
-            <div className={classes.formWithHeader}>
+          <div className="route-inner">
+            <div className="form-with-header">
               {this.state.sourceId && this.renderSourceQuoteHeader()}
 
-              <div
-                className={`${classes.mainContent}`}
-                ref={this.formContainerRef}
-              >
+              <div className="main-content" ref={this.formContainerRef}>
                 {this.renderErrorOrSuccess()}
 
                 <Mutation
@@ -203,7 +139,7 @@ export class NewQuote extends React.Component<Props, State> {
               </div>
             </div>
 
-            <QuotesSidebar className={classes.quotesSidebar} />
+            <QuotesSidebar className="quotes-sidebar" />
           </div>
         </div>
       </AppSideBar>
@@ -240,63 +176,16 @@ export class NewQuote extends React.Component<Props, State> {
     const { source } = this.state.initialFormValues;
 
     return (
-      <Header dividing={true} style={styles.quoteSourceDisplayContainer}>
+      <Header dividing={true} className="quote-source-display-container">
         {source && (
-          <NavLink className={classes.quoteLink} to={makeSourceURL(source.id)}>
-            <div style={inlineStyle.quoteSourceLabel}>
-              Click to go to source
-            </div>
+          <NavLink className="quote-link" to={makeSourceURL(source.id)}>
+            <div className="quote-source-label">Click to go to source</div>
 
-            <div className={`${classes.quoteSourceDisplay}`}>
-              {sourceDisplay(source)}
-            </div>
+            <div className="quote-source-display">{sourceDisplay(source)}</div>
           </NavLink>
         )}
       </Header>
     );
-  };
-
-  writeQuoteToCache: CreateQuoteUpdateFn = async (
-    cache,
-    { data: quoteData }
-  ) => {
-    if (!quoteData || !quoteData.createQuote) {
-      return;
-    }
-
-    const { createQuote } = quoteData;
-
-    const sourceId = this.state.formOutputs.sourceId;
-
-    const query = {
-      query: QUOTES_QUERY,
-      variables: {
-        quote: {
-          source: sourceId
-        }
-      }
-    };
-
-    try {
-      const quotesQuery = cache.readQuery(query) as Quotes1Query;
-      const quotes = quotesQuery.quotes || [];
-
-      cache.writeQuery({
-        ...query,
-        data: {
-          quotes: [createQuote, ...quotes]
-        }
-      });
-    } catch (error) {
-      const message = error.message;
-      const queryErrorStart = `Can't find field quotes({"quote":{"source":"${sourceId}"}})`;
-
-      if (message.startsWith(queryErrorStart)) {
-        return;
-      }
-
-      throw error;
-    }
   };
 
   validate = (values: FormValues) => {
@@ -345,7 +234,7 @@ export class NewQuote extends React.Component<Props, State> {
         <Field name="date" render={this.renderDateControl} />
         <Field name="extras" render={this.renderExtrasControl} />
 
-        <div className={`${classes.submitReset}`}>
+        <div className="submit-reset">
           <Button
             basic={true}
             color="red"
@@ -356,7 +245,7 @@ export class NewQuote extends React.Component<Props, State> {
           </Button>
 
           <Button
-            className={`${classes.submitButton}`}
+            className="submit-button"
             type="submit"
             color="green"
             disabled={disableSubmit}
@@ -423,7 +312,7 @@ export class NewQuote extends React.Component<Props, State> {
     const tags = this.props.tags as TagFrag[];
 
     return (
-      <div className={classes.tagsField}>
+      <div className="tags-field">
         <Form.Field
           control={TagControl}
           label="Select at least one tag"
@@ -514,7 +403,7 @@ export class NewQuote extends React.Component<Props, State> {
 
     return (
       <Date
-        className={`${booleanError ? classes.errorBorder : ""}`}
+        className={`${booleanError ? "error-border" : ""}`}
         onChange={this.handleControlChange(name, form)}
         onBlur={this.handleFormControlBlur(name, form)}
         value={field.value}
@@ -530,7 +419,7 @@ export class NewQuote extends React.Component<Props, State> {
 
     return (
       <Page
-        className={`${booleanError ? classes.errorBorder : ""}`}
+        className={`${booleanError ? "error-border" : ""}`}
         onChange={this.handleControlChange(name, form)}
         onBlur={this.handleFormControlBlur(name, form)}
         value={field.value}
@@ -546,7 +435,7 @@ export class NewQuote extends React.Component<Props, State> {
 
     return (
       <VolumeIssue
-        className={`${booleanError ? classes.errorBorder : ""}`}
+        className={`${booleanError ? "error-border" : ""}`}
         onChange={this.handleControlChange(name, form)}
         onBlur={this.handleFormControlBlur(name, form)}
         value={field.value}
@@ -773,18 +662,18 @@ export class NewQuote extends React.Component<Props, State> {
     return "";
   };
 
-  scrollToTopOfForm = () => {
+  private scrollToTopOfForm = () => {
     if (this.formContainerRef.current) {
       this.formContainerRef.current.scrollTop = 0;
     }
   };
 
-  onResetClicked = (reset: () => void) => () => {
+  private onResetClicked = (reset: () => void) => () => {
     reset();
     this.scrollToTopOfForm();
   };
 
-  dismissErrorModal = () => {
+  private dismissErrorModal = () => {
     this.setState(s =>
       update(s, {
         graphqlError: {
@@ -794,7 +683,7 @@ export class NewQuote extends React.Component<Props, State> {
     );
   };
 
-  onSuccessModalDismissed = (val: ShouldReUseSource) => () => {
+  private onSuccessModalDismissed = (val: ShouldReUseSource) => () => {
     const { sourceId, submittedSourceId } = this.state;
     this.setState({ submittedSourceId: undefined });
 
@@ -804,6 +693,108 @@ export class NewQuote extends React.Component<Props, State> {
       val === ShouldReUseSource.RE_USE_SOURCE
     ) {
       this.props.history.push(makeNewQuoteURL(submittedSourceId));
+    }
+  };
+
+  private fetchSource = async () => {
+    try {
+      let query;
+
+      if (this.state.sourceId) {
+        query = await this.props.client.query<Source1Query, Source1Variables>({
+          query: SOURCE_QUERY,
+          variables: {
+            source: {
+              id: this.state.sourceId
+            }
+          }
+        });
+      } else {
+        const { currentProject } = this.props;
+
+        if (!currentProject) {
+          return;
+        }
+
+        query = await this.props.client.query<
+          Sources1Query,
+          Sources1QueryVariables
+        >({
+          query: SOURCES_QUERY,
+          variables: {
+            source: {
+              projectId: currentProject ? currentProject.id : "0"
+            }
+          }
+        });
+      }
+
+      if (!query) {
+        return;
+      }
+
+      const result = query as ApolloQueryResult<Sources1Query & Source1Query>;
+
+      this.setState(s =>
+        update(s, {
+          queryResult: {
+            $set: result
+          },
+
+          initialFormValues: {
+            source: {
+              $set: result.data.source
+            }
+          }
+        })
+      );
+    } catch (error) {
+      // tslint:disable-next-line:no-any
+      const result = { data: { sources: [] } } as any;
+      this.setState({ graphqlError: error, queryResult: result });
+    }
+  };
+
+  private writeQuoteToCache: CreateQuoteUpdateFn = async (
+    cache,
+    { data: quoteData }
+  ) => {
+    if (!quoteData || !quoteData.createQuote) {
+      return;
+    }
+
+    const { createQuote } = quoteData;
+
+    const sourceId = this.state.formOutputs.sourceId;
+
+    const query = {
+      query: QUOTES_QUERY,
+      variables: {
+        quote: {
+          source: sourceId
+        }
+      }
+    };
+
+    try {
+      const quotesQuery = cache.readQuery(query) as Quotes1Query;
+      const quotes = quotesQuery.quotes || [];
+
+      cache.writeQuery({
+        ...query,
+        data: {
+          quotes: [createQuote, ...quotes]
+        }
+      });
+    } catch (error) {
+      const message = error.message;
+      const queryErrorStart = `Can't find field quotes({"quote":{"source":"${sourceId}"}})`;
+
+      if (message.startsWith(queryErrorStart)) {
+        return;
+      }
+
+      throw error;
     }
   };
 }

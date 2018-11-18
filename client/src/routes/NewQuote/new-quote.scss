@@ -1,0 +1,112 @@
+@import "./../../styles/variables";
+@import "./../../styles/extensions";
+
+$two-columns-break-point: 745px;
+
+.src-routes-new-quote {
+  height: 100%;
+  display: grid;
+  grid-template-areas:
+    "rootHeader"
+    "inner";
+  grid-template-rows: auto minmax(50%, 1fr) auto;
+  grid-template-columns: 100%;
+
+  .route-inner {
+    grid-area: inner;
+
+    & > div {
+      overflow: hidden;
+    }
+
+    @media (min-width: $two-columns-break-point) {
+      display: grid;
+      grid-template-areas: "formWithHeader quotesSidebar";
+      grid-template-columns: minmax(400px, 550px) minmax(40%, 1fr);
+      grid-column-gap: 10px;
+    }
+  }
+
+  .main-content {
+    @extend %route-main;
+  }
+
+  .route-header {
+    grid-area: rootHeader;
+  }
+
+  .form-with-header {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    grid-area: formWithHeader;
+
+    @media (min-width: $two-columns-break-point) {
+      height: initial;
+      box-shadow: 1px -1px 6px -1px #9e9898;
+    }
+  }
+
+  .quotes-sidebar {
+    display: none;
+    grid-area: quotesSidebar;
+    margin: 5px 5px 0;
+
+    @media (min-width: $two-columns-break-point) {
+      display: flex;
+      flex-direction: column;
+    }
+  }
+
+  .ui.dividing.header.quote-source-display-container {
+    padding: 5px;
+    margin: 0;
+    flex-shrink: 0;
+  }
+
+  .quote-source-display {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    max-height: 10vh;
+    font-size: 0.7em;
+    text-align: center;
+    line-height: 1;
+  }
+
+  .quote-source-label {
+    text-align: center;
+    margin-bottom: 5px;
+    font-weight: 100;
+    font-size: 1.1rem;
+    font-style: italic;
+  }
+
+  .quote-link {
+    text-decoration: none;
+    color: initial;
+    cursor: pointer;
+
+    &:hover {
+      color: initial;
+    }
+  }
+
+  .submit-button {
+    margin-left: 20px !important;
+  }
+
+  .error-border {
+    border-color: $error-color;
+  }
+
+  .tags-field {
+    margin-top: 15px;
+  }
+
+  .submit-reset {
+    margin: 25px 0 40px 0;
+    display: flex;
+    justify-content: center;
+  }
+}
