@@ -11,7 +11,7 @@ import Loading from "../../components/Loading";
 import { Props, State, initialState } from "./projects";
 import { SemanticOnInputChangeFunc } from "../../utils";
 import { ProjectFragment } from "src/graphql/gen.types";
-import { ROOT_URL } from "../util";
+import { makeNewQuoteURL } from "../util";
 import { format as dateFormat } from "date-fns";
 import AppSideBar from "src/components/AppSidebar";
 
@@ -127,7 +127,7 @@ export class SelectProject extends React.Component<Props, State> {
     const { history, updateLocalProject } = this.props;
 
     await updateLocalProject({ variables: { currentProject } });
-    history.push(ROOT_URL);
+    history.push(makeNewQuoteURL());
   };
 
   private submit = async () => {

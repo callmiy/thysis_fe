@@ -10,7 +10,6 @@ import {
   PROJECTS_URL,
   TAG_URL,
   SOURCE_URL,
-  NEW_QUOTE_URL,
   SEARCH_QUOTES_URL,
   QUOTE_URL,
   AUTHOR_ROUTE_URL,
@@ -24,7 +23,6 @@ import { logger } from "src/utils";
 
 // tslint:disable-next-line:no-any
 const ReactLazy = React as any;
-const Home = ReactLazy.lazy(() => import("./../../routes/Home"));
 const TagDetail = ReactLazy.lazy(() => import("./../../routes/TagDetail"));
 const Source = ReactLazy.lazy(() => import("./../../routes/Source"));
 const NewQuote = ReactLazy.lazy(() => import("./../../routes/NewQuote"));
@@ -116,11 +114,9 @@ export class App extends React.Component<{}, State> {
 
                 <AuthRequired
                   exact={true}
-                  path={NEW_QUOTE_URL}
+                  path={ROOT_URL}
                   component={NewQuote}
                 />
-
-                <AuthRequired exact={true} path={ROOT_URL} component={Home} />
 
                 <Route component={LoginRoute} />
               </Switch>

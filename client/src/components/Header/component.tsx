@@ -8,7 +8,7 @@ import {
   AppSidebarConsumer,
   SideBarContextProps
 } from "../../containers/App/app.utils";
-import { ROOT_URL } from "src/routes/util";
+import { ROOT_URL, makeNewQuoteURL } from "src/routes/util";
 
 export default class Header extends React.Component<Props, State> {
   state = INITIAL_STATE;
@@ -44,7 +44,7 @@ export default class Header extends React.Component<Props, State> {
             {path === ROOT_URL ? (
               <span className="project-title">{currentProject.title}</span>
             ) : (
-              <NavLink to={ROOT_URL} className="project-title">
+              <NavLink to={makeNewQuoteURL()} className="project-title">
                 {currentProject.title}
               </NavLink>
             )}

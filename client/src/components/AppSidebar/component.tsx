@@ -13,7 +13,6 @@ import {
   PROJECTS_URL,
   SEARCH_QUOTES_URL,
   makeNewQuoteURL,
-  NEW_QUOTE_URL,
   LOGIN_URL,
   USER_REG_URL
 } from "src/routes/util";
@@ -55,8 +54,12 @@ export class AppSideBar extends React.Component<Props, State> {
           width="thin"
         >
           {currentProject && path !== ROOT_URL ? (
-            <Menu.Item as={NavLink} to={ROOT_URL} onClick={context.onHide}>
-              <Icon name="home" />
+            <Menu.Item
+              as={NavLink}
+              to={makeNewQuoteURL()}
+              onClick={context.onHide}
+            >
+              <Icon name="quote right" />
               Home
             </Menu.Item>
           ) : (
@@ -80,19 +83,6 @@ export class AppSideBar extends React.Component<Props, State> {
             >
               <Icon name="search" />
               Search
-            </Menu.Item>
-          ) : (
-            undefined
-          )}
-
-          {currentProject && path !== NEW_QUOTE_URL ? (
-            <Menu.Item
-              as={NavLink}
-              to={makeNewQuoteURL()}
-              onClick={context.onHide}
-            >
-              <Icon name="quote right" />
-              New Quote
             </Menu.Item>
           ) : (
             undefined
