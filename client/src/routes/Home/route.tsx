@@ -17,7 +17,7 @@ import styles from "./styles";
 import { classes } from "./styles";
 import { Props } from "./home";
 import { State } from "./home";
-import { MenuItem } from "./home";
+import { MenuItem } from "src/components/side-bar-menu";
 import AppSideBar from "src/components/AppSidebar";
 
 export class Home extends React.Component<Props, State> {
@@ -175,7 +175,7 @@ export class Home extends React.Component<Props, State> {
     );
   }
 
-  toggleModalOpen = (name: string, open: boolean) => () => {
+  toggleModalOpen = (name: MenuItem, open: boolean) => () => {
     this.setState(s =>
       update(s, {
         modalOpened: {

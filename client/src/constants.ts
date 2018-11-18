@@ -24,5 +24,7 @@ export enum MenuItemNames {
   NEW_TAG = "newTag",
   NEW_SOURCE = "newSource",
   TAG_LIST = "tagList",
-  SOURCE_LIST = "sourceList"
+  SOURCE_LIST = "sourceList",
+  NEW_AUTHOR = "newAuthor",
+  NEW_SOURCE_TYPE = "newSourceType"
 }

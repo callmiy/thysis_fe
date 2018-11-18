@@ -22,7 +22,6 @@ export const styles = {
     gridTemplateAreas: `
       "rootHeader"
       "inner"
-      "bottomMenu"
     `,
     gridTemplateRows: "auto minmax(50%, 1fr) auto",
     gridTemplateColumns: "100%"
@@ -70,10 +69,6 @@ export const styles = {
 
   rootHeader: {
     gridArea: "rootHeader"
-  },
-
-  bottomMenu: {
-    gridArea: "bottomMenu"
   },
 
   mainContent: {

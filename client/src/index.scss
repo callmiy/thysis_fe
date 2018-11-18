@@ -66,3 +66,16 @@ body,
 .icon {
   color: $app-color !important;
 }
+
+.ui.labeled.icon.menu .item > .icon:not(.dropdown) {
+  font-size: 1em;
+}
+
+.ui.menu .item {
+  padding: 5px;
+}
+
+.ui.thin.left.sidebar,
+.ui.thin.right.sidebar {
+  width: 110px;
+}

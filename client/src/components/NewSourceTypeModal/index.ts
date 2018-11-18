@@ -1,4 +1,4 @@
-import { graphql } from "react-apollo";
+import { graphql, compose } from "react-apollo";
 import update from "immutability-helper";
 
 import NewSourceTypeModal from "./component";
@@ -11,6 +11,19 @@ import {
   SourceTypes
 } from "../../graphql/gen.types";
 import { CreateSourceTypeFn } from "../../graphql/create-source-type.mutation";
+import USER_LOCAL_QUERY, {
+  UserLocalGqlData,
+  UserLocalGqlProps
+} from "src/state/auth-user.local.query";
+
+const userLocalGql = graphql<
+  OwnProps,
+  UserLocalGqlData,
+  {},
+  UserLocalGqlProps | void
+>(USER_LOCAL_QUERY, {
+  props: props => props.data
+});
 
 const createSourceTypeGql = graphql<
   OwnProps,
@@ -68,4 +81,7 @@ const createSourceTypeGql = graphql<
   }
 });
 
-export default createSourceTypeGql(NewSourceTypeModal);
+export default compose(
+  userLocalGql,
+  createSourceTypeGql
+)(NewSourceTypeModal);
