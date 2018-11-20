@@ -86,3 +86,47 @@
   font-weight: 900 !important;
   font-size: 1.2em !important;
 }
+
+%list-resources-modal {
+  margin-top: -20px !important;
+  overflow: hidden !important;
+  max-width: 500px;
+
+  .content {
+    word-wrap: break-word;
+  }
+
+  .modal-close {
+    flex-shrink: 0;
+    font-weight: 900;
+    font-size: 2rem;
+    text-align: right;
+    cursor: pointer;
+    color: darken($app-color, 20);
+  }
+
+  .list {
+    background: white;
+    padding: 8px !important ;
+    flex: 1;
+    overflow: auto;
+    margin-top: 0;
+    border: 1px solid #dad8d8;
+  }
+
+  .list-item {
+    cursor: pointer;
+  }
+
+  .no-resources-message {
+    text-align: center;
+    font-weight: 900;
+    max-width: 96%;
+    color: #fff;
+    background: darken($app-color, 10);
+  }
+
+  .error-container {
+    @extend %simple-error;
+  }
+}

@@ -16,6 +16,7 @@
 
     & > .sidebar-trigger {
       min-width: 40px;
+      cursor: pointer;
 
       &:hover {
         background-color: darken($color: $app-color, $amount: 8%);

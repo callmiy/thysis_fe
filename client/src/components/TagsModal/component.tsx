@@ -1,15 +1,12 @@
 import React from "react";
-import { Modal, List } from "semantic-ui-react";
-import { Loader } from "semantic-ui-react";
+import { Modal, List, Message, Loader } from "semantic-ui-react";
 
+import "./tags-modal.css";
 import { TagsMinimalQueryComponent } from "../../graphql/ops.types";
 import { TagsMinimalQueryResult } from "../../graphql/ops.types";
 import { TagFrag } from "../../graphql/gen.types";
 import TAGS_QUERY from "../../graphql/tags-mini.query";
 import { makeTagURL } from "../../routes/util";
-import { styles } from "../SourcesModal/styles";
-import { modalStyle } from "../SourcesModal/styles";
-import { classes } from "../SourcesModal/styles";
 import { Props } from "./utils";
 
 export class TagsModal extends React.Component<Props> {
@@ -21,24 +18,22 @@ export class TagsModal extends React.Component<Props> {
         {dataProps => {
           return (
             <Modal
-              style={modalStyle}
+              className="src-components-tags-modal"
               basic={true}
               dimmer="inverted"
               open={open}
               onClose={this.resetModal}
             >
               <Modal.Content>
-                <div id="tag-list-modal" className={classes.content}>
-                  <div
-                    id="tag-list-modal-close"
-                    className={classes.modalClose}
-                    onClick={this.props.dismissModal}
-                  >
-                    &times;
-                  </div>
-
-                  {this.renderTags(dataProps)}
+                <div
+                  id="tag-list-modal-close"
+                  className="modal-close"
+                  onClick={this.props.dismissModal}
+                >
+                  &times;
                 </div>
+
+                {this.renderTags(dataProps)}
               </Modal.Content>
             </Modal>
           );
@@ -50,10 +45,7 @@ export class TagsModal extends React.Component<Props> {
   renderTags = ({ loading, data, error }: TagsMinimalQueryResult) => {
     if (error) {
       return (
-        <div
-          className={classes.errorContainer}
-          onClick={this.props.dismissModal}
-        >
+        <div className="error-container" onClick={this.props.dismissModal}>
           {error.message}
         </div>
       );
@@ -65,25 +57,24 @@ export class TagsModal extends React.Component<Props> {
 
     const tags = data ? data.tags : null;
 
-    if (tags) {
+    if (tags && tags.length) {
       return (
-        <List style={styles.list} divided={true} relaxed={true}>
+        <List divided={true} relaxed={true}>
           {tags.map(this.renderTag)}
         </List>
       );
     }
 
-    return undefined;
+    return (
+      <Message className="no-resources-message">
+        <Message.Content>No tags for "current project"</Message.Content>
+      </Message>
+    );
   };
 
   renderTag = ({ id, text, question }: TagFrag) => {
     return (
-      <List.Item
-        key={id}
-        style={styles.listItem}
-        id={id}
-        onClick={this.navigateTo(id)}
-      >
+      <List.Item key={id} id={id} onClick={this.navigateTo(id)}>
         <List.Content>
           <div>{text}</div>
           {question && (

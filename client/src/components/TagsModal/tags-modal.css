@@ -1,4 +1,4 @@
-.src-components-sources-modal .error-container {
+.src-components-tags-modal .error-container {
   flex: 1;
   display: flex;
   justify-content: center;
@@ -7,29 +7,29 @@
   font-weight: 900;
   font-size: 1.2em; }
 
-.src-components-sources-modal {
+.src-components-tags-modal {
   margin-top: -20px !important;
   overflow: hidden !important;
   max-width: 500px; }
-  .src-components-sources-modal .content {
+  .src-components-tags-modal .content {
     word-wrap: break-word; }
-  .src-components-sources-modal .modal-close {
+  .src-components-tags-modal .modal-close {
     flex-shrink: 0;
     font-weight: 900;
     font-size: 2rem;
     text-align: right;
     cursor: pointer;
     color: #32748e; }
-  .src-components-sources-modal .list {
+  .src-components-tags-modal .list {
     background: white;
     padding: 8px !important;
     flex: 1;
     overflow: auto;
     margin-top: 0;
     border: 1px solid #dad8d8; }
-  .src-components-sources-modal .list-item {
+  .src-components-tags-modal .list-item {
     cursor: pointer; }
-  .src-components-sources-modal .no-resources-message {
+  .src-components-tags-modal .no-resources-message {
     text-align: center;
     font-weight: 900;
     max-width: 96%;

@@ -1,15 +1,10 @@
 import React from "react";
-import { Modal } from "semantic-ui-react";
-import { List } from "semantic-ui-react";
-import { Loader } from "semantic-ui-react";
+import { Modal, Message, List, Loader } from "semantic-ui-react";
 
 import "./sources-modal.css";
 import { SourceFullFrag } from "../../graphql/gen.types";
 import { sourceDisplay } from "../../graphql/utils";
 import { makeSourceURL } from "../../routes/util";
-import { styles } from "./styles";
-import { modalStyle } from "./styles";
-import { classes } from "./styles";
 import { Props } from "./sources-modal";
 
 export class SourcesModal extends React.Component<Props> {
@@ -17,25 +12,22 @@ export class SourcesModal extends React.Component<Props> {
     return (
       <Modal
         id="sources-modal"
-        style={modalStyle}
         basic={true}
         open={this.props.open}
         onClose={this.resetModal}
         dimmer="inverted"
-        className="sources-modal"
+        className="src-components-sources-modal"
       >
         <Modal.Content>
-          <div className={classes.content}>
-            <div
-              id="sources-modal-close"
-              className={classes.modalClose}
-              onClick={this.props.dismissModal}
-            >
-              &times;
-            </div>
-
-            {this.renderSources()}
+          <div
+            id="sources-modal-close"
+            className="modal-close"
+            onClick={this.props.dismissModal}
+          >
+            &times;
           </div>
+
+          {this.renderSources()}
         </Modal.Content>
       </Modal>
     );
@@ -46,7 +38,7 @@ export class SourcesModal extends React.Component<Props> {
 
     if (error) {
       return (
-        <div className={classes.errorContainer} onClick={dismissModal}>
+        <div className="error-container" onClick={dismissModal}>
           {error.message}
         </div>
       );
@@ -60,14 +52,18 @@ export class SourcesModal extends React.Component<Props> {
 
     if (sources && sources.length) {
       return (
-        <List style={styles.list} divided={true} relaxed={true}>
+        <List divided={true} relaxed={true}>
           {sources.map(this.renderSource)}
         </List>
       );
     }
 
     return (
-      <div>No sources {`for "${currentProject && currentProject.title}"`}</div>
+      <Message className="no-resources-message">
+        <Message.Content>
+          No sources for {` "${currentProject && currentProject.title}"`}
+        </Message.Content>
+      </Message>
     );
   };
 
@@ -75,7 +71,7 @@ export class SourcesModal extends React.Component<Props> {
     return (
       <List.Item
         key={source.id}
-        style={styles.listItem}
+        className="list-item"
         onClick={this.navigateTo(source.id)}
       >
         <List.Content>{sourceDisplay(source)}</List.Content>
