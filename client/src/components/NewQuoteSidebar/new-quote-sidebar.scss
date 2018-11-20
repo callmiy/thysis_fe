@@ -1,0 +1,42 @@
+@import "../../../styles/variables";
+
+.src-components-new-quote-sidebar {
+  & > .menu.ui {
+    background: $app-color !important;
+    border-radius: 0;
+  }
+
+  .message-container {
+    display: flex;
+    padding: 10px;
+
+    &.error {
+      color: $error-color;
+      background: $error-bg-color;
+    }
+  }
+
+  .message-icon {
+    margin-right: 15px;
+    font-size: 1.5em;
+    color: $error-color !important;
+  }
+
+  .message-header {
+    text-align: center;
+    font-weight: 900;
+    font-size: 1.2em;
+    margin-bottom: 10px;
+  }
+
+  .pane {
+    flex: 1;
+    overflow-x: hidden;
+    overflow-y: auto;
+    word-wrap: break-word;
+
+    .list-item {
+      cursor: pointer;
+    }
+  }
+}

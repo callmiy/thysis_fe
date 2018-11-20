@@ -8,25 +8,24 @@ import update from "immutability-helper";
 import { ApolloError } from "apollo-client";
 import { RouteComponentProps } from "react-router-dom";
 
-import { messageIconStyle } from "./styles";
-import { classes } from "./styles";
+import "./new-quote-sidebar.css";
 import {
   Quote1Frag,
   Quotes1,
   Quotes1Variables,
   TagsMinimal
-} from "../../../graphql/gen.types";
-import { TagFrag } from "../../../graphql/gen.types";
-import { SourceFullFrag } from "../../../graphql/gen.types";
-import { Sources1QueryClientResult } from "../../../graphql/ops.types";
-import QUOTES_QUERY from "../../../graphql/quotes-1.query";
-import TAGS_QUERY from "../../../graphql/tags-mini.query";
-import SOURCES_QUERY from "../../../graphql/sources-1.query";
-import { sourceDisplay } from "../../../graphql/utils";
-import SearchQuotesComponent from "../../../components/SearchComponent";
-import { makeSourceURL } from "../../../routes/util";
-import { makeTagURL } from "../../../routes/util";
-import Loading from "../../../components/Loading";
+} from "src/graphql/gen.types";
+import { TagFrag } from "src/graphql/gen.types";
+import { SourceFullFrag } from "src/graphql/gen.types";
+import { Sources1QueryClientResult } from "src/graphql/ops.types";
+import QUOTES_QUERY from "src/graphql/quotes-1.query";
+import TAGS_QUERY from "src/graphql/tags-mini.query";
+import SOURCES_QUERY from "src/graphql/sources-1.query";
+import { sourceDisplay } from "src/graphql/utils";
+import SearchQuotesComponent from "src/components/SearchComponent";
+import { makeSourceURL } from "src/routes/util";
+import { makeTagURL } from "src/routes/util";
+import Loading from "src/components/Loading";
 
 enum ResourceName {
   QUOTES = "quotes",
@@ -54,16 +53,14 @@ export class QuotesSidebar extends React.Component<Props, State> {
   state: State = {};
 
   render() {
-    const className = this.props.className || "";
-
     return (
       <Tab
-        className={className}
+        className={`src-components-new-quote-sidebar ${this.props.className ||
+          ""}`}
         menu={{
           pointing: true,
           inverted: true,
-          tabular: false,
-          style: { backgroundColor: "#5faac7" }
+          secondary: true
         }}
         panes={[
           this.renderQuotes(),
@@ -98,19 +95,17 @@ export class QuotesSidebar extends React.Component<Props, State> {
 
   renderError = (resource: string) => {
     const { graphQlError } = this.state;
+    resource = resource.toLowerCase();
+    resource = resource.charAt(0).toUpperCase() + resource.slice(1);
 
     return (
-      <div className={`${classes.messageContainer} error`}>
-        <Icon style={messageIconStyle} name="warning sign" />
+      <div className="message-container error">
+        <Icon className="message-icon" name="warning sign" />
 
         <div>
-          <div className={classes.messageHeader}>
-            {`Error fetching: ${resource}`}
-          </div>
+          <div className="message-header">{`Error fetching: ${resource}`}</div>
 
-          <div className={classes.messageAction}>
-            {graphQlError && graphQlError.message}
-          </div>
+          <div>{graphQlError && graphQlError.message}</div>
         </div>
       </div>
     );
@@ -120,7 +115,7 @@ export class QuotesSidebar extends React.Component<Props, State> {
     const { loading, graphQlError } = this.state;
 
     if (graphQlError) {
-      return this.renderError("Quotes");
+      return this.renderError(resourcesName);
     }
 
     const resources = this.state[resourcesName] as Resources;
@@ -145,7 +140,7 @@ export class QuotesSidebar extends React.Component<Props, State> {
       menuItem: "Quotes",
       render: () => (
         <Tab.Pane
-          className={classes.pane}
+          className="pane"
           attached={false}
           loading={this.state.loading}
         >
@@ -168,7 +163,7 @@ export class QuotesSidebar extends React.Component<Props, State> {
       menuItem: "Tags",
       render: () => (
         <Tab.Pane
-          className={classes.pane}
+          className="pane"
           attached={false}
           loading={this.state.loading}
         >
@@ -182,7 +177,7 @@ export class QuotesSidebar extends React.Component<Props, State> {
     return (
       <List.Item
         key={id}
-        className={classes.listItem}
+        className="list-item"
         onClick={this.navigateTo(makeTagURL(id))}
       >
         <List.Content>{text}</List.Content>
@@ -195,7 +190,7 @@ export class QuotesSidebar extends React.Component<Props, State> {
       menuItem: "Sources",
       render: () => (
         <Tab.Pane
-          className={classes.pane}
+          className="pane"
           attached={false}
           loading={this.state.loading}
         >
@@ -211,7 +206,7 @@ export class QuotesSidebar extends React.Component<Props, State> {
     return (
       <List.Item
         key={id}
-        className={classes.listItem}
+        className="list-item"
         onClick={this.navigateTo(makeSourceURL(id))}
       >
         <List.Content>{display}</List.Content>
@@ -224,7 +219,7 @@ export class QuotesSidebar extends React.Component<Props, State> {
       menuItem: "Search",
       render: () => (
         <Tab.Pane
-          className={classes.pane}
+          className="pane"
           attached={false}
           loading={this.state.loading}
         >
@@ -289,13 +284,15 @@ export class QuotesSidebar extends React.Component<Props, State> {
     result?: Quote1Frag[] | TagFrag[] | SourceFullFrag[],
     error?: ApolloError
   ) => {
+    this.setState({ graphQlError: undefined });
+
     if (error) {
       this.setState({ loading: false, graphQlError: error });
       return;
     }
 
     if (resource && result) {
-      return this.setState(s =>
+      this.setState(s =>
         update(s, {
           loading: {
             $set: false
@@ -303,15 +300,18 @@ export class QuotesSidebar extends React.Component<Props, State> {
 
           [resource]: {
             $set: result
+          },
+
+          graphQlError: {
+            $set: undefined
           }
         })
       );
-    }
 
-    if (!result || !error) {
-      this.setState({ loading: true });
       return;
     }
+
+    this.setState({ loading: true });
   };
 
   navigateTo = (url: string) => () => {

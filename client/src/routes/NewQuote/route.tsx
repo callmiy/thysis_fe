@@ -54,7 +54,7 @@ import { ShouldReUseSource } from "./new-quote";
 import { FormValues } from "./new-quote";
 import { State } from "./new-quote";
 import { Props } from "./new-quote";
-import QuotesSidebar from "./QuotesSidebar";
+import QuotesSidebar from "src/components/NewQuoteSidebar";
 import { initialFormValues } from "./new-quote";
 import { formOutputs } from "./new-quote";
 import AppSideBar from "src/components/AppSidebar";
