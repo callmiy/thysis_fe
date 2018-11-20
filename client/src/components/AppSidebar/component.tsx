@@ -3,6 +3,7 @@ import { Sidebar, Segment, Menu, Icon } from "semantic-ui-react";
 import { NavLink } from "react-router-dom";
 import update from "immutability-helper";
 
+import "./app-sidebar.css";
 import { Props, State, initialState } from "./app-sidebar";
 import {
   AppSidebarConsumer,
@@ -43,7 +44,7 @@ export class AppSideBar extends React.Component<Props, State> {
     } = this.props;
 
     return (
-      <Sidebar.Pushable as={Segment}>
+      <Sidebar.Pushable as={Segment} className="src-components-app-sidebar">
         <Sidebar
           as={Menu}
           animation="overlay"
@@ -51,7 +52,6 @@ export class AppSideBar extends React.Component<Props, State> {
           onHide={context.onHide}
           vertical={true}
           visible={context.showSidebar}
-          width="thin"
         >
           {currentProject && path !== ROOT_URL ? (
             <Menu.Item
@@ -60,7 +60,7 @@ export class AppSideBar extends React.Component<Props, State> {
               onClick={context.onHide}
             >
               <Icon name="quote right" />
-              Home
+              <span>Home</span>
             </Menu.Item>
           ) : (
             undefined
@@ -69,7 +69,7 @@ export class AppSideBar extends React.Component<Props, State> {
           {path !== PROJECTS_URL ? (
             <Menu.Item as={NavLink} to={PROJECTS_URL} onClick={context.onHide}>
               <Icon name="gem" />
-              Projects
+              <span>Projects</span>
             </Menu.Item>
           ) : (
             undefined
@@ -82,7 +82,7 @@ export class AppSideBar extends React.Component<Props, State> {
               onClick={context.onHide}
             >
               <Icon name="search" />
-              Search
+              <span>Search</span>
             </Menu.Item>
           ) : (
             undefined
@@ -93,7 +93,7 @@ export class AppSideBar extends React.Component<Props, State> {
               onClick={this.toggleModalState(MenuItemNames.NEW_SOURCE, true)}
             >
               <Icon name="user" />
-              New Source
+              <span>New Source</span>
             </Menu.Item>
           )}
 
@@ -102,7 +102,7 @@ export class AppSideBar extends React.Component<Props, State> {
               onClick={this.toggleModalState(MenuItemNames.NEW_AUTHOR, true)}
             >
               <Icon name="user" />
-              New Author
+              <span>New Author</span>
             </Menu.Item>
           )}
 
@@ -111,7 +111,7 @@ export class AppSideBar extends React.Component<Props, State> {
               onClick={this.toggleModalState(MenuItemNames.NEW_TAG, true)}
             >
               <Icon name="tag" />
-              New Tag
+              <span>New Tag</span>
             </Menu.Item>
           )}
 
@@ -123,7 +123,7 @@ export class AppSideBar extends React.Component<Props, State> {
               )}
             >
               <Icon name="tree" />
-              New Source Type
+              <span>New Source Type</span>
             </Menu.Item>
           )}
 
@@ -132,7 +132,7 @@ export class AppSideBar extends React.Component<Props, State> {
               onClick={this.toggleModalState(MenuItemNames.TAG_LIST, true)}
             >
               <Icon name="numbered list" />
-              List Tags
+              <span>List Tags</span>
             </Menu.Item>
           )}
 
@@ -141,14 +141,14 @@ export class AppSideBar extends React.Component<Props, State> {
               onClick={this.toggleModalState(MenuItemNames.SOURCE_LIST, true)}
             >
               <Icon name="numbered list" />
-              List Sources
+              <span>List Sources</span>
             </Menu.Item>
           )}
 
           {!AUTH_URLS.includes(path) ? (
             <Menu.Item onClick={this.logout(context.onHide)}>
               <Icon name="sign-out" />
-              Logout
+              <span>Logout</span>
             </Menu.Item>
           ) : (
             undefined

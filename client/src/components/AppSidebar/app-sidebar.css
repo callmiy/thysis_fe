@@ -1,0 +1,13 @@
+.src-components-app-sidebar .ui.vertical.left.sidebar {
+  width: 200px !important;
+  border: 1px solid #5faac7; }
+  .src-components-app-sidebar .ui.vertical.left.sidebar > .item {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center;
+    padding: 12px 5px; }
+    .src-components-app-sidebar .ui.vertical.left.sidebar > .item > i.icon {
+      margin: 0 10px 0 5px !important;
+      font-style: normal; }
+    .src-components-app-sidebar .ui.vertical.left.sidebar > .item > span {
+      font-weight: bold; }
