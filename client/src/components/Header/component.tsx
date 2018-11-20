@@ -27,11 +27,14 @@ export default class Header extends React.Component<Props, State> {
       showSideBarTrigger
     } = this.props;
 
+    const { onShowClicked, minWidth600, showSidebar } = context;
+    const show = minWidth600 ? !showSidebar : true;
+
     return (
       <div className={`${className} src-components-header`} style={style}>
         <div className="top">
-          {showSideBarTrigger && (
-            <a className="sidebar-trigger item" onClick={context.onShowClicked}>
+          {showSideBarTrigger && show && (
+            <a className="sidebar-trigger item" onClick={onShowClicked}>
               <Icon name="content" />
             </a>
           )}

@@ -18,8 +18,7 @@
       .src-routes-new-quote .route-inner {
         display: grid;
         grid-template-areas: "formWithHeader quotesSidebar";
-        grid-template-columns: minmax(400px, 550px) minmax(40%, 1fr);
-        grid-column-gap: 10px; } }
+        grid-template-columns: minmax(400px, 550px) minmax(40%, 1fr); } }
   .src-routes-new-quote .route-header {
     grid-area: rootHeader; }
   .src-routes-new-quote .form-with-header {
@@ -33,8 +32,7 @@
         box-shadow: 1px -1px 6px -1px #9e9898; } }
   .src-routes-new-quote .quotes-sidebar {
     display: none;
-    grid-area: quotesSidebar;
-    margin: 5px 5px 0; }
+    grid-area: quotesSidebar; }
     @media (min-width: 745px) {
       .src-routes-new-quote .quotes-sidebar {
         display: flex;

@@ -23,7 +23,7 @@ $two-columns-break-point: 745px;
       display: grid;
       grid-template-areas: "formWithHeader quotesSidebar";
       grid-template-columns: minmax(400px, 550px) minmax(40%, 1fr);
-      grid-column-gap: 10px;
+      // grid-column-gap: 10px;
     }
   }
 
@@ -50,7 +50,6 @@ $two-columns-break-point: 745px;
   .quotes-sidebar {
     display: none;
     grid-area: quotesSidebar;
-    margin: 5px 5px 0;
 
     @media (min-width: $two-columns-break-point) {
       display: flex;

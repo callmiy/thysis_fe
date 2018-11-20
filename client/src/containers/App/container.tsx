@@ -3,6 +3,7 @@ import { BrowserRouter } from "react-router-dom";
 import { Switch } from "react-router-dom";
 import { Route } from "react-router-dom";
 import { ApolloProvider } from "react-apollo";
+import MediaQuery from "react-responsive";
 
 import { client, persistCache } from "../../apollo-setup";
 import {
@@ -41,6 +42,8 @@ const UserRegRoute = ReactLazy.lazy(() =>
 
 export class App extends React.Component<{}, State> {
   state: State = { showSidebar: false };
+  initialCond = true as boolean | void;
+  minWidth600?: boolean;
 
   async componentDidMount() {
     try {
@@ -62,77 +65,104 @@ export class App extends React.Component<{}, State> {
 
     return (
       <ReactLazy.Suspense fallback={<Loading />}>
-        <ApolloProvider client={client}>
-          <AppSidebarContext.Provider
-            value={{
-              showSidebar: this.state.showSidebar,
-              onShowClicked: this.handleShowSidebar,
-              onHide: this.handleHideSidebar
-            }}
-          >
-            <BrowserRouter>
-              <Switch>
-                <Route
-                  exact={true}
-                  path={USER_REG_URL}
-                  component={UserRegRoute}
-                />
+        <MediaQuery minWidth={600}>
+          {matches => {
+            this.minWidth600 = matches;
+            let showSidebar = this.state.showSidebar;
 
-                <Route exact={true} path={LOGIN_URL} component={LoginRoute} />
+            if (this.initialCond && matches) {
+              showSidebar = true;
+            }
 
-                <AuthRequired
-                  exact={true}
-                  path={SOURCE_URL}
-                  component={Source}
-                />
+            return (
+              <ApolloProvider client={client}>
+                <AppSidebarContext.Provider
+                  value={{
+                    showSidebar,
+                    onShowClicked: this.toggleSidebar,
+                    onHide: this.toggleSidebar,
+                    minWidth600: matches
+                  }}
+                >
+                  <BrowserRouter>
+                    <Switch>
+                      <Route
+                        exact={true}
+                        path={USER_REG_URL}
+                        component={UserRegRoute}
+                      />
 
-                <AuthRequired exact={true} path={QUOTE_URL} component={Quote} />
+                      <Route
+                        exact={true}
+                        path={LOGIN_URL}
+                        component={LoginRoute}
+                      />
 
-                <AuthRequired
-                  exact={true}
-                  path={AUTHOR_ROUTE_URL}
-                  component={AuthorRoute}
-                />
+                      <AuthRequired
+                        exact={true}
+                        path={SOURCE_URL}
+                        component={Source}
+                      />
 
-                <AuthRequired
-                  exact={true}
-                  path={PROJECTS_URL}
-                  component={ProjectsRoute}
-                />
+                      <AuthRequired
+                        exact={true}
+                        path={QUOTE_URL}
+                        component={Quote}
+                      />
 
-                <AuthRequired
-                  exact={true}
-                  path={SEARCH_QUOTES_URL}
-                  component={SearchQuotes}
-                />
+                      <AuthRequired
+                        exact={true}
+                        path={AUTHOR_ROUTE_URL}
+                        component={AuthorRoute}
+                      />
 
-                <AuthRequired
-                  exact={true}
-                  path={TAG_URL}
-                  component={TagDetail}
-                />
+                      <AuthRequired
+                        exact={true}
+                        path={PROJECTS_URL}
+                        component={ProjectsRoute}
+                      />
 
-                <AuthRequired
-                  exact={true}
-                  path={ROOT_URL}
-                  component={NewQuote}
-                />
+                      <AuthRequired
+                        exact={true}
+                        path={SEARCH_QUOTES_URL}
+                        component={SearchQuotes}
+                      />
 
-                <Route component={LoginRoute} />
-              </Switch>
-            </BrowserRouter>
-          </AppSidebarContext.Provider>
-        </ApolloProvider>
+                      <AuthRequired
+                        exact={true}
+                        path={TAG_URL}
+                        component={TagDetail}
+                      />
+
+                      <AuthRequired
+                        exact={true}
+                        path={ROOT_URL}
+                        component={NewQuote}
+                      />
+
+                      <Route component={LoginRoute} />
+                    </Switch>
+                  </BrowserRouter>
+                </AppSidebarContext.Provider>
+              </ApolloProvider>
+            );
+          }}
+        </MediaQuery>
       </ReactLazy.Suspense>
     );
   }
 
-  private handleShowSidebar = () => {
-    this.setState({ showSidebar: true });
-  };
+  private toggleSidebar = () => {
+    // if we are at breakpoint min width = 600, and if we have not set
+    // initialCond to false, it means at this PointerEvent, user wishes to
+    // close the sidebar
+    if (this.minWidth600 && this.initialCond) {
+      this.initialCond = false;
+      this.setState({ showSidebar: false });
+      return;
+    }
 
-  private handleHideSidebar = () => {
-    this.setState({ showSidebar: false });
+    this.setState({ showSidebar: !this.state.showSidebar });
   };
 }
 

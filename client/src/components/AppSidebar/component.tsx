@@ -37,6 +37,7 @@ export class AppSideBar extends React.Component<Props, State> {
 
   private renderSideBar = (context: SideBarContextProps) => {
     this.context = context;
+    const { onShowClicked, minWidth600, showSidebar } = context;
 
     const {
       match: { path },
@@ -44,20 +45,32 @@ export class AppSideBar extends React.Component<Props, State> {
     } = this.props;
 
     return (
-      <Sidebar.Pushable as={Segment} className="src-components-app-sidebar">
+      <Sidebar.Pushable
+        as={Segment}
+        className={`src-components-app-sidebar ${
+          showSidebar && minWidth600 ? "min-width-600" : ""
+        } `}
+      >
         <Sidebar
+          className={minWidth600 ? "side-bar-min-width-600" : ""}
           as={Menu}
           animation="overlay"
           icon="labeled"
-          onHide={context.onHide}
+          onHide={this.hideSidebar}
           vertical={true}
           visible={context.showSidebar}
         >
+          {minWidth600 && (
+            <a className="sidebar-trigger-sidebar item" onClick={onShowClicked}>
+              <Icon name="content" />
+            </a>
+          )}
+
           {currentProject && path !== ROOT_URL ? (
             <Menu.Item
               as={NavLink}
               to={makeNewQuoteURL()}
-              onClick={context.onHide}
+              onClick={this.hideSidebar}
             >
               <Icon name="quote right" />
               <span>Home</span>
@@ -67,7 +80,11 @@ export class AppSideBar extends React.Component<Props, State> {
           )}
 
           {path !== PROJECTS_URL ? (
-            <Menu.Item as={NavLink} to={PROJECTS_URL} onClick={context.onHide}>
+            <Menu.Item
+              as={NavLink}
+              to={PROJECTS_URL}
+              onClick={this.hideSidebar}
+            >
               <Icon name="gem" />
               <span>Projects</span>
             </Menu.Item>
@@ -79,7 +96,7 @@ export class AppSideBar extends React.Component<Props, State> {
             <Menu.Item
               as={NavLink}
               to={SEARCH_QUOTES_URL}
-              onClick={context.onHide}
+              onClick={this.hideSidebar}
             >
               <Icon name="search" />
               <span>Search</span>
@@ -146,7 +163,7 @@ export class AppSideBar extends React.Component<Props, State> {
           )}
 
           {!AUTH_URLS.includes(path) ? (
-            <Menu.Item onClick={this.logout(context.onHide)}>
+            <Menu.Item onClick={this.logout(this.hideSidebar)}>
               <Icon name="sign-out" />
               <span>Logout</span>
             </Menu.Item>
@@ -231,7 +248,7 @@ export class AppSideBar extends React.Component<Props, State> {
 
   private toggleModalState = (name: string, open: boolean) => () => {
     if (open && this.context) {
-      this.context.onHide();
+      this.hideSidebar();
     }
 
     this.setState(s =>
@@ -251,6 +268,15 @@ export class AppSideBar extends React.Component<Props, State> {
         }
       })
     );
+  };
+
+  private hideSidebar = () => {
+    const { minWidth600, onHide } = this.context;
+    if (minWidth600) {
+      return;
+    }
+
+    onHide();
   };
 }
 

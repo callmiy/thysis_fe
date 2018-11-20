@@ -1,13 +1,41 @@
-.src-components-app-sidebar .ui.vertical.left.sidebar {
-  width: 200px !important;
-  border: 1px solid #5faac7; }
-  .src-components-app-sidebar .ui.vertical.left.sidebar > .item {
-    display: flex !important;
-    flex-direction: row !important;
-    align-items: center;
-    padding: 12px 5px; }
-    .src-components-app-sidebar .ui.vertical.left.sidebar > .item > i.icon {
-      margin: 0 10px 0 5px !important;
-      font-style: normal; }
-    .src-components-app-sidebar .ui.vertical.left.sidebar > .item > span {
-      font-weight: bold; }
+.src-components-app-sidebar.ui {
+  width: 100%;
+  height: 100%; }
+  .src-components-app-sidebar.ui .ui.vertical.left.sidebar {
+    width: 200px !important;
+    background: #5faac7; }
+    .src-components-app-sidebar.ui .ui.vertical.left.sidebar > .item {
+      display: flex !important;
+      flex-direction: row !important;
+      align-items: center;
+      padding: 12px 5px;
+      color: white; }
+      .src-components-app-sidebar.ui .ui.vertical.left.sidebar > .item:nth-child(2) {
+        margin-top: 50px; }
+      .src-components-app-sidebar.ui .ui.vertical.left.sidebar > .item > i.icon {
+        margin: 0 10px 0 5px !important;
+        color: white !important;
+        font-size: 1.2em !important; }
+      .src-components-app-sidebar.ui .ui.vertical.left.sidebar > .item > span {
+        font-weight: bold; }
+      .src-components-app-sidebar.ui .ui.vertical.left.sidebar > .item.sidebar-trigger-sidebar {
+        position: absolute;
+        right: 0;
+        min-width: 10px;
+        padding: 10px 5px 0 150px; }
+        .src-components-app-sidebar.ui .ui.vertical.left.sidebar > .item.sidebar-trigger-sidebar::before {
+          width: 0; }
+  .src-components-app-sidebar.ui.min-width-600 {
+    position: initial;
+    display: flex; }
+    .src-components-app-sidebar.ui.min-width-600 > .ui.sidebar {
+      position: relative; }
+    .src-components-app-sidebar.ui.min-width-600 > .pusher {
+      flex: 1;
+      position: initial; }
+      .src-components-app-sidebar.ui.min-width-600 > .pusher .sidebar-triggerx {
+        display: none; }
+  .src-components-app-sidebar.ui > .side-bar-min-width-600.visible.overlay {
+    transition: transform 0s; }
+  .src-components-app-sidebar.ui > .side-bar-min-width-600.overlay.left:not(.visible) {
+    transition: transform 0.5s ease; }
