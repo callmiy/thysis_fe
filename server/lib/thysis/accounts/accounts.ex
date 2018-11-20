@@ -28,7 +28,8 @@ defmodule Thysis.Accounts do
     Credential
     |> join(:inner, [c], assoc(c, :user))
     |> where([c, u], u.email == ^email)
-    |> preload([c, u], user: u)
+    |> join(:inner, [c, u], p in assoc(u, :projects))
+    |> preload([c, u, p], user: {u, projects: p})
     |> Repo.one()
     |> case do
       nil ->

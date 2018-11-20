@@ -1,7 +1,7 @@
 defmodule ThysisWeb.Schema.User do
   use Absinthe.Schema.Notation
 
-  import Absinthe.Resolution.Helpers, only: [dataloader: 1]
+  import Absinthe.Resolution.Helpers, only: [on_load: 2]
 
   alias ThysisWeb.User.Resolver
   alias Thysis.Projects
@@ -16,7 +16,20 @@ defmodule ThysisWeb.Schema.User do
 
     field(:inserted_at, non_null(:iso_datetime))
     field(:updated_at, non_null(:iso_datetime))
-    field(:projects, list_of(:project), resolve: dataloader(Projects))
+
+    field(:projects, list_of(:project),
+      resolve: fn
+        %{projects: %Ecto.Association.NotLoaded{}} = user, _args, %{context: %{loader: loader}} ->
+          loader
+          |> Dataloader.load(Projects, :projects, user)
+          |> on_load(fn loader ->
+            {:ok, Dataloader.get(loader, Projects, :projects, user)}
+          end)
+
+        %{projects: projects}, _, _ ->
+          {:ok, projects}
+      end
+    )
   end
 
   @desc "Variables for creating User and credential"

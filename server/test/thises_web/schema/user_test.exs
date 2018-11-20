@@ -7,6 +7,7 @@ defmodule Thysis.Schema.UserTest do
   alias ThysisWeb.Query.User, as: Query
   alias Thysis.Factory.User, as: Factory
   alias ThysisWeb.Auth.Guardian, as: GuardianApp
+  alias Thysis.Factory.Project, as: ProjectFactory
 
   describe "mutation" do
     # @tag :skip
@@ -125,7 +126,11 @@ defmodule Thysis.Schema.UserTest do
     # @tag :skip
     test "login succeeds" do
       %{email: email, password: password} = params = RegFactory.params()
-      %{email: user_email} = RegFactory.insert(params)
+      user = RegFactory.insert(params)
+
+      project_id =
+        ProjectFactory.insert(user_id: user.id).id
+        |> Integer.to_string()
 
       queryMap = RegQuery.login()
 
@@ -137,6 +142,13 @@ defmodule Thysis.Schema.UserTest do
         #{queryMap.fragments}
       """
 
+      variables = %{
+        "login" => %{
+          "email" => email,
+          "password" => password
+        }
+      }
+
       assert {:ok,
               %{
                 data: %{
@@ -144,18 +156,15 @@ defmodule Thysis.Schema.UserTest do
                     "id" => _,
                     "name" => name,
                     "email" => ^email,
-                    "jwt" => _jwt
+                    "jwt" => _jwt,
+                    "projects" => [
+                      %{
+                        "id" => ^project_id
+                      }
+                    ]
                   }
                 }
-              }} =
-               Absinthe.run(query, Schema,
-                 variables: %{
-                   "login" => %{
-                     "email" => user_email,
-                     "password" => password
-                   }
-                 }
-               )
+              }} = Absinthe.run(query, Schema, variables: variables)
     end
 
     # @tag :skip

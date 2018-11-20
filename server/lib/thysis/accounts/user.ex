@@ -12,6 +12,7 @@ defmodule Thysis.Accounts.User do
     field(:_rev, :string)
     field(:email, :string)
     field(:name, :string)
+    field(:jwt, :string, virtual: true)
 
     has_one(:credential, Credential)
     has_many(:projects, Project)

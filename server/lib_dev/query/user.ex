@@ -1,19 +1,28 @@
 defmodule ThysisWeb.Query.User do
+  alias ThysisWeb.Query.Project
+
+  @frag_name "UserAllFieldsFragment"
+
   def all_fields_fragment do
-    name = "UserAllFieldsFragment"
+    {project_frag_name, project_frag} = Project.all_fields_fragment()
 
     fragment = """
-      fragment #{name} on User {
+      fragment #{@frag_name} on User {
         id
         name
         email
         jwt
         insertedAt
         updatedAt
+        projects {
+          ...#{project_frag_name}
+        }
       }
+
+      #{project_frag}
     """
 
-    {name, fragment}
+    {@frag_name, fragment}
   end
 
   @doc "update"
