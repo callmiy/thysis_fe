@@ -14,7 +14,7 @@
     grid-area: inner; }
     .src-routes-new-quote .route-inner > div {
       overflow: hidden; }
-    @media (min-width: 745px) {
+    @media (min-width: 967px) {
       .src-routes-new-quote .route-inner {
         display: grid;
         grid-template-areas: "formWithHeader quotesSidebar";
@@ -26,14 +26,14 @@
     display: flex;
     flex-direction: column;
     grid-area: formWithHeader; }
-    @media (min-width: 745px) {
+    @media (min-width: 967px) {
       .src-routes-new-quote .form-with-header {
         height: initial;
         box-shadow: 1px -1px 6px -1px #9e9898; } }
   .src-routes-new-quote .quotes-sidebar {
     display: none;
     grid-area: quotesSidebar; }
-    @media (min-width: 745px) {
+    @media (min-width: 967px) {
       .src-routes-new-quote .quotes-sidebar {
         display: flex;
         flex-direction: column; } }
