@@ -1,5 +1,4 @@
-import { graphql } from "react-apollo";
-import { compose } from "react-apollo";
+import { graphql, compose, withApollo } from "react-apollo";
 
 import { Login } from "./route";
 import { LoginMutation } from "src/graphql/gen.types";
@@ -41,5 +40,6 @@ const loggedOutUserGql = graphql<
 export default compose(
   loggedOutUserGql,
   userLocalMutationGql,
-  loginMutationGql
+  loginMutationGql,
+  withApollo
 )(Login);

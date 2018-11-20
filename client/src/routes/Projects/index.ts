@@ -1,4 +1,4 @@
-import { graphql, compose, withApollo } from "react-apollo";
+import { graphql, compose } from "react-apollo";
 import update from "immutability-helper";
 
 import PROJECTS_QUERY from "../../graphql/projects.query";
@@ -12,7 +12,6 @@ import { CreateProjectMutationVariables } from "../../graphql/gen.types";
 import { SelectProject } from "./route";
 import { projectLocalMutationGql } from "../../state/project.local.mutation";
 import { ProjectsGqlDataValue, OwnProps } from "./projects";
-import loadInitialData from "./initial-data";
 
 const projectsGql = graphql<
   OwnProps,
@@ -20,19 +19,7 @@ const projectsGql = graphql<
   {},
   ProjectsGqlDataValue | undefined
 >(PROJECTS_QUERY, {
-  props: ({ data, ownProps: { client } }) => {
-    if (!data) {
-      return data;
-    }
-
-    const { projects } = data;
-
-    if (projects && projects.length) {
-      loadInitialData(projects, client);
-    }
-
-    return data;
-  }
+  props: props => props.data
 });
 
 const createProjectGql = graphql<
@@ -90,7 +77,6 @@ const createProjectGql = graphql<
 });
 
 export default compose(
-  withApollo,
   projectsGql,
   projectLocalMutationGql,
   createProjectGql

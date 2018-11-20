@@ -22,7 +22,7 @@ import { FormValues } from "./login";
 import { setTitle, PROJECTS_URL } from "../../routes/util";
 import { USER_REG_URL } from "./../../routes/util";
 import RootHeader from "../../components/Header";
-import socket from "src/socket";
+import connectAndLoad from "src/state/initial-data";
 
 export class Login extends React.Component<Props, State> {
   static getDerivedStateFromProps(nextProps: Props, currentState: State) {
@@ -189,8 +189,10 @@ export class Login extends React.Component<Props, State> {
   ) => {
     formikBag.setSubmitting(true);
 
+    const { login, client, updateLocalUser } = this.props;
+
     try {
-      const result = await this.props.login({
+      const result = await login({
         variables: {
           login: this.state.formValues
         }
@@ -200,9 +202,10 @@ export class Login extends React.Component<Props, State> {
         const user = result.data.login;
 
         if (user) {
-          socket.connect(user.jwt);
+          const { projects, jwt } = user;
+          connectAndLoad(projects, client, jwt);
 
-          await this.props.updateLocalUser({
+          await updateLocalUser({
             variables: { user }
           });
 

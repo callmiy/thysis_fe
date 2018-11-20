@@ -15,16 +15,27 @@ import TAGS_MINI_QUERY from "src/graphql/tags-mini.query";
 import SOURCES_QUERY from "src/graphql/sources-1.query";
 import SOURCE_TYPES_QUERY from "src/graphql/source-types.query";
 import AUTHORS_QUERY from "src/graphql/authors.query";
+import PROJECTS_QUERY from "src/graphql/projects.query";
 
 const AUTHORS_PROJECT_INPUT_KEY = "authorProject";
 
-export const load = (
-  projects: Array<null | ProjectFragment>,
-  client: ApolloClient<{}>
+export const connectAndLoad = (
+  projects: Array<null | ProjectFragment> | null,
+  client: ApolloClient<{}>,
+  jwt: string
 ) => {
+  if (!projects) {
+    return;
+  }
+
   if (!projects.length) {
     return;
   }
+
+  client.writeQuery({
+    query: PROJECTS_QUERY,
+    data: { projects }
+  });
 
   const sourcesProjVariables = {};
   const authorsProjectVariables = {};
@@ -37,6 +48,7 @@ export const load = (
     const { id: projectId } = p;
 
     sourcesProjVariables[`source${projectId}`] = { projectId };
+
     authorsProjectVariables[`${AUTHORS_PROJECT_INPUT_KEY}${projectId}`] = {
       projectId
     };
@@ -72,10 +84,13 @@ export const load = (
       ${sourceFullFrag}
       ${tagFrag} `;
 
-  socket.sendDataAuth<{}, AllQueries, {}>(
-    query.loc.source.body,
-    { ...sourcesProjVariables, ...authorsProjectVariables },
-    onLoaded
+  socket.connect(
+    jwt,
+    {
+      query: query.loc.source.body,
+      variables: { ...sourcesProjVariables, ...authorsProjectVariables },
+      onData: onLoaded
+    }
   );
 
   async function saveTags(tags: Array<TagFrag | null> | null) {
@@ -140,7 +155,7 @@ export const load = (
     });
   }
 
-  function onLoaded(data: AllQueries) {
+  function onLoaded({ data }: { data: AllQueries }) {
     saveTags(data.tags);
     saveSources(data);
     saveSourceTypes(data.sourceTypes);
@@ -204,4 +219,4 @@ export const load = (
   }
 };
 
-export default load;
+export default connectAndLoad;

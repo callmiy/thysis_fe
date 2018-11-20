@@ -1,5 +1,5 @@
 import * as React from "react";
-import { DataValue } from "react-apollo";
+import { DataValue, WithApolloClient } from "react-apollo";
 import { RouteProps } from "react-router-dom";
 
 import { UserLocalMutationProps } from "../../../state/user.local.mutation";
@@ -10,7 +10,8 @@ import { RefreshUserQueryVariables } from "../../../graphql/gen.types";
 
 export interface OwnProps
   extends UserLocalMutationProps,
-    CurrentProjectLocalData {
+    CurrentProjectLocalData,
+    WithApolloClient<{}> {
   jwt: string;
   componentProps: RouteProps & {
     component: React.ComponentClass | React.StatelessComponent;

@@ -219,11 +219,18 @@ export interface CreateSourceTypeVariables {
 // GraphQL mutation operation: LoginMutation
 // ====================================================
 
+export interface LoginMutation_login_projects {
+  id: string;
+  title: string;
+  insertedAt: any;
+}
+
 export interface LoginMutation_login {
   id: string;
   name: string;
   email: string;
   jwt: string;
+  projects: (LoginMutation_login_projects | null)[] | null;
 }
 
 export interface LoginMutation {
@@ -393,11 +400,18 @@ export interface Quotes1Variables {
 // GraphQL query operation: RefreshUserQuery
 // ====================================================
 
+export interface RefreshUserQuery_refresh_projects {
+  id: string;
+  title: string;
+  insertedAt: any;
+}
+
 export interface RefreshUserQuery_refresh {
   id: string;
   name: string;
   email: string;
   jwt: string;
+  projects: (RefreshUserQuery_refresh_projects | null)[] | null;
 }
 
 export interface RefreshUserQuery {

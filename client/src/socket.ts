@@ -2,6 +2,7 @@ import { Socket, Channel } from "phoenix";
 import { logger } from "./utils";
 import { getToken } from "src/state";
 import getBackendUrls from "./get-backend-urls";
+import { AllQueries } from "src/graphql/gen.types";
 
 enum CHANNEL {
   "DATA_PLAIN" = "data:pxy",
@@ -27,14 +28,15 @@ export const defineSocket = () => {
 
   let socketDisconnectedCount = 0;
   let dataAuthChannel: Channel;
+  // let initialDataSynced = false
 
-  function connect(token = getToken()) {
+  function connect(token = getToken(), payload?: ConnectionPayload) {
     const params = token ? { params: { token } } : {};
     socket = new Socket(getBackendUrls().websocketUrl, params);
     socket.connect();
 
     if (token) {
-      socket.onOpen(joinDataAuthChannel);
+      socket.onOpen(() => joinDataAuthChannel(payload));
     }
 
     socket.onError(() => {
@@ -67,13 +69,22 @@ export const defineSocket = () => {
     }
   }
 
-  function joinDataAuthChannel() {
-    dataAuthChannel = socket.channel(CHANNEL.DATA_AUTH);
+  function joinDataAuthChannel(payload?: ConnectionPayload) {
+    const params = payload
+      ? { query: payload.query, variables: payload.variables }
+      : {};
+
+    dataAuthChannel = socket.channel(CHANNEL.DATA_AUTH, params);
 
     dataAuthChannel
       .join()
       .receive("ok", message => {
         socketDisconnectedCount = 0;
+
+        if (payload) {
+          payload.onData(message);
+        }
+
         logger("log", "Data auth channel joined", message);
       })
       .receive("error", reason => {
@@ -164,3 +175,9 @@ type ChannelMessageSend<
 > = ChannelMessage<TData, TParams, TError, TTimeout> & {
   topic: ChannelTopic;
 };
+
+interface ConnectionPayload<TVariables = {}> {
+  query: string;
+  variables: TVariables;
+  onData: (data: { data: AllQueries }) => void;
+}

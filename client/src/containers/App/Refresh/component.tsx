@@ -18,12 +18,6 @@ export class Refresh extends React.Component<Props, {}> {
       return <Redirect to={LOGIN_URL} />;
     }
 
-    if (user) {
-      this.props.updateLocalUser({
-        variables: { user }
-      });
-    }
-
     if (
       !currentProject &&
       (rest.location && rest.location.pathname) !== PROJECTS_URL

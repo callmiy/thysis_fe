@@ -1,5 +1,5 @@
 import { ApolloError } from "apollo-client";
-import { ChildProps } from "react-apollo";
+import { ChildProps, WithApolloClient } from "react-apollo";
 import { RouteComponentProps } from "react-router-dom";
 
 import { LoginMutation } from "../../graphql/gen.types";
@@ -8,7 +8,9 @@ import { LoginMutationProps } from "../../graphql/ops.types";
 import { UserLocalMutationProps } from "../../state/user.local.mutation";
 import { LoggedOutUserProps } from "src/state/logged-out-user.local.query";
 
-export type OwnProps = RouteComponentProps<{}> & LoginMutation;
+export type OwnProps = WithApolloClient<{}> &
+  RouteComponentProps<{}> &
+  LoginMutation;
 
 export type Props = ChildProps<
   OwnProps & LoginMutationProps & UserLocalMutationProps & LoggedOutUserProps,

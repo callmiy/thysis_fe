@@ -9,13 +9,14 @@ defmodule ThysisWeb.DataChannel do
 
   @doc ~S"""
     Channel "data:pxy" = un-authenticated channel
+    Channel "data:pxz" = authenticated channel
   """
 
   def join("data:pxy", _params, socket), do: {:ok, socket}
 
-  def join("data:pxz", _params, socket) do
+  def join("data:pxz", params, socket) do
     if can_join?(socket) do
-      {:ok, socket}
+      load_initial_data(params, socket)
     else
       {:error, %{}}
     end
@@ -23,30 +24,36 @@ defmodule ThysisWeb.DataChannel do
 
   @doc false
   def handle_in("graphql:pxy", params, socket) do
-    run_query(params, socket)
+    {:reply, run_query(params, socket), socket}
   end
 
   @doc false
   def handle_in("graphql:pxz", params, socket) do
-    run_query(params, socket)
+    {:reply, run_query(params, socket), socket}
   end
 
+  defp load_initial_data(%{"query" => _, "variables" => _} = params, socket) do
+    case run_query(params, socket) do
+      {:error, _} -> {:ok, socket}
+      {:ok, data} -> {:ok, data, socket}
+    end
+  end
+
+  defp load_initial_data(_, socket), do: {:ok, socket}
+
   defp run_query(%{"query" => query} = params, socket) do
-    response =
-      case Absinthe.run(
-             query,
-             Schema,
-             variables: params["variables"] || %{},
-             context: %{current_user: socket.assigns[:user]}
-           ) do
-        {:ok, %{errors: errors}} ->
-          {:error, %{errors: errors}}
+    case Absinthe.run(
+           query,
+           Schema,
+           variables: params["variables"] || %{},
+           context: %{current_user: socket.assigns[:user]}
+         ) do
+      {:ok, %{errors: errors}} ->
+        {:error, %{errors: errors}}
 
-        {:ok, %{data: data}} ->
-          {:ok, data}
-      end
-
-    {:reply, response, socket}
+      {:ok, %{data: data}} ->
+        {:ok, %{data: data}}
+    end
   end
 
   defp can_join?(socket) do

@@ -99,6 +99,37 @@
         },
         {
           "possibleTypes": null,
+          "name": "LoginUser",
+          "kind": "INPUT_OBJECT",
+          "interfaces": null,
+          "inputFields": [
+            {
+              "type": {
+                "ofType": null,
+                "name": "String",
+                "kind": "SCALAR"
+              },
+              "name": "email",
+              "description": null,
+              "defaultValue": null
+            },
+            {
+              "type": {
+                "ofType": null,
+                "name": "String",
+                "kind": "SCALAR"
+              },
+              "name": "password",
+              "description": null,
+              "defaultValue": null
+            }
+          ],
+          "fields": null,
+          "enumValues": null,
+          "description": "Variables for login in User"
+        },
+        {
+          "possibleTypes": null,
           "name": "String",
           "kind": "SCALAR",
           "interfaces": null,
@@ -109,82 +140,7 @@
         },
         {
           "possibleTypes": null,
-          "name": "QuoteFullSearchResultRow",
-          "kind": "OBJECT",
-          "interfaces": [],
-          "inputFields": null,
-          "fields": [
-            {
-              "type": {
-                "ofType": {
-                  "ofType": null,
-                  "name": "String",
-                  "kind": "SCALAR"
-                },
-                "name": null,
-                "kind": "NON_NULL"
-              },
-              "name": "column",
-              "isDeprecated": false,
-              "description": "The column name of the table from which the search was obtained",
-              "deprecationReason": null,
-              "args": []
-            },
-            {
-              "type": {
-                "ofType": {
-                  "ofType": null,
-                  "name": "QuoteFullSearchTable",
-                  "kind": "ENUM"
-                },
-                "name": null,
-                "kind": "NON_NULL"
-              },
-              "name": "source",
-              "isDeprecated": false,
-              "description": "The table name from which the search was obtained",
-              "deprecationReason": null,
-              "args": []
-            },
-            {
-              "type": {
-                "ofType": {
-                  "ofType": null,
-                  "name": "String",
-                  "kind": "SCALAR"
-                },
-                "name": null,
-                "kind": "NON_NULL"
-              },
-              "name": "text",
-              "isDeprecated": false,
-              "description": "The matched search text",
-              "deprecationReason": null,
-              "args": []
-            },
-            {
-              "type": {
-                "ofType": {
-                  "ofType": null,
-                  "name": "Int",
-                  "kind": "SCALAR"
-                },
-                "name": null,
-                "kind": "NON_NULL"
-              },
-              "name": "tid",
-              "isDeprecated": false,
-              "description": "The ID of the row from which the search was obtained",
-              "deprecationReason": null,
-              "args": []
-            }
-          ],
-          "enumValues": null,
-          "description": "Result row returned when we search quotes by text"
-        },
-        {
-          "possibleTypes": null,
-          "name": "CreateSourceTypeInput",
+          "name": "GetProjectInput",
           "kind": "INPUT_OBJECT",
           "interfaces": null,
           "inputFields": [
@@ -192,11 +148,42 @@
               "type": {
                 "ofType": {
                   "ofType": null,
-                  "name": "String",
+                  "name": "ID",
                   "kind": "SCALAR"
                 },
                 "name": null,
                 "kind": "NON_NULL"
+              },
+              "name": "id",
+              "description": "ID of the project",
+              "defaultValue": null
+            }
+          ],
+          "fields": null,
+          "enumValues": null,
+          "description": "Variables for getting a user Project"
+        },
+        {
+          "possibleTypes": null,
+          "name": "GetSourceTypeInput",
+          "kind": "INPUT_OBJECT",
+          "interfaces": null,
+          "inputFields": [
+            {
+              "type": {
+                "ofType": null,
+                "name": "ID",
+                "kind": "SCALAR"
+              },
+              "name": "id",
+              "description": null,
+              "defaultValue": null
+            },
+            {
+              "type": {
+                "ofType": null,
+                "name": "String",
+                "kind": "SCALAR"
               },
               "name": "name",
               "description": null,
@@ -205,7 +192,7 @@
           ],
           "fields": null,
           "enumValues": null,
-          "description": "Create source type input"
+          "description": "Get source type input"
         },
         {
           "possibleTypes": null,
@@ -234,28 +221,94 @@
         },
         {
           "possibleTypes": null,
-          "name": "GetQuoteInput",
-          "kind": "INPUT_OBJECT",
-          "interfaces": null,
-          "inputFields": [
+          "name": "QuoteFullSearchResult",
+          "kind": "OBJECT",
+          "interfaces": [],
+          "inputFields": null,
+          "fields": [
             {
               "type": {
                 "ofType": {
                   "ofType": null,
-                  "name": "ID",
-                  "kind": "SCALAR"
+                  "name": "QuoteFullSearchResultRow",
+                  "kind": "OBJECT"
                 },
                 "name": null,
-                "kind": "NON_NULL"
+                "kind": "LIST"
               },
-              "name": "id",
-              "description": "ID of quote",
-              "defaultValue": null
+              "name": "authors",
+              "isDeprecated": false,
+              "description": "A search result from authors table",
+              "deprecationReason": null,
+              "args": []
+            },
+            {
+              "type": {
+                "ofType": {
+                  "ofType": null,
+                  "name": "QuoteFullSearchResultRow",
+                  "kind": "OBJECT"
+                },
+                "name": null,
+                "kind": "LIST"
+              },
+              "name": "quotes",
+              "isDeprecated": false,
+              "description": "A search result from quotes table",
+              "deprecationReason": null,
+              "args": []
+            },
+            {
+              "type": {
+                "ofType": {
+                  "ofType": null,
+                  "name": "QuoteFullSearchResultRow",
+                  "kind": "OBJECT"
+                },
+                "name": null,
+                "kind": "LIST"
+              },
+              "name": "sourceTypes",
+              "isDeprecated": false,
+              "description": "A search result from source types table",
+              "deprecationReason": null,
+              "args": []
+            },
+            {
+              "type": {
+                "ofType": {
+                  "ofType": null,
+                  "name": "QuoteFullSearchResultRow",
+                  "kind": "OBJECT"
+                },
+                "name": null,
+                "kind": "LIST"
+              },
+              "name": "sources",
+              "isDeprecated": false,
+              "description": "A search result from sources table",
+              "deprecationReason": null,
+              "args": []
+            },
+            {
+              "type": {
+                "ofType": {
+                  "ofType": null,
+                  "name": "QuoteFullSearchResultRow",
+                  "kind": "OBJECT"
+                },
+                "name": null,
+                "kind": "LIST"
+              },
+              "name": "tags",
+              "isDeprecated": false,
+              "description": "A search result from tags table",
+              "deprecationReason": null,
+              "args": []
             }
           ],
-          "fields": null,
           "enumValues": null,
-          "description": "Inputs for getting a single quote"
+          "description": "Result returned when we search quotes by text"
         },
         {
           "possibleTypes": null,
@@ -974,58 +1027,17 @@
         },
         {
           "possibleTypes": null,
-          "name": "QuoteFullSearchTable",
-          "kind": "ENUM",
-          "interfaces": null,
-          "inputFields": null,
-          "fields": null,
-          "enumValues": [
-            {
-              "name": "AUTHORS",
-              "isDeprecated": false,
-              "description": null,
-              "deprecationReason": null
-            },
-            {
-              "name": "QUOTES",
-              "isDeprecated": false,
-              "description": null,
-              "deprecationReason": null
-            },
-            {
-              "name": "SOURCE_TYPES",
-              "isDeprecated": false,
-              "description": null,
-              "deprecationReason": null
-            },
-            {
-              "name": "SOURCES",
-              "isDeprecated": false,
-              "description": null,
-              "deprecationReason": null
-            },
-            {
-              "name": "TAGS",
-              "isDeprecated": false,
-              "description": null,
-              "deprecationReason": null
-            }
-          ],
-          "description": "When we do full text search, the result returned will contain name of\n  the table from which the result was returned. This object contains an\n  enum of the possible table names"
-        },
-        {
-          "possibleTypes": null,
-          "name": "GetTagInput",
+          "name": "UpdateUser",
           "kind": "INPUT_OBJECT",
           "interfaces": null,
           "inputFields": [
             {
               "type": {
                 "ofType": null,
-                "name": "ID",
+                "name": "String",
                 "kind": "SCALAR"
               },
-              "name": "id",
+              "name": "_rev",
               "description": null,
               "defaultValue": null
             },
@@ -1035,37 +1047,23 @@
                 "name": "String",
                 "kind": "SCALAR"
               },
-              "name": "text",
+              "name": "email",
               "description": null,
               "defaultValue": null
-            }
-          ],
-          "fields": null,
-          "enumValues": null,
-          "description": "Get tag input"
-        },
-        {
-          "possibleTypes": null,
-          "name": "SourceType",
-          "kind": "OBJECT",
-          "interfaces": [],
-          "inputFields": null,
-          "fields": [
+            },
             {
               "type": {
                 "ofType": {
                   "ofType": null,
-                  "name": "ID",
+                  "name": "String",
                   "kind": "SCALAR"
                 },
                 "name": null,
                 "kind": "NON_NULL"
               },
-              "name": "id",
-              "isDeprecated": false,
+              "name": "jwt",
               "description": null,
-              "deprecationReason": null,
-              "args": []
+              "defaultValue": null
             },
             {
               "type": {
@@ -1074,14 +1072,13 @@
                 "kind": "SCALAR"
               },
               "name": "name",
-              "isDeprecated": false,
               "description": null,
-              "deprecationReason": null,
-              "args": []
+              "defaultValue": null
             }
           ],
+          "fields": null,
           "enumValues": null,
-          "description": "A source type"
+          "description": "Variables for updating User"
         },
         {
           "possibleTypes": null,
@@ -1204,209 +1201,6 @@
         },
         {
           "possibleTypes": null,
-          "name": "CreateTagInput",
-          "kind": "INPUT_OBJECT",
-          "interfaces": null,
-          "inputFields": [
-            {
-              "type": {
-                "ofType": null,
-                "name": "String",
-                "kind": "SCALAR"
-              },
-              "name": "question",
-              "description": null,
-              "defaultValue": null
-            },
-            {
-              "type": {
-                "ofType": {
-                  "ofType": null,
-                  "name": "String",
-                  "kind": "SCALAR"
-                },
-                "name": null,
-                "kind": "NON_NULL"
-              },
-              "name": "text",
-              "description": null,
-              "defaultValue": null
-            }
-          ],
-          "fields": null,
-          "enumValues": null,
-          "description": "Input for creating a tag"
-        },
-        {
-          "possibleTypes": null,
-          "name": "ID",
-          "kind": "SCALAR",
-          "interfaces": null,
-          "inputFields": null,
-          "fields": null,
-          "enumValues": null,
-          "description": "The `ID` scalar type represents a unique identifier, often used to\nrefetch an object or as key for a cache. The ID type appears in a JSON\nresponse as a String; however, it is not intended to be human-readable.\nWhen expected as an input type, any string (such as `\"4\"`) or integer\n(such as `4`) input value will be accepted as an ID."
-        },
-        {
-          "possibleTypes": null,
-          "name": "CreateQuoteInput",
-          "kind": "INPUT_OBJECT",
-          "interfaces": null,
-          "inputFields": [
-            {
-              "type": {
-                "ofType": null,
-                "name": "Date",
-                "kind": "SCALAR"
-              },
-              "name": "date",
-              "description": "The quote date",
-              "defaultValue": null
-            },
-            {
-              "type": {
-                "ofType": null,
-                "name": "String",
-                "kind": "SCALAR"
-              },
-              "name": "extras",
-              "description": "Optional miscellaneous information with regards to the quote",
-              "defaultValue": null
-            },
-            {
-              "type": {
-                "ofType": null,
-                "name": "String",
-                "kind": "SCALAR"
-              },
-              "name": "issue",
-              "description": "Optional (journal, textbook, magazine etc.) issue number",
-              "defaultValue": null
-            },
-            {
-              "type": {
-                "ofType": null,
-                "name": "Int",
-                "kind": "SCALAR"
-              },
-              "name": "pageEnd",
-              "description": "Optional end of page where quote is located",
-              "defaultValue": null
-            },
-            {
-              "type": {
-                "ofType": null,
-                "name": "Int",
-                "kind": "SCALAR"
-              },
-              "name": "pageStart",
-              "description": "Optional start of page where quote is located",
-              "defaultValue": null
-            },
-            {
-              "type": {
-                "ofType": {
-                  "ofType": null,
-                  "name": "ID",
-                  "kind": "SCALAR"
-                },
-                "name": null,
-                "kind": "NON_NULL"
-              },
-              "name": "sourceId",
-              "description": "The source id",
-              "defaultValue": null
-            },
-            {
-              "type": {
-                "ofType": {
-                  "ofType": {
-                    "ofType": null,
-                    "name": "ID",
-                    "kind": "SCALAR"
-                  },
-                  "name": null,
-                  "kind": "LIST"
-                },
-                "name": null,
-                "kind": "NON_NULL"
-              },
-              "name": "tags",
-              "description": "The tags i.e subject matters of the quote",
-              "defaultValue": null
-            },
-            {
-              "type": {
-                "ofType": {
-                  "ofType": null,
-                  "name": "String",
-                  "kind": "SCALAR"
-                },
-                "name": null,
-                "kind": "NON_NULL"
-              },
-              "name": "text",
-              "description": "The quote text",
-              "defaultValue": null
-            },
-            {
-              "type": {
-                "ofType": null,
-                "name": "String",
-                "kind": "SCALAR"
-              },
-              "name": "volume",
-              "description": "Optional (journal, textbook, magazine etc.) volume number",
-              "defaultValue": null
-            }
-          ],
-          "fields": null,
-          "enumValues": null,
-          "description": "Inputs for creating a Quote object"
-        },
-        {
-          "possibleTypes": null,
-          "name": "Boolean",
-          "kind": "SCALAR",
-          "interfaces": null,
-          "inputFields": null,
-          "fields": null,
-          "enumValues": null,
-          "description": "The `Boolean` scalar type represents `true` or `false`."
-        },
-        {
-          "possibleTypes": null,
-          "name": "GetQuotes",
-          "kind": "INPUT_OBJECT",
-          "interfaces": null,
-          "inputFields": [
-            {
-              "type": {
-                "ofType": null,
-                "name": "ID",
-                "kind": "SCALAR"
-              },
-              "name": "source",
-              "description": null,
-              "defaultValue": null
-            }
-          ],
-          "fields": null,
-          "enumValues": null,
-          "description": "Inputs for querying list of quotes"
-        },
-        {
-          "possibleTypes": null,
-          "name": "Date",
-          "kind": "SCALAR",
-          "interfaces": null,
-          "inputFields": null,
-          "fields": null,
-          "enumValues": null,
-          "description": "The `Date` scalar type represents a date. The Date appears in a JSON\nresponse as an ISO8601 formatted string."
-        },
-        {
-          "possibleTypes": null,
           "name": "QuoteFullSearchInput",
           "kind": "INPUT_OBJECT",
           "interfaces": null,
@@ -1432,19 +1226,26 @@
         },
         {
           "possibleTypes": null,
-          "name": "LoginUser",
-          "kind": "INPUT_OBJECT",
-          "interfaces": null,
-          "inputFields": [
+          "name": "SourceType",
+          "kind": "OBJECT",
+          "interfaces": [],
+          "inputFields": null,
+          "fields": [
             {
               "type": {
-                "ofType": null,
-                "name": "String",
-                "kind": "SCALAR"
+                "ofType": {
+                  "ofType": null,
+                  "name": "ID",
+                  "kind": "SCALAR"
+                },
+                "name": null,
+                "kind": "NON_NULL"
               },
-              "name": "email",
+              "name": "id",
+              "isDeprecated": false,
               "description": null,
-              "defaultValue": null
+              "deprecationReason": null,
+              "args": []
             },
             {
               "type": {
@@ -1452,14 +1253,15 @@
                 "name": "String",
                 "kind": "SCALAR"
               },
-              "name": "password",
+              "name": "name",
+              "isDeprecated": false,
               "description": null,
-              "defaultValue": null
+              "deprecationReason": null,
+              "args": []
             }
           ],
-          "fields": null,
           "enumValues": null,
-          "description": "Variables for login in User"
+          "description": "A source type"
         },
         {
           "possibleTypes": null,
@@ -1485,6 +1287,300 @@
           "fields": null,
           "enumValues": null,
           "description": "Input variables for refreshing user"
+        },
+        {
+          "possibleTypes": null,
+          "name": "GetSourcesInput",
+          "kind": "INPUT_OBJECT",
+          "interfaces": null,
+          "inputFields": [
+            {
+              "type": {
+                "ofType": null,
+                "name": "ID",
+                "kind": "SCALAR"
+              },
+              "name": "projectId",
+              "description": "ID of project",
+              "defaultValue": null
+            }
+          ],
+          "fields": null,
+          "enumValues": null,
+          "description": "Input for getting a sources belonging to a project or user"
+        },
+        {
+          "possibleTypes": null,
+          "name": "ID",
+          "kind": "SCALAR",
+          "interfaces": null,
+          "inputFields": null,
+          "fields": null,
+          "enumValues": null,
+          "description": "The `ID` scalar type represents a unique identifier, often used to\nrefetch an object or as key for a cache. The ID type appears in a JSON\nresponse as a String; however, it is not intended to be human-readable.\nWhen expected as an input type, any string (such as `\"4\"`) or integer\n(such as `4`) input value will be accepted as an ID."
+        },
+        {
+          "possibleTypes": null,
+          "name": "CreateSourceInput",
+          "kind": "INPUT_OBJECT",
+          "interfaces": null,
+          "inputFields": [
+            {
+              "type": {
+                "ofType": {
+                  "ofType": null,
+                  "name": "CreateAuthorInput",
+                  "kind": "INPUT_OBJECT"
+                },
+                "name": null,
+                "kind": "LIST"
+              },
+              "name": "authorAttrs",
+              "description": "The original owners of the work - Either author creation inputs\n    or list of author IDs, one of which is mandatory",
+              "defaultValue": null
+            },
+            {
+              "type": {
+                "ofType": {
+                  "ofType": null,
+                  "name": "ID",
+                  "kind": "SCALAR"
+                },
+                "name": null,
+                "kind": "LIST"
+              },
+              "name": "authorIds",
+              "description": null,
+              "defaultValue": null
+            },
+            {
+              "type": {
+                "ofType": {
+                  "ofType": null,
+                  "name": "ID",
+                  "kind": "SCALAR"
+                },
+                "name": null,
+                "kind": "NON_NULL"
+              },
+              "name": "projectId",
+              "description": "ID of project to which source belongs",
+              "defaultValue": null
+            },
+            {
+              "type": {
+                "ofType": null,
+                "name": "String",
+                "kind": "SCALAR"
+              },
+              "name": "publication",
+              "description": "For which conference was this work published - optional",
+              "defaultValue": null
+            },
+            {
+              "type": {
+                "ofType": {
+                  "ofType": null,
+                  "name": "ID",
+                  "kind": "SCALAR"
+                },
+                "name": null,
+                "kind": "NON_NULL"
+              },
+              "name": "sourceTypeId",
+              "description": "The source type i.e. book, journal etc. - mandatory",
+              "defaultValue": null
+            },
+            {
+              "type": {
+                "ofType": {
+                  "ofType": null,
+                  "name": "String",
+                  "kind": "SCALAR"
+                },
+                "name": null,
+                "kind": "NON_NULL"
+              },
+              "name": "topic",
+              "description": "The topic of the work, as given by authors - mandatory",
+              "defaultValue": null
+            },
+            {
+              "type": {
+                "ofType": null,
+                "name": "String",
+                "kind": "SCALAR"
+              },
+              "name": "url",
+              "description": "The URI where author's original work can be accessed - optional",
+              "defaultValue": null
+            },
+            {
+              "type": {
+                "ofType": null,
+                "name": "String",
+                "kind": "SCALAR"
+              },
+              "name": "year",
+              "description": "The year the source was published",
+              "defaultValue": null
+            }
+          ],
+          "fields": null,
+          "enumValues": null,
+          "description": "Inputs for creating a source with authors"
+        },
+        {
+          "possibleTypes": null,
+          "name": "UpdateSourceInput",
+          "kind": "INPUT_OBJECT",
+          "interfaces": null,
+          "inputFields": [
+            {
+              "type": {
+                "ofType": {
+                  "ofType": null,
+                  "name": "CreateAuthorInput",
+                  "kind": "INPUT_OBJECT"
+                },
+                "name": null,
+                "kind": "LIST"
+              },
+              "name": "authorAttrs",
+              "description": "The new authors we wish to add by attributes",
+              "defaultValue": null
+            },
+            {
+              "type": {
+                "ofType": {
+                  "ofType": null,
+                  "name": "ID",
+                  "kind": "SCALAR"
+                },
+                "name": null,
+                "kind": "LIST"
+              },
+              "name": "authorIds",
+              "description": "New authors we wish to add by IDs",
+              "defaultValue": null
+            },
+            {
+              "type": {
+                "ofType": {
+                  "ofType": null,
+                  "name": "ID",
+                  "kind": "SCALAR"
+                },
+                "name": null,
+                "kind": "LIST"
+              },
+              "name": "deletedAuthors",
+              "description": "The authors we wish to delete",
+              "defaultValue": null
+            },
+            {
+              "type": {
+                "ofType": {
+                  "ofType": null,
+                  "name": "ID",
+                  "kind": "SCALAR"
+                },
+                "name": null,
+                "kind": "NON_NULL"
+              },
+              "name": "id",
+              "description": "ID of source to be updated",
+              "defaultValue": null
+            },
+            {
+              "type": {
+                "ofType": null,
+                "name": "String",
+                "kind": "SCALAR"
+              },
+              "name": "publication",
+              "description": "For which conference was this work published",
+              "defaultValue": null
+            },
+            {
+              "type": {
+                "ofType": null,
+                "name": "ID",
+                "kind": "SCALAR"
+              },
+              "name": "sourceTypeId",
+              "description": "The source type i.e. book, journal etc. - if needed to be changed",
+              "defaultValue": null
+            },
+            {
+              "type": {
+                "ofType": null,
+                "name": "String",
+                "kind": "SCALAR"
+              },
+              "name": "topic",
+              "description": "The topic of the work, as given by authors",
+              "defaultValue": null
+            },
+            {
+              "type": {
+                "ofType": null,
+                "name": "String",
+                "kind": "SCALAR"
+              },
+              "name": "url",
+              "description": "The URI where author's original work can be accessed",
+              "defaultValue": null
+            },
+            {
+              "type": {
+                "ofType": null,
+                "name": "String",
+                "kind": "SCALAR"
+              },
+              "name": "year",
+              "description": "The year the source was published",
+              "defaultValue": null
+            }
+          ],
+          "fields": null,
+          "enumValues": null,
+          "description": "Inputs for updating a source"
+        },
+        {
+          "possibleTypes": null,
+          "name": "Date",
+          "kind": "SCALAR",
+          "interfaces": null,
+          "inputFields": null,
+          "fields": null,
+          "enumValues": null,
+          "description": "The `Date` scalar type represents a date. The Date appears in a JSON\nresponse as an ISO8601 formatted string."
+        },
+        {
+          "possibleTypes": null,
+          "name": "GetQuoteInput",
+          "kind": "INPUT_OBJECT",
+          "interfaces": null,
+          "inputFields": [
+            {
+              "type": {
+                "ofType": {
+                  "ofType": null,
+                  "name": "ID",
+                  "kind": "SCALAR"
+                },
+                "name": null,
+                "kind": "NON_NULL"
+              },
+              "name": "id",
+              "description": "ID of quote",
+              "defaultValue": null
+            }
+          ],
+          "fields": null,
+          "enumValues": null,
+          "description": "Inputs for getting a single quote"
         },
         {
           "possibleTypes": null,
@@ -1579,236 +1675,6 @@
         },
         {
           "possibleTypes": null,
-          "name": "Source",
-          "kind": "OBJECT",
-          "interfaces": [],
-          "inputFields": null,
-          "fields": [
-            {
-              "type": {
-                "ofType": {
-                  "ofType": {
-                    "ofType": null,
-                    "name": "Author",
-                    "kind": "OBJECT"
-                  },
-                  "name": null,
-                  "kind": "LIST"
-                },
-                "name": null,
-                "kind": "NON_NULL"
-              },
-              "name": "authors",
-              "isDeprecated": false,
-              "description": null,
-              "deprecationReason": null,
-              "args": []
-            },
-            {
-              "type": {
-                "ofType": null,
-                "name": "String",
-                "kind": "SCALAR"
-              },
-              "name": "display",
-              "isDeprecated": true,
-              "description": null,
-              "deprecationReason": "Client should handle display",
-              "args": []
-            },
-            {
-              "type": {
-                "ofType": {
-                  "ofType": null,
-                  "name": "ID",
-                  "kind": "SCALAR"
-                },
-                "name": null,
-                "kind": "NON_NULL"
-              },
-              "name": "id",
-              "isDeprecated": false,
-              "description": null,
-              "deprecationReason": null,
-              "args": []
-            },
-            {
-              "type": {
-                "ofType": {
-                  "ofType": null,
-                  "name": "ISODatime",
-                  "kind": "SCALAR"
-                },
-                "name": null,
-                "kind": "NON_NULL"
-              },
-              "name": "insertedAt",
-              "isDeprecated": false,
-              "description": null,
-              "deprecationReason": null,
-              "args": []
-            },
-            {
-              "type": {
-                "ofType": null,
-                "name": "String",
-                "kind": "SCALAR"
-              },
-              "name": "publication",
-              "isDeprecated": false,
-              "description": null,
-              "deprecationReason": null,
-              "args": []
-            },
-            {
-              "type": {
-                "ofType": {
-                  "ofType": null,
-                  "name": "Quote",
-                  "kind": "OBJECT"
-                },
-                "name": null,
-                "kind": "LIST"
-              },
-              "name": "quotes",
-              "isDeprecated": false,
-              "description": null,
-              "deprecationReason": null,
-              "args": []
-            },
-            {
-              "type": {
-                "ofType": {
-                  "ofType": null,
-                  "name": "SourceType",
-                  "kind": "OBJECT"
-                },
-                "name": null,
-                "kind": "NON_NULL"
-              },
-              "name": "sourceType",
-              "isDeprecated": false,
-              "description": null,
-              "deprecationReason": null,
-              "args": []
-            },
-            {
-              "type": {
-                "ofType": {
-                  "ofType": null,
-                  "name": "String",
-                  "kind": "SCALAR"
-                },
-                "name": null,
-                "kind": "NON_NULL"
-              },
-              "name": "topic",
-              "isDeprecated": false,
-              "description": null,
-              "deprecationReason": null,
-              "args": []
-            },
-            {
-              "type": {
-                "ofType": {
-                  "ofType": null,
-                  "name": "ISODatime",
-                  "kind": "SCALAR"
-                },
-                "name": null,
-                "kind": "NON_NULL"
-              },
-              "name": "updatedAt",
-              "isDeprecated": false,
-              "description": null,
-              "deprecationReason": null,
-              "args": []
-            },
-            {
-              "type": {
-                "ofType": null,
-                "name": "String",
-                "kind": "SCALAR"
-              },
-              "name": "url",
-              "isDeprecated": false,
-              "description": null,
-              "deprecationReason": null,
-              "args": []
-            },
-            {
-              "type": {
-                "ofType": null,
-                "name": "String",
-                "kind": "SCALAR"
-              },
-              "name": "year",
-              "isDeprecated": false,
-              "description": null,
-              "deprecationReason": null,
-              "args": []
-            }
-          ],
-          "enumValues": null,
-          "description": "A source"
-        },
-        {
-          "possibleTypes": null,
-          "name": "UpdateUser",
-          "kind": "INPUT_OBJECT",
-          "interfaces": null,
-          "inputFields": [
-            {
-              "type": {
-                "ofType": null,
-                "name": "String",
-                "kind": "SCALAR"
-              },
-              "name": "_rev",
-              "description": null,
-              "defaultValue": null
-            },
-            {
-              "type": {
-                "ofType": null,
-                "name": "String",
-                "kind": "SCALAR"
-              },
-              "name": "email",
-              "description": null,
-              "defaultValue": null
-            },
-            {
-              "type": {
-                "ofType": {
-                  "ofType": null,
-                  "name": "String",
-                  "kind": "SCALAR"
-                },
-                "name": null,
-                "kind": "NON_NULL"
-              },
-              "name": "jwt",
-              "description": null,
-              "defaultValue": null
-            },
-            {
-              "type": {
-                "ofType": null,
-                "name": "String",
-                "kind": "SCALAR"
-              },
-              "name": "name",
-              "description": null,
-              "defaultValue": null
-            }
-          ],
-          "fields": null,
-          "enumValues": null,
-          "description": "Variables for updating User"
-        },
-        {
-          "possibleTypes": null,
           "name": "ISODatime",
           "kind": "SCALAR",
           "interfaces": null,
@@ -1819,20 +1685,24 @@
         },
         {
           "possibleTypes": null,
-          "name": "Int",
-          "kind": "SCALAR",
-          "interfaces": null,
-          "inputFields": null,
-          "fields": null,
-          "enumValues": null,
-          "description": "The `Int` scalar type represents non-fractional signed whole numeric values.\nInt can represent values between `-(2^53 - 1)` and `2^53 - 1` since it is\nrepresented in JSON as double-precision floating point numbers specified\nby [IEEE 754](http://en.wikipedia.org/wiki/IEEE_floating_point)."
-        },
-        {
-          "possibleTypes": null,
-          "name": "GetProjectInput",
+          "name": "CreateProjectInput",
           "kind": "INPUT_OBJECT",
           "interfaces": null,
           "inputFields": [
+            {
+              "type": {
+                "ofType": {
+                  "ofType": null,
+                  "name": "String",
+                  "kind": "SCALAR"
+                },
+                "name": null,
+                "kind": "NON_NULL"
+              },
+              "name": "title",
+              "description": null,
+              "defaultValue": null
+            },
             {
               "type": {
                 "ofType": {
@@ -1843,39 +1713,45 @@
                 "name": null,
                 "kind": "NON_NULL"
               },
-              "name": "id",
-              "description": "ID of the project",
+              "name": "userId",
+              "description": null,
               "defaultValue": null
             }
           ],
           "fields": null,
           "enumValues": null,
-          "description": "Variables for getting a user Project"
+          "description": "Variables for creating a Project"
         },
         {
           "possibleTypes": null,
-          "name": "GetSourceInput",
+          "name": "GetTagInput",
           "kind": "INPUT_OBJECT",
           "interfaces": null,
           "inputFields": [
             {
               "type": {
-                "ofType": {
-                  "ofType": null,
-                  "name": "ID",
-                  "kind": "SCALAR"
-                },
-                "name": null,
-                "kind": "NON_NULL"
+                "ofType": null,
+                "name": "ID",
+                "kind": "SCALAR"
               },
               "name": "id",
-              "description": "ID of source",
+              "description": null,
+              "defaultValue": null
+            },
+            {
+              "type": {
+                "ofType": null,
+                "name": "String",
+                "kind": "SCALAR"
+              },
+              "name": "text",
+              "description": null,
               "defaultValue": null
             }
           ],
           "fields": null,
           "enumValues": null,
-          "description": "Input for getting a source"
+          "description": "Get tag input"
         },
         {
           "possibleTypes": null,
@@ -2242,10 +2118,11 @@
         },
         {
           "possibleTypes": null,
-          "name": "CreateProjectInput",
-          "kind": "INPUT_OBJECT",
-          "interfaces": null,
-          "inputFields": [
+          "name": "QuoteFullSearchResultRow",
+          "kind": "OBJECT",
+          "interfaces": [],
+          "inputFields": null,
+          "fields": [
             {
               "type": {
                 "ofType": {
@@ -2256,10 +2133,70 @@
                 "name": null,
                 "kind": "NON_NULL"
               },
-              "name": "title",
-              "description": null,
-              "defaultValue": null
+              "name": "column",
+              "isDeprecated": false,
+              "description": "The column name of the table from which the search was obtained",
+              "deprecationReason": null,
+              "args": []
             },
+            {
+              "type": {
+                "ofType": {
+                  "ofType": null,
+                  "name": "QuoteFullSearchTable",
+                  "kind": "ENUM"
+                },
+                "name": null,
+                "kind": "NON_NULL"
+              },
+              "name": "source",
+              "isDeprecated": false,
+              "description": "The table name from which the search was obtained",
+              "deprecationReason": null,
+              "args": []
+            },
+            {
+              "type": {
+                "ofType": {
+                  "ofType": null,
+                  "name": "String",
+                  "kind": "SCALAR"
+                },
+                "name": null,
+                "kind": "NON_NULL"
+              },
+              "name": "text",
+              "isDeprecated": false,
+              "description": "The matched search text",
+              "deprecationReason": null,
+              "args": []
+            },
+            {
+              "type": {
+                "ofType": {
+                  "ofType": null,
+                  "name": "Int",
+                  "kind": "SCALAR"
+                },
+                "name": null,
+                "kind": "NON_NULL"
+              },
+              "name": "tid",
+              "isDeprecated": false,
+              "description": "The ID of the row from which the search was obtained",
+              "deprecationReason": null,
+              "args": []
+            }
+          ],
+          "enumValues": null,
+          "description": "Result row returned when we search quotes by text"
+        },
+        {
+          "possibleTypes": null,
+          "name": "GetSourceInput",
+          "kind": "INPUT_OBJECT",
+          "interfaces": null,
+          "inputFields": [
             {
               "type": {
                 "ofType": {
@@ -2270,35 +2207,100 @@
                 "name": null,
                 "kind": "NON_NULL"
               },
-              "name": "userId",
-              "description": null,
+              "name": "id",
+              "description": "ID of source",
               "defaultValue": null
             }
           ],
           "fields": null,
           "enumValues": null,
-          "description": "Variables for creating a Project"
+          "description": "Input for getting a source"
         },
         {
           "possibleTypes": null,
-          "name": "GetSourcesInput",
+          "name": "QuoteFullSearchTable",
+          "kind": "ENUM",
+          "interfaces": null,
+          "inputFields": null,
+          "fields": null,
+          "enumValues": [
+            {
+              "name": "AUTHORS",
+              "isDeprecated": false,
+              "description": null,
+              "deprecationReason": null
+            },
+            {
+              "name": "QUOTES",
+              "isDeprecated": false,
+              "description": null,
+              "deprecationReason": null
+            },
+            {
+              "name": "SOURCE_TYPES",
+              "isDeprecated": false,
+              "description": null,
+              "deprecationReason": null
+            },
+            {
+              "name": "SOURCES",
+              "isDeprecated": false,
+              "description": null,
+              "deprecationReason": null
+            },
+            {
+              "name": "TAGS",
+              "isDeprecated": false,
+              "description": null,
+              "deprecationReason": null
+            }
+          ],
+          "description": "When we do full text search, the result returned will contain name of\n  the table from which the result was returned. This object contains an\n  enum of the possible table names"
+        },
+        {
+          "possibleTypes": null,
+          "name": "Boolean",
+          "kind": "SCALAR",
+          "interfaces": null,
+          "inputFields": null,
+          "fields": null,
+          "enumValues": null,
+          "description": "The `Boolean` scalar type represents `true` or `false`."
+        },
+        {
+          "possibleTypes": null,
+          "name": "CreateTagInput",
           "kind": "INPUT_OBJECT",
           "interfaces": null,
           "inputFields": [
             {
               "type": {
                 "ofType": null,
-                "name": "ID",
+                "name": "String",
                 "kind": "SCALAR"
               },
-              "name": "projectId",
-              "description": "ID of project",
+              "name": "question",
+              "description": null,
+              "defaultValue": null
+            },
+            {
+              "type": {
+                "ofType": {
+                  "ofType": null,
+                  "name": "String",
+                  "kind": "SCALAR"
+                },
+                "name": null,
+                "kind": "NON_NULL"
+              },
+              "name": "text",
+              "description": null,
               "defaultValue": null
             }
           ],
           "fields": null,
           "enumValues": null,
-          "description": "Input for getting a sources belonging to a project or user"
+          "description": "Input for creating a tag"
         },
         {
           "possibleTypes": null,
@@ -2375,51 +2377,42 @@
         },
         {
           "possibleTypes": null,
-          "name": "UpdateSourceInput",
-          "kind": "INPUT_OBJECT",
-          "interfaces": null,
-          "inputFields": [
+          "name": "Source",
+          "kind": "OBJECT",
+          "interfaces": [],
+          "inputFields": null,
+          "fields": [
             {
               "type": {
                 "ofType": {
-                  "ofType": null,
-                  "name": "CreateAuthorInput",
-                  "kind": "INPUT_OBJECT"
+                  "ofType": {
+                    "ofType": null,
+                    "name": "Author",
+                    "kind": "OBJECT"
+                  },
+                  "name": null,
+                  "kind": "LIST"
                 },
                 "name": null,
-                "kind": "LIST"
+                "kind": "NON_NULL"
               },
-              "name": "authorAttrs",
-              "description": "The new authors we wish to add by attributes",
-              "defaultValue": null
+              "name": "authors",
+              "isDeprecated": false,
+              "description": null,
+              "deprecationReason": null,
+              "args": []
             },
             {
               "type": {
-                "ofType": {
-                  "ofType": null,
-                  "name": "ID",
-                  "kind": "SCALAR"
-                },
-                "name": null,
-                "kind": "LIST"
+                "ofType": null,
+                "name": "String",
+                "kind": "SCALAR"
               },
-              "name": "authorIds",
-              "description": "New authors we wish to add by IDs",
-              "defaultValue": null
-            },
-            {
-              "type": {
-                "ofType": {
-                  "ofType": null,
-                  "name": "ID",
-                  "kind": "SCALAR"
-                },
-                "name": null,
-                "kind": "LIST"
-              },
-              "name": "deletedAuthors",
-              "description": "The authors we wish to delete",
-              "defaultValue": null
+              "name": "display",
+              "isDeprecated": true,
+              "description": null,
+              "deprecationReason": "Client should handle display",
+              "args": []
             },
             {
               "type": {
@@ -2432,8 +2425,26 @@
                 "kind": "NON_NULL"
               },
               "name": "id",
-              "description": "ID of source to be updated",
-              "defaultValue": null
+              "isDeprecated": false,
+              "description": null,
+              "deprecationReason": null,
+              "args": []
+            },
+            {
+              "type": {
+                "ofType": {
+                  "ofType": null,
+                  "name": "ISODatime",
+                  "kind": "SCALAR"
+                },
+                "name": null,
+                "kind": "NON_NULL"
+              },
+              "name": "insertedAt",
+              "isDeprecated": false,
+              "description": null,
+              "deprecationReason": null,
+              "args": []
             },
             {
               "type": {
@@ -2442,28 +2453,74 @@
                 "kind": "SCALAR"
               },
               "name": "publication",
-              "description": "For which conference was this work published",
-              "defaultValue": null
+              "isDeprecated": false,
+              "description": null,
+              "deprecationReason": null,
+              "args": []
             },
             {
               "type": {
-                "ofType": null,
-                "name": "ID",
-                "kind": "SCALAR"
+                "ofType": {
+                  "ofType": null,
+                  "name": "Quote",
+                  "kind": "OBJECT"
+                },
+                "name": null,
+                "kind": "LIST"
               },
-              "name": "sourceTypeId",
-              "description": "The source type i.e. book, journal etc. - if needed to be changed",
-              "defaultValue": null
+              "name": "quotes",
+              "isDeprecated": false,
+              "description": null,
+              "deprecationReason": null,
+              "args": []
             },
             {
               "type": {
-                "ofType": null,
-                "name": "String",
-                "kind": "SCALAR"
+                "ofType": {
+                  "ofType": null,
+                  "name": "SourceType",
+                  "kind": "OBJECT"
+                },
+                "name": null,
+                "kind": "NON_NULL"
+              },
+              "name": "sourceType",
+              "isDeprecated": false,
+              "description": null,
+              "deprecationReason": null,
+              "args": []
+            },
+            {
+              "type": {
+                "ofType": {
+                  "ofType": null,
+                  "name": "String",
+                  "kind": "SCALAR"
+                },
+                "name": null,
+                "kind": "NON_NULL"
               },
               "name": "topic",
-              "description": "The topic of the work, as given by authors",
-              "defaultValue": null
+              "isDeprecated": false,
+              "description": null,
+              "deprecationReason": null,
+              "args": []
+            },
+            {
+              "type": {
+                "ofType": {
+                  "ofType": null,
+                  "name": "ISODatime",
+                  "kind": "SCALAR"
+                },
+                "name": null,
+                "kind": "NON_NULL"
+              },
+              "name": "updatedAt",
+              "isDeprecated": false,
+              "description": null,
+              "deprecationReason": null,
+              "args": []
             },
             {
               "type": {
@@ -2472,8 +2529,10 @@
                 "kind": "SCALAR"
               },
               "name": "url",
-              "description": "The URI where author's original work can be accessed",
-              "defaultValue": null
+              "isDeprecated": false,
+              "description": null,
+              "deprecationReason": null,
+              "args": []
             },
             {
               "type": {
@@ -2482,44 +2541,14 @@
                 "kind": "SCALAR"
               },
               "name": "year",
-              "description": "The year the source was published",
-              "defaultValue": null
+              "isDeprecated": false,
+              "description": null,
+              "deprecationReason": null,
+              "args": []
             }
           ],
-          "fields": null,
           "enumValues": null,
-          "description": "Inputs for updating a source"
-        },
-        {
-          "possibleTypes": null,
-          "name": "GetSourceTypeInput",
-          "kind": "INPUT_OBJECT",
-          "interfaces": null,
-          "inputFields": [
-            {
-              "type": {
-                "ofType": null,
-                "name": "ID",
-                "kind": "SCALAR"
-              },
-              "name": "id",
-              "description": null,
-              "defaultValue": null
-            },
-            {
-              "type": {
-                "ofType": null,
-                "name": "String",
-                "kind": "SCALAR"
-              },
-              "name": "name",
-              "description": null,
-              "defaultValue": null
-            }
-          ],
-          "fields": null,
-          "enumValues": null,
-          "description": "Get source type input"
+          "description": "A source"
         },
         {
           "possibleTypes": null,
@@ -2541,6 +2570,27 @@
           "fields": null,
           "enumValues": null,
           "description": "Get authors input"
+        },
+        {
+          "possibleTypes": null,
+          "name": "GetQuotes",
+          "kind": "INPUT_OBJECT",
+          "interfaces": null,
+          "inputFields": [
+            {
+              "type": {
+                "ofType": null,
+                "name": "ID",
+                "kind": "SCALAR"
+              },
+              "name": "source",
+              "description": null,
+              "defaultValue": null
+            }
+          ],
+          "fields": null,
+          "enumValues": null,
+          "description": "Inputs for querying list of quotes"
         },
         {
           "possibleTypes": null,
@@ -2679,141 +2729,18 @@
         },
         {
           "possibleTypes": null,
-          "name": "QuoteFullSearchResult",
-          "kind": "OBJECT",
-          "interfaces": [],
-          "inputFields": null,
-          "fields": [
-            {
-              "type": {
-                "ofType": {
-                  "ofType": null,
-                  "name": "QuoteFullSearchResultRow",
-                  "kind": "OBJECT"
-                },
-                "name": null,
-                "kind": "LIST"
-              },
-              "name": "authors",
-              "isDeprecated": false,
-              "description": "A search result from authors table",
-              "deprecationReason": null,
-              "args": []
-            },
-            {
-              "type": {
-                "ofType": {
-                  "ofType": null,
-                  "name": "QuoteFullSearchResultRow",
-                  "kind": "OBJECT"
-                },
-                "name": null,
-                "kind": "LIST"
-              },
-              "name": "quotes",
-              "isDeprecated": false,
-              "description": "A search result from quotes table",
-              "deprecationReason": null,
-              "args": []
-            },
-            {
-              "type": {
-                "ofType": {
-                  "ofType": null,
-                  "name": "QuoteFullSearchResultRow",
-                  "kind": "OBJECT"
-                },
-                "name": null,
-                "kind": "LIST"
-              },
-              "name": "sourceTypes",
-              "isDeprecated": false,
-              "description": "A search result from source types table",
-              "deprecationReason": null,
-              "args": []
-            },
-            {
-              "type": {
-                "ofType": {
-                  "ofType": null,
-                  "name": "QuoteFullSearchResultRow",
-                  "kind": "OBJECT"
-                },
-                "name": null,
-                "kind": "LIST"
-              },
-              "name": "sources",
-              "isDeprecated": false,
-              "description": "A search result from sources table",
-              "deprecationReason": null,
-              "args": []
-            },
-            {
-              "type": {
-                "ofType": {
-                  "ofType": null,
-                  "name": "QuoteFullSearchResultRow",
-                  "kind": "OBJECT"
-                },
-                "name": null,
-                "kind": "LIST"
-              },
-              "name": "tags",
-              "isDeprecated": false,
-              "description": "A search result from tags table",
-              "deprecationReason": null,
-              "args": []
-            }
-          ],
-          "enumValues": null,
-          "description": "Result returned when we search quotes by text"
-        },
-        {
-          "possibleTypes": null,
-          "name": "CreateSourceInput",
+          "name": "CreateQuoteInput",
           "kind": "INPUT_OBJECT",
           "interfaces": null,
           "inputFields": [
             {
               "type": {
-                "ofType": {
-                  "ofType": null,
-                  "name": "CreateAuthorInput",
-                  "kind": "INPUT_OBJECT"
-                },
-                "name": null,
-                "kind": "LIST"
+                "ofType": null,
+                "name": "Date",
+                "kind": "SCALAR"
               },
-              "name": "authorAttrs",
-              "description": "The original owners of the work - Either author creation inputs\n    or list of author IDs, one of which is mandatory",
-              "defaultValue": null
-            },
-            {
-              "type": {
-                "ofType": {
-                  "ofType": null,
-                  "name": "ID",
-                  "kind": "SCALAR"
-                },
-                "name": null,
-                "kind": "LIST"
-              },
-              "name": "authorIds",
-              "description": null,
-              "defaultValue": null
-            },
-            {
-              "type": {
-                "ofType": {
-                  "ofType": null,
-                  "name": "ID",
-                  "kind": "SCALAR"
-                },
-                "name": null,
-                "kind": "NON_NULL"
-              },
-              "name": "projectId",
-              "description": "ID of project to which source belongs",
+              "name": "date",
+              "description": "The quote date",
               "defaultValue": null
             },
             {
@@ -2822,8 +2749,38 @@
                 "name": "String",
                 "kind": "SCALAR"
               },
-              "name": "publication",
-              "description": "For which conference was this work published - optional",
+              "name": "extras",
+              "description": "Optional miscellaneous information with regards to the quote",
+              "defaultValue": null
+            },
+            {
+              "type": {
+                "ofType": null,
+                "name": "String",
+                "kind": "SCALAR"
+              },
+              "name": "issue",
+              "description": "Optional (journal, textbook, magazine etc.) issue number",
+              "defaultValue": null
+            },
+            {
+              "type": {
+                "ofType": null,
+                "name": "Int",
+                "kind": "SCALAR"
+              },
+              "name": "pageEnd",
+              "description": "Optional end of page where quote is located",
+              "defaultValue": null
+            },
+            {
+              "type": {
+                "ofType": null,
+                "name": "Int",
+                "kind": "SCALAR"
+              },
+              "name": "pageStart",
+              "description": "Optional start of page where quote is located",
               "defaultValue": null
             },
             {
@@ -2836,8 +2793,26 @@
                 "name": null,
                 "kind": "NON_NULL"
               },
-              "name": "sourceTypeId",
-              "description": "The source type i.e. book, journal etc. - mandatory",
+              "name": "sourceId",
+              "description": "The source id",
+              "defaultValue": null
+            },
+            {
+              "type": {
+                "ofType": {
+                  "ofType": {
+                    "ofType": null,
+                    "name": "ID",
+                    "kind": "SCALAR"
+                  },
+                  "name": null,
+                  "kind": "LIST"
+                },
+                "name": null,
+                "kind": "NON_NULL"
+              },
+              "name": "tags",
+              "description": "The tags i.e subject matters of the quote",
               "defaultValue": null
             },
             {
@@ -2850,8 +2825,8 @@
                 "name": null,
                 "kind": "NON_NULL"
               },
-              "name": "topic",
-              "description": "The topic of the work, as given by authors - mandatory",
+              "name": "text",
+              "description": "The quote text",
               "defaultValue": null
             },
             {
@@ -2860,146 +2835,53 @@
                 "name": "String",
                 "kind": "SCALAR"
               },
-              "name": "url",
-              "description": "The URI where author's original work can be accessed - optional",
-              "defaultValue": null
-            },
-            {
-              "type": {
-                "ofType": null,
-                "name": "String",
-                "kind": "SCALAR"
-              },
-              "name": "year",
-              "description": "The year the source was published",
+              "name": "volume",
+              "description": "Optional (journal, textbook, magazine etc.) volume number",
               "defaultValue": null
             }
           ],
           "fields": null,
           "enumValues": null,
-          "description": "Inputs for creating a source with authors"
+          "description": "Inputs for creating a Quote object"
         },
         {
           "possibleTypes": null,
-          "name": "__InputValue",
-          "kind": "OBJECT",
-          "interfaces": [],
+          "name": "Int",
+          "kind": "SCALAR",
+          "interfaces": null,
           "inputFields": null,
-          "fields": [
+          "fields": null,
+          "enumValues": null,
+          "description": "The `Int` scalar type represents non-fractional signed whole numeric values.\nInt can represent values between `-(2^53 - 1)` and `2^53 - 1` since it is\nrepresented in JSON as double-precision floating point numbers specified\nby [IEEE 754](http://en.wikipedia.org/wiki/IEEE_floating_point)."
+        },
+        {
+          "possibleTypes": null,
+          "name": "CreateSourceTypeInput",
+          "kind": "INPUT_OBJECT",
+          "interfaces": null,
+          "inputFields": [
             {
               "type": {
-                "ofType": null,
-                "name": "String",
-                "kind": "SCALAR"
-              },
-              "name": "defaultValue",
-              "isDeprecated": false,
-              "description": null,
-              "deprecationReason": null,
-              "args": []
-            },
-            {
-              "type": {
-                "ofType": null,
-                "name": "String",
-                "kind": "SCALAR"
-              },
-              "name": "description",
-              "isDeprecated": false,
-              "description": null,
-              "deprecationReason": null,
-              "args": []
-            },
-            {
-              "type": {
-                "ofType": null,
-                "name": "String",
-                "kind": "SCALAR"
+                "ofType": {
+                  "ofType": null,
+                  "name": "String",
+                  "kind": "SCALAR"
+                },
+                "name": null,
+                "kind": "NON_NULL"
               },
               "name": "name",
-              "isDeprecated": false,
               "description": null,
-              "deprecationReason": null,
-              "args": []
-            },
-            {
-              "type": {
-                "ofType": null,
-                "name": "__Type",
-                "kind": "OBJECT"
-              },
-              "name": "type",
-              "isDeprecated": false,
-              "description": null,
-              "deprecationReason": null,
-              "args": []
+              "defaultValue": null
             }
           ],
+          "fields": null,
           "enumValues": null,
-          "description": null
+          "description": "Create source type input"
         },
         {
           "possibleTypes": null,
-          "name": "__EnumValue",
-          "kind": "OBJECT",
-          "interfaces": [],
-          "inputFields": null,
-          "fields": [
-            {
-              "type": {
-                "ofType": null,
-                "name": "String",
-                "kind": "SCALAR"
-              },
-              "name": "deprecationReason",
-              "isDeprecated": false,
-              "description": null,
-              "deprecationReason": null,
-              "args": []
-            },
-            {
-              "type": {
-                "ofType": null,
-                "name": "String",
-                "kind": "SCALAR"
-              },
-              "name": "description",
-              "isDeprecated": false,
-              "description": null,
-              "deprecationReason": null,
-              "args": []
-            },
-            {
-              "type": {
-                "ofType": null,
-                "name": "Boolean",
-                "kind": "SCALAR"
-              },
-              "name": "isDeprecated",
-              "isDeprecated": false,
-              "description": null,
-              "deprecationReason": null,
-              "args": []
-            },
-            {
-              "type": {
-                "ofType": null,
-                "name": "String",
-                "kind": "SCALAR"
-              },
-              "name": "name",
-              "isDeprecated": false,
-              "description": null,
-              "deprecationReason": null,
-              "args": []
-            }
-          ],
-          "enumValues": null,
-          "description": null
-        },
-        {
-          "possibleTypes": null,
-          "name": "__Field",
+          "name": "__Directive",
           "kind": "OBJECT",
           "interfaces": [],
           "inputFields": null,
@@ -3026,18 +2908,6 @@
                 "name": "String",
                 "kind": "SCALAR"
               },
-              "name": "deprecationReason",
-              "isDeprecated": false,
-              "description": null,
-              "deprecationReason": null,
-              "args": []
-            },
-            {
-              "type": {
-                "ofType": null,
-                "name": "String",
-                "kind": "SCALAR"
-              },
               "name": "description",
               "isDeprecated": false,
               "description": null,
@@ -3046,11 +2916,15 @@
             },
             {
               "type": {
-                "ofType": null,
-                "name": "Boolean",
-                "kind": "SCALAR"
+                "ofType": {
+                  "ofType": null,
+                  "name": "__DirectiveLocation",
+                  "kind": "ENUM"
+                },
+                "name": null,
+                "kind": "LIST"
               },
-              "name": "isDeprecated",
+              "name": "locations",
               "isDeprecated": false,
               "description": null,
               "deprecationReason": null,
@@ -3071,18 +2945,42 @@
             {
               "type": {
                 "ofType": null,
-                "name": "__Type",
-                "kind": "OBJECT"
+                "name": "Boolean",
+                "kind": "SCALAR"
               },
-              "name": "type",
-              "isDeprecated": false,
+              "name": "onField",
+              "isDeprecated": true,
               "description": null,
-              "deprecationReason": null,
+              "deprecationReason": "Check `locations` field for enum value FIELD",
+              "args": []
+            },
+            {
+              "type": {
+                "ofType": null,
+                "name": "Boolean",
+                "kind": "SCALAR"
+              },
+              "name": "onFragment",
+              "isDeprecated": true,
+              "description": null,
+              "deprecationReason": "Check `locations` field for enum value FRAGMENT_SPREAD",
+              "args": []
+            },
+            {
+              "type": {
+                "ofType": null,
+                "name": "Boolean",
+                "kind": "SCALAR"
+              },
+              "name": "onOperation",
+              "isDeprecated": true,
+              "description": null,
+              "deprecationReason": "Check `locations` field for enum value OPERATION",
               "args": []
             }
           ],
           "enumValues": null,
-          "description": null
+          "description": "Represents a directive"
         },
         {
           "possibleTypes": null,
@@ -3247,6 +3145,177 @@
         },
         {
           "possibleTypes": null,
+          "name": "__EnumValue",
+          "kind": "OBJECT",
+          "interfaces": [],
+          "inputFields": null,
+          "fields": [
+            {
+              "type": {
+                "ofType": null,
+                "name": "String",
+                "kind": "SCALAR"
+              },
+              "name": "deprecationReason",
+              "isDeprecated": false,
+              "description": null,
+              "deprecationReason": null,
+              "args": []
+            },
+            {
+              "type": {
+                "ofType": null,
+                "name": "String",
+                "kind": "SCALAR"
+              },
+              "name": "description",
+              "isDeprecated": false,
+              "description": null,
+              "deprecationReason": null,
+              "args": []
+            },
+            {
+              "type": {
+                "ofType": null,
+                "name": "Boolean",
+                "kind": "SCALAR"
+              },
+              "name": "isDeprecated",
+              "isDeprecated": false,
+              "description": null,
+              "deprecationReason": null,
+              "args": []
+            },
+            {
+              "type": {
+                "ofType": null,
+                "name": "String",
+                "kind": "SCALAR"
+              },
+              "name": "name",
+              "isDeprecated": false,
+              "description": null,
+              "deprecationReason": null,
+              "args": []
+            }
+          ],
+          "enumValues": null,
+          "description": null
+        },
+        {
+          "possibleTypes": null,
+          "name": "__InputValue",
+          "kind": "OBJECT",
+          "interfaces": [],
+          "inputFields": null,
+          "fields": [
+            {
+              "type": {
+                "ofType": null,
+                "name": "String",
+                "kind": "SCALAR"
+              },
+              "name": "defaultValue",
+              "isDeprecated": false,
+              "description": null,
+              "deprecationReason": null,
+              "args": []
+            },
+            {
+              "type": {
+                "ofType": null,
+                "name": "String",
+                "kind": "SCALAR"
+              },
+              "name": "description",
+              "isDeprecated": false,
+              "description": null,
+              "deprecationReason": null,
+              "args": []
+            },
+            {
+              "type": {
+                "ofType": null,
+                "name": "String",
+                "kind": "SCALAR"
+              },
+              "name": "name",
+              "isDeprecated": false,
+              "description": null,
+              "deprecationReason": null,
+              "args": []
+            },
+            {
+              "type": {
+                "ofType": null,
+                "name": "__Type",
+                "kind": "OBJECT"
+              },
+              "name": "type",
+              "isDeprecated": false,
+              "description": null,
+              "deprecationReason": null,
+              "args": []
+            }
+          ],
+          "enumValues": null,
+          "description": null
+        },
+        {
+          "possibleTypes": null,
+          "name": "__DirectiveLocation",
+          "kind": "ENUM",
+          "interfaces": null,
+          "inputFields": null,
+          "fields": null,
+          "enumValues": [
+            {
+              "name": "FIELD",
+              "isDeprecated": false,
+              "description": null,
+              "deprecationReason": null
+            },
+            {
+              "name": "FRAGMENT_DEFINITION",
+              "isDeprecated": false,
+              "description": null,
+              "deprecationReason": null
+            },
+            {
+              "name": "FRAGMENT_SPREAD",
+              "isDeprecated": false,
+              "description": null,
+              "deprecationReason": null
+            },
+            {
+              "name": "INLINE_FRAGMENT",
+              "isDeprecated": false,
+              "description": null,
+              "deprecationReason": null
+            },
+            {
+              "name": "MUTATION",
+              "isDeprecated": false,
+              "description": null,
+              "deprecationReason": null
+            },
+            {
+              "name": "QUERY",
+              "isDeprecated": false,
+              "description": null,
+              "deprecationReason": null
+            },
+            {
+              "name": "SUBSCRIPTION",
+              "isDeprecated": false,
+              "description": null,
+              "deprecationReason": null
+            }
+          ],
+          "description": null
+        },
+        {
+          "possibleTypes": null,
           "name": "__Schema",
           "kind": "OBJECT",
           "interfaces": [],
@@ -3326,60 +3395,7 @@
         },
         {
           "possibleTypes": null,
-          "name": "__DirectiveLocation",
-          "kind": "ENUM",
-          "interfaces": null,
-          "inputFields": null,
-          "fields": null,
-          "enumValues": [
-            {
-              "name": "FIELD",
-              "isDeprecated": false,
-              "description": null,
-              "deprecationReason": null
-            },
-            {
-              "name": "FRAGMENT_DEFINITION",
-              "isDeprecated": false,
-              "description": null,
-              "deprecationReason": null
-            },
-            {
-              "name": "FRAGMENT_SPREAD",
-              "isDeprecated": false,
-              "description": null,
-              "deprecationReason": null
-            },
-            {
-              "name": "INLINE_FRAGMENT",
-              "isDeprecated": false,
-              "description": null,
-              "deprecationReason": null
-            },
-            {
-              "name": "MUTATION",
-              "isDeprecated": false,
-              "description": null,
-              "deprecationReason": null
-            },
-            {
-              "name": "QUERY",
-              "isDeprecated": false,
-              "description": null,
-              "deprecationReason": null
-            },
-            {
-              "name": "SUBSCRIPTION",
-              "isDeprecated": false,
-              "description": null,
-              "deprecationReason": null
-            }
-          ],
-          "description": null
-        },
-        {
-          "possibleTypes": null,
-          "name": "__Directive",
+          "name": "__Field",
           "kind": "OBJECT",
           "interfaces": [],
           "inputFields": null,
@@ -3406,6 +3422,18 @@
                 "name": "String",
                 "kind": "SCALAR"
               },
+              "name": "deprecationReason",
+              "isDeprecated": false,
+              "description": null,
+              "deprecationReason": null,
+              "args": []
+            },
+            {
+              "type": {
+                "ofType": null,
+                "name": "String",
+                "kind": "SCALAR"
+              },
               "name": "description",
               "isDeprecated": false,
               "description": null,
@@ -3414,15 +3442,11 @@
             },
             {
               "type": {
-                "ofType": {
-                  "ofType": null,
-                  "name": "__DirectiveLocation",
-                  "kind": "ENUM"
-                },
-                "name": null,
-                "kind": "LIST"
+                "ofType": null,
+                "name": "Boolean",
+                "kind": "SCALAR"
               },
-              "name": "locations",
+              "name": "isDeprecated",
               "isDeprecated": false,
               "description": null,
               "deprecationReason": null,
@@ -3443,42 +3467,18 @@
             {
               "type": {
                 "ofType": null,
-                "name": "Boolean",
-                "kind": "SCALAR"
+                "name": "__Type",
+                "kind": "OBJECT"
               },
-              "name": "onField",
-              "isDeprecated": true,
+              "name": "type",
+              "isDeprecated": false,
               "description": null,
-              "deprecationReason": "Check `locations` field for enum value FIELD",
-              "args": []
-            },
-            {
-              "type": {
-                "ofType": null,
-                "name": "Boolean",
-                "kind": "SCALAR"
-              },
-              "name": "onFragment",
-              "isDeprecated": true,
-              "description": null,
-              "deprecationReason": "Check `locations` field for enum value FRAGMENT_SPREAD",
-              "args": []
-            },
-            {
-              "type": {
-                "ofType": null,
-                "name": "Boolean",
-                "kind": "SCALAR"
-              },
-              "name": "onOperation",
-              "isDeprecated": true,
-              "description": null,
-              "deprecationReason": "Check `locations` field for enum value OPERATION",
+              "deprecationReason": null,
               "args": []
             }
           ],
           "enumValues": null,
-          "description": "Represents a directive"
+          "description": null
         }
       ],
       "subscriptionType": null,
