@@ -39,20 +39,24 @@ export class AppSideBar extends React.Component<Props, State> {
     this.context = context;
     const { onShowClicked, minWidth600, showSidebar } = context;
 
+    let pushableClassName = "src-components-app-sidebar";
+
+    if (minWidth600) {
+      pushableClassName += " " + "pushable-min-width-600";
+    }
+
+    if (showSidebar) {
+      pushableClassName += " " + "pushable-showing-sidebar";
+    }
+
     const {
       match: { path },
       currentProject
     } = this.props;
 
     return (
-      <Sidebar.Pushable
-        as={Segment}
-        className={`src-components-app-sidebar ${
-          showSidebar && minWidth600 ? "min-width-600" : ""
-        } `}
-      >
+      <Sidebar.Pushable as={Segment} className={pushableClassName}>
         <Sidebar
-          className={minWidth600 ? "side-bar-min-width-600" : ""}
           as={Menu}
           animation="overlay"
           icon="labeled"
@@ -71,6 +75,7 @@ export class AppSideBar extends React.Component<Props, State> {
               as={NavLink}
               to={makeNewQuoteURL()}
               onClick={this.hideSidebar}
+              className="home-menu"
             >
               <Icon name="quote right" />
               <span>Home</span>

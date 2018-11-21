@@ -15,7 +15,26 @@ export const AppSidebarContext = React.createContext<SideBarContextProps>({
 
 export const AppSidebarConsumer = AppSidebarContext.Consumer;
 
+export enum MediaQueryKey {
+  SCREEN_MIN_WIDTH_600 = "screenMinWidth600"
+}
+
+export const mediaQueries = {
+  [MediaQueryKey.SCREEN_MIN_WIDTH_600]: "screen and (min-width: 600px)"
+};
+
+type StateMediaQueries = { [k in MediaQueryKey]: boolean };
+
 export interface State {
   showSidebar: boolean;
   cacheLoaded?: boolean;
+  mediaQueries: StateMediaQueries;
 }
+
+export const initialState: State = {
+  showSidebar: false,
+  mediaQueries: Object.values(MediaQueryKey).reduce(
+    (acc, k) => ({ ...acc, [k]: false }),
+    {} as StateMediaQueries
+  )
+};
