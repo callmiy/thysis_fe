@@ -81,7 +81,7 @@ export class App extends React.Component<{}, State> {
             value={{
               showSidebar,
               onShowClicked: this.toggleSidebar,
-              onHide: this.toggleSidebar,
+              onHide: this.handleSidebarHide,
               minWidth600: mQueries[MediaQueryKey.SCREEN_MIN_WIDTH_600]
             }}
           >
@@ -143,8 +143,11 @@ export class App extends React.Component<{}, State> {
   }
 
   private toggleSidebar = () => {
-    this.setState({ showSidebar: !this.state.showSidebar });
+    const { showSidebar } = this.state;
+    this.setState({ showSidebar: !showSidebar });
   };
+
+  private handleSidebarHide = () => this.setState({ showSidebar: false });
 
   private tearDownMediaListeners = () => this.mediaListeners.forEach(m => m());
 
