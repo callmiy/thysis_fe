@@ -68,3 +68,6 @@ body,
 .ui.thin.left.sidebar,
 .ui.thin.right.sidebar {
   width: 110px; }
+
+.ui.card > .extra.content {
+  flex-shrink: 0; }

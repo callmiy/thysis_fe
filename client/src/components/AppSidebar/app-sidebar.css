@@ -10,8 +10,6 @@
       align-items: center;
       padding: 12px 5px;
       color: white; }
-      .src-components-app-sidebar.ui .ui.vertical.left.sidebar > .item:nth-child(2) {
-        margin-top: 50px; }
       .src-components-app-sidebar.ui .ui.vertical.left.sidebar > .item > i.icon {
         margin: 0 10px 0 5px !important;
         color: white !important;
@@ -39,3 +37,5 @@
     transition: transform 0s; }
   .src-components-app-sidebar.ui > .side-bar-min-width-600.overlay.left:not(.visible) {
     transition: transform 0.5s ease; }
+  .src-components-app-sidebar.ui > .side-bar-min-width-600 > .item:nth-child(2) {
+    margin-top: 50px; }

@@ -21,11 +21,6 @@
     @extend %form-title;
   }
 
-  // same as .form-title
-  .ui.card > .extra {
-    min-height: initial !important;
-  }
-
   @extend %msg-error-close;
 
   .to-login-button {

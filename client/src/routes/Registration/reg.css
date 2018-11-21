@@ -64,6 +64,3 @@
   min-width: 314px;
   height: 100%;
   overflow-y: auto; }
-
-.user-reg-route .ui.card > .extra {
-  min-height: initial !important; }
