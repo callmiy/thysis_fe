@@ -113,7 +113,7 @@ defmodule ThysisWeb.Schema.Source do
   @desc "Input for getting a sources belonging to a project or user"
   input_object :get_sources_input do
     @desc "ID of project"
-    field(:project_id, :id)
+    field(:project_id, non_null(:id))
   end
 
   # QUERIES
@@ -121,7 +121,7 @@ defmodule ThysisWeb.Schema.Source do
   object :source_query do
     @desc "Query for all sources"
     field :sources, type: list_of(:source) do
-      arg(:source, :get_sources_input)
+      arg(:source, non_null(:get_sources_input))
       resolve(&Resolver.sources/3)
     end
 

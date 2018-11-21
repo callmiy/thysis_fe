@@ -1,6 +1,7 @@
 .src-components-new-quote-sidebar > .menu.ui {
   background: #5faac7 !important;
-  border-radius: 0; }
+  border-radius: 0;
+  border-color: #5faac7 !important; }
 
 .src-components-new-quote-sidebar .message-container {
   display: flex;

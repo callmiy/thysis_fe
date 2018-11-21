@@ -32,6 +32,7 @@ defmodule ThysisWeb.Schema.Author do
 
   @desc "Get authors input"
   input_object :get_authors_input do
+    @desc "ID of project"
     field(:project_id, :id)
   end
 
@@ -63,7 +64,7 @@ defmodule ThysisWeb.Schema.Author do
     end
 
     field :authors, type: list_of(:author) do
-      arg(:author, :get_authors_input)
+      arg(:author, non_null(:get_authors_input))
       resolve(&Resolver.authors/3)
     end
   end

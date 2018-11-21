@@ -1,9 +1,10 @@
-@import "../../../styles/variables";
+@import "../../styles/variables";
 
 .src-components-new-quote-sidebar {
   & > .menu.ui {
     background: $app-color !important;
     border-radius: 0;
+    border-color: $app-color !important;
   }
 
   .message-container {

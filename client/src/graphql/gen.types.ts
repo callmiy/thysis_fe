@@ -63,8 +63,8 @@ export interface AllQueries {
 }
 
 export interface AllQueriesVariables {
-  source?: GetSourcesInput | null;
-  author?: GetAuthorsInput | null;
+  source: GetSourcesInput;
+  author: GetAuthorsInput;
 }
 
 
@@ -140,7 +140,7 @@ export interface GetAllAuthors {
 }
 
 export interface GetAllAuthorsVariables {
-  author?: GetAuthorsInput | null;
+  author: GetAuthorsInput;
 }
 
 
@@ -609,7 +609,7 @@ export interface Sources1Query {
 }
 
 export interface Sources1QueryVariables {
-  source?: GetSourcesInput | null;
+  source: GetSourcesInput;
 }
 
 
@@ -1226,7 +1226,7 @@ export enum QuoteFullSearchTable {
 
 // Input for getting a sources belonging to a project or user
 export interface GetSourcesInput {
-  projectId?: string | null;
+  projectId: string;
 }
 
 // Get authors input

@@ -38,7 +38,6 @@ export class GetAllAuthorsQueryComponent extends Query<
 
 // tslint:disable-next-line:max-classes-per-file
 export class Sources1QueryComponent extends Query<Sources1Query, {}> {}
-export type Sources1QueryClientResult = ApolloQueryResult<Sources1Query>;
 
 export type CreateQuoteFn = MutationFn<
   CreateQuoteMutation,

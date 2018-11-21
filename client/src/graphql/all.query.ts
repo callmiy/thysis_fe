@@ -6,7 +6,7 @@ import { sourceTypeFrag } from "./source-type.fragment";
 import { authorFrag } from "./author.fragment";
 
 export const allQueries = gql`
-  query AllQueries($source: GetSourcesInput, $author: GetAuthorsInput) {
+  query AllQueries($source: GetSourcesInput!, $author: GetAuthorsInput!) {
     sources(source: $source) {
       ...SourceFullFrag
     }

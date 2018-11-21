@@ -3,21 +3,20 @@ import { Tab } from "semantic-ui-react";
 import { TabProps } from "semantic-ui-react";
 import { List } from "semantic-ui-react";
 import { Icon } from "semantic-ui-react";
-import { WithApolloClient } from "react-apollo";
 import update from "immutability-helper";
 import { ApolloError } from "apollo-client";
-import { RouteComponentProps } from "react-router-dom";
 
 import "./new-quote-sidebar.css";
 import {
+  SourceFullFrag,
+  Sources1Query,
+  Sources1QueryVariables,
   Quote1Frag,
   Quotes1,
   Quotes1Variables,
-  TagsMinimal
+  TagsMinimal,
+  TagFrag
 } from "src/graphql/gen.types";
-import { TagFrag } from "src/graphql/gen.types";
-import { SourceFullFrag } from "src/graphql/gen.types";
-import { Sources1QueryClientResult } from "src/graphql/ops.types";
 import QUOTES_QUERY from "src/graphql/quotes-1.query";
 import TAGS_QUERY from "src/graphql/tags-mini.query";
 import SOURCES_QUERY from "src/graphql/sources-1.query";
@@ -26,28 +25,7 @@ import SearchQuotesComponent from "src/components/SearchComponent";
 import { makeSourceURL } from "src/routes/util";
 import { makeTagURL } from "src/routes/util";
 import Loading from "src/components/Loading";
-
-enum ResourceName {
-  QUOTES = "quotes",
-  TAGS = "tags",
-  SOURCES = "sources"
-}
-
-type Resources = Array<Quote1Frag | TagFrag | SourceFullFrag>;
-
-interface OwnProps extends RouteComponentProps<{}> {
-  className?: string;
-}
-
-type Props = WithApolloClient<OwnProps>;
-
-interface State {
-  quotes?: Quote1Frag[];
-  tags?: TagFrag[];
-  sources?: SourceFullFrag[];
-  loading?: boolean;
-  graphQlError?: ApolloError;
-}
+import { Props, State, ResourceName, Resources } from "./new-quote-sidebar";
 
 export class QuotesSidebar extends React.Component<Props, State> {
   state: State = {};
@@ -265,12 +243,25 @@ export class QuotesSidebar extends React.Component<Props, State> {
   };
 
   fetchSources = async () => {
+    const { currentProject } = this.props;
+
+    if (!currentProject) {
+      this.setState({ graphQlError: { message: "No project selected." } });
+      return;
+    }
+
     this.fetching();
 
     try {
-      const result = (await this.props.client.query({
-        query: SOURCES_QUERY
-      })) as Sources1QueryClientResult;
+      const result = await this.props.client.query<
+        Sources1Query,
+        Sources1QueryVariables
+      >({
+        query: SOURCES_QUERY,
+        variables: {
+          source: { projectId: currentProject.id }
+        }
+      });
 
       const data = result.data.sources as SourceFullFrag[];
       this.fetching(ResourceName.SOURCES, data);
