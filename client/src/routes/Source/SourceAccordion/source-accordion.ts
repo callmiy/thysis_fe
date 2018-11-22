@@ -5,11 +5,7 @@ import { InjectedFormikProps } from "formik";
 import { WithFormikConfig } from "formik";
 import { FormikErrors } from "formik";
 
-import {
-  SourceFullFrag,
-  Quote1Frag,
-  AuthorFrag
-} from "../../../graphql/gen.types";
+import { SourceFullFrag, QuoteFromTagFrag } from "../../../graphql/gen.types";
 import { UpdateSourceMutationFn } from "../../../graphql/ops.types";
 import { AuthorWithFullName, authorFullName } from "../../../graphql/utils";
 
@@ -48,7 +44,7 @@ export enum AccordionIndex {
 export interface State {
   detailAction: DetailAction;
   loadingQuotes?: boolean;
-  quotes?: Quote1Frag[];
+  quotes?: QuoteFromTagFrag[];
   fetchQuotesError?: ApolloError;
   updateSourceError?: ApolloError;
   openUpdateSourceSuccessModal: boolean;
@@ -68,14 +64,18 @@ export const formikConfig: WithFormikConfig<Props, FormOutput> = {
   handleSubmit: async values => null,
 
   mapPropsToValues: ({ source }) => {
-    let authors = [] as AuthorWithFullName[];
-
-    if (source.authors) {
-      authors = source.authors.map((a: AuthorFrag) => ({
-        ...a,
-        fullName: authorFullName(a)
-      })) as AuthorWithFullName[];
-    }
+    const authors = source.authors.reduce(
+      (acc2, a) => {
+        if (a) {
+          acc2.push({
+            ...a,
+            fullName: authorFullName(a)
+          });
+        }
+        return acc2;
+      },
+      [] as AuthorWithFullName[]
+    );
 
     return { ...source, authors };
   },

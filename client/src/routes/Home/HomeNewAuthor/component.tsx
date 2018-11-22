@@ -2,11 +2,11 @@ import React from "react";
 import { Message, Modal, Header, Button } from "semantic-ui-react";
 import update from "immutability-helper";
 
-import "./home-new-author.css";
+import "./home-new-author.scss";
 import NewAuthorModal from "../../../components/NewAuthorModal";
 import SourceModal from "../../../components/SourceModal";
 import { Props, State, initialState } from "./home-new-author";
-import { AuthorFrag } from "src/graphql/gen.types";
+import { AuthorFrag } from "../../../graphql/gen.types";
 import { authorFullName } from "../../../graphql/utils";
 
 export class HomeNewAuthor extends React.Component<Props, State> {

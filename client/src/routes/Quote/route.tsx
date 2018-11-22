@@ -4,7 +4,7 @@ import { Loader } from "semantic-ui-react";
 import { List } from "semantic-ui-react";
 import { NavLink } from "react-router-dom";
 
-import "./quote-route.css";
+import "./quote-route.scss";
 import RootHeader from "../../components/Header";
 import { setTitle } from "../../routes/util";
 import { makeSourceURL } from "../../routes/util";
@@ -12,8 +12,8 @@ import { makeTagURL } from "../../routes/util";
 import { Props } from "./quote";
 import { State } from "./quote";
 import { QuoteFull_quote_tags } from "../../graphql/gen.types";
-import { sourceDisplay } from "src/graphql/utils";
-import AppSideBar from "src/components/AppSidebar";
+import { sourceDisplay } from "../../graphql/utils";
+import AppSideBar from "../../components/AppSidebar";
 
 export class Quote extends React.Component<Props, State> {
   componentDidMount() {
@@ -94,7 +94,12 @@ export class Quote extends React.Component<Props, State> {
     );
   };
 
-  private renderTag = ({ id, text }: QuoteFull_quote_tags) => {
+  private renderTag = (quote: QuoteFull_quote_tags | null) => {
+    if (!quote) {
+      return undefined;
+    }
+
+    const { id, text } = quote;
     return (
       <List.Item
         as={NavLink}

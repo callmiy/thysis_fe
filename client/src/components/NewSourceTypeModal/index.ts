@@ -14,7 +14,7 @@ import { CreateSourceTypeFn } from "../../graphql/create-source-type.mutation";
 import USER_LOCAL_QUERY, {
   UserLocalGqlData,
   UserLocalGqlProps
-} from "src/state/auth-user.local.query";
+} from "../../state/auth-user.local.query";
 
 const userLocalGql = graphql<
   OwnProps,

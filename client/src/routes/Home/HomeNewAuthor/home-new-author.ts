@@ -1,6 +1,6 @@
 import { OwnProps as NewAuthorModalProps } from "../../../components/NewAuthorModal/new-author-modal";
 import { OwnProps as SourceModalProps } from "../../../components/SourceModal/source-modal";
-import { AuthorFrag } from "src/graphql/gen.types";
+import { AuthorFrag } from "../../../graphql/gen.types";
 
 export interface Props {
   childProps: NewAuthorModalProps;

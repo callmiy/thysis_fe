@@ -1,19 +1,19 @@
-import Select from "react-select";
+import Select, { OnChangeHandler } from "react-select";
 import * as React from "react";
 
 import { SourceFullFrag } from "../../graphql/gen.types";
-import { sourceDisplay } from "src/graphql/utils";
+import { sourceDisplay } from "../../graphql/utils";
 
-interface SourceControlProps {
+interface Props {
   selectError: boolean;
   sources: SourceFullFrag[];
-  handleChange: (value: SourceFullFrag[]) => void;
+  handleChange: OnChangeHandler<SourceFullFrag[]>;
   handleBlur: () => void;
   name: string;
   value: SourceFullFrag;
 }
 
-export default class SourceControl extends React.Component<SourceControlProps> {
+export default class SourceControl extends React.Component<Props> {
   render() {
     const { name, value, selectError, sources } = this.props;
 

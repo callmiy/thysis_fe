@@ -19,7 +19,7 @@ import {
 import CURRENT_PROJECT_QUERY, {
   CurrentProjectLocalData,
   CurrProjLocalGqlProps
-} from "src/state/project.local.query";
+} from "../../state/project.local.query";
 
 const currentProjGql = graphql<
   {},

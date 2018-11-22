@@ -10,7 +10,7 @@ import { AuthorFrag } from "../../graphql/gen.types";
 import { CreateSource } from "../../graphql/gen.types";
 import { CreateSourceFn } from "../../graphql/source.mutation";
 import { CurrentProjectLocalData } from "../../state/project.local.query";
-import { authorFullName } from "src/graphql/utils";
+import { authorFullName } from "../../graphql/utils";
 
 export interface FormValues {
   sourceType: SourceTypeFrag | null;

@@ -1,12 +1,12 @@
 import gql from "graphql-tag";
 
 import { sourceFullFrag } from "./source-full.fragment";
-import { quote1Frag } from "./quote-1.fragment";
+import { quoteFromTagFrag } from "./quote-from-tag.fragment";
 
 export const quoteMut = gql`
   mutation CreateQuote($quote: CreateQuoteInput!) {
     createQuote(quote: $quote) {
-      ...Quote1Frag
+      ...QuoteFromTagFrag
 
       source {
         ...SourceFullFrag
@@ -14,7 +14,7 @@ export const quoteMut = gql`
     }
   }
 
-  ${quote1Frag}
+  ${quoteFromTagFrag}
   ${sourceFullFrag}
 `;
 

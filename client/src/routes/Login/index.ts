@@ -1,16 +1,16 @@
 import { graphql, compose, withApollo } from "react-apollo";
 
 import { Login } from "./route";
-import { LoginMutation } from "src/graphql/gen.types";
-import { LoginMutationVariables } from "src/graphql/gen.types";
-import { LoginFn } from "src/graphql/ops.types";
-import { LoginMutationProps } from "src/graphql/ops.types";
-import LOGIN_MUTATION from "src/graphql/login.mutation";
-import { userLocalMutationGql } from "src/state/user.local.mutation";
+import { LoginMutation } from "../../graphql/gen.types";
+import { LoginMutationVariables } from "../../graphql/gen.types";
+import { LoginFn } from "../../graphql/ops.types";
+import { LoginMutationProps } from "../../graphql/ops.types";
+import LOGIN_MUTATION from "../../graphql/login.mutation";
+import { userLocalMutationGql } from "../../state/user.local.mutation";
 import USER_LOCAL_QUERY, {
   LoggedOutUserData,
   LoggedOutUserProps
-} from "src/state/logged-out-user.local.query";
+} from "../../state/logged-out-user.local.query";
 import { OwnProps } from "./login";
 
 const loginMutationGql = graphql<

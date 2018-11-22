@@ -7,7 +7,7 @@ export const tagQuotesFrag = gql`
   fragment TagQuotesFrag on Tag {
     ...TagFrag
     quotes {
-      ...QuoteFromtagFrag
+      ...QuoteFromTagFrag
     }
   }
   ${tagFrag}

@@ -1,7 +1,7 @@
 import React from "react";
 import { Modal, List, Message, Loader } from "semantic-ui-react";
 
-import "./tags-modal.css";
+import "./tags-modal.scss";
 import { TagsMinimalQueryComponent } from "../../graphql/ops.types";
 import { TagsMinimalQueryResult } from "../../graphql/ops.types";
 import { TagFrag } from "../../graphql/gen.types";
@@ -72,7 +72,12 @@ export class TagsModal extends React.Component<Props> {
     );
   };
 
-  renderTag = ({ id, text, question }: TagFrag) => {
+  renderTag = (tag: TagFrag | null) => {
+    if (!tag) {
+      return undefined;
+    }
+
+    const { id, text, question } = tag;
     return (
       <List.Item key={id} id={id} onClick={this.navigateTo(id)}>
         <List.Content>

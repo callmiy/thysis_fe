@@ -7,14 +7,14 @@ import { Message } from "semantic-ui-react";
 import { Icon } from "semantic-ui-react";
 import { Form } from "semantic-ui-react";
 import { Formik } from "formik";
-import { FormikProps } from "formik";
+import { FormikProps, FormikActions } from "formik";
 import { Field } from "formik";
 import { FieldProps } from "formik";
 import { FormikErrors } from "formik";
 import isEmpty from "lodash/isEmpty";
 import update from "immutability-helper";
 
-import "./new-author-modal.css";
+import "./new-author-modal.scss";
 import {
   FORM_OUTPUT_KEY,
   Props,
@@ -22,9 +22,9 @@ import {
   FormValues,
   initialState
 } from "./new-author-modal";
-import { AuthorFrag } from "src/graphql/gen.types";
-import { authorFullName } from "src/graphql/utils";
-import SourceModal from "src/components/SourceModal";
+import { AuthorFrag } from "../../graphql/gen.types";
+import { authorFullName } from "../../graphql/utils";
+import SourceModal from "../../components/SourceModal";
 
 export class NewAuthorModal extends React.Component<Props, State> {
   contentRef = React.createRef<HTMLDivElement>();
@@ -164,7 +164,7 @@ export class NewAuthorModal extends React.Component<Props, State> {
     this.props.dismissModal();
   };
 
-  submit = async (values: FormValues, formikBag: FormikProps<FormValues>) => {
+  submit = async (values: FormValues, formikBag: FormikActions<FormValues>) => {
     formikBag.setSubmitting(true);
     const { author } = this.state;
     const { onAuthorCreated, createAuthor, authorUpdate } = this.props;

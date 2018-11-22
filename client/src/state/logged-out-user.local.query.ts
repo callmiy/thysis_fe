@@ -1,7 +1,7 @@
 import gql from "graphql-tag";
 
 import { userFragment } from "../graphql/user.fragment";
-import { UserFragment } from "src/graphql/gen.types";
+import { UserFragment } from "../graphql/gen.types";
 import { DataValue } from "react-apollo";
 
 export const loggedOutUserLocalQuery = gql`

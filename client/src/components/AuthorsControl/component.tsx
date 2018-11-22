@@ -34,14 +34,15 @@ export class AuthorsControl extends React.Component<Props> {
         }}
       >
         {({ data }) => {
-          let authors = [] as AuthorWithFullName[];
-
-          if (data && data.authors) {
-            authors = data.authors.map((a: AuthorWithFullName) => {
-              // a.fullName = authorFullName(a);
-              return { ...a, fullName: authorFullName(a) };
-            }) as AuthorWithFullName[];
-          }
+          const authors = ((data && data.authors) || []).reduce(
+            (acc, a) => {
+              if (a) {
+                acc.push({ ...a, fullName: authorFullName(a) });
+              }
+              return acc;
+            },
+            [] as AuthorWithFullName[]
+          );
 
           return (
             <Select

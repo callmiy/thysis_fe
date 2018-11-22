@@ -2,13 +2,13 @@ import * as React from "react";
 import { Icon } from "semantic-ui-react";
 import { NavLink } from "react-router-dom";
 
-import "./header.css";
+import "./header.scss";
 import { Props, State, INITIAL_STATE } from "./header.utils";
 import {
   AppSidebarConsumer,
   SideBarContextProps
 } from "../../containers/App/app.utils";
-import { ROOT_URL, makeNewQuoteURL } from "src/routes/util";
+import { ROOT_URL, makeNewQuoteURL } from "../../routes/util";
 
 export default class Header extends React.Component<Props, State> {
   state = INITIAL_STATE;

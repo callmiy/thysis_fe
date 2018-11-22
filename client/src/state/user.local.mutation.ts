@@ -3,7 +3,7 @@ import { graphql } from "react-apollo";
 import { MutationFn } from "react-apollo";
 
 import { UserFragment } from "./../graphql/gen.types";
-import { userFragment } from "src/graphql/user.fragment";
+import { userFragment } from "../graphql/user.fragment";
 
 export const userLocalMutation = gql`
   mutation UserLocalMutation($user: LocalUserInput!) {

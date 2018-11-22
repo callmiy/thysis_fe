@@ -4,7 +4,7 @@ import { List } from "semantic-ui-react";
 import { NavLink } from "react-router-dom";
 import update from "immutability-helper";
 
-import "./author-route.css";
+import "./author-route.scss";
 import RootHeader from "../../components/Header";
 import NewAuthorModal from "../../components/NewAuthorModal";
 import { setTitle } from "../../routes/util";
@@ -13,8 +13,8 @@ import { Props } from "./author";
 import { State } from "./author";
 import { AuthorRouteFrag_sources, AuthorFrag } from "../../graphql/gen.types";
 import { authorFullName, sourceDisplay } from "../../graphql/utils";
-import Loading from "src/components/Loading";
-import AppSideBar from "src/components/AppSidebar";
+import Loading from "../../components/Loading";
+import AppSideBar from "../../components/AppSidebar";
 
 export class Author extends React.Component<Props, State> {
   static getDerivedStateFromProps(nextProps: Props, currentState: State) {
@@ -101,7 +101,11 @@ export class Author extends React.Component<Props, State> {
     );
   };
 
-  private renderSource = (source: AuthorRouteFrag_sources) => {
+  private renderSource = (source: null | AuthorRouteFrag_sources) => {
+    if (!source) {
+      return undefined;
+    }
+
     return (
       <List.Item
         as={NavLink}

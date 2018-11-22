@@ -1,15 +1,15 @@
 import gql from "graphql-tag";
 
-import { quote1Frag } from "./quote-1.fragment";
+import { quoteFromTagFrag } from "./quote-from-tag.fragment";
 
 export const quotes1Query = gql`
   query Quotes1($quote: GetQuotes) {
     quotes(quote: $quote) {
-      ...Quote1Frag
+      ...QuoteFromTagFrag
     }
   }
 
-  ${quote1Frag}
+  ${quoteFromTagFrag}
 `;
 
 export default quotes1Query;

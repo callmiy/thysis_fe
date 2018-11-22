@@ -4,21 +4,21 @@ import { Menu } from "semantic-ui-react";
 import { Icon } from "semantic-ui-react";
 import update from "immutability-helper";
 
-import Header from "src/components/Header";
-import { makeNewQuoteURL } from "src/routes/util";
-import { SEARCH_QUOTES_URL } from "src/routes/util";
-import TagsModal from "src/components/TagsModal";
-import SourcesModal from "src/components/SourcesModal";
-import NewTagModalForm from "src/components/NewTagModalForm";
-import SourceModal from "src/components/SourceModal";
+import Header from "../../components/Header";
+import { makeNewQuoteURL } from "../../routes/util";
+import { SEARCH_QUOTES_URL } from "../../routes/util";
+import TagsModal from "../../components/TagsModal";
+import SourcesModal from "../../components/SourcesModal";
+import NewTagModalForm from "../../components/NewTagModalForm";
+import SourceModal from "../../components/SourceModal";
 import HomeNewAuthor from "./HomeNewAuthor";
-import NewSourceTypeModal from "src/components/NewSourceTypeModal";
+import NewSourceTypeModal from "../../components/NewSourceTypeModal";
 import styles from "./styles";
 import { classes } from "./styles";
 import { Props } from "./home";
 import { State } from "./home";
-import { MenuItem } from "src/components/side-bar-menu";
-import AppSideBar from "src/components/AppSidebar";
+import { MenuItem } from "../../components/side-bar-menu";
+import AppSideBar from "../../components/AppSidebar";
 
 export class Home extends React.Component<Props, State> {
   state: State = {

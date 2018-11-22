@@ -5,15 +5,15 @@ import { Form } from "semantic-ui-react";
 import { List } from "semantic-ui-react";
 import update from "immutability-helper";
 
-import "./projects.css";
+import "./projects.scss";
 import Header from "../../components/Header";
 import Loading from "../../components/Loading";
 import { Props, State, initialState } from "./projects";
 import { SemanticOnInputChangeFunc } from "../../utils";
-import { ProjectFragment } from "src/graphql/gen.types";
+import { ProjectFragment } from "../../graphql/gen.types";
 import { makeNewQuoteURL } from "../util";
 import { format as dateFormat } from "date-fns";
-import AppSideBar from "src/components/AppSidebar";
+import AppSideBar from "../../components/AppSidebar";
 
 export class SelectProject extends React.Component<Props, State> {
   state: State = initialState;
@@ -112,22 +112,28 @@ export class SelectProject extends React.Component<Props, State> {
     );
   };
 
-  private renderProject = (project: ProjectFragment) => (
-    <List.Item key={project.id}>
-      <List.Content
-        className="project-row"
-        onClick={this.projectSelected(project)}
-      >
-        <List.Header className="project-row__header">
-          {project.title}
-        </List.Header>
-        <List.Description className="project-row__desc">
-          Created: &nbsp; &nbsp;{" "}
-          {dateFormat(project.insertedAt, "eeee, M/MMM/yyyy HH:mm a")}
-        </List.Description>
-      </List.Content>
-    </List.Item>
-  );
+  private renderProject = (project: null | ProjectFragment) => {
+    if (!project) {
+      return undefined;
+    }
+
+    return (
+      <List.Item key={project.id}>
+        <List.Content
+          className="project-row"
+          onClick={this.projectSelected(project)}
+        >
+          <List.Header className="project-row__header">
+            {project.title}
+          </List.Header>
+          <List.Description className="project-row__desc">
+            Created: &nbsp; &nbsp;{" "}
+            {dateFormat(project.insertedAt, "eeee, M/MMM/yyyy HH:mm a")}
+          </List.Description>
+        </List.Content>
+      </List.Item>
+    );
+  };
 
   private projectSelected = (currentProject: ProjectFragment) => async () => {
     const { history, updateLocalProject } = this.props;

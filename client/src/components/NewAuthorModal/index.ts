@@ -18,7 +18,7 @@ import {
   AuthorUpdate,
   AuthorUpdateVariables
 } from "../../graphql/gen.types";
-import { CreateAuthorFn } from "src/graphql/ops.types";
+import { CreateAuthorFn } from "../../graphql/ops.types";
 import USER_LOCAL_QUERY, {
   UserLocalGqlData,
   UserLocalGqlProps

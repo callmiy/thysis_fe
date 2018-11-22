@@ -3,12 +3,12 @@ import { Sidebar, Segment, Menu, Icon } from "semantic-ui-react";
 import { NavLink } from "react-router-dom";
 import update from "immutability-helper";
 
-import "./app-sidebar.css";
+import "./app-sidebar.scss";
 import { Props, State, initialState } from "./app-sidebar";
 import {
   AppSidebarConsumer,
   SideBarContextProps
-} from "src/containers/App/app.utils";
+} from "../../containers/App/app.utils";
 import {
   ROOT_URL,
   PROJECTS_URL,
@@ -16,12 +16,12 @@ import {
   makeNewQuoteURL,
   LOGIN_URL,
   USER_REG_URL
-} from "src/routes/util";
-import { MenuItemNames } from "src/constants";
-import NewTagModalForm from "src/components/NewTagModalForm";
-import SourceModal from "src/components/SourceModal";
-import TagsModal from "src/components/TagsModal";
-import SourcesModal from "src/components/SourcesModal";
+} from "../../routes/util";
+import { MenuItemNames } from "../../constants";
+import NewTagModalForm from "../../components/NewTagModalForm";
+import SourceModal from "../../components/SourceModal";
+import TagsModal from "../../components/TagsModal";
+import SourcesModal from "../../components/SourcesModal";
 import NewAuthorModal from "../NewAuthorModal";
 import NewSourceTypeModal from "../NewSourceTypeModal";
 
@@ -29,7 +29,7 @@ const AUTH_URLS = [LOGIN_URL, USER_REG_URL];
 
 export class AppSideBar extends React.Component<Props, State> {
   state: State = initialState;
-  context: SideBarContextProps;
+  context: SideBarContextProps | undefined = undefined;
 
   render() {
     return <AppSidebarConsumer>{this.renderSideBar}</AppSidebarConsumer>;
@@ -276,12 +276,14 @@ export class AppSideBar extends React.Component<Props, State> {
   };
 
   private hideSidebar = () => {
-    const { minWidth600, onHide } = this.context;
-    if (minWidth600) {
-      return;
-    }
+    if (this.context) {
+      const { minWidth600, onHide } = this.context;
+      if (minWidth600) {
+        return;
+      }
 
-    onHide();
+      onHide();
+    }
   };
 }
 

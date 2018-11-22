@@ -2,12 +2,12 @@ import React from "react";
 import { List } from "semantic-ui-react";
 import { NavLink } from "react-router-dom";
 
-import "./quote-item.css";
-import { QuoteFromtagFrag } from "../../graphql/gen.types";
+import "./quote-item.scss";
+import { QuoteFromTagFrag } from "../../graphql/gen.types";
 import { makeQuoteURL } from "../../routes/util";
 import { makeSourceURL } from "../../routes/util";
 
-type Props = QuoteFromtagFrag;
+type Props = QuoteFromTagFrag;
 
 export class QuoteItem extends React.Component<Props> {
   render() {
@@ -36,6 +36,10 @@ export class QuoteItem extends React.Component<Props> {
   }
 }
 
-export default (quote: QuoteFromtagFrag, index: number) => (
-  <QuoteItem key={quote.id} {...quote} />
-);
+export default (quote: null | QuoteFromTagFrag, index: number) => {
+  if (!quote) {
+    return undefined;
+  }
+
+  return <QuoteItem key={quote.id} {...quote} />;
+};

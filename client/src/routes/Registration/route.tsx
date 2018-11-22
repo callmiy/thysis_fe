@@ -6,19 +6,19 @@ import { Icon } from "semantic-ui-react";
 import { Form } from "semantic-ui-react";
 import { NavLink } from "react-router-dom";
 import { Formik } from "formik";
-import { FormikProps } from "formik";
+import { FormikProps, FormikActions } from "formik";
 import { Field } from "formik";
 import { FieldProps } from "formik";
 import { FormikErrors } from "formik";
 import isEmpty from "lodash/isEmpty";
 import update from "immutability-helper";
 
-import "./reg.css";
+import "./reg.scss";
 import { Props, FORM_VALUES_KEY, State, initialState, FormValues } from "./reg";
 import { setTitle, PROJECTS_URL, LOGIN_URL } from "../../routes/util";
 import RootHeader from "../../components/Header";
-import { Registration } from "src/graphql/gen.types";
-import socket from "src/socket";
+import { Registration } from "../../graphql/gen.types";
+import socket from "../../socket";
 
 export class UserReg extends React.Component<Props, State> {
   state = initialState;
@@ -67,7 +67,7 @@ export class UserReg extends React.Component<Props, State> {
 
   private submit = async (
     values: FormValues,
-    formikBag: FormikProps<FormValues>
+    formikBag: FormikActions<FormValues>
   ) => {
     formikBag.setSubmitting(true);
 

@@ -7,7 +7,7 @@ import { Message } from "semantic-ui-react";
 import { Icon } from "semantic-ui-react";
 import { Form } from "semantic-ui-react";
 import { Formik } from "formik";
-import { FormikProps } from "formik";
+import { FormikProps, FormikActions } from "formik";
 import { Field } from "formik";
 import { FieldProps } from "formik";
 import { FormikErrors } from "formik";
@@ -114,7 +114,7 @@ export class NewSourceTypeModal extends React.Component<Props, State> {
     this.props.dismissModal();
   };
 
-  submit = async (values: FormValues, formikBag: FormikProps<FormValues>) => {
+  submit = async (values: FormValues, formikBag: FormikActions<FormValues>) => {
     formikBag.setSubmitting(true);
 
     try {

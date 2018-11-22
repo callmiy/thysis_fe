@@ -1,10 +1,10 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import 'semantic-ui-css-offline';
+import "semantic-ui-css-offline";
 import "react-select/dist/react-select.css";
 
 import App from "./containers/App";
-import "./index.css";
+import "./index.scss";
 import "./socket";
 import registerServiceWorker from "./registerServiceWorker";
 

@@ -1,21 +1,21 @@
 import ApolloClient from "apollo-client";
 
-import { sourceFullFrag } from "src/graphql/source-full.fragment";
-import { tagFrag } from "src/graphql/tag-mini.fragment";
-import { sourceTypeFrag } from "src/graphql/source-type.fragment";
+import { sourceFullFrag } from "../graphql/source-full.fragment";
+import { tagFrag } from "../graphql/tag-mini.fragment";
+import { sourceTypeFrag } from "../graphql/source-type.fragment";
 import gql from "graphql-tag";
-import socket from "src/socket";
+import socket from "../socket";
 import {
   ProjectFragment,
   AllQueries,
   TagFrag,
   SourceTypeFrag
-} from "src/graphql/gen.types";
-import TAGS_MINI_QUERY from "src/graphql/tags-mini.query";
-import SOURCES_QUERY from "src/graphql/sources-1.query";
-import SOURCE_TYPES_QUERY from "src/graphql/source-types.query";
-import AUTHORS_QUERY from "src/graphql/authors.query";
-import PROJECTS_QUERY from "src/graphql/projects.query";
+} from "../graphql/gen.types";
+import TAGS_MINI_QUERY from "../graphql/tags-mini.query";
+import SOURCES_QUERY from "../graphql/sources-1.query";
+import SOURCE_TYPES_QUERY from "../graphql/source-types.query";
+import AUTHORS_QUERY from "../graphql/authors.query";
+import PROJECTS_QUERY from "../graphql/projects.query";
 
 const AUTHORS_PROJECT_INPUT_KEY = "authorProject";
 

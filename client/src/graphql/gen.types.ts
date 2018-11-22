@@ -344,6 +344,7 @@ export interface CreateQuote_createQuote_source_sourceType {
 
 export interface CreateQuote_createQuote_source {
   id: string;
+  display: string | null;
   year: string | null;
   topic: string;
   publication: string | null;
@@ -378,10 +379,16 @@ export interface CreateQuoteVariables {
 // GraphQL query operation: Quotes1
 // ====================================================
 
+export interface Quotes1_quotes_source {
+  id: string;
+  display: string | null;
+}
+
 export interface Quotes1_quotes {
   id: string;
   text: string;
   date: any | null;
+  source: Quotes1_quotes_source | null;
 }
 
 export interface Quotes1 {
@@ -918,33 +925,19 @@ export interface ProjectFragment {
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL fragment: Quote1Frag
+// GraphQL fragment: QuoteFromTagFrag
 // ====================================================
 
-export interface Quote1Frag {
-  id: string;
-  text: string;
-  date: any | null;
-}
-
-
-/* tslint:disable */
-// This file was automatically generated and should not be edited.
-
-// ====================================================
-// GraphQL fragment: QuoteFromtagFrag
-// ====================================================
-
-export interface QuoteFromtagFrag_source {
+export interface QuoteFromTagFrag_source {
   id: string;
   display: string | null;
 }
 
-export interface QuoteFromtagFrag {
+export interface QuoteFromTagFrag {
   id: string;
   text: string;
   date: any | null;
-  source: QuoteFromtagFrag_source | null;
+  source: QuoteFromTagFrag_source | null;
 }
 
 

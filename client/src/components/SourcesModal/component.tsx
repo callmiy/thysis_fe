@@ -1,7 +1,7 @@
 import React from "react";
 import { Modal, Message, List, Loader } from "semantic-ui-react";
 
-import "./sources-modal.css";
+import "./sources-modal.scss";
 import { SourceFullFrag } from "../../graphql/gen.types";
 import { sourceDisplay } from "../../graphql/utils";
 import { makeSourceURL } from "../../routes/util";
@@ -67,7 +67,11 @@ export class SourcesModal extends React.Component<Props> {
     );
   };
 
-  renderSource = (source: SourceFullFrag) => {
+  renderSource = (source: SourceFullFrag | null) => {
+    if (!source) {
+      return undefined;
+    }
+
     return (
       <List.Item
         key={source.id}

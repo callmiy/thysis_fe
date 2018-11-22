@@ -1,4 +1,4 @@
-import Select from "react-select";
+import Select, { OnChangeHandler } from "react-select";
 import React from "react";
 
 import { SourceTypeFrag } from "../../graphql/gen.types";
@@ -7,7 +7,7 @@ import SOURCE_TYPE_QUERY from "../../graphql/source-types.query";
 
 interface Props {
   selectError: boolean;
-  handleChange: (value: SourceTypeFrag[]) => void;
+  handleChange: OnChangeHandler<SourceTypeFrag[]>;
   handleBlur: () => void;
   name: string;
   value: SourceTypeFrag[];

@@ -201,12 +201,18 @@ export class SearchQuotesComponent extends React.Component<Props, State> {
     );
   };
 
-  renderCategory = (data: TextSearchRowFrag[]) => {
+  renderCategory = (data: Array<TextSearchRowFrag | null> | null) => {
     if (!data) {
       return;
     }
 
-    const header = data[0].source;
+    const data0 = data[0];
+
+    if (!data0) {
+      return;
+    }
+
+    const header = data0.source;
 
     return (
       <div className={classes.result} key={header}>
@@ -219,11 +225,13 @@ export class SearchQuotesComponent extends React.Component<Props, State> {
     );
   };
 
-  renderRow = (header: string) => ({
-    text,
-    tid,
-    column
-  }: TextSearchRowFrag) => {
+  renderRow = (header: string) => (data: TextSearchRowFrag | null) => {
+    if (!data) {
+      return undefined;
+    }
+
+    const { text, tid, column } = data;
+
     const rowProps = RENDER_ROW_PROPS[header];
     const otherProps = rowProps
       ? {

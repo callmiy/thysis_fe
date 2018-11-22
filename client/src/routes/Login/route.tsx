@@ -7,13 +7,13 @@ import { Form } from "semantic-ui-react";
 import { Formik } from "formik";
 import { FormikProps } from "formik";
 import { Field } from "formik";
-import { FieldProps } from "formik";
+import { FieldProps, FormikActions } from "formik";
 import { FormikErrors } from "formik";
 import isEmpty from "lodash/isEmpty";
 import { NavLink } from "react-router-dom";
 import update from "immutability-helper";
 
-import "./login.css";
+import "./login.scss";
 import { initialState } from "./login";
 import { Props } from "./login";
 import { State } from "./login";
@@ -22,7 +22,7 @@ import { FormValues } from "./login";
 import { setTitle, PROJECTS_URL } from "../../routes/util";
 import { USER_REG_URL } from "./../../routes/util";
 import RootHeader from "../../components/Header";
-import connectAndLoad from "src/state/initial-data";
+import connectAndLoad from "../../state/initial-data";
 
 export class Login extends React.Component<Props, State> {
   static getDerivedStateFromProps(nextProps: Props, currentState: State) {
@@ -43,7 +43,7 @@ export class Login extends React.Component<Props, State> {
 
   state = initialState;
 
-  componentDidMount() {
+  async componentDidMount() {
     setTitle("Sign In");
 
     const { updateLocalUser, loggedOutUser } = this.props;
@@ -51,31 +51,31 @@ export class Login extends React.Component<Props, State> {
     // thus will not sign out again
     if (!loggedOutUser) {
       // sign out the user
-      updateLocalUser({
+      const result = await updateLocalUser({
         variables: {
           user: null
         }
-      }).then(result => {
-        if (result) {
-          const { data } = result;
+      });
 
-          if (data) {
-            const { user } = data;
+      if (result) {
+        const { data } = result;
 
-            if (user) {
-              this.setState(s =>
-                update(s, {
-                  initialFormValues: {
-                    email: {
-                      $set: user.email
-                    }
+        if (data) {
+          const { user } = data;
+
+          if (user) {
+            this.setState(s =>
+              update(s, {
+                initialFormValues: {
+                  email: {
+                    $set: user.email
                   }
-                })
-              );
-            }
+                }
+              })
+            );
           }
         }
-      });
+      }
     }
   }
 
@@ -185,7 +185,7 @@ export class Login extends React.Component<Props, State> {
 
   private submit = async (
     values: FormValues,
-    formikBag: FormikProps<FormValues>
+    formikBag: FormikActions<FormValues>
   ) => {
     formikBag.setSubmitting(true);
 

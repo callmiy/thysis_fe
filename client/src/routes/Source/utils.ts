@@ -4,7 +4,7 @@ import { WithApolloClient } from "react-apollo";
 import { ChildProps } from "react-apollo";
 import { GraphqlQueryControls } from "react-apollo";
 
-import { Quote1Frag } from "../../graphql/gen.types";
+import { Quotes1_quotes } from "../../graphql/gen.types";
 import { SourceFull as SourceFullQuery } from "../../graphql/gen.types";
 import { SourceFullVariables } from "../../graphql/gen.types";
 
@@ -16,6 +16,6 @@ export type SourceProps = GraphqlQueryControls<SourceFullVariables> &
 export interface SourceState {
   loadingQuotes: boolean;
   showingQuotes: boolean;
-  quotes?: Quote1Frag[];
+  quotes?: Quotes1_quotes[];
   fetchQuotesError?: ApolloError;
 }

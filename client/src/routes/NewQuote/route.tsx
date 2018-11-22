@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Formik } from "formik";
-import { FormikProps } from "formik";
+import { FormikProps, FormikActions } from "formik";
 import { Field } from "formik";
 import { FieldProps } from "formik";
 import { FormikErrors } from "formik";
@@ -19,7 +19,7 @@ import { Mutation } from "react-apollo";
 import { NavLink } from "react-router-dom";
 import dateIsValid from "date-fns/isValid";
 
-import "./new-quote.css";
+import "./new-quote.scss";
 import {
   Quotes1 as Quotes1Query,
   Sources1QueryVariables,
@@ -54,10 +54,10 @@ import { ShouldReUseSource } from "./new-quote";
 import { FormValues } from "./new-quote";
 import { State } from "./new-quote";
 import { Props } from "./new-quote";
-import QuotesSidebar from "src/components/NewQuoteSidebar";
+import QuotesSidebar from "../../components/NewQuoteSidebar";
 import { initialFormValues } from "./new-quote";
 import { formOutputs } from "./new-quote";
-import AppSideBar from "src/components/AppSidebar";
+import AppSideBar from "../../components/AppSidebar";
 
 export class NewQuote extends React.Component<Props, State> {
   static getDerivedStateFromProps(nextProps: Props, currentState: State) {
@@ -260,7 +260,7 @@ export class NewQuote extends React.Component<Props, State> {
 
   submit = (createQuote: CreateQuoteFn) => async (
     values: FormValues,
-    formikBag: FormikProps<FormValues>
+    formikBag: FormikActions<FormValues>
   ) => {
     formikBag.setSubmitting(true);
 

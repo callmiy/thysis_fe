@@ -26,7 +26,7 @@ import {
   mediaQueries,
   MediaQueryKey
 } from "./app.utils";
-import { logger } from "src/utils";
+import { logger } from "../../utils";
 
 // tslint:disable-next-line:no-any
 const ReactLazy = React as any;

@@ -1,7 +1,7 @@
 import gql from "graphql-tag";
 
 export const quoteFromTagFrag = gql`
-  fragment QuoteFromtagFrag on Quote {
+  fragment QuoteFromTagFrag on Quote {
     id
     text
     date

@@ -11,7 +11,7 @@ import { classes } from "./styles";
 import { SourceProps } from "./utils";
 import { SourceState } from "./utils";
 import SourceAccordion from "./SourceAccordion";
-import AppSideBar from "src/components/AppSidebar";
+import AppSideBar from "../../components/AppSidebar";
 
 export class Source extends React.Component<SourceProps, SourceState> {
   state: SourceState = {

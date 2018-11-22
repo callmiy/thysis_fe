@@ -35,7 +35,7 @@ import SourceTypeControlComponent from "../../../components/SourceTypeControl";
 import SOURCE_QUERY from "../../../graphql/source-full.query";
 import SuccessModal from "./SuccessModal";
 import ErrorModal from "./ErrorModal";
-import { makeAuthorRouteURL } from "src/routes/util";
+import { makeAuthorRouteURL } from "../../../routes/util";
 
 export class SourceAccordion extends React.Component<Props, State> {
   state: State = initialState;
@@ -191,7 +191,11 @@ export class SourceAccordion extends React.Component<Props, State> {
     );
   };
 
-  renderAuthor = (author: AuthorFrag) => {
+  renderAuthor = (author: AuthorFrag | null) => {
+    if (!author) {
+      return undefined;
+    }
+
     return (
       <div key={author.id}>
         <NavLink to={makeAuthorRouteURL(author.id)}>
@@ -495,7 +499,9 @@ export class SourceAccordion extends React.Component<Props, State> {
 
     setSubmitting(true);
 
-    const previousAuthors = source.authors.map((a: AuthorFrag) => a && a.id);
+    const previousAuthors = source.authors.map(
+      (a: null | AuthorFrag) => a && a.id
+    );
     const authorIds = authors.map((a: AuthorFrag) => a && a.id);
 
     const updatedSource = {
@@ -503,7 +509,7 @@ export class SourceAccordion extends React.Component<Props, State> {
       sourceTypeId: id,
       authorIds: authorIds.filter((a: string) => !previousAuthors.includes(a)),
       deletedAuthors: previousAuthors.filter(
-        (a: string) => !authorIds.includes(a)
+        (a: string | null) => a && !authorIds.includes(a)
       ),
       year,
       topic,

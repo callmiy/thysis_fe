@@ -9,7 +9,11 @@ export const authorFullName = (author: AuthorFrag) =>
     .filter(v => !!v)
     .join(" ");
 
-export const authorDisplay = (author: AuthorFrag) => {
+export const authorDisplay = (author: AuthorFrag | null) => {
+  if (!author) {
+    return "";
+  }
+
   let display = "";
 
   if (author.firstName) {

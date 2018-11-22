@@ -1,8 +1,8 @@
 import { RouteComponentProps } from "react-router";
 
-import { CurrProjLocalGqlProps } from "src/state/project.local.query";
-import { TagModalCreatedCb } from "src/components/NewTagModalForm/utils";
-import { UserLocalGqlProps } from "src/state/auth-user.local.query";
+import { CurrProjLocalGqlProps } from "../../state/project.local.query";
+import { TagModalCreatedCb } from "../../components/NewTagModalForm/utils";
+import { UserLocalGqlProps } from "../../state/auth-user.local.query";
 
 export interface OwnProps {
   children: JSX.Element;

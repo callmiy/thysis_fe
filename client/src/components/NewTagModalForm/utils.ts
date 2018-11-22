@@ -1,7 +1,7 @@
 import React from "react";
 import { ApolloError } from "apollo-client";
 
-import { TagFrag } from "../../graphql/gen.types";
+import { TagFrag, CreateTagInput } from "../../graphql/gen.types";
 
 export type TagModalCreatedCb = (tag: TagFrag) => void;
 
@@ -12,9 +12,7 @@ export interface Props {
   onTagCreated?: TagModalCreatedCb;
 }
 
-export interface State {
-  text: string;
-  question?: string;
+export interface State extends CreateTagInput {
   formError?: ApolloError;
   submitting: boolean;
   submitSuccess: boolean;

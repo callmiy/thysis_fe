@@ -1,8 +1,8 @@
 import { Socket, Channel } from "phoenix";
 import { logger } from "./utils";
-import { getToken } from "src/state";
+import { getToken } from "./state";
 import getBackendUrls from "./get-backend-urls";
-import { AllQueries } from "src/graphql/gen.types";
+import { AllQueries } from "./graphql/gen.types";
 
 enum CHANNEL {
   "DATA_PLAIN" = "data:pxy",

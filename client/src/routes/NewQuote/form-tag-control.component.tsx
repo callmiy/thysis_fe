@@ -1,18 +1,18 @@
-import Select from "react-select";
+import Select, { OnChangeHandler } from "react-select";
 import * as React from "react";
 
 import { TagFrag } from "../../graphql/gen.types";
 
-interface TagControlProps {
+interface Props {
   tags: TagFrag[];
   selectError: boolean;
-  handleChange: (value: TagFrag[]) => void;
+  handleChange: OnChangeHandler<TagFrag[]>;
   handleBlur: () => void;
   name: string;
   value: TagFrag;
 }
 
-export default class TagControl extends React.Component<TagControlProps> {
+export default class TagControl extends React.Component<Props> {
   render() {
     const { name, value, selectError } = this.props;
 

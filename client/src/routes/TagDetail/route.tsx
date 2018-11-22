@@ -13,7 +13,7 @@ import renderQuote from "../../components/QuoteItem";
 import { setTitle } from "../../routes/util";
 import { styles } from "./styles";
 import { classes } from "./styles";
-import AppSideBar from "src/components/AppSidebar";
+import AppSideBar from "../../components/AppSidebar";
 
 type TagDetailProps = RouteComponentProps<{ id: string }>;
 

@@ -1,7 +1,6 @@
 import { InMemoryCache } from "apollo-cache-inmemory";
 import { ApolloClient } from "apollo-client";
-import { ApolloLink, NextLink } from "apollo-link";
-import { Operation } from "apollo-link";
+import { ApolloLink, Operation } from "apollo-link";
 import { onError } from "apollo-link-error";
 import { HttpLink } from "apollo-link-http";
 import { CachePersistor } from "apollo-cache-persist";
@@ -29,10 +28,11 @@ export const client = new ApolloClient({
 });
 
 export default client;
+const storage = localStorage as any;
 
 const persistor = new CachePersistor({
   cache,
-  storage: localStorage,
+  storage,
   key: "thysis-apollo-cache-persist"
 });
 
@@ -87,11 +87,11 @@ const getNow = () => {
 
 function middlewareLoggerLink(l: ApolloLink) {
   const processOperation = (operation: Operation) => ({
-    query: operation.query.loc ? operation.query.loc.source.body : {},
+    query: operation.query.loc ? operation.query.loc.source.body : "",
     variables: operation.variables
   });
 
-  const logger = new ApolloLink((operation, forward: NextLink) => {
+  const logger = new ApolloLink((operation, forward) => {
     const operationName = `Apollo operation: ${operation.operationName}`;
 
     // tslint:disable-next-line:no-console
@@ -104,7 +104,7 @@ function middlewareLoggerLink(l: ApolloLink) {
     );
 
     if (!forward) {
-      return forward;
+      return null;
     }
 
     const fop = forward(operation);

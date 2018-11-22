@@ -6,25 +6,25 @@ import { Icon } from "semantic-ui-react";
 import update from "immutability-helper";
 import { ApolloError } from "apollo-client";
 
-import "./new-quote-sidebar.css";
+import "./new-quote-sidebar.scss";
 import {
   SourceFullFrag,
   Sources1Query,
   Sources1QueryVariables,
-  Quote1Frag,
+  Quotes1_quotes,
   Quotes1,
   Quotes1Variables,
   TagsMinimal,
   TagFrag
-} from "src/graphql/gen.types";
-import QUOTES_QUERY from "src/graphql/quotes-1.query";
-import TAGS_QUERY from "src/graphql/tags-mini.query";
-import SOURCES_QUERY from "src/graphql/sources-1.query";
-import { sourceDisplay } from "src/graphql/utils";
-import SearchQuotesComponent from "src/components/SearchComponent";
-import { makeSourceURL } from "src/routes/util";
-import { makeTagURL } from "src/routes/util";
-import Loading from "src/components/Loading";
+} from "../../graphql/gen.types";
+import QUOTES_QUERY from "../../graphql/quotes-1.query";
+import TAGS_QUERY from "../../graphql/tags-mini.query";
+import SOURCES_QUERY from "../../graphql/sources-1.query";
+import { sourceDisplay } from "../../graphql/utils";
+import SearchQuotesComponent from "../../components/SearchComponent";
+import { makeSourceURL } from "../../routes/util";
+import { makeTagURL } from "../../routes/util";
+import Loading from "../../components/Loading";
 import { Props, State, ResourceName, Resources } from "./new-quote-sidebar";
 
 export class QuotesSidebar extends React.Component<Props, State> {
@@ -128,7 +128,7 @@ export class QuotesSidebar extends React.Component<Props, State> {
     };
   };
 
-  renderquote = ({ id, text }: Quote1Frag) => {
+  renderquote = ({ id, text }: Quotes1_quotes) => {
     return (
       <List.Item key={id}>
         <List.Content>{text}</List.Content>
@@ -220,8 +220,8 @@ export class QuotesSidebar extends React.Component<Props, State> {
         }
       });
 
-      const data = result.data.quotes as Quote1Frag[];
-      this.fetching(ResourceName.QUOTES, data);
+      const quotes = result.data.quotes as Quotes1_quotes[];
+      this.fetching(ResourceName.QUOTES, quotes);
     } catch (error) {
       this.fetching(undefined, undefined, error);
     }
@@ -253,13 +253,14 @@ export class QuotesSidebar extends React.Component<Props, State> {
     this.fetching();
 
     try {
+      const projectId = currentProject.id;
       const result = await this.props.client.query<
         Sources1Query,
         Sources1QueryVariables
       >({
         query: SOURCES_QUERY,
         variables: {
-          source: { projectId: currentProject.id }
+          source: { projectId }
         }
       });
 
@@ -272,7 +273,7 @@ export class QuotesSidebar extends React.Component<Props, State> {
 
   fetching = (
     resource?: ResourceName,
-    result?: Quote1Frag[] | TagFrag[] | SourceFullFrag[],
+    result?: Quotes1_quotes[] | TagFrag[] | SourceFullFrag[],
     error?: ApolloError
   ) => {
     this.setState({ graphQlError: undefined });

@@ -2,7 +2,7 @@ import { RouteProps } from "react-router-dom";
 import { DataValue } from "react-apollo";
 
 import { CurrentProjectLocalData } from "../../../state/project.local.query";
-import { UserLocalGqlProps } from "src/state/auth-user.local.query";
+import { UserLocalGqlProps } from "../../../state/auth-user.local.query";
 
 export type LocalUserGqlProps = DataValue<UserLocalGqlProps> | undefined;
 

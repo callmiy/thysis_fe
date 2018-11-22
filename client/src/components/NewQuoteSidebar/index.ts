@@ -5,7 +5,7 @@ import QuotesSidebar from "./component";
 import LOCAL_PROJECT_QUERY, {
   CurrProjLocalGqlProps,
   CurrentProjectLocalData
-} from "src/state/project.local.query";
+} from "../../state/project.local.query";
 
 const currLocalProjGql = graphql<
   {},

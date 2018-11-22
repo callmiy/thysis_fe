@@ -12,7 +12,11 @@ import update from "immutability-helper";
 
 import TAG_MUTATION from "../../graphql/tag.mutation";
 import { CreateTagFn, CreateTagUpdateFn } from "../../graphql/ops.types";
-import { TagsMinimal as TagsMinimalQuery } from "../../graphql/gen.types";
+import {
+  TagsMinimal as TagsMinimalQuery,
+  CreateTag,
+  CreateTagVariables
+} from "../../graphql/gen.types";
 import { TagFrag } from "../../graphql/gen.types";
 import TAGS_QUERY from "../../graphql/tags-mini.query";
 import { initialState } from "./utils";
@@ -81,7 +85,7 @@ export class NewTagModalForm extends React.Component<Props, State> {
               <Icon name="remove" /> Dismiss
             </Button>
 
-            <Mutation
+            <Mutation<CreateTag, CreateTagVariables>
               mutation={TAG_MUTATION}
               variables={{ tag: { text, question } }}
               update={this.writeTagsToCache}

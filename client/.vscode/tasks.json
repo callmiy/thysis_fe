@@ -4,39 +4,9 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "start front end",
-      "type": "shell",
-      "command": "yarn start",
-      "options": {
-        "env": {
-          "PORT": "3016",
-          "REACT_APP_API_URL": "http://localhost:4016/__api"
-        }
-      },
-      "group": "build",
-      "problemMatcher": []
-    },
-
-    {
       "label": "start front end js only",
       "type": "shell",
       "command": "launch_with_cmder.bat \"npm start\"",
-      "group": "build",
-      "problemMatcher": []
-    },
-
-    {
-      "label": "start front end js only + watch css",
-      "type": "shell",
-      "command": "launch_with_cmder.bat \"npm start\" && launch_with_cmder.bat \"npm run watch-css\"",
-      "group": "build",
-      "problemMatcher": []
-    },
-
-    {
-      "label": "watch css",
-      "type": "shell",
-      "command": "launch_with_cmder.bat \"npm run watch-css\"",
       "group": "build",
       "problemMatcher": []
     },
