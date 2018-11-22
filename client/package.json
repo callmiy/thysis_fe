@@ -32,7 +32,6 @@
     "start": "cross-env PORT=3016 BROWSER=none REACT_APP_API_URL=http://localhost:4016/__api yarn react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject",
     "deploy": "rimraf ../server/priv/web-client/static && yarn build && node sync-backend.js && cd ../server && mix deploy rewrite index.html"
   },
   "devDependencies": {

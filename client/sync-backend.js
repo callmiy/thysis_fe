@@ -102,7 +102,7 @@ const make = () => {
 
   if (args.length === 2) {
     deleteStatics();
-    rewriteServiceWorkerFile(path.resolve(buildDir, "service-worker.js"));
+    // rewriteServiceWorkerFile(path.resolve(buildDir, "service-worker.js"));
 
     // tslint:disable-next-line:no-console
     console.log("\n\nCopying from: ", buildDir, " to: ", deployDir, "\n\n");
