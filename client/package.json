@@ -15,7 +15,6 @@
     "jss": "^9.8.1",
     "jss-preset-default": "^4.5.0",
     "lodash-es": "^4.17.10",
-    "moment": "^2.22.2",
     "react": "16.6.1",
     "react-apollo": "^2.2.4",
     "react-dom": "16.6.1",
