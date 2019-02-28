@@ -60,6 +60,23 @@ defmodule ThysisWeb.Schema.User do
     field(:jwt, non_null(:string))
   end
 
+  @desc "Create password recovery success response"
+  object :anfordern_pzs do
+    field(:email, :string |> non_null)
+  end
+
+  @desc "PZS Token Kontrollieren Erfolgeich Nachricht"
+  object :pzs_token_kontrollieren_nachricht do
+    field(:token, :string |> non_null)
+  end
+
+  @desc "PZS input"
+  input_object :pzs do
+    field(:token, non_null(:string))
+    field(:password, non_null(:string))
+    field(:password_confirmation, non_null(:string))
+  end
+
   @desc "Mutations allowed on User object"
   object :user_mutation do
     @doc "Create a user and her credential"
@@ -81,6 +98,17 @@ defmodule ThysisWeb.Schema.User do
       arg(:login, non_null(:login_user))
 
       resolve(&Resolver.login/3)
+    end
+
+    field :anfordern_pzs, :anfordern_pzs do
+      arg(:email, :string |> non_null())
+      resolve(&Resolver.anfordern_pzs/3)
+    end
+
+    @doc "Reset user password"
+    field :veranderung_pzs, :user do
+      arg(:input, non_null(:pzs))
+      resolve(&Resolver.veranderung_pzs/3)
     end
   end
 

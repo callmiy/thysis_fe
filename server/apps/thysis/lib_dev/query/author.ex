@@ -30,20 +30,6 @@ defmodule ThysisWeb.Query.Author do
     """
   end
 
-  def query(:authors) do
-    {frag_name, frag} = all_fields_fragment()
-
-    """
-    query GetAuthors($author: GetAuthorsInput) {
-      authors(author: $author) {
-        ...#{frag_name}
-      }
-    }
-
-    #{frag}
-    """
-  end
-
   def mutation(:author) do
     {frag_name, frag} = all_fields_fragment()
 
@@ -64,6 +50,20 @@ defmodule ThysisWeb.Query.Author do
     """
     mutation UpdateAuthor($author: UpdateAuthorInput!) {
       updateAuthor(author: $author) {
+        ...#{frag_name}
+      }
+    }
+
+    #{frag}
+    """
+  end
+
+  def authors do
+    {frag_name, frag} = all_fields_fragment()
+
+    """
+    query GetAuthors($author: GetAuthorsInput) {
+      authors(author: $author) {
         ...#{frag_name}
       }
     }

@@ -102,7 +102,7 @@ defmodule ThysisWeb.Query.Source do
 
     %{
       query: query,
-      params: "$source: GetSourcesInput",
+      params: "$source: GetSourcesInput!",
       fragments: frags
     }
   end

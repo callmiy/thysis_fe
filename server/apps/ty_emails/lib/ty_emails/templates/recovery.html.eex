@@ -1,0 +1,45 @@
+<% url = Application.get_env( :thysis, :front_end_url ) <> "/reset/" <>
+assigns[:token] %>
+
+<div
+  style="max-width: 400px; margin: 0 auto; font-size: 14px; border: 1px solid blue; border-radius: 2px; padding: 0 10px 10px;"
+>
+  <div style="text-align: center;">
+    <h1 style="margin: 5px">Reset Your Password</h1>
+  </div>
+
+  <div>
+    You told us you forgot your password. If you really did, click here to
+    choose a new one:
+  </div>
+
+  <div style="text-align: center; margin: 10px 0;">
+    <a
+      href="<%= url %>"
+      style="display: inline-block; border: 1px solid blue; border-radius: 5px; padding: 10px 20px; text-decoration: none; color: white; background-color: blue; font-size: 18px; font-weight: bolder;"
+      >Choose a New Password</a
+    >
+  </div>
+
+  <div>
+    If you didn’t mean to reset your password, then you can just ignore this
+    email; your password will not change.
+  </div>
+
+  <hr style="margin: 20px -6px 20px;" />
+
+  <h3>"Choose a New Password" button not working?</h3>
+  <div style="margin-bottom: 10px;">
+    Just copy and paste this link in your browser:
+  </div>
+  <a href="<%= url %>"><%= url %></a>
+
+  <h3>
+    Please note that the link must be used within
+    <b style="text-decoration: underline;font-weight: 800;color: #ff9b00;"
+      >24 hours</b
+    >
+    from time of receipt. You will need to request another link if it expires
+    before use.
+  </h3>
+</div>

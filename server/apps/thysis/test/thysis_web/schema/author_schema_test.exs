@@ -1,5 +1,6 @@
 defmodule ThysisWeb.AuthorSchemaTest do
   use Thysis.DataCase
+
   alias ThysisWeb.Schema
   alias ThysisWeb.Query.Author, as: Query
   alias Thysis.Author
@@ -38,36 +39,9 @@ defmodule ThysisWeb.AuthorSchemaTest do
     end
 
     # @tag :skip
-    test "get all authors for user succeeds" do
-      {assoc, assoc_ids} = Factory.assoc()
-      # first author
-      Factory.insert(assoc_ids)
-
-      # 2nd author
-      %{last_name: last_name, id: id} = Factory.insert(assoc_ids)
-      id = inspect(id)
-
-      assert {:ok,
-              %{
-                data: %{
-                  "authors" => authors
-                }
-              }} =
-               Absinthe.run(
-                 Query.query(:authors),
-                 Schema,
-                 context: context(assoc.user)
-               )
-
-      assert length(authors) == 2
-      assert %{"id" => ^id, "lastName" => ^last_name} = List.last(authors)
-    end
-
-    # @tag :skip
     test "get all authors for project succeeds" do
       {assoc, assoc_ids} = Factory.assoc()
-      # first author
-      Factory.insert(assoc_ids)
+      _author_1 = Factory.insert(assoc_ids)
 
       project = ProjectFactory.insert(user_id: assoc.user.id)
 
@@ -87,7 +61,7 @@ defmodule ThysisWeb.AuthorSchemaTest do
                 }
               }} =
                Absinthe.run(
-                 Query.query(:authors),
+                 Query.authors(),
                  Schema,
                  variables: variables,
                  context: context(assoc.user)

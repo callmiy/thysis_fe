@@ -76,31 +76,35 @@ defmodule ThysisWeb.SourceSchemaTest do
     end
 
     # @tag :skip
-    test "get all sources for user succeeds" do
+    test "get all sources for a project belonging to a user succeeds" do
       user = RegFactory.insert()
       source_type_id = SourceTypeFactory.insert().id
 
-      # first source belonging to random project of same user
-      Factory.insert(
-        project_id: ProjectFactory.insert(user: user).id,
-        user_id: user.id,
-        source_type_id: source_type_id
-      )
+      # first source belonging to random project of same user -> should never
+      # show up in result of query
+      _source1 =
+        Factory.insert(
+          project_id: ProjectFactory.insert(user: user).id,
+          user_id: user.id,
+          source_type_id: source_type_id
+        )
 
       project = ProjectFactory.insert(user: user)
 
-      # 2nd and 3rd source
-      Factory.insert(
-        project_id: project.id,
-        user_id: user.id,
-        source_type_id: source_type_id
-      )
+      # 2nd and 3rd sources
+      source2 =
+        Factory.insert(
+          project_id: project.id,
+          user_id: user.id,
+          source_type_id: source_type_id
+        )
 
-      Factory.insert(
-        project_id: project.id,
-        user_id: user.id,
-        source_type_id: source_type_id
-      )
+      source3 =
+        Factory.insert(
+          project_id: project.id,
+          user_id: user.id,
+          source_type_id: source_type_id
+        )
 
       queryMap = Query.sources()
 
@@ -119,11 +123,14 @@ defmodule ThysisWeb.SourceSchemaTest do
                 }
               }} =
                Absinthe.run(query, Schema,
-                 #  variables: %{"source" => %{"projectId" => project.id}},
+                 variables: %{"source" => %{"projectId" => project.id}},
                  context: %{current_user: user}
                )
 
-      assert length(sources) == 3
+      assert Enum.map(sources, & &1["id"]) |> Enum.sort() == [
+               "#{source2.id}",
+               "#{source3.id}"
+             ]
     end
 
     # @tag :skip

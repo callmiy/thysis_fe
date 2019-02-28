@@ -90,10 +90,14 @@ export class App extends React.Component<{}, State> {
                 <Route
                   exact={true}
                   path={USER_REG_URL}
-                  component={UserRegRoute}
+                  render={routeProps => <UserRegRoute {...routeProps} />}
                 />
 
-                <Route exact={true} path={LOGIN_URL} component={LoginRoute} />
+                <Route
+                  exact={true}
+                  path={LOGIN_URL}
+                  render={routeProps => <LoginRoute {...routeProps} />}
+                />
 
                 <AuthRequired
                   exact={true}
@@ -133,7 +137,7 @@ export class App extends React.Component<{}, State> {
                   component={NewQuote}
                 />
 
-                <Route component={LoginRoute} />
+                <Route render={routeProps => <LoginRoute {...routeProps} />} />
               </Switch>
             </BrowserRouter>
           </AppSidebarContext.Provider>
