@@ -4,6 +4,8 @@ import { Icon } from "semantic-ui-react";
 import { Form } from "semantic-ui-react";
 import { List } from "semantic-ui-react";
 import update from "immutability-helper";
+import dateFormat from "date-fns/format";
+import parseISO from "date-fns/parseISO";
 
 import "./projects.scss";
 import Header from "../../components/Header";
@@ -12,7 +14,6 @@ import { Props, State, initialState } from "./projects";
 import { SemanticOnInputChangeFunc } from "../../utils";
 import { ProjectFragment } from "../../graphql/gen.types";
 import { makeNewQuoteURL } from "../util";
-import { format as dateFormat } from "date-fns";
 import AppSideBar from "../../components/AppSidebar";
 
 export class SelectProject extends React.Component<Props, State> {
@@ -127,8 +128,11 @@ export class SelectProject extends React.Component<Props, State> {
             {project.title}
           </List.Header>
           <List.Description className="project-row__desc">
-            Created: &nbsp; &nbsp;{" "}
-            {dateFormat(project.insertedAt, "eeee, M/MMM/yyyy HH:mm a")}
+            Created: &nbsp; &nbsp;
+            {dateFormat(
+              parseISO(project.insertedAt),
+              "eeee, M/MMM/yyyy HH:mm a"
+            )}
           </List.Description>
         </List.Content>
       </List.Item>

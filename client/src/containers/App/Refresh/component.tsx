@@ -12,7 +12,7 @@ export class Refresh extends React.Component<Props, {}> {
       return <Loading />;
     }
 
-    const { component: Component, ...rest } = this.props.componentProps;
+    const { component, ...rest } = this.props.componentProps;
 
     if (error && !error.message.includes("Network")) {
       return <Redirect to={LOGIN_URL} />;
@@ -25,6 +25,8 @@ export class Refresh extends React.Component<Props, {}> {
       return <Redirect to={PROJECTS_URL} />;
     }
 
+    // tslint:disable-next-line: no-any
+    const Component = component as any;
     return <Component {...rest} />;
   }
 }

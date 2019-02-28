@@ -103,7 +103,7 @@ const searchComponentStateMutation: ClientStateFn<{
   return null;
 };
 
-export const initState = (cache: InMemoryCache) => {
+export const stateLink = (cache: InMemoryCache) => {
   return withClientState({
     cache,
     resolvers: {

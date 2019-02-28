@@ -8,7 +8,7 @@ import { Props } from "./auth-required";
 import { LOGIN_URL, PROJECTS_URL } from "./../../../routes/util";
 
 export const AuthRequired = ({
-  component: AuthComponent,
+  component,
   user,
   staleToken,
   currentProject,
@@ -19,6 +19,9 @@ export const AuthRequired = ({
     currentProject,
     ...rest
   };
+
+  // tslint:disable-next-line: no-any
+  const AuthComponent = component as any;
 
   const render = (childProps: RouteProps) => {
     if (user) {

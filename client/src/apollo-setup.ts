@@ -5,7 +5,7 @@ import { onError } from "apollo-link-error";
 import { HttpLink } from "apollo-link-http";
 import { CachePersistor } from "apollo-cache-persist";
 
-import { initState } from "./state";
+import { stateLink } from "./state";
 import { getToken } from "./state";
 import getBackendUrls from "./get-backend-urls";
 
@@ -24,10 +24,11 @@ const cache = new InMemoryCache();
 
 export const client = new ApolloClient({
   cache,
-  link: ApolloLink.from([initState(cache), httpLink])
+  link: ApolloLink.from([stateLink(cache), httpLink])
 });
 
 export default client;
+// tslint:disable-next-line: no-any
 const storage = localStorage as any;
 
 const persistor = new CachePersistor({
