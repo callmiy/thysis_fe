@@ -7,7 +7,7 @@ use Mix.Config
 # watchers to your application. For example, we use it
 # with brunch.io to recompile .js and .css sources.
 config :thysis, ThysisWeb.Endpoint,
-  http: [port: System.get_env("THYSIS_PHOENIX_PORT") || 4000],
+  http: [port: System.get_env("THYSIS_PHOENIX_PORT") || 4016],
   debug_errors: true,
   check_origin: false,
   watchers: []

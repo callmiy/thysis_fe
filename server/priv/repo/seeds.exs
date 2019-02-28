@@ -36,7 +36,12 @@ defmodule Seed do
 
     Repo.transaction(fn ->
       tags = TagFactory.insert_list(8)
-      user = RegFactory.insert()
+
+      user =
+        RegFactory.insert(
+          email: "a@b.com", password: "123456", password_confirmation: "123456"
+        )
+
       projects = projects(user)
       project_ids = Enum.map(projects, & &1.id)
 
