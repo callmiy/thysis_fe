@@ -3,7 +3,8 @@ const fs = require("fs");
 const copydir = require("copy-dir");
 
 const buildDir = path.resolve(".", "build");
-const deployDir = path.resolve("..", "server", "priv", "web-client");
+const serverPath = "server/apps/thysis/priv/web-client";
+const deployDir = path.resolve("..", serverPath);
 
 const deleteStatics = (toDelete = deployDir) => {
   // tslint:disable-next-line:no-console
@@ -109,7 +110,7 @@ const make = () => {
 
     copydir.sync(buildDir, deployDir);
   } else {
-    deleteStatics(path.resolve("server", "priv", "web-client"));
+    deleteStatics(path.resolve(serverPath));
   }
 };
 
