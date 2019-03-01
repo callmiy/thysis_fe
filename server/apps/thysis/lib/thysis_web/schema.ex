@@ -8,7 +8,6 @@ defmodule ThysisWeb.Schema do
   import_types(ThysisWeb.Schema.Source)
   import_types(ThysisWeb.Schema.Quote)
   import_types(ThysisWeb.Schema.Author)
-  import_types(ThysisWeb.Schema.Credential)
   import_types(ThysisWeb.Schema.User)
   import_types(ThysisWeb.Schema.Project)
 
