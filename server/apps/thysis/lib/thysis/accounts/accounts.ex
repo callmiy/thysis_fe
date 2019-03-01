@@ -59,7 +59,9 @@ defmodule Thysis.Accounts do
             "\n\ncredentials error for email: ",
             email,
             ". invalid password: ",
-            password
+            password,
+            " or token: ",
+            cred.token
           ])
 
           {:error, "Invalid email/password"}
