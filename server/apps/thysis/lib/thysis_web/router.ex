@@ -16,7 +16,7 @@ defmodule ThysisWeb.Router do
     plug(ThysisWeb.Plug.AuthContexts)
   end
 
-  scope "/__admin", ExAdmin do
+  scope "/admin", ExAdmin do
     pipe_through(:browser)
     admin_routes()
   end
@@ -25,20 +25,19 @@ defmodule ThysisWeb.Router do
     pipe_through(:api)
 
     forward(
-      "/__api",
+      "/api",
       Absinthe.Plug,
       schema: ThysisWeb.Schema,
       context: %{pubsub: ThysisWeb.Endpoint}
     )
 
-    # if Mix.env() == :dev do
-    forward(
-      "/__graphql",
-      Absinthe.Plug.GraphiQL,
-      schema: ThysisWeb.Schema,
-      context: %{pubsub: ThysisWeb.Endpoint}
-    )
-
-    # end
+    if Mix.env() == :dev do
+      forward(
+        "/graphql",
+        Absinthe.Plug.GraphiQL,
+        schema: ThysisWeb.Schema,
+        context: %{pubsub: ThysisWeb.Endpoint}
+      )
+    end
   end
 end

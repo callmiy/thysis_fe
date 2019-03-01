@@ -1,4 +1,4 @@
-const URL_ROOT = "/__api";
+const URL_ROOT = "/api";
 
 export const getBackendUrls = () => {
   const apiUrl = process.env.REACT_APP_API_URL;

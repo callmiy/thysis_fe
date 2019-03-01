@@ -78,7 +78,7 @@
       "options": {
         "env": {
           "THYSIS_PHOENIX_INTEGRATION_TEST_PORT": "4017",
-          "REACT_APP_API_URL": "http://localhost:4017/__api"
+          "REACT_APP_API_URL": "http://localhost:4017/api"
         }
       },
       "problemMatcher": ["$mixCompileError", "$mixCompileWarning"],
@@ -95,7 +95,7 @@
       "options": {
         "env": {
           "THYSIS_PHOENIX_INTEGRATION_TEST_PORT": "4017",
-          "REACT_APP_API_URL": "http://localhost:4017/__api"
+          "REACT_APP_API_URL": "http://localhost:4017/api"
         }
       },
       "problemMatcher": ["$mixCompileError", "$mixCompileWarning"],
@@ -112,7 +112,7 @@
       "options": {
         "env": {
           "THYSIS_PHOENIX_INTEGRATION_TEST_PORT": "4017",
-          "REACT_APP_API_URL": "http://localhost:4017/__api"
+          "REACT_APP_API_URL": "http://localhost:4017/api"
         }
       },
       "problemMatcher": ["$mixCompileError", "$mixCompileWarning"],
@@ -128,7 +128,7 @@
       "options": {
         "env": {
           "THYSIS_PHOENIX_INTEGRATION_TEST_PORT": "4017",
-          "REACT_APP_API_URL": "http://localhost:4017/__api"
+          "REACT_APP_API_URL": "http://localhost:4017/api"
         }
       },
       "problemMatcher": ["$mixCompileError", "$mixCompileWarning"],

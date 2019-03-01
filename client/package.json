@@ -28,11 +28,11 @@
     "tslib": "1.9.3"
   },
   "scripts": {
-    "start": "cross-env PORT=3016 BROWSER=none REACT_APP_API_URL=http://localhost:4016/__api yarn react-scripts start",
+    "start": "cross-env PORT=3016 BROWSER=none REACT_APP_API_URL=http://localhost:4016/api yarn react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
-    "deploy": "rimraf ../server/apps/thysis/priv/web-client/static && yarn build && node sync-backend.js && cd ../server && mix deploy rewrite index.html",
-    "deploy-netlify": "cross-env REACT_APP_API_URL=https://thysis.herokuapp.com/__api react-scripts build && netlify deploy  --prod --dir=build",
+    "deploy-prod": "yarn deploy-netlify && yarn deploy-heroku",
+    "deploy-netlify": "cross-env REACT_APP_API_URL=https://thysis.herokuapp.com/api react-scripts build && netlify deploy  --prod --dir=build",
     "deploy-heroku": "cd .. && git co master && git merge dev && git subtree push --prefix=server heroku master && git co dev && cd client"
   },
   "devDependencies": {

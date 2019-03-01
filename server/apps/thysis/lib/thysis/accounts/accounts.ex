@@ -27,7 +27,7 @@ defmodule Thysis.Accounts do
   end
 
   def authenticate(%{email: email, password: password} = _params) do
-    Logger.info(["\n\nauthenticating with email: ", email])
+    Logger.info(fn -> ["authenticating with email: ", email] end)
 
     Credential
     |> join(:inner, [c], assoc(c, :user))
@@ -37,32 +37,35 @@ defmodule Thysis.Accounts do
     |> Repo.one()
     |> case do
       nil ->
-        Logger.error([
-          "\n\ncredentials not found for email: ",
-          email,
-          ". Invalid email"
-        ])
+        Logger.error(fn ->
+          [
+            "Credentials not found for email: ",
+            email,
+            ". Invalid email"
+          ]
+        end)
 
         dummy_checkpw()
         {:error, "Invalid email/password"}
 
       %Credential{} = cred ->
         if checkpw(password, cred.token) do
-          Logger.info([
-            "\n\nauthentication succeeds for email: ",
-            email
-          ])
+          Logger.info(fn ->
+            [
+              "Authentication succeeds for email: ",
+              email
+            ]
+          end)
 
           {:ok, cred}
         else
-          Logger.error([
-            "\n\ncredentials error for email: ",
-            email,
-            ". invalid password: ",
-            password,
-            " or token: ",
-            cred.token
-          ])
+          Logger.error(fn ->
+            [
+              "Credentials error for email: ",
+              email,
+              ". Invalid password"
+            ]
+          end)
 
           {:error, "Invalid email/password"}
         end

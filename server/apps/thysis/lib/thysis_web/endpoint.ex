@@ -17,23 +17,11 @@ defmodule ThysisWeb.Endpoint do
     service-worker
   )
 
-  @sw_req_path "/service-worker.js"
-  @sw_file "priv/web-client/service-worker.js.gz"
-
   if Application.get_env(:thysis, :sql_sandbox) do
     plug(Phoenix.Ecto.SQL.Sandbox)
   end
 
   socket("/socket", ThysisWeb.UserSocket)
-
-  # Serve the service worker file. We don't use Plug.Static because the
-  # service worker response requires special headers e.g 'cache-control' must
-  # be set to 'no-cache' but Plug.Static sets it to 'public'
-  plug(:serve_sw)
-
-  # Serve frontend at /index.html (root path). Static files will be served from
-  # priv/web-client
-  plug(ThysisWeb.FrontEnd)
 
   # You should set gzip to true if you are running phoenix.digest
   # when deploying your static files in production.
@@ -103,25 +91,4 @@ defmodule ThysisWeb.Endpoint do
       {:ok, config}
     end
   end
-
-  def serve_sw(%{request_path: @sw_req_path} = conn, _opts) do
-    conn =
-      update_in(
-        conn.resp_headers,
-        &[
-          {"content-encoding", "gzip"},
-          {"vary", "Accept-Encoding"},
-          {"accept-ranges", "bytes"},
-          {"content-type", "application/javascript"},
-          {"server", "Cowboy"}
-          | &1
-        ]
-      )
-
-    conn
-    |> send_file(200, @sw_file)
-    |> halt()
-  end
-
-  def serve_sw(conn, _), do: conn
 end

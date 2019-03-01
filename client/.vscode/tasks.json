@@ -17,7 +17,7 @@
       "command": "yarn deploy",
       "options": {
         "env": {
-          "REACT_APP_API_URL": "http://localhost:4016/__api"
+          "REACT_APP_API_URL": "http://localhost:4016/api"
         }
       },
       "group": "build",
@@ -30,7 +30,7 @@
       "command": "yarn deploy",
       "options": {
         "env": {
-          "REACT_APP_API_URL": "https://thysis.herokuapp.com/__api"
+          "REACT_APP_API_URL": "https://thysis.herokuapp.com/api"
         }
       },
       "group": "build",
@@ -40,7 +40,7 @@
     {
       "label": "Apollo code gen",
       "type": "shell",
-      "command": "apollo-codegen introspect-schema http://localhost:4016/__api --output src/graphql/schema.json && apollo-codegen generate src/graphql/*.ts --schema src/graphql/schema.json --target typescript --output src/graphql/gen.types.ts",
+      "command": "apollo-codegen introspect-schema http://localhost:4016/api --output src/graphql/schema.json && apollo-codegen generate src/graphql/*.ts --schema src/graphql/schema.json --target typescript --output src/graphql/gen.types.ts",
       "problemMatcher": []
     }
   ]

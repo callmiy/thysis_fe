@@ -37,6 +37,10 @@ config :thysis, Thysis.Repo,
 
 config :thysis, front_end_url: front_end_url
 
+config :logger,
+  level: :info,
+  compile_time_purge_level: :info
+
 # ## SSL Support
 #
 # To get SSL working, you will need to add the `https` key
