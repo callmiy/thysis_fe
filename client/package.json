@@ -31,7 +31,8 @@
     "start": "cross-env PORT=3016 BROWSER=none REACT_APP_API_URL=http://localhost:4016/__api yarn react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
-    "deploy": "rimraf ../server/apps/thysis/priv/web-client/static && yarn build && node sync-backend.js && cd ../server && mix deploy rewrite index.html"
+    "deploy": "rimraf ../server/apps/thysis/priv/web-client/static && yarn build && node sync-backend.js && cd ../server && mix deploy rewrite index.html",
+    "deploy-netlify": "cross-env REACT_APP_API_URL=https://thysis.herokuapp.com/__api react-scripts build && netlify deploy  --prod --dir=build"
   },
   "devDependencies": {
     "@types/graphql": "^14.0.7",
