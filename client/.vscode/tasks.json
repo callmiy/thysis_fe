@@ -38,28 +38,6 @@
     },
 
     {
-      "label": "deploy to heroku client + server",
-      "type": "shell",
-      "command": "git co dev && yarn deploy && cd .. && git add . && git cm -m \"Production build\" && git co master && git merge dev && git subtree push --prefix=server heroku master && heroku run \"POOL_SIZE=2 mix ecto.migrate\" && git co dev && rimraf server/apps/thysis/priv/web-client/static  && node client/sync-backend.js delete && git add . && git cm -m \"Static folder reset\" ",
-      "options": {
-        "env": {
-          "REACT_APP_API_URL": "https://thysis.herokuapp.com/__api"
-        }
-      },
-      "problemMatcher": []
-    },
-
-    {
-      "label": "deploy to heroku server only",
-      "type": "shell",
-      "command": "git co master && git merge dev && git subtree push --prefix=server heroku master && heroku run \"POOL_SIZE=2 mix ecto.migrate\" && git co dev",
-      "options": {
-        "cwd": ".."
-      },
-      "problemMatcher": []
-    },
-
-    {
       "label": "Apollo code gen",
       "type": "shell",
       "command": "apollo-codegen introspect-schema http://localhost:4016/__api --output src/graphql/schema.json && apollo-codegen generate src/graphql/*.ts --schema src/graphql/schema.json --target typescript --output src/graphql/gen.types.ts",

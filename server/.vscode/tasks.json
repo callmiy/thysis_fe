@@ -133,6 +133,16 @@
       },
       "problemMatcher": ["$mixCompileError", "$mixCompileWarning"],
       "group": "test"
+    },
+
+    {
+      "label": "deploy to heroku",
+      "type": "shell",
+      "command": "git co master && git merge dev && git subtree push --prefix=server heroku master && heroku run \"POOL_SIZE=2 mix ecto.migrate\" && git co dev",
+      "options": {
+        "cwd": ".."
+      },
+      "problemMatcher": []
     }
   ]
 }
