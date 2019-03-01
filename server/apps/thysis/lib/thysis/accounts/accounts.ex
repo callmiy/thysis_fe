@@ -1,4 +1,6 @@
 defmodule Thysis.Accounts do
+  require Logger
+
   import Ecto.Query, warn: false
   import Comeonin.Bcrypt, only: [{:dummy_checkpw, 0}, {:checkpw, 2}]
 
@@ -25,6 +27,8 @@ defmodule Thysis.Accounts do
   end
 
   def authenticate(%{email: email, password: password} = _params) do
+    Logger.info(["\n\nauthenticating with email: ", email])
+
     Credential
     |> join(:inner, [c], assoc(c, :user))
     |> where([c, u], u.email == ^email)
@@ -33,13 +37,30 @@ defmodule Thysis.Accounts do
     |> Repo.one()
     |> case do
       nil ->
+        Logger.error([
+          "\n\ncredentials not found for email: ",
+          email,
+          ". Invalid email"
+        ])
+
         dummy_checkpw()
         {:error, "Invalid email/password"}
 
       %Credential{} = cred ->
         if checkpw(password, cred.token) do
+          Logger.info([
+            "\n\nauthentication succeeds for email: ",
+            email
+          ])
+
           {:ok, cred}
         else
+          Logger.error([
+            "\n\ncredentials error for email: ",
+            email,
+            ". invalid password"
+          ])
+
           {:error, "Invalid email/password"}
         end
     end
