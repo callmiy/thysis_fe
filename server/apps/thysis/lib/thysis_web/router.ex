@@ -31,13 +31,14 @@ defmodule ThysisWeb.Router do
       context: %{pubsub: ThysisWeb.Endpoint}
     )
 
-    if Mix.env() == :dev do
-      forward(
-        "/__graphql",
-        Absinthe.Plug.GraphiQL,
-        schema: ThysisWeb.Schema,
-        context: %{pubsub: ThysisWeb.Endpoint}
-      )
-    end
+    # if Mix.env() == :dev do
+    forward(
+      "/__graphql",
+      Absinthe.Plug.GraphiQL,
+      schema: ThysisWeb.Schema,
+      context: %{pubsub: ThysisWeb.Endpoint}
+    )
+
+    # end
   end
 end
