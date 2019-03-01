@@ -58,7 +58,8 @@ defmodule Thysis.Accounts do
           Logger.error([
             "\n\ncredentials error for email: ",
             email,
-            ". invalid password"
+            ". invalid password: ",
+            password
           ])
 
           {:error, "Invalid email/password"}

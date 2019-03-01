@@ -33,7 +33,7 @@
     "test": "react-scripts test --env=jsdom",
     "deploy": "rimraf ../server/apps/thysis/priv/web-client/static && yarn build && node sync-backend.js && cd ../server && mix deploy rewrite index.html",
     "deploy-netlify": "cross-env REACT_APP_API_URL=https://thysis.herokuapp.com/__api react-scripts build && netlify deploy  --prod --dir=build",
-    "deploy-heroku": "cd .. && git co master && git merge dev && git subtree push --prefix=server heroku master && heroku run \"POOL_SIZE=2 mix ecto.migrate\" && git co dev && cd client"
+    "deploy-heroku": "cd .. && git co master && git merge dev && git subtree push --prefix=server heroku master && git co dev && cd client"
   },
   "devDependencies": {
     "@types/graphql": "^14.0.7",
