@@ -20,7 +20,7 @@ import { State } from "./login";
 import { FORM_VALUES_KEY } from "./login";
 import { FormValues } from "./login";
 import { setTitle, PROJECTS_URL } from "../../routes/util";
-import { USER_REG_URL } from "./../../routes/util";
+import { USER_REG_URL, PWD_RECOVERY_REQUEST_ROUTE } from "./../../routes/util";
 import RootHeader from "../../components/Header";
 import connectAndLoad from "../../state/initial-data";
 
@@ -265,6 +265,12 @@ export class Login extends React.Component<Props, State> {
               <Icon name="checkmark" /> Ok
             </Button>
           </Form>
+        </Card.Content>
+
+        <Card.Content extra={true}>
+          <NavLink className="to-reg-button" to={PWD_RECOVERY_REQUEST_ROUTE}>
+            Forgot your password?
+          </NavLink>
         </Card.Content>
 
         <Card.Content extra={true}>
