@@ -170,7 +170,7 @@ it("sends password recovery token request and returns success", async () => {
   const { Ui: ui } = renderWithRouter(PwdRecoveryTokenRequestP);
   const { Ui } = renderWithApollo(ui);
 
-  const { getByText, getByLabelText, queryByText } = render(
+  const { getByText, getByLabelText, queryByText, queryByLabelText } = render(
     <Ui requestPwdTokenRecovery={mockRequestPwdTokenRecovery} />
   );
 
@@ -179,18 +179,31 @@ it("sends password recovery token request and returns success", async () => {
    */
   expect(queryByText(/Success/i)).not.toBeInTheDocument();
 
+  const $btn = getByText(/Request password reset/);
+
+  /**
+   * Nor did she see a loading indicator on the submit button
+   */
+  expect($btn.classList).not.toContain("loading");
+
   /**
    * When she inputs her email address
    */
-  fireEvent.change(getByLabelText(/Enter your email address/), {
+  fireEvent.change(getByLabelText(/Enter your email address/i), {
     target: { value: email }
   });
 
   /**
    * And clicks on request password reset button
    */
+
   act(() => {
-    fireEvent.click(getByText(/Request password reset/));
+    fireEvent.click($btn);
+
+    /**
+     * The she sees that the submit button has a loading indicator
+     */
+    // expect($btn.classList).toContain("loading");
   });
 
   /**
@@ -199,6 +212,11 @@ it("sends password recovery token request and returns success", async () => {
   const $message = await waitForElement(() => getByText(/Success/i));
 
   expect($message).toBeInTheDocument();
+
+  /**
+   * Und das die Formular ist verschwunden
+   */
+  expect(queryByLabelText(/Enter your email address/i)).not.toBeInTheDocument();
 });
 
 it("sends password recovery token request and does not return email or token", async () => {
@@ -220,10 +238,14 @@ it("sends password recovery token request and does not return email or token", a
     <Ui requestPwdTokenRecovery={mockRequestPwdTokenRecovery} />
   );
 
+  const anfordernErfolgreichNachrichtPattern = /Please check you inbox /i;
+
   /**
    * She does not see any message showing her request failed
    */
-  expect(queryByText(/request unsuccessful/i)).not.toBeInTheDocument();
+  expect(
+    queryByText(anfordernErfolgreichNachrichtPattern)
+  ).not.toBeInTheDocument();
 
   /**
    * When she inputs her email address
@@ -240,10 +262,10 @@ it("sends password recovery token request and does not return email or token", a
   });
 
   /**
-   * Then she sees a message showing her request did not succeed
+   * Then she sees a message showing her request did succeed
    */
   const $message = await waitForElement(() =>
-    getByText(/request unsuccessful/i)
+    getByText(anfordernErfolgreichNachrichtPattern)
   );
 
   expect($message).toBeInTheDocument();
@@ -282,6 +304,21 @@ it("renders error if form is invalid", async () => {
    */
   const $error = await waitForElement(() => getByText(/email invalid/i));
   expect($error).toBeInTheDocument();
+});
+
+test("login instead", () => {
+  /**
+   * Given that a user is on the password recovery token request page
+   */
+  const { Ui: ui } = renderWithRouter(PwdRecoveryTokenRequestP);
+  const { Ui } = renderWithApollo(ui);
+
+  const { getByText } = render(<Ui requestPwdTokenRecovery={jest.fn()} />);
+
+  /**
+   * She should be able to click on the login instead button
+   */
+  fireEvent.click(getByText(/login instead/i));
 });
 
 ///////////////////////////////////////////////////////////////////////////////
