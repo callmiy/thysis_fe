@@ -4,7 +4,9 @@ export const getBackendUrls = () => {
   const apiUrl = process.env.REACT_APP_API_URL;
 
   if (!apiUrl) {
-    throw new Error('You must set the "ELM_APP_MY_EXP_PHOENIX_API_URL"');
+    throw new Error(
+      'You must set the "REACT_APP_API_URL" environment variable'
+    );
   }
 
   let websocketUrl;
