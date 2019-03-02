@@ -73,6 +73,7 @@ defmodule ThysisWeb.Schema.User do
   @desc "Request password recovery token success response"
   object :anfordern_pzs do
     field(:email, :string |> non_null)
+    field(:token, :string |> non_null)
   end
 
   @desc "PZS Token Kontrollieren Erfolgeich Nachricht"

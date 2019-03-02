@@ -18,22 +18,6 @@ defmodule Thysis.Accounts.CredentialApi do
   end
 
   @doc """
-  Gets a single credential.
-
-  Raises `Ecto.NoResultsError` if the Credential does not exist.
-
-  ## Examples
-
-      iex> get(123)
-      %Credential{}
-
-      iex> get(456)
-      ** nil
-
-  """
-  def get(id), do: Repo.get(Credential, id)
-
-  @doc """
   Creates a credential.
 
   ## Examples
@@ -53,24 +37,6 @@ defmodule Thysis.Accounts.CredentialApi do
     %Credential{}
     |> Credential.changeset(attrs)
     |> create_()
-  end
-
-  @doc """
-  Updates a credential.
-
-  ## Examples
-
-      iex> update_(credential, %{field: new_value})
-      {:ok, %Credential{}}
-
-      iex> update_(credential, %{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def update_(%Credential{} = credential, attrs) do
-    credential
-    |> Credential.changeset(attrs)
-    |> Repo.update()
   end
 
   @doc """

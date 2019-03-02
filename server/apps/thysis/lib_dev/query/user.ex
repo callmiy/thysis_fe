@@ -58,4 +58,15 @@ defmodule ThysisWeb.Query.User do
       parameters: "$refresh: RefreshInput!"
     }
   end
+
+  def request_password_recovery_token do
+    """
+      mutation RequestPwdRecoveryToken($email: String!){
+        anfordernPzs(email: $email) {
+          email
+          token
+        }
+      }
+    """
+  end
 end

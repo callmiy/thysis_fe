@@ -8,6 +8,7 @@ defmodule Thysis.Schema.UserTest do
   alias Thysis.Factory.User, as: Factory
   alias ThysisWeb.Auth.Guardian, as: GuardianApp
   alias Thysis.Factory.Project, as: ProjectFactory
+  alias Thysis.Accounts
 
   describe "mutation" do
     # @tag :skip
@@ -260,6 +261,59 @@ defmodule Thysis.Schema.UserTest do
                    "refresh" => %{"jwt" => jwt <> "9"}
                  }
                )
+    end
+  end
+
+  describe "password recovery" do
+    test "request password recovery token fails if email not in system" do
+      email = "unknown email"
+
+      assert {:ok,
+              %{
+                errors: [
+                  %{
+                    message: "Invalid email"
+                  }
+                ]
+              }} =
+               Absinthe.run(
+                 Query.request_password_recovery_token(),
+                 Schema,
+                 variables: %{"email" => email}
+               )
+    end
+
+    test "request password recovery token succeeds" do
+      %{email: email} = user = RegFactory.insert()
+
+      assert %{
+               pwd_recovery_token: nil,
+               pwd_recovery_token_expires_at: nil
+             } = user.credential
+
+      assert {:ok,
+              %{
+                data: %{
+                  "anfordernPzs" => %{
+                    "email" => ^email,
+                    "token" => token
+                  }
+                }
+              }} =
+               Absinthe.run(
+                 Query.request_password_recovery_token(),
+                 Schema,
+                 variables: %{"email" => email}
+               )
+
+      assert {:ok, _} = GuardianApp.decode_and_verify(token)
+
+      assert %{
+               pwd_recovery_token: ^token,
+               pwd_recovery_token_expires_at: expiry_time
+             } = Accounts.get_credential(user.credential.id)
+
+      refute expiry_time == nil
     end
   end
 end

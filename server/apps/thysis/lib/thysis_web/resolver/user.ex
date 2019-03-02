@@ -1,10 +1,11 @@
 defmodule ThysisWeb.User.Resolver do
+  require Logger
+
   alias Thysis.Accounts
   alias Thysis.Accounts.User
   alias ThysisWeb.Resolver
   alias ThysisWeb.Auth.Guardian, as: GuardianApp
   alias Thysis.Accounts.UserApi
-
 
   def create(_root, %{registration: params}, _info) do
     with {:ok, user} <- Accounts.register(params),
@@ -63,6 +64,53 @@ defmodule ThysisWeb.User.Resolver do
             error: errs
           })
         }
+    end
+  end
+
+  def anfordern_pzs(_root, %{email: email}, _info) do
+    Logger.info(fn ->
+      ["Request for password reset token from user email: ", email]
+    end)
+
+    with %User{} = user <- Accounts.get_user_for_pwd_recovery(email),
+         {:ok, jwt, _claim} <- GuardianApp.encode_and_sign(user),
+         :ok <-
+           Accounts.create_pwd_recovery_token(
+             user.credential,
+             email,
+             jwt
+           ) do
+      Logger.info(fn ->
+        [
+          "Request for password reset token from user email: ",
+          email,
+          " successful!"
+        ]
+      end)
+
+      {:ok, %{email: email, token: jwt}}
+    else
+      nil ->
+        Logger.error(fn ->
+          [
+            "Request for password reset token from user.",
+            "\nInvalid email: ",
+            email
+          ]
+        end)
+
+        {:error, "Invalid email"}
+
+      _ ->
+        Logger.error(fn ->
+          [
+            "Request for password reset token from user email: ",
+            email,
+            " errors for unknown reasons!"
+          ]
+        end)
+
+        {:ok, "error"}
     end
   end
 end
