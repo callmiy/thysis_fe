@@ -7,6 +7,7 @@ import { ApolloError } from "apollo-client";
 import { PwdRecoveryTokenRequest } from "./pwd-recovery-token-request-x";
 import { Props } from "./pwd-recovery-token-request";
 import { PwdRecoveryTokenRequestMutation } from "../graphql/apollo-types/PwdRecoveryTokenRequestMutation";
+import { renderWithRouter, renderWithApollo } from "../test-utils";
 
 const PwdRecoveryTokenRequestP = PwdRecoveryTokenRequest as React.FunctionComponent<
   Partial<Props>
@@ -16,8 +17,11 @@ it("renders error message if requestPwdRecoveryToken not injected", () => {
   /**
    * Given that a user is on the request password recovery token page
    */
+  const { Ui: ui } = renderWithRouter(PwdRecoveryTokenRequestP);
+  const { Ui } = renderWithApollo(ui);
+
   const { getByTestId, getByText, getByLabelText, queryByText } = render(
-    <PwdRecoveryTokenRequestP />
+    <Ui />
   );
 
   /**
@@ -68,10 +72,11 @@ it("renders error if user has no network connection", async () => {
   /**
    * Given that a user is on the request password recovery token page
    */
+  const { Ui: ui } = renderWithRouter(PwdRecoveryTokenRequestP);
+  const { Ui } = renderWithApollo(ui);
+
   const { getByText, getByLabelText, queryByText } = render(
-    <PwdRecoveryTokenRequestP
-      requestPwdTokenRecovery={mockRequestPwdTokenRecovery}
-    />
+    <Ui requestPwdTokenRecovery={mockRequestPwdTokenRecovery} />
   );
 
   /**
@@ -107,7 +112,10 @@ test("submit disabled when email field is empty", () => {
   /**
    * Given that a user is on the request password recovery token page
    */
-  const { getByText, getByLabelText } = render(<PwdRecoveryTokenRequestP />);
+  const { Ui: ui } = renderWithRouter(PwdRecoveryTokenRequestP);
+  const { Ui } = renderWithApollo(ui);
+
+  const { getByText, getByLabelText } = render(<Ui />);
 
   /**
    * Then she sees that the submit button is disabled
@@ -159,10 +167,11 @@ it("sends password recovery token request and returns success", async () => {
   /**
    * Given that a user is on the request password recovery token page
    */
+  const { Ui: ui } = renderWithRouter(PwdRecoveryTokenRequestP);
+  const { Ui } = renderWithApollo(ui);
+
   const { getByText, getByLabelText, queryByText } = render(
-    <PwdRecoveryTokenRequestP
-      requestPwdTokenRecovery={mockRequestPwdTokenRecovery}
-    />
+    <Ui requestPwdTokenRecovery={mockRequestPwdTokenRecovery} />
   );
 
   /**
@@ -204,10 +213,11 @@ it("sends password recovery token request and does not return email or token", a
   /**
    * Given that a user is on the request password recovery token page
    */
+  const { Ui: ui } = renderWithRouter(PwdRecoveryTokenRequestP);
+  const { Ui } = renderWithApollo(ui);
+
   const { getByText, getByLabelText, queryByText } = render(
-    <PwdRecoveryTokenRequestP
-      requestPwdTokenRecovery={mockRequestPwdTokenRecovery}
-    />
+    <Ui requestPwdTokenRecovery={mockRequestPwdTokenRecovery} />
   );
 
   /**
@@ -243,8 +253,11 @@ it("renders error if form is invalid", async () => {
   /**
    * Given that a user is on the password recovery token request page
    */
+  const { Ui: ui } = renderWithRouter(PwdRecoveryTokenRequestP);
+  const { Ui } = renderWithApollo(ui);
+
   const { getByLabelText, getByText, queryByText } = render(
-    <PwdRecoveryTokenRequestP requestPwdTokenRecovery={jest.fn()} />
+    <Ui requestPwdTokenRecovery={jest.fn()} />
   );
 
   /**
