@@ -31,6 +31,8 @@ export const USER_REG_URL = "/auth/register";
 export const LOGIN_URL = "/auth/login";
 export const PROJECTS_URL = "/projects" as string;
 
+export const PWD_RECOVERY_REQUEST_ROUTE = "/auth/request-pwd-recovery";
+
 // END ROUTE URLS
 
 let titleEl = document.getElementById("thysis-title");

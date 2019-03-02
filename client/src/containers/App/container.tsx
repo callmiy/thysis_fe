@@ -15,7 +15,8 @@ import {
   QUOTE_URL,
   AUTHOR_ROUTE_URL,
   USER_REG_URL,
-  LOGIN_URL
+  LOGIN_URL,
+  PWD_RECOVERY_REQUEST_ROUTE
 } from "./../../routes/util";
 import Loading from "./../../components/Loading";
 import AuthRequired from "./AuthRequired";
@@ -37,6 +38,9 @@ const Quote = ReactLazy.lazy(() => import("./../../routes/Quote"));
 const AuthorRoute = ReactLazy.lazy(() => import("./../../routes/Author"));
 const LoginRoute = ReactLazy.lazy(() => import("./../../routes/Login"));
 const ProjectsRoute = ReactLazy.lazy(() => import("./../../routes/Projects"));
+const PwdRecoveryRequest = React.lazy(() =>
+  import("../../PwdRecoveryTokenRequest")
+);
 
 const SearchQuotes = ReactLazy.lazy(() =>
   import("./../../routes/SearchQuotes")
@@ -87,18 +91,6 @@ export class App extends React.Component<{}, State> {
           >
             <BrowserRouter>
               <Switch>
-                <Route
-                  exact={true}
-                  path={USER_REG_URL}
-                  render={routeProps => <UserRegRoute {...routeProps} />}
-                />
-
-                <Route
-                  exact={true}
-                  path={LOGIN_URL}
-                  render={routeProps => <LoginRoute {...routeProps} />}
-                />
-
                 <AuthRequired
                   exact={true}
                   path={SOURCE_URL}
@@ -135,6 +127,24 @@ export class App extends React.Component<{}, State> {
                   exact={true}
                   path={ROOT_URL}
                   component={NewQuote}
+                />
+
+                <Route
+                  exact={true}
+                  path={USER_REG_URL}
+                  render={routeProps => <UserRegRoute {...routeProps} />}
+                />
+
+                <Route
+                  exact={true}
+                  path={LOGIN_URL}
+                  render={routeProps => <LoginRoute {...routeProps} />}
+                />
+
+                <Route
+                  exact={true}
+                  path={PWD_RECOVERY_REQUEST_ROUTE}
+                  render={routeProps => <PwdRecoveryRequest {...routeProps} />}
                 />
 
                 <Route render={routeProps => <LoginRoute {...routeProps} />} />

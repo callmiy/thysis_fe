@@ -23,7 +23,23 @@
     "esModuleInterop": true,
     "strict": true,
     "resolveJsonModule": true,
-    "isolatedModules": true
+    "isolatedModules": true,
+    "types": [
+      "graphql",
+      "jest",
+      "jss",
+      "lodash-es",
+      "node",
+      "phoenix",
+      "prop-types",
+      "react",
+      "react-dom",
+      "react-router-dom",
+      "react-select",
+      "react-transition-group",
+      "styled-components",
+      "yup"
+    ]
   },
   "include": ["src"],
   "exclude": [

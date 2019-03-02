@@ -21,3 +21,4 @@ yarn-debug.log*
 yarn-error.log*
 uwbsy2ddp.bat
 /.netlify
+**/apollo-types
