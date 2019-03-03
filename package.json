@@ -33,19 +33,21 @@
   },
   "scripts": {
     "start": "cross-env PORT=3016 BROWSER=none REACT_APP_API_URL=http://localhost:4016/api yarn react-scripts start",
+    "start-and-test": "start-server-and-test start http://localhost:3016 test",
     "build": "react-scripts build",
     "test": "cross-env REACT_APP_API_URL=http://localhost:4016/api react-scripts test --env=jsdom",
     "deploy-netlify": "cross-env REACT_APP_API_URL=https://thysis.herokuapp.com/api react-scripts build && netlify deploy  --prod --dir=build",
     "gen-apollo-types": "apollo codegen:generate --endpoint=http://localhost:4016/api --tagName=gql --target=typescript --includes=src/graphql/*.ts --outputFlat=src/graphql/apollo-types",
     "build-local-prod": "cross-env REACT_APP_API_URL=http://localhost:4017/api  react-scripts build",
     "start-local-prod": "serve --no-clipboard --single --listen 3017 build",
-    "cy-open": "cypress open",
-    "cy-run": "cypress run",
-    "test-e2e-prod-run": "yarn build-local-prod && start-server-and-test start-local-prod http://localhost:3017 cy-run",
-    "test-e2e-prod-open": "yarn build-local-prod && start-server-and-test start-local-prod http://localhost:3017 cy-open",
-    "test-e2e-prod-run-no-build": "start-server-and-test start-local-prod http://localhost:3017 cy-run",
-    "test-e2e-prod-open-no-build": "start-server-and-test start-local-prod http://localhost:3017 cy-open",
-    "test-e2e-dev-run": "start-server-and-test start http://localhost:3016 cy-run"
+    "cy-open-prod": "cypress open --config baseUrl=http://localhost:3017/",
+    "cy-run-prod": "cypress run --config baseUrl=http://localhost:3017/",
+    "cy-run-dev": "cypress run --config baseUrl=http://localhost:3016/",
+    "test-e2e-prod-run": "yarn build-local-prod && start-server-and-test start-local-prod http://localhost:3017 cy-run-prod",
+    "test-e2e-prod-open": "yarn build-local-prod && start-server-and-test start-local-prod http://localhost:3017 cy-open-prod",
+    "test-e2e-prod-run-no-build": "start-server-and-test start-local-prod http://localhost:3017 cy-run-prod",
+    "test-e2e-prod-open-no-build": "start-server-and-test start-local-prod http://localhost:3017 cy-open-prod",
+    "test-e2e-dev-run": "start-server-and-test start http://localhost:3016 cy-run-dev"
   },
   "devDependencies": {
     "@types/graphql": "^14.0.7",
