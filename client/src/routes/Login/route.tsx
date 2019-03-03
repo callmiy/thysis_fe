@@ -1,26 +1,31 @@
 import React from "react";
-import { Button, Card } from "semantic-ui-react";
-import { Input } from "semantic-ui-react";
-import { Message } from "semantic-ui-react";
-import { Icon } from "semantic-ui-react";
-import { Form } from "semantic-ui-react";
-import { Formik } from "formik";
-import { FormikProps } from "formik";
-import { Field } from "formik";
-import { FieldProps, FormikActions } from "formik";
-import { FormikErrors } from "formik";
+import { Button, Card, Input, Message, Icon, Form } from "semantic-ui-react";
+import {
+  Formik,
+  FormikProps,
+  Field,
+  FieldProps,
+  FormikActions,
+  FormikErrors
+} from "formik";
 import isEmpty from "lodash/isEmpty";
 import { NavLink } from "react-router-dom";
 import update from "immutability-helper";
 
 import "./login.scss";
-import { initialState } from "./login";
-import { Props } from "./login";
-import { State } from "./login";
-import { FORM_VALUES_KEY } from "./login";
-import { FormValues } from "./login";
-import { setTitle, PROJECTS_URL } from "../../routes/util";
-import { USER_REG_URL, PWD_RECOVERY_REQUEST_ROUTE } from "./../../routes/util";
+import {
+  initialState,
+  Props,
+  State,
+  FORM_VALUES_KEY,
+  FormValues
+} from "./login";
+import {
+  setTitle,
+  PROJECTS_URL,
+  USER_REG_URL,
+  PWD_RECOVERY_REQUEST_ROUTE
+} from "../../routes/util";
 import RootHeader from "../../components/Header";
 import connectAndLoad from "../../state/initial-data";
 
