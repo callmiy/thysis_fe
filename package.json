@@ -43,7 +43,7 @@
     "cy-run": "cypress run",
     "test-e2e-prod-run": "yarn build-local-prod && start-server-and-test start-local-prod http://localhost:3017 cy-run",
     "test-e2e-prod-open": "yarn build-local-prod && start-server-and-test start-local-prod http://localhost:3017 cy-open",
-    "test-e2e-prod-run-no-bild": "start-server-and-test start-local-prod http://localhost:3017 cy-run",
+    "test-e2e-prod-run-no-build": "start-server-and-test start-local-prod http://localhost:3017 cy-run",
     "test-e2e-prod-open-no-build": "start-server-and-test start-local-prod http://localhost:3017 cy-open",
     "test-e2e-dev-run": "start-server-and-test start http://localhost:3016 cy-run"
   },
