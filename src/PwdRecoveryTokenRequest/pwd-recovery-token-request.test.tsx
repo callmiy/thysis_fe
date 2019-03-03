@@ -13,7 +13,7 @@ const PwdRecoveryTokenRequestP = PwdRecoveryTokenRequest as React.FunctionCompon
   Partial<Props>
 >;
 
-it("renders error message if requestPwdRecoveryToken not injected", () => {
+it("renders error message if requestPwdRecoveryToken not injected", async () => {
   /**
    * Given that a user is on the request password recovery token page
    */
@@ -45,7 +45,10 @@ it("renders error message if requestPwdRecoveryToken not injected", () => {
    * Then she sees a message telling her an error occurred
    */
 
-  expect(getByText(/Unable to make request/i)).toBeInTheDocument();
+  const $error = await waitForElement(() =>
+    getByText(/Unable to make request/i)
+  );
+  expect($error).toBeInTheDocument();
 
   /**
    * When she clicks the close button

@@ -67,17 +67,17 @@ export function PwdRecoveryTokenRequest(props: Props) {
     setOtherErrors(undefined);
     setSuccessMessage(undefined);
 
-    if (!requestPwdTokenRecovery) {
-      setOtherErrors("Unable to make request.");
-      return;
-    }
-
     const email = rawEmail.trim();
 
     try {
       await emailValidator.validate(email);
     } catch (error) {
       setEmailError(error.message);
+      return;
+    }
+
+    if (!requestPwdTokenRecovery) {
+      setOtherErrors("Unable to make request.");
       return;
     }
 
