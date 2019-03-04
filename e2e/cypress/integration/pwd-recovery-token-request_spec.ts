@@ -1,7 +1,14 @@
 import { routeTitle } from "../../../src/PwdRecoveryTokenRequest/pwd-recovery-token-request";
 
 describe("Password Recovery Token Request", function() {
-  beforeEach(() => cy.visit("/"));
+  beforeEach(() => {
+    cy.checkoutSession();
+    cy.visit("/");
+  });
+
+  afterEach(() => {
+    cy.dropSession();
+  });
 
   it(".should() - assert that <title> is correct", function() {
     cy.getByText(/Forgot your password/i).click();

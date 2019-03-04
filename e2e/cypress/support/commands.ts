@@ -1,26 +1,41 @@
-// ***********************************************
-// This example commands.js shows you how to
-// create various custom commands and overwrite
-// existing commands.
-//
-// For more comprehensive examples of custom
-// commands please read more here:
-// https://on.cypress.io/custom-commands
-// ***********************************************
-//
-//
-// -- This is a parent command --
-// Cypress.Commands.add("login", (email, password) => { ... })
-//
-//
-// -- This is a child command --
-// Cypress.Commands.add("drag", { prevSubject: 'element'}, (subject, options) => { ... })
-//
-//
-// -- This is a dual command --
-// Cypress.Commands.add("dismiss", { prevSubject: 'optional'}, (subject, options) => { ... })
-//
-//
-// -- This is will overwrite an existing command --
-// Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
 import "cypress-testing-library/add-commands";
+import { mockWindowsFetch } from "./mock-windows-fetch";
+
+declare global {
+  namespace Cypress {
+    interface Chainable {
+      /**
+       *
+       */
+      checkoutSession: () => Promise<void>;
+
+      /**
+       *
+       */
+      dropSession: () => Promise<void>;
+    }
+  }
+}
+
+const serverUrl = "http://localhost:4017";
+
+Cypress.Commands.add("checkoutSession", async () => {
+  const response = await fetch(serverUrl + "/sandbox", {
+    cache: "no-store",
+    method: "POST"
+  });
+
+  const sessionId = await response.text();
+  return Cypress.env("sessionId", sessionId);
+});
+
+Cypress.Commands.add("dropSession", () =>
+  fetch(serverUrl + "/sandbox", {
+    method: "DELETE",
+    headers: { "x-session-id": Cypress.env("sessionId") }
+  })
+);
+
+Cypress.on("window:before:load", win => {
+  cy.stub(win, "fetch", mockWindowsFetch(fetch));
+});
