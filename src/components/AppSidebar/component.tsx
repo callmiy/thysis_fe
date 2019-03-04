@@ -5,10 +5,7 @@ import update from "immutability-helper";
 
 import "./app-sidebar.scss";
 import { Props, State, initialState } from "./app-sidebar";
-import {
-  AppSidebarConsumer,
-  SideBarContextProps
-} from "../../containers/App/app.utils";
+import { AppSidebarConsumer, SideBarContextProps } from "../../App/app";
 import {
   ROOT_URL,
   PROJECTS_URL,

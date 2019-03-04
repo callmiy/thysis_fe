@@ -16,7 +16,7 @@ import { State } from "./search-component";
 import { Props } from "./search-component";
 import ALL_MATCHING_TEXT_QUERY from "../../graphql/text-search.query";
 import { classes } from "./styles";
-import ErrorBoundary from "../../containers/error-boundary.container";
+import ErrorBoundary from "../../ErrorBoundary";
 import { SemanticOnInputChangeFunc } from "../../utils";
 import { TextSearchResultFrag } from "../../graphql/gen.types";
 import { TextSearchRowFrag } from "../../graphql/gen.types";

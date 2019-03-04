@@ -3,9 +3,9 @@ import { compose } from "react-apollo";
 
 import AUTH_USER_LOCAL_QUERY, {
   UserLocalGqlData
-} from "../../../state/auth-user.local.query";
-import CURRENT_PROJECT_QUERY from "../../../state/project.local.query";
-import { CurrentProjectLocalData } from "../../../state/project.local.query";
+} from "../../state/auth-user.local.query";
+import CURRENT_PROJECT_QUERY from "../../state/project.local.query";
+import { CurrentProjectLocalData } from "../../state/project.local.query";
 import { LocalUserGqlProps } from "./auth-required";
 import { OwnProps } from "./auth-required";
 import { CurrentProjectLocalGqlProps } from "./auth-required";

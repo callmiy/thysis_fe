@@ -3,7 +3,7 @@ import * as ReactDOM from "react-dom";
 import "semantic-ui-css-offline";
 import "react-select/dist/react-select.css";
 
-import App from "./containers/App";
+import App from "./App";
 import "./index.scss";
 import "./socket";
 import { getBackendUrls } from "./get-backend-urls";

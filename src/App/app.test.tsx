@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import { App, Props } from "./container";
+import { App, Props } from "./app-x";
 import { act } from "react-testing-library";
 
 it("renders without crashing", () => {

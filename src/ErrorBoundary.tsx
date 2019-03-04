@@ -1,6 +1,5 @@
-import * as React from "react";
-import { Message } from "semantic-ui-react";
-import { Icon } from "semantic-ui-react";
+import React from "react";
+import { Message, Icon } from "semantic-ui-react";
 
 interface ErrorBoundaryProps {
   className?: string;

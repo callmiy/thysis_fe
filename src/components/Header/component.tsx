@@ -4,10 +4,7 @@ import { NavLink } from "react-router-dom";
 
 import "./header.scss";
 import { Props, State, INITIAL_STATE } from "./header.utils";
-import {
-  AppSidebarConsumer,
-  SideBarContextProps
-} from "../../containers/App/app.utils";
+import { AppSidebarConsumer, SideBarContextProps } from "../../App/app";
 import { ROOT_URL, makeNewQuoteURL } from "../../routes/util";
 
 export default class Header extends React.Component<Props, State> {

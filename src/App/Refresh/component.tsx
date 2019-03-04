@@ -1,9 +1,9 @@
 import React from "react";
 import { Redirect } from "react-router-dom";
-import { LOGIN_URL, PROJECTS_URL } from "../../../routes/util";
+import { LOGIN_URL, PROJECTS_URL } from "../../routes/util";
 
 import { Props } from "./refresh";
-import Loading from "../../../components/Loading";
+import Loading from "../../components/Loading";
 
 export class Refresh extends React.Component<Props, {}> {
   render() {

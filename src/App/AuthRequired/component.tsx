@@ -5,7 +5,7 @@ import { Route } from "react-router-dom";
 
 import Refresh from "./../Refresh";
 import { Props } from "./auth-required";
-import { LOGIN_URL, PROJECTS_URL } from "./../../../routes/util";
+import { LOGIN_URL, PROJECTS_URL } from "./../../routes/util";
 
 export const AuthRequired = ({
   component,

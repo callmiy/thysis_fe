@@ -1,14 +1,14 @@
 import { graphql, compose, withApollo, DataValue } from "react-apollo";
 
-import REFRESH_USER_QUERY from "../../../graphql/refresh-user.query";
+import REFRESH_USER_QUERY from "../../graphql/refresh-user.query";
 import {
   RefreshUserQuery,
   RefreshUserQueryVariables
-} from "../../../graphql/gen.types";
-import { userLocalMutationGql } from "../../../state/user.local.mutation";
+} from "../../graphql/gen.types";
+import { userLocalMutationGql } from "../../state/user.local.mutation";
 import { OwnProps } from "./refresh";
 import { Refresh } from "./component";
-import connectAndLoad from "../../../state/initial-data";
+import connectAndLoad from "../../state/initial-data";
 
 const refreshUserGql = graphql<
   OwnProps,

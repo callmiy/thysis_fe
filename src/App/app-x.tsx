@@ -7,7 +7,7 @@ import update from "immutability-helper";
 import { InMemoryCache } from "apollo-cache-inmemory";
 import { ApolloClient } from "apollo-client";
 
-import { persistCache } from "../../apollo-setup";
+import { persistCache } from "../apollo-setup";
 import {
   ROOT_URL,
   PROJECTS_URL,
@@ -19,8 +19,8 @@ import {
   USER_REG_URL,
   LOGIN_URL,
   PWD_RECOVERY_REQUEST_ROUTE
-} from "./../../routes/util";
-import Loading from "./../../components/Loading";
+} from "./../routes/util";
+import Loading from "./../components/Loading";
 import AuthRequired from "./AuthRequired";
 import {
   AppSidebarContext,
@@ -28,19 +28,19 @@ import {
   initialState,
   mediaQueries,
   MediaQueryKey
-} from "./app.utils";
-import { logger } from "../../utils";
+} from "./app";
+import { logger } from "../utils";
 
-const TagDetail = lazy(() => import("./../../routes/TagDetail"));
-const Source = lazy(() => import("./../../routes/Source"));
-const NewQuote = lazy(() => import("./../../routes/NewQuote"));
-const Quote = lazy(() => import("./../../routes/Quote"));
-const AuthorRoute = lazy(() => import("./../../routes/Author"));
-const LoginRoute = lazy(() => import("./../../routes/Login"));
-const ProjectsRoute = lazy(() => import("./../../routes/Projects"));
-const PwdRecoveryRequest = lazy(() => import("../../PwdRecoveryTokenRequest"));
-const SearchQuotes = lazy(() => import("./../../routes/SearchQuotes"));
-const UserRegistration = lazy(() => import("./../../UserRegistration"));
+const TagDetail = lazy(() => import("./../routes/TagDetail"));
+const Source = lazy(() => import("./../routes/Source"));
+const NewQuote = lazy(() => import("./../routes/NewQuote"));
+const Quote = lazy(() => import("./../routes/Quote"));
+const AuthorRoute = lazy(() => import("./../routes/Author"));
+const LoginRoute = lazy(() => import("./../routes/Login"));
+const ProjectsRoute = lazy(() => import("./../routes/Projects"));
+const PwdRecoveryRequest = lazy(() => import("../PwdRecoveryTokenRequest"));
+const SearchQuotes = lazy(() => import("./../routes/SearchQuotes"));
+const UserRegistration = lazy(() => import("./../UserRegistration"));
 
 export interface Props {
   client: ApolloClient<{}>;
