@@ -21,7 +21,7 @@ import {
   PWD_RECOVERY_REQUEST_ROUTE
 } from "./../routes/util";
 import Loading from "./../components/Loading";
-import AuthRequired from "./AuthRequired";
+import AuthRequired from "../AuthRequired";
 import {
   AppSidebarContext,
   State,
