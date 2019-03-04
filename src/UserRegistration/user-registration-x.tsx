@@ -1,28 +1,20 @@
 import React from "react";
 import { Button, Card, Input, Message, Icon, Form } from "semantic-ui-react";
 import { NavLink } from "react-router-dom";
-import {
-  FormikProps,
-  FormikActions,
-  Formik,
-  Field,
-  FieldProps,
-  FormikErrors
-} from "formik";
+import { FormikProps, Formik, Field, FieldProps } from "formik";
 import isEmpty from "lodash/isEmpty";
-import update from "immutability-helper";
 
 import "./user-registration.scss";
 import {
   Props,
-  FORM_VALUES_KEY,
+  FORM_RENDER_PROPS,
   State,
   initialState,
-  FormValues
+  ValidationSchema
 } from "./user-registration";
 import { setTitle, PROJECTS_URL, LOGIN_URL } from "../routes/util";
 import RootHeader from "../components/Header";
-import { Registration } from "../graphql/gen.types";
+import { Registration } from "../graphql/apollo-types/globalTypes";
 import defaultSocket from "../socket";
 import { Container } from "./user-registration-styles";
 
@@ -46,9 +38,11 @@ export class UserReg extends React.Component<Props, State> {
           <Formik
             initialValues={this.state.initialFormValues}
             enableReinitialize={true}
-            onSubmit={this.submit}
+            onSubmit={() => null}
             render={this.renderForm}
-            validate={this.validate}
+            validationSchema={ValidationSchema}
+            validateOnBlur={false}
+            validateOnChange={false}
           />
         </div>
       </Container>
@@ -71,17 +65,25 @@ export class UserReg extends React.Component<Props, State> {
     return undefined;
   };
 
-  private submit = async (
-    values: FormValues,
-    formikBag: FormikActions<FormValues>
-  ) => {
-    formikBag.setSubmitting(true);
+  private onSubmit = ({
+    values,
+    setSubmitting,
+    validateForm
+  }: FormikProps<Registration>) => async () => {
+    setSubmitting(true);
+    this.setState({
+      graphQlError: undefined,
+      otherErrors: undefined,
+      formErrors: undefined
+    });
 
-    let regValues = {} as Registration;
-    regValues = Object.entries(this.state.formValues).reduce(
-      (acc, [k, v]) => ({ ...acc, [k]: v }),
-      regValues
-    );
+    const formErrors = await validateForm(values);
+
+    if (!isEmpty(formErrors)) {
+      this.setState({ formErrors });
+      setSubmitting(false);
+      return;
+    }
 
     const {
       regUser,
@@ -92,14 +94,14 @@ export class UserReg extends React.Component<Props, State> {
 
     if (!regUser) {
       this.setState({ otherErrors: "Unable to make request" });
-      formikBag.setSubmitting(false);
+      setSubmitting(false);
       return;
     }
 
     try {
       const result = await regUser({
         variables: {
-          registration: regValues
+          registration: values
         }
       });
 
@@ -117,17 +119,14 @@ export class UserReg extends React.Component<Props, State> {
         history.replace(PROJECTS_URL);
       }
     } catch (error) {
-      formikBag.setSubmitting(false);
+      setSubmitting(false);
       this.setState({ graphQlError: error });
     }
   };
 
-  private renderForm = ({
-    dirty,
-    isSubmitting,
-    errors,
-    handleSubmit
-  }: FormikProps<FormValues>) => {
+  private renderForm = (formikProps: FormikProps<Registration>) => {
+    const { dirty, isSubmitting, errors } = formikProps;
+
     const { graphQlError } = this.state;
     const dirtyOrSubmitting = !dirty || isSubmitting;
     const disableSubmit =
@@ -142,27 +141,18 @@ export class UserReg extends React.Component<Props, State> {
         {this.renderErrorOrSuccess()}
 
         <Card.Content>
-          <Form onSubmit={handleSubmit}>
-            {[
-              ["Name", "text", FORM_VALUES_KEY.NAME],
-              ["Email", "email", FORM_VALUES_KEY.EMAIL],
-              ["Password", "password", FORM_VALUES_KEY.PASSWORD],
-              [
-                "Password Confirmation",
-                "password",
-                FORM_VALUES_KEY.PASSWORD_CONFIRM
-              ],
-              ["Source", "text", FORM_VALUES_KEY.SOURCE]
-            ].map(data => {
-              const [label, type, name] = data;
-              return (
-                <Field
-                  key={name}
-                  name={name}
-                  render={this.renderInput(label, type)}
-                />
-              );
-            })}
+          <Form onSubmit={this.onSubmit(formikProps)}>
+            {Object.entries(FORM_RENDER_PROPS).map(
+              ([name, { label, type = "text" }]) => {
+                return (
+                  <Field
+                    key={name}
+                    name={name}
+                    render={this.renderInput(label, type)}
+                  />
+                );
+              }
+            )}
 
             <label htmlFor="user-reg-submit-btn" className="submit-btn-label">
               Register User
@@ -192,15 +182,14 @@ export class UserReg extends React.Component<Props, State> {
   };
 
   private renderInput = (label: string, type: string) => (
-    formProps: FieldProps<FormValues>
+    formProps: FieldProps<Registration>
   ) => {
     const { field, form } = formProps;
-    const name = field.name as FORM_VALUES_KEY;
+    const name = field.name;
     const error = form.errors[name];
-    const formIsEmpty = this.isFormEmpty();
-    const booleanError = !!error && !formIsEmpty;
+    const booleanError = !!error;
     const touched = form.touched[name];
-    const isSourceField = name === FORM_VALUES_KEY.SOURCE;
+    const isSourceField = name === "source";
 
     return (
       <div>
@@ -213,198 +202,17 @@ export class UserReg extends React.Component<Props, State> {
           label={label}
           id={name}
           error={booleanError}
-          onBlur={this.handleFormControlBlur(name, form)}
-          onFocus={this.handleFocus}
-          autoFocus={name === FORM_VALUES_KEY.NAME}
+          autoFocus={name === "name"}
           readOnly={isSourceField}
         />
 
-        {booleanError && touched && !formIsEmpty && (
-          <Message error={true} header={error} />
-        )}
+        {booleanError && touched && <Message error={true} header={error} />}
       </div>
     );
   };
 
-  private handleFormControlBlur = (
-    name: FORM_VALUES_KEY,
-    form: FormikProps<FormValues>
-  ) => () => {
-    form.setFieldTouched(name, true);
-  };
-
-  private handleFocus = () => {
-    this.setState({ graphQlError: undefined });
-  };
-
   private handleFormErrorDismissed = () =>
     this.setState({ graphQlError: undefined });
-
-  private validate = (values: FormValues) => {
-    const errors: FormikErrors<FormValues> = {};
-
-    for (const [key, val] of Object.entries(values)) {
-      let error;
-
-      switch (key) {
-        case FORM_VALUES_KEY.NAME:
-          error = this.validateName(val);
-          break;
-
-        case FORM_VALUES_KEY.EMAIL:
-          error = this.validateEmail(val);
-          break;
-
-        case FORM_VALUES_KEY.PASSWORD:
-          error = this.validatePassword(val);
-          break;
-
-        case FORM_VALUES_KEY.PASSWORD_CONFIRM:
-          error = this.validatePasswordConfirm(
-            val,
-            values[FORM_VALUES_KEY.PASSWORD] || ""
-          );
-          break;
-
-        case FORM_VALUES_KEY.SOURCE:
-          error = this.validateSource(val);
-      }
-
-      if (error) {
-        errors[key] = error;
-        return errors;
-      }
-    }
-
-    return errors;
-  };
-
-  private validateName = (name: string | undefined) => {
-    name = (name || "").trim();
-
-    this.setState(s =>
-      update(s, {
-        formValues: {
-          [FORM_VALUES_KEY.NAME]: {
-            $set: name || undefined
-          }
-        }
-      })
-    );
-
-    if (!name) {
-      return "Enter name";
-    }
-
-    if (name.length < 2) {
-      return "Too short";
-    }
-
-    return "";
-  };
-
-  private validateEmail = (email: string | undefined) => {
-    email = (email || "").trim();
-    let error = "";
-
-    if (
-      !(
-        email &&
-        /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(
-          email
-        )
-      )
-    ) {
-      error = "Enter valid email";
-    }
-
-    this.setState(s =>
-      update(s, {
-        formValues: {
-          [FORM_VALUES_KEY.EMAIL]: {
-            $set: (error && undefined) || email
-          }
-        }
-      })
-    );
-
-    return error;
-  };
-
-  private validatePassword = (password: string | undefined) => {
-    password = (password || "").trim();
-    let error = "";
-
-    if (!password) {
-      error = "Enter Password";
-    } else if (password.length < 4) {
-      error = "Too short";
-    }
-
-    this.setState(s =>
-      update(s, {
-        formValues: {
-          [FORM_VALUES_KEY.PASSWORD]: {
-            $set: (error && undefined) || password
-          }
-        }
-      })
-    );
-
-    return error;
-  };
-
-  private validatePasswordConfirm = (
-    confirm: string | undefined,
-    pwd: string
-  ) => {
-    confirm = (confirm || "").trim();
-    let error = "";
-
-    if (!confirm) {
-      error = "Confirm Password";
-    } else if (confirm !== pwd) {
-      error = "Passwords don't match";
-    }
-
-    this.setState(s =>
-      update(s, {
-        formValues: {
-          [FORM_VALUES_KEY.PASSWORD_CONFIRM]: {
-            $set: (error && undefined) || confirm
-          }
-        }
-      })
-    );
-
-    return error;
-  };
-
-  private validateSource = (source: string | undefined) => {
-    source = (source || "").trim();
-
-    this.setState(s =>
-      update(s, {
-        formValues: {
-          [FORM_VALUES_KEY.SOURCE]: {
-            $set: source || "password"
-          }
-        }
-      })
-    );
-
-    return "";
-  };
-
-  private isFormEmpty = () => {
-    for (const [key, val] of Object.entries(this.state.formValues)) {
-      if (key !== FORM_VALUES_KEY.SOURCE && val !== undefined) {
-        return false;
-      }
-    }
-
-    return true;
-  };
 }
 
 export default UserReg;

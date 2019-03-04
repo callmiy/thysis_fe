@@ -1,9 +1,12 @@
 import { ApolloError } from "apollo-client";
 import { RouteComponentProps } from "react-router-dom";
+import * as Yup from "yup";
+import { FormikErrors } from "formik";
 
 import { UserRegistrationMutationProps } from "../graphql/user-reg.mutation";
 import { UserLocalMutationProps } from "../state/user.local.mutation";
 import { AppSocketType } from "../socket";
+import { Registration } from "../graphql/apollo-types/globalTypes";
 
 export interface OwnProps extends RouteComponentProps<{}> {
   socket?: AppSocketType;
@@ -14,44 +17,54 @@ export interface Props
     UserRegistrationMutationProps,
     UserLocalMutationProps {}
 
-export interface FormValues {
-  email: string | undefined;
-  name: string | undefined;
-  password: string | undefined;
-  passwordConfirmation: string | undefined;
-  source: string;
-}
+export const FORM_RENDER_PROPS: {
+  [k in keyof Registration]: {
+    label: string;
+    type?: string;
+  }
+} = {
+  name: { label: "Name" },
+  email: { label: "Email", type: "email" },
+  password: { label: "Password", type: "password" },
+  passwordConfirmation: { label: "Password Confirmation", type: "password" },
+  source: { label: "Source" }
+};
 
-export enum FORM_VALUES_KEY {
-  EMAIL = "email",
-  NAME = "name",
-  PASSWORD = "password",
-  PASSWORD_CONFIRM = "passwordConfirmation",
-  SOURCE = "source"
-}
-
-const formValuesAcc = {} as FormValues;
-const formValues = Object.values(FORM_VALUES_KEY).reduce(
-  (acc, k) => ({ ...acc, [k]: undefined }),
-  formValuesAcc
-);
-
-export const initialFormValues = {
-  [FORM_VALUES_KEY.NAME]: "",
-  [FORM_VALUES_KEY.EMAIL]: "",
-  [FORM_VALUES_KEY.PASSWORD]: "",
-  [FORM_VALUES_KEY.PASSWORD_CONFIRM]: "",
-  [FORM_VALUES_KEY.SOURCE]: "password"
+export const initialFormValues: Registration = {
+  name: "",
+  email: "",
+  password: "",
+  passwordConfirmation: "",
+  source: "password"
 };
 
 export interface State {
-  initialFormValues: FormValues;
+  initialFormValues: Registration;
   graphQlError?: ApolloError;
-  formValues: FormValues;
   otherErrors?: string;
+  formErrors?: FormikErrors<Registration>;
 }
 
 export const initialState: State = {
-  initialFormValues,
-  formValues
+  initialFormValues
 };
+
+export const ValidationSchema = Yup.object<Registration>().shape<Registration>({
+  name: Yup.string()
+    .min(2, "must be at least 2 characters")
+    .max(50, "is too long!")
+    .required("is required"),
+  email: Yup.string()
+    .email("is invalid")
+    .required("is required"),
+  password: Yup.string()
+    .min(4, "must be at least 4 characters")
+    .max(50, "is too Long!")
+    .required("is required"),
+  passwordConfirmation: Yup.string()
+    .required("is required")
+    .test("passwords-match", "Passwords don't match", function(val) {
+      return this.parent.password === val;
+    }),
+  source: Yup.string().default(() => "password")
+});
