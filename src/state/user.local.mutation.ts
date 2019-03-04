@@ -1,5 +1,5 @@
 import gql from "graphql-tag";
-import { graphql } from "react-apollo";
+import { graphql, MutationOptions } from "react-apollo";
 import { MutationFn } from "react-apollo";
 
 import { UserFragment } from "./../graphql/gen.types";
@@ -41,3 +41,5 @@ export const userLocalMutationGql = graphql<
     };
   }
 });
+
+export type UserLocalMutationArgs = MutationOptions<Variable, Variable>;

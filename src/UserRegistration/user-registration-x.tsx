@@ -23,7 +23,8 @@ import {
 import { setTitle, PROJECTS_URL, LOGIN_URL } from "../routes/util";
 import RootHeader from "../components/Header";
 import { Registration } from "../graphql/gen.types";
-import socket from "../socket";
+import defaultSocket from "../socket";
+import { Container } from "./user-registration-styles";
 
 export class UserReg extends React.Component<Props, State> {
   state = initialState;
@@ -38,7 +39,7 @@ export class UserReg extends React.Component<Props, State> {
 
   render() {
     return (
-      <div className="user-reg-route">
+      <Container className="user-reg-route">
         <RootHeader title="Thysis" />
 
         <div className="main">
@@ -50,7 +51,7 @@ export class UserReg extends React.Component<Props, State> {
             validate={this.validate}
           />
         </div>
-      </div>
+      </Container>
     );
   }
 
@@ -82,25 +83,38 @@ export class UserReg extends React.Component<Props, State> {
       regValues
     );
 
+    const {
+      regUser,
+      socket = defaultSocket,
+      updateLocalUser,
+      history
+    } = this.props;
+
+    if (!regUser) {
+      this.setState({ otherErrors: "Unable to make request" });
+      formikBag.setSubmitting(false);
+      return;
+    }
+
     try {
-      const result = await this.props.regUser({
+      const result = await regUser({
         variables: {
           registration: regValues
         }
       });
 
-      if (result && result.data) {
-        const user = result.data.registration;
+      const user = result && result.data && result.data.registration;
 
+      if (user) {
         if (user) {
           socket.connect(user.jwt);
         }
 
-        await this.props.updateLocalUser({
+        await updateLocalUser({
           variables: { user }
         });
 
-        this.props.history.replace(PROJECTS_URL);
+        history.replace(PROJECTS_URL);
       }
     } catch (error) {
       formikBag.setSubmitting(false);
@@ -134,7 +148,7 @@ export class UserReg extends React.Component<Props, State> {
               ["Email", "email", FORM_VALUES_KEY.EMAIL],
               ["Password", "password", FORM_VALUES_KEY.PASSWORD],
               [
-                "Password Confirm",
+                "Password Confirmation",
                 "password",
                 FORM_VALUES_KEY.PASSWORD_CONFIRM
               ],
@@ -150,8 +164,12 @@ export class UserReg extends React.Component<Props, State> {
               );
             })}
 
+            <label htmlFor="user-reg-submit-btn" className="submit-btn-label">
+              Register User
+            </label>
+
             <Button
-              id="author-modal-submit"
+              id="user-reg-submit-btn"
               color="green"
               inverted={true}
               disabled={disableSubmit}
@@ -191,7 +209,6 @@ export class UserReg extends React.Component<Props, State> {
           className={`form-field ${isSourceField ? "disabled" : ""}`}
           type={type}
           control={Input}
-          placeholder={label}
           autoComplete="off"
           label={label}
           id={name}

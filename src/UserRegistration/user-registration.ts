@@ -1,23 +1,18 @@
 import { ApolloError } from "apollo-client";
-import { ChildProps } from "react-apollo";
 import { RouteComponentProps } from "react-router-dom";
 
-import {
-  UserRegMutation,
-  UserRegMutationVariables
-} from "../graphql/gen.types";
-import { UserRegMutationProps } from "../graphql/ops.types";
+import { UserRegistrationMutationProps } from "../graphql/user-reg.mutation";
 import { UserLocalMutationProps } from "../state/user.local.mutation";
+import { AppSocketType } from "../socket";
 
-export type OwnProps = RouteComponentProps<{}> &
-  UserRegMutationProps &
-  UserLocalMutationProps;
+export interface OwnProps extends RouteComponentProps<{}> {
+  socket?: AppSocketType;
+}
 
-export type Props = ChildProps<
-  OwnProps,
-  UserRegMutation,
-  UserRegMutationVariables
->;
+export interface Props
+  extends OwnProps,
+    UserRegistrationMutationProps,
+    UserLocalMutationProps {}
 
 export interface FormValues {
   email: string | undefined;
@@ -53,6 +48,7 @@ export interface State {
   initialFormValues: FormValues;
   graphQlError?: ApolloError;
   formValues: FormValues;
+  otherErrors?: string;
 }
 
 export const initialState: State = {

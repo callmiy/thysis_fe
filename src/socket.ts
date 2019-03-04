@@ -186,3 +186,16 @@ interface ConnectionPayload<TVariables = {}> {
   variables: TVariables;
   onData: (data: { data: AllQueries }) => void;
 }
+
+export interface AppSocketType {
+  sendDataAuth: <TVariables, TData, TError = {}>(
+    query: string,
+    variables: TVariables,
+    ok: OnChannelMessage<TData>,
+    error?: OnError<TError>
+  ) => void;
+  connect: (
+    token?: string | null,
+    payload?: ConnectionPayload<{}> | undefined
+  ) => void;
+}
