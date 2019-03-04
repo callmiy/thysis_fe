@@ -10,7 +10,11 @@
     "cy-run-dev": "cypress run --config baseUrl=http://localhost:3016/"
   },
   "devDependencies": {
+    "@cypress/webpack-preprocessor": "^4.0.3",
     "cypress": "^3.1.5",
-    "cypress-testing-library": "^2.3.6"
+    "cypress-testing-library": "^2.3.6",
+    "ts-loader": "^5.3.3",
+    "typescript": "^3.3.3333",
+    "webpack": "^4.29.6"
   }
 }
