@@ -1,14 +1,13 @@
 import { withClientState } from "apollo-link-state";
 import { InMemoryCache } from "apollo-cache-inmemory";
 
-import { UserFragment } from "./../graphql/gen.types";
-import { ProjectFragment } from "./../graphql/gen.types";
-import { TOKEN_KEY } from "./../constants";
-import { CURRENT_PROJECT_KEY } from "./../constants";
+import { UserFragment } from "../graphql/gen.types";
+import { ProjectFragment } from "../graphql/gen.types";
+import { TOKEN_KEY } from "../constants";
+import { CURRENT_PROJECT_KEY } from "../constants";
 import { State as SearchComponentState } from "../components/SearchComponent/search-component";
 import USER_QUERY, { UserLocalGqlData } from "./auth-user.local.query";
 import { Variable as UserMutationVar } from "./user.local.mutation";
-import { resetClientAndPersistor } from "../apollo-setup";
 
 type ClientStateFn<TVariables> = (
   fieldName: string,
@@ -35,7 +34,9 @@ const userMutation: ClientStateFn<UserMutationVar> = async (
   { cache }
 ) => {
   if (user) {
-    cache.writeData({ data: { user, staleToken: null, loggedOutUser: null } });
+    cache.writeData({
+      data: { user, staleToken: null, loggedOutUser: null }
+    });
     storeToken(user.jwt);
 
     return user;
@@ -59,7 +60,9 @@ const userMutation: ClientStateFn<UserMutationVar> = async (
   };
 
   if (loggedOutUser) {
-    await resetClientAndPersistor();
+    // const { client } = buildClientCache();
+    // const persistor = await persistCache(cache);
+    // await resetClientAndPersistor(client, persistor);
     data.loggedOutUser = loggedOutUser;
   }
 
@@ -103,9 +106,9 @@ const searchComponentStateMutation: ClientStateFn<{
   return null;
 };
 
-export const stateLink = (cache: InMemoryCache) => {
+export const stateLink = (appCache: InMemoryCache) => {
   return withClientState({
-    cache,
+    cache: appCache,
     resolvers: {
       Mutation: {
         updateNetworkStatus,
@@ -124,19 +127,29 @@ export const stateLink = (cache: InMemoryCache) => {
   });
 };
 
-export const getToken = (): string | null =>
-  localStorage.getItem(TOKEN_KEY) || null;
+export default stateLink;
 
-const storeToken = (token: string) => localStorage.setItem(TOKEN_KEY, token);
+export function getToken(): string | null {
+  return localStorage.getItem(TOKEN_KEY) || null;
+}
 
-const clearToken = () => localStorage.removeItem(TOKEN_KEY);
+function storeToken(token: string) {
+  return localStorage.setItem(TOKEN_KEY, token);
+}
 
-const getProject = (): ProjectFragment | null => {
+function clearToken() {
+  return localStorage.removeItem(TOKEN_KEY);
+}
+
+function getProject(): ProjectFragment | null {
   const project = localStorage.getItem(CURRENT_PROJECT_KEY);
   return project ? JSON.parse(project) : null;
-};
+}
 
-const storeProject = async (project: ProjectFragment) =>
-  localStorage.setItem(CURRENT_PROJECT_KEY, JSON.stringify(project));
+async function storeProject(project: ProjectFragment) {
+  return localStorage.setItem(CURRENT_PROJECT_KEY, JSON.stringify(project));
+}
 
-const clearProject = () => localStorage.removeItem(CURRENT_PROJECT_KEY);
+function clearProject() {
+  return localStorage.removeItem(CURRENT_PROJECT_KEY);
+}

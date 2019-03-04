@@ -1,11 +1,13 @@
-import * as React from "react";
+import React, { lazy, Suspense } from "react";
 import { BrowserRouter } from "react-router-dom";
 import { Switch } from "react-router-dom";
 import { Route } from "react-router-dom";
 import { ApolloProvider } from "react-apollo";
 import update from "immutability-helper";
+import { InMemoryCache } from "apollo-cache-inmemory";
+import { ApolloClient } from "apollo-client";
 
-import { client, persistCache } from "../../apollo-setup";
+import { persistCache } from "../../apollo-setup";
 import {
   ROOT_URL,
   PROJECTS_URL,
@@ -29,34 +31,29 @@ import {
 } from "./app.utils";
 import { logger } from "../../utils";
 
-// tslint:disable-next-line:no-any
-const ReactLazy = React as any;
-const TagDetail = ReactLazy.lazy(() => import("./../../routes/TagDetail"));
-const Source = ReactLazy.lazy(() => import("./../../routes/Source"));
-const NewQuote = ReactLazy.lazy(() => import("./../../routes/NewQuote"));
-const Quote = ReactLazy.lazy(() => import("./../../routes/Quote"));
-const AuthorRoute = ReactLazy.lazy(() => import("./../../routes/Author"));
-const LoginRoute = ReactLazy.lazy(() => import("./../../routes/Login"));
-const ProjectsRoute = ReactLazy.lazy(() => import("./../../routes/Projects"));
-const PwdRecoveryRequest = React.lazy(() =>
-  import("../../PwdRecoveryTokenRequest")
-);
+const TagDetail = lazy(() => import("./../../routes/TagDetail"));
+const Source = lazy(() => import("./../../routes/Source"));
+const NewQuote = lazy(() => import("./../../routes/NewQuote"));
+const Quote = lazy(() => import("./../../routes/Quote"));
+const AuthorRoute = lazy(() => import("./../../routes/Author"));
+const LoginRoute = lazy(() => import("./../../routes/Login"));
+const ProjectsRoute = lazy(() => import("./../../routes/Projects"));
+const PwdRecoveryRequest = lazy(() => import("../../PwdRecoveryTokenRequest"));
+const SearchQuotes = lazy(() => import("./../../routes/SearchQuotes"));
+const UserRegRoute = lazy(() => import("./../../routes/Registration"));
 
-const SearchQuotes = ReactLazy.lazy(() =>
-  import("./../../routes/SearchQuotes")
-);
+export interface Props {
+  client: ApolloClient<{}>;
+  cache: InMemoryCache;
+}
 
-const UserRegRoute = ReactLazy.lazy(() =>
-  import("./../../routes/Registration")
-);
-
-export class App extends React.Component<{}, State> {
+export class App extends React.Component<Props, State> {
   state: State = initialState;
   mediaListeners: Array<() => void> = [];
 
   async componentDidMount() {
     try {
-      await persistCache();
+      await persistCache(this.props.cache);
     } catch (error) {
       logger("error", "Error restoring Apollo cache", error);
     }
@@ -79,8 +76,8 @@ export class App extends React.Component<{}, State> {
     const { showSidebar, mediaQueries: mQueries } = this.state;
 
     return (
-      <ReactLazy.Suspense fallback={<Loading />}>
-        <ApolloProvider client={client}>
+      <Suspense fallback={<Loading />}>
+        <ApolloProvider client={this.props.client}>
           <AppSidebarContext.Provider
             value={{
               showSidebar,
@@ -152,7 +149,7 @@ export class App extends React.Component<{}, State> {
             </BrowserRouter>
           </AppSidebarContext.Provider>
         </ApolloProvider>
-      </ReactLazy.Suspense>
+      </Suspense>
     );
   }
 

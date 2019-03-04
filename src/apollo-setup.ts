@@ -1,78 +1,100 @@
-import { InMemoryCache } from "apollo-cache-inmemory";
+import { InMemoryCache, NormalizedCacheObject } from "apollo-cache-inmemory";
 import { ApolloClient } from "apollo-client";
 import { ApolloLink, Operation } from "apollo-link";
 import { onError } from "apollo-link-error";
 import { HttpLink } from "apollo-link-http";
 import { CachePersistor } from "apollo-cache-persist";
 
-import { stateLink } from "./state";
-import { getToken } from "./state";
-import getBackendUrls from "./get-backend-urls";
+import { getToken, stateLink } from "./state";
 
-const HTTP_URL = getBackendUrls().apiUrl;
+let cache: InMemoryCache;
+let client: ApolloClient<{}>;
+let persistor: CachePersistor<NormalizedCacheObject>;
 
-let httpLink;
-httpLink = new HttpLink({ uri: HTTP_URL }) as ApolloLink;
-httpLink = middlewareAuthLink().concat(httpLink);
-httpLink = middlewareErrorLink().concat(httpLink);
-
-if (process.env.NODE_ENV !== "production") {
-  httpLink = middlewareLoggerLink(httpLink);
+interface BuildClientCache {
+  uri: string;
+  headers?: { [k: string]: string };
 }
 
-const cache = new InMemoryCache();
+export function buildClientCache(
+  { uri, headers }: BuildClientCache = {} as BuildClientCache
+) {
+  if (!cache) {
+    cache = new InMemoryCache();
+  }
 
-export const client = new ApolloClient({
-  cache,
-  link: ApolloLink.from([stateLink(cache), httpLink])
-});
+  if (!client || headers) {
+    let httpLink;
+    httpLink = new HttpLink({
+      uri
+    }) as ApolloLink;
+    httpLink = middlewareAuthLink(headers).concat(httpLink);
+    httpLink = middlewareErrorLink().concat(httpLink);
 
-export default client;
-// tslint:disable-next-line: no-any
-const storage = localStorage as any;
+    if (process.env.NODE_ENV !== "production") {
+      httpLink = middlewareLoggerLink(httpLink);
+    }
 
-const persistor = new CachePersistor({
-  cache,
-  storage,
-  key: "thysis-apollo-cache-persist"
-});
+    client = new ApolloClient({
+      cache,
+      link: ApolloLink.from([stateLink(cache), httpLink])
+    });
+  }
 
-export async function persistCache() {
-  const SCHEMA_VERSION = "3.1"; // Must be a string.
-  const SCHEMA_VERSION_KEY = "thysis-apollo-schema-version";
-  const currentVersion = localStorage.getItem(SCHEMA_VERSION_KEY);
+  return { client, cache };
+}
 
-  if (currentVersion === SCHEMA_VERSION) {
-    // If the current version matches the latest version,
-    // we're good to go and can restore the cache.
-    await persistor.restore();
-  } else {
-    // Otherwise, we'll want to purge the outdated persisted cache
-    // and mark ourselves as having updated to the latest version.
-    await persistor.purge();
-    localStorage.setItem(SCHEMA_VERSION_KEY, SCHEMA_VERSION);
+export default buildClientCache;
+
+export async function persistCache(appCache: InMemoryCache) {
+  if (!persistor) {
+    persistor = new CachePersistor({
+      cache: appCache,
+      // tslint:disable-next-line: no-any
+      storage: localStorage as any,
+      key: "thysis-apollo-cache-persist"
+    });
+
+    const SCHEMA_VERSION = "3.1"; // Must be a string.
+    const SCHEMA_VERSION_KEY = "thysis-apollo-schema-version";
+    const currentVersion = localStorage.getItem(SCHEMA_VERSION_KEY);
+
+    if (currentVersion === SCHEMA_VERSION) {
+      // If the current version matches the latest version,
+      // we're good to go and can restore the cache.
+      await persistor.restore();
+    } else {
+      // Otherwise, we'll want to purge the outdated persisted cache
+      // and mark ourselves as having updated to the latest version.
+      await persistor.purge();
+      localStorage.setItem(SCHEMA_VERSION_KEY, SCHEMA_VERSION);
+    }
   }
 
   return persistor;
 }
 
-export const resetClientAndPersistor = async () => {
-  await persistor.pause(); // Pause automatic persistence.
-  await persistor.purge(); // Delete everything in the storage provider.
-  await client.clearStore();
-  await persistor.resume();
+export const resetClientAndPersistor = async (
+  appClient: ApolloClient<{}>,
+  appPersistor: CachePersistor<NormalizedCacheObject>
+) => {
+  await appPersistor.pause(); // Pause automatic persistence.
+  await appPersistor.purge(); // Delete everything in the storage provider.
+  await appClient.clearStore();
+  await appPersistor.resume();
 };
 
 // HELPER FUNCTIONS
 
-function middlewareAuthLink() {
+function middlewareAuthLink(headers: { [k: string]: string } = {}) {
   return new ApolloLink((operation, forward) => {
     const token = getToken();
 
     if (token) {
       operation.setContext({
         headers: {
-          authorization: `Bearer ${token}`
+          authorization: `Bearer ${token}`,
+          ...headers
         }
       });
     }

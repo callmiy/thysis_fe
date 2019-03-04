@@ -32,7 +32,12 @@ export const defineSocket = () => {
 
   function connect(token = getToken(), payload?: ConnectionPayload) {
     const params = token ? { params: { token } } : {};
-    socket = new Socket(getBackendUrls().websocketUrl, params);
+
+    socket = new Socket(
+      getBackendUrls(process.env.REACT_APP_API_URL || "").websocketUrl,
+      params
+    );
+
     socket.connect();
 
     if (token) {
