@@ -39,7 +39,7 @@ it("renders error message if requestPwdRecoveryToken not injected", async () => 
   /**
    * And clicks on request password reset button
    */
-  fireEvent.click(getByText(/Request password reset/));
+  act(() => fireEvent.click(getByText(/Request password reset/)));
 
   /**
    * Then she sees a message telling her an error occurred
@@ -321,7 +321,7 @@ test("login instead", () => {
   /**
    * She should be able to click on the login instead button
    */
-  fireEvent.click(getByText(/login instead/i));
+  act(() => fireEvent.click(getByText(/login instead/i)));
 });
 
 ///////////////////////////////////////////////////////////////////////////////

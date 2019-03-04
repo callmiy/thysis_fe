@@ -73,11 +73,13 @@ export function PwdRecoveryTokenRequest(props: Props) {
       await emailValidator.validate(email);
     } catch (error) {
       setEmailError(error.message);
+      setSubmitting(false)
       return;
     }
 
     if (!requestPwdTokenRecovery) {
       setOtherErrors("Unable to make request.");
+      setSubmitting(false)
       return;
     }
 
@@ -94,6 +96,7 @@ export function PwdRecoveryTokenRequest(props: Props) {
 
       if (message.includes("Network error")) {
         setOtherErrors("You seem to be offline");
+        setSubmitting(false)
       } else {
         setSuccessMessage(SUCCESS_MESSAGE(email));
       }

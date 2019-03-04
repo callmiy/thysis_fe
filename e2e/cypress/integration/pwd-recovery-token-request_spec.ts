@@ -6,5 +6,7 @@ describe("Password Recovery Token Request", function() {
   it(".should() - assert that <title> is correct", function() {
     cy.getByText(/Forgot your password/i).click();
     cy.title().should("include", routeTitle);
+    cy.getByLabelText(/Enter your email address/i).type("a@b.com");
+    cy.getByText(/Request password reset/i).click();
   });
 });
