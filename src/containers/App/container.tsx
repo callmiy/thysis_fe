@@ -40,7 +40,7 @@ const LoginRoute = lazy(() => import("./../../routes/Login"));
 const ProjectsRoute = lazy(() => import("./../../routes/Projects"));
 const PwdRecoveryRequest = lazy(() => import("../../PwdRecoveryTokenRequest"));
 const SearchQuotes = lazy(() => import("./../../routes/SearchQuotes"));
-const UserRegRoute = lazy(() => import("./../../routes/Registration"));
+const UserRegistration = lazy(() => import("./../../UserRegistration"));
 
 export interface Props {
   client: ApolloClient<{}>;
@@ -129,7 +129,7 @@ export class App extends React.Component<Props, State> {
                 <Route
                   exact={true}
                   path={USER_REG_URL}
-                  render={routeProps => <UserRegRoute {...routeProps} />}
+                  render={routeProps => <UserRegistration {...routeProps} />}
                 />
 
                 <Route

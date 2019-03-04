@@ -1,24 +1,29 @@
 import React from "react";
-import { Button, Card } from "semantic-ui-react";
-import { Input } from "semantic-ui-react";
-import { Message } from "semantic-ui-react";
-import { Icon } from "semantic-ui-react";
-import { Form } from "semantic-ui-react";
+import { Button, Card, Input, Message, Icon, Form } from "semantic-ui-react";
 import { NavLink } from "react-router-dom";
-import { Formik } from "formik";
-import { FormikProps, FormikActions } from "formik";
-import { Field } from "formik";
-import { FieldProps } from "formik";
-import { FormikErrors } from "formik";
+import {
+  FormikProps,
+  FormikActions,
+  Formik,
+  Field,
+  FieldProps,
+  FormikErrors
+} from "formik";
 import isEmpty from "lodash/isEmpty";
 import update from "immutability-helper";
 
-import "./reg.scss";
-import { Props, FORM_VALUES_KEY, State, initialState, FormValues } from "./reg";
-import { setTitle, PROJECTS_URL, LOGIN_URL } from "../../routes/util";
-import RootHeader from "../../components/Header";
-import { Registration } from "../../graphql/gen.types";
-import socket from "../../socket";
+import "./user-registration.scss";
+import {
+  Props,
+  FORM_VALUES_KEY,
+  State,
+  initialState,
+  FormValues
+} from "./user-registration";
+import { setTitle, PROJECTS_URL, LOGIN_URL } from "../routes/util";
+import RootHeader from "../components/Header";
+import { Registration } from "../graphql/gen.types";
+import socket from "../socket";
 
 export class UserReg extends React.Component<Props, State> {
   state = initialState;

@@ -2,10 +2,12 @@ import { ApolloError } from "apollo-client";
 import { ChildProps } from "react-apollo";
 import { RouteComponentProps } from "react-router-dom";
 
-import { UserRegMutation } from "../../graphql/gen.types";
-import { UserRegMutationVariables } from "../../graphql/gen.types";
-import { UserRegMutationProps } from "../../graphql/ops.types";
-import { UserLocalMutationProps } from "../../state/user.local.mutation";
+import {
+  UserRegMutation,
+  UserRegMutationVariables
+} from "../graphql/gen.types";
+import { UserRegMutationProps } from "../graphql/ops.types";
+import { UserLocalMutationProps } from "../state/user.local.mutation";
 
 export type OwnProps = RouteComponentProps<{}> &
   UserRegMutationProps &
