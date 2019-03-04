@@ -22,28 +22,21 @@ export function mockWindowsFetch(fetch: Fetch) {
       headers: modifiedHeaders
     });
 
-    increaseFetches();
-
     return fetch(fetchUrl, modifiedOptions)
       .then(result => {
-        decreaseFetches();
         return Promise.resolve(result);
       })
       .catch(error => {
-        decreaseFetches();
+        // tslint:disable-next-line:no-console
+        console.log(
+          "\n\t\tLogging start\n\n\n\n  fetch error\n",
+          error,
+          "\n\n\n\n\t\tLogging ends\n"
+        );
+
         return Promise.reject(error);
       });
   };
 }
 
 export default mockWindowsFetch;
-
-function increaseFetches() {
-  const count = Cypress.env("fetchCount") || 0;
-  Cypress.env("fetchCount", count + 1);
-}
-
-function decreaseFetches() {
-  const count = Cypress.env("fetchCount") || 0;
-  Cypress.env("fetchCount", count === 0 ? 0 : count - 1);
-}

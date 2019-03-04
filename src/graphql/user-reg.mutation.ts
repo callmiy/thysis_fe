@@ -1,7 +1,7 @@
 import gql from "graphql-tag";
 import userFragment from "./user.fragment";
 
-export const userRegMutation = gql`
+export const USER_REG_MUTATION = gql`
   mutation UserRegMutation($registration: Registration!) {
     registration(registration: $registration) {
       ...UserFragment
@@ -10,4 +10,4 @@ export const userRegMutation = gql`
   ${userFragment}
 `;
 
-export default userRegMutation;
+export default USER_REG_MUTATION;

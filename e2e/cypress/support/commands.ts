@@ -60,20 +60,12 @@ Cypress.Commands.add("dropSession", () => {
     return;
   }
 
-  cy.waitForFetches().then(() =>
-    fetch(serverUrl.root + "/sandbox", {
-      method: "DELETE",
-      headers: { "x-session-id": sessionId }
-    })
-  );
-});
-
-Cypress.Commands.add("waitForFetches", () => {
-  if (Cypress.env("fetchCount") === 0) {
-    return;
-  }
-
-  cy.wait(100).then(() => cy.waitForFetches());
+  fetch(serverUrl.root + "/sandbox", {
+    method: "DELETE",
+    headers: { "x-session-id": sessionId }
+  }).catch(() => {
+    Cypress.env("sessionId", null);
+  });
 });
 
 Cypress.on("window:before:load", win => {
@@ -89,6 +81,7 @@ Cypress.Commands.add(
         "x-session-id": Cypress.env("sessionId")
       }
     });
+
     return client.mutate<TData, TVariables>(options);
   }
 );

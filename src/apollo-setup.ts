@@ -89,15 +89,13 @@ export const resetClientAndPersistor = async (
 function middlewareAuthLink(headers: { [k: string]: string } = {}) {
   return new ApolloLink((operation, forward) => {
     const token = getToken();
-
     if (token) {
-      operation.setContext({
-        headers: {
-          authorization: `Bearer ${token}`,
-          ...headers
-        }
-      });
+      headers.authorization = `Bearer ${token}`;
     }
+
+    operation.setContext({
+      headers
+    });
 
     return forward ? forward(operation) : null;
   });
