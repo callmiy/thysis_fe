@@ -7,12 +7,17 @@ declare global {
       /**
        *
        */
-      checkoutSession: () => Promise<void>;
+      checkoutSession: () => Chainable<Promise<void>>;
 
       /**
        *
        */
-      dropSession: () => Promise<void>;
+      dropSession: () => Chainable<Promise<void>>;
+
+      /**
+       *
+       */
+      waitForFetches: () => Chainable<Promise<void>>;
     }
   }
 }
@@ -30,11 +35,21 @@ Cypress.Commands.add("checkoutSession", async () => {
 });
 
 Cypress.Commands.add("dropSession", () =>
-  fetch(serverUrl + "/sandbox", {
-    method: "DELETE",
-    headers: { "x-session-id": Cypress.env("sessionId") }
-  })
+  cy.waitForFetches().then(() =>
+    fetch(serverUrl + "/sandbox", {
+      method: "DELETE",
+      headers: { "x-session-id": Cypress.env("sessionId") || "0" }
+    })
+  )
 );
+
+Cypress.Commands.add("waitForFetches", () => {
+  if (Cypress.env("fetchCount") === 0) {
+    return;
+  }
+
+  cy.wait(100).then(() => cy.waitForFetches());
+});
 
 Cypress.on("window:before:load", win => {
   cy.stub(win, "fetch", mockWindowsFetch(fetch));

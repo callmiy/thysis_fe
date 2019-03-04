@@ -22,8 +22,28 @@ export function mockWindowsFetch(fetch: Fetch) {
       headers: modifiedHeaders
     });
 
-    return fetch(fetchUrl, modifiedOptions);
+    increaseFetches();
+
+    return fetch(fetchUrl, modifiedOptions)
+      .then(result => {
+        decreaseFetches();
+        return Promise.resolve(result);
+      })
+      .catch(error => {
+        decreaseFetches();
+        return Promise.reject(error);
+      });
   };
 }
 
 export default mockWindowsFetch;
+
+function increaseFetches() {
+  const count = Cypress.env("fetchCount") || 0;
+  Cypress.env("fetchCount", count + 1);
+}
+
+function decreaseFetches() {
+  const count = Cypress.env("fetchCount") || 0;
+  Cypress.env("fetchCount", count === 0 ? 0 : count - 1);
+}
