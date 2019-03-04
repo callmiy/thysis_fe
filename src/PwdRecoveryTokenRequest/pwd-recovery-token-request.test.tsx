@@ -39,7 +39,9 @@ it("renders error message if requestPwdRecoveryToken not injected", async () => 
   /**
    * And clicks on request password reset button
    */
-  act(() => fireEvent.click(getByText(/Request password reset/)));
+  act(() => {
+    fireEvent.click(getByText(/Request password reset/));
+  });
 
   /**
    * Then she sees a message telling her an error occurred
@@ -300,7 +302,9 @@ it("renders error if form is invalid", async () => {
   /**
    * When she submits the form
    */
-  act(() => fireEvent.click(getByText(/Request password reset/i)));
+  act(() => {
+    fireEvent.click(getByText(/Request password reset/i));
+  });
 
   /**
    * Then she sees email error messages on the screen
@@ -321,7 +325,9 @@ test("login instead", () => {
   /**
    * She should be able to click on the login instead button
    */
-  act(() => fireEvent.click(getByText(/login instead/i)));
+  act(() => {
+    fireEvent.click(getByText(/login instead/i));
+  });
 });
 
 ///////////////////////////////////////////////////////////////////////////////
