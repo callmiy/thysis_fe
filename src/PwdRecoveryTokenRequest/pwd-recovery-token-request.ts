@@ -5,3 +5,5 @@ import { PwdRecoveryTokenRequestProps } from "../graphql/pwd-recovery-token-requ
 export interface OwnProps extends RouteComponentProps<{}> {}
 
 export interface Props extends PwdRecoveryTokenRequestProps, OwnProps {}
+
+export const routeTitle = "Request Password Recovery";

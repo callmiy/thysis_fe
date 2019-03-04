@@ -1,4 +1,5 @@
-/// <reference types="Cypress" />
+// import { routeTitle } from "../../src/PwdRecoveryTokenRequest/pwd-recovery-token-request";
+
 describe("Password Recovery Token Request", function() {
   beforeEach(() => cy.visit("/"));
 

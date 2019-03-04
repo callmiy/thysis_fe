@@ -1,0 +1,16 @@
+{
+  "name": "e2e",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "cy-open-dev": "cypress open --config baseUrl=http://localhost:3016/",
+    "cy-open-prod": "cypress open --config baseUrl=http://localhost:3017/",
+    "cy-run-prod": "cypress run --config baseUrl=http://localhost:3017/",
+    "cy-run-dev": "cypress run --config baseUrl=http://localhost:3016/"
+  },
+  "devDependencies": {
+    "cypress": "^3.1.5",
+    "cypress-testing-library": "^2.3.6"
+  }
+}
