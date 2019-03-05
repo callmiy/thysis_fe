@@ -50,19 +50,58 @@ export class UserReg extends React.Component<Props, State> {
   }
 
   private renderErrorOrSuccess = () => {
-    const { graphQlError } = this.state;
+    const { graphQlError, formErrors } = this.state;
+    let content = null;
 
-    if (graphQlError) {
+    if (formErrors) {
+      content = (
+        <>
+          <span>Errors in fields:</span>
+          {Object.entries(formErrors).map(([k, err]) => {
+            const { label } = FORM_RENDER_PROPS[k];
+            return (
+              <div key={label}>
+                <span className="error-label">{label}:</span>
+                <span style={{ marginLeft: "10px" }} className="error-text">
+                  {err}
+                </span>
+              </div>
+            );
+          })}
+        </>
+      );
+    } else if (graphQlError) {
+      content = graphQlError.graphQLErrors.reduce(
+        (acc, { path = [], message }) => {
+          if (path[0] !== "registration") {
+            return acc;
+          }
+
+          Object.entries(JSON.parse(message).error).forEach(([k, v]) => {
+            acc.push(
+              <div key={k}>
+                {k.charAt(0).toUpperCase() + k.slice(1)}: {v}
+              </div>
+            );
+          });
+
+          return acc;
+        },
+        [] as JSX.Element[]
+      );
+    }
+
+    if (content) {
       return (
         <Card.Content extra={true}>
           <Message error={true} onDismiss={this.handleFormErrorDismissed}>
-            <Message.Content>{graphQlError.message}</Message.Content>
+            <Message.Content>{content}</Message.Content>
           </Message>
         </Card.Content>
       );
     }
 
-    return undefined;
+    return null;
   };
 
   private onSubmit = ({
@@ -184,11 +223,11 @@ export class UserReg extends React.Component<Props, State> {
   private renderInput = (label: string, type: string) => (
     formProps: FieldProps<Registration>
   ) => {
-    const { field, form } = formProps;
+    const { field } = formProps;
+    const { formErrors = {} } = this.state;
     const name = field.name;
-    const error = form.errors[name];
+    const error = formErrors[name];
     const booleanError = !!error;
-    const touched = form.touched[name];
     const isSourceField = name === "source";
 
     return (
@@ -206,13 +245,14 @@ export class UserReg extends React.Component<Props, State> {
           readOnly={isSourceField}
         />
 
-        {booleanError && touched && <Message error={true} header={error} />}
+        {booleanError && <Message error={true} header={error} />}
       </div>
     );
   };
 
-  private handleFormErrorDismissed = () =>
-    this.setState({ graphQlError: undefined });
+  private handleFormErrorDismissed = () => {
+    this.setState({ graphQlError: undefined, formErrors: undefined });
+  };
 }
 
 export default UserReg;
