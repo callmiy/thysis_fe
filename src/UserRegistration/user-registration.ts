@@ -40,7 +40,7 @@ export const initialFormValues: Registration = {
 
 export interface State {
   initialFormValues: Registration;
-  graphQlError?: ApolloError;
+  gqlError?: ApolloError;
   otherErrors?: string;
   formErrors?: FormikErrors<Registration>;
 }
@@ -49,22 +49,64 @@ export const initialState: State = {
   initialFormValues
 };
 
+export const formErrorTexts: {
+  [k in keyof Registration]: { [t: string]: string }
+} = {
+  name: {
+    min: "must be at least 2 characters",
+    max: "is too long!"
+  },
+
+  email: {
+    invalid: "is invalid"
+  },
+
+  password: {
+    min: "must be at least 4 characters",
+    max: "is too long!"
+  },
+
+  passwordConfirmation: {
+    doesNotMatch: "Passwords don't match"
+  },
+
+  source: {}
+};
+
 export const ValidationSchema = Yup.object<Registration>().shape<Registration>({
   name: Yup.string()
-    .min(2, "must be at least 2 characters")
-    .max(50, "is too long!")
+    .min(2, formErrorTexts.name.min)
+    .max(50, formErrorTexts.name.max)
     .required("is required"),
   email: Yup.string()
-    .email("is invalid")
+    .email(formErrorTexts.email.invalid)
     .required("is required"),
   password: Yup.string()
-    .min(4, "must be at least 4 characters")
-    .max(50, "is too Long!")
+    .min(4, formErrorTexts.password.min)
+    .max(50, formErrorTexts.password.max)
     .required("is required"),
   passwordConfirmation: Yup.string()
     .required("is required")
-    .test("passwords-match", "Passwords don't match", function(val) {
-      return this.parent.password === val;
-    }),
+    .test(
+      "passwords-match",
+      formErrorTexts.passwordConfirmation.doesNotMatch,
+      function(val) {
+        return this.parent.password === val;
+      }
+    ),
   source: Yup.string().default(() => "password")
 });
+
+export const uiTexts = {
+  submitBtnLabel: "Register User",
+  fieldErrorTestId: "field error",
+  formFieldErrorTestId: "form field error"
+};
+
+export function makeFieldErrorTestId(fieldName: string) {
+  return fieldName + " " + uiTexts.fieldErrorTestId;
+}
+
+export function makeFormFieldErrorTestId(fieldName: string) {
+  return fieldName + " " + uiTexts.formFieldErrorTestId;
+}

@@ -10,7 +10,10 @@ import {
   FORM_RENDER_PROPS,
   State,
   initialState,
-  ValidationSchema
+  ValidationSchema,
+  uiTexts,
+  makeFieldErrorTestId,
+  makeFormFieldErrorTestId
 } from "./user-registration";
 import { setTitle, PROJECTS_URL, LOGIN_URL } from "../routes/util";
 import RootHeader from "../components/Header";
@@ -49,19 +52,22 @@ export class UserReg extends React.Component<Props, State> {
     );
   }
 
-  private renderErrorOrSuccess = () => {
-    const { graphQlError, formErrors } = this.state;
+  private renderFormErrors = () => {
+    const { gqlError, formErrors } = this.state;
     let content = null;
 
     if (formErrors) {
       content = (
         <>
           <span>Errors in fields:</span>
+
           {Object.entries(formErrors).map(([k, err]) => {
             const { label } = FORM_RENDER_PROPS[k];
+
             return (
-              <div key={label}>
+              <div key={label} data-testid={makeFormFieldErrorTestId(k)}>
                 <span className="error-label">{label}:</span>
+
                 <span style={{ marginLeft: "10px" }} className="error-text">
                   {err}
                 </span>
@@ -70,8 +76,8 @@ export class UserReg extends React.Component<Props, State> {
           })}
         </>
       );
-    } else if (graphQlError) {
-      content = graphQlError.graphQLErrors.reduce(
+    } else if (gqlError) {
+      content = gqlError.graphQLErrors.reduce(
         (acc, { path = [], message }) => {
           if (path[0] !== "registration") {
             return acc;
@@ -111,7 +117,7 @@ export class UserReg extends React.Component<Props, State> {
   }: FormikProps<Registration>) => async () => {
     setSubmitting(true);
     this.setState({
-      graphQlError: undefined,
+      gqlError: undefined,
       otherErrors: undefined,
       formErrors: undefined
     });
@@ -157,19 +163,18 @@ export class UserReg extends React.Component<Props, State> {
 
         history.replace(PROJECTS_URL);
       }
-    } catch (error) {
+    } catch (gqlError) {
       setSubmitting(false);
-      this.setState({ graphQlError: error });
+      this.setState({ gqlError });
     }
   };
 
   private renderForm = (formikProps: FormikProps<Registration>) => {
     const { dirty, isSubmitting, errors } = formikProps;
 
-    const { graphQlError } = this.state;
+    const { gqlError } = this.state;
     const dirtyOrSubmitting = !dirty || isSubmitting;
-    const disableSubmit =
-      dirtyOrSubmitting || !isEmpty(errors) || !!graphQlError;
+    const disableSubmit = dirtyOrSubmitting || !isEmpty(errors) || !!gqlError;
 
     return (
       <Card>
@@ -177,7 +182,7 @@ export class UserReg extends React.Component<Props, State> {
           Sign up for Thysis
         </Card.Content>
 
-        {this.renderErrorOrSuccess()}
+        {this.renderFormErrors()}
 
         <Card.Content>
           <Form onSubmit={this.onSubmit(formikProps)}>
@@ -194,7 +199,7 @@ export class UserReg extends React.Component<Props, State> {
             )}
 
             <label htmlFor="user-reg-submit-btn" className="submit-btn-label">
-              Register User
+              {uiTexts.submitBtnLabel}
             </label>
 
             <Button
@@ -245,13 +250,19 @@ export class UserReg extends React.Component<Props, State> {
           readOnly={isSourceField}
         />
 
-        {booleanError && <Message error={true} header={error} />}
+        {booleanError && (
+          <Message
+            data-testid={makeFieldErrorTestId(name)}
+            error={true}
+            header={error}
+          />
+        )}
       </div>
     );
   };
 
   private handleFormErrorDismissed = () => {
-    this.setState({ graphQlError: undefined, formErrors: undefined });
+    this.setState({ gqlError: undefined, formErrors: undefined });
   };
 }
 
