@@ -47,7 +47,7 @@ describe("Create user", function() {
     ).should("exist");
   });
 
-  it(".should() - return email not unique error", function() {
+  it(".should() - return email must be unique error", function() {
     /**
      * Given a user already exists in the system
      */
