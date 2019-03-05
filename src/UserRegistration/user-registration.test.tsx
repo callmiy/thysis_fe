@@ -198,7 +198,7 @@ it("renders form submission errors", async () => {
   /**
    * Given that a user is on the registration page
    */
-  const { getByLabelText, getByText } = render(
+  const { getByLabelText, getByText, queryByText, getByTestId } = render(
     makeUi({
       regUser: mockRegUser
     }).ui
@@ -217,15 +217,33 @@ it("renders form submission errors", async () => {
     );
   });
 
+  /**
+   * And submits the form
+   */
   act(() => {
     fireEvent.click(getByLabelText(new RegExp(uiTexts.submitBtnLabel, "i")));
   });
 
+  /**
+   * She sees error telling her email has already been taken
+   */
   const $emailError = await waitForElement(() =>
     getByText(/has already been taken/i)
   );
 
   expect($emailError).toBeTruthy();
+
+  /**
+   * When she clicks on the close button of the error message
+   */
+  fireEvent.click(getByTestId("form-errors").querySelector(
+    ".close.icon"
+  ) as HTMLElement);
+
+  /**
+   * Then she sees that the error message is gone
+   */
+  expect(queryByText(/has already been taken/i)).not.toBeInTheDocument();
 });
 
 ///////////////////////////////////////////////////////////////////////////////

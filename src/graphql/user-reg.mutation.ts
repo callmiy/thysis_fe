@@ -24,7 +24,7 @@ type UserRegistrationMutationFn = MutationFn<
 >;
 
 export interface UserRegistrationMutationProps {
-  regUser?: UserRegistrationMutationFn;
+  regUser: UserRegistrationMutationFn;
 }
 
 export type UserRegistrationMutationArgs = MutationOptions<

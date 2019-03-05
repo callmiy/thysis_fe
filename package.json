@@ -39,6 +39,7 @@
     "build": "react-scripts build",
     "build-local-prod": "cross-env REACT_APP_API_URL=http://localhost:4017/api  react-scripts build",
     "test": "cross-env REACT_APP_API_URL=http://localhost:4016/api react-scripts test --env=jsdom",
+    "test-cover": "yarn test --coverage --coverageDirectory=./coverage",
     "deploy-netlify": "cross-env REACT_APP_API_URL=https://thysis.herokuapp.com/api react-scripts build && netlify deploy  --prod --dir=build",
     "gen-apollo-types": "apollo codegen:generate --endpoint=http://localhost:4016/api --tagName=gql --target=typescript --includes=src/graphql/*.ts --outputFlat=src/graphql/apollo-types"
   },
@@ -79,7 +80,8 @@
     "collectCoverageFrom": [
       "src/**/*.{ts,tsx}",
       "!src/index.tsx",
-      "!src/pwd-recovery-token-request/index.ts"
+      "!src/pwd-recovery-token-request/index.ts",
+      "!src/UserRegistration/index.ts"
     ],
     "coverageReporters": [
       "json",

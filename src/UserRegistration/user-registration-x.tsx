@@ -79,17 +79,15 @@ export class UserReg extends React.Component<Props, State> {
     } else if (gqlError) {
       content = gqlError.graphQLErrors.reduce(
         (acc, { path = [], message }) => {
-          if (path[0] !== "registration") {
-            return acc;
+          if (path[0] === "registration") {
+            Object.entries(JSON.parse(message).error).forEach(([k, v]) => {
+              acc.push(
+                <div key={k}>
+                  {k.charAt(0).toUpperCase() + k.slice(1)}: {v}
+                </div>
+              );
+            });
           }
-
-          Object.entries(JSON.parse(message).error).forEach(([k, v]) => {
-            acc.push(
-              <div key={k}>
-                {k.charAt(0).toUpperCase() + k.slice(1)}: {v}
-              </div>
-            );
-          });
 
           return acc;
         },
@@ -100,7 +98,11 @@ export class UserReg extends React.Component<Props, State> {
     if (content) {
       return (
         <Card.Content extra={true}>
-          <Message error={true} onDismiss={this.handleFormErrorDismissed}>
+          <Message
+            data-testid="form-errors"
+            error={true}
+            onDismiss={this.handleFormErrorDismissed}
+          >
             <Message.Content>{content}</Message.Content>
           </Message>
         </Card.Content>
@@ -136,12 +138,6 @@ export class UserReg extends React.Component<Props, State> {
       updateLocalUser,
       history
     } = this.props;
-
-    if (!regUser) {
-      this.setState({ otherErrors: "Unable to make request" });
-      setSubmitting(false);
-      return;
-    }
 
     try {
       const result = await regUser({

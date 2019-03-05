@@ -94,7 +94,7 @@ export const ValidationSchema = Yup.object<Registration>().shape<Registration>({
         return this.parent.password === val;
       }
     ),
-  source: Yup.string().default(() => "password")
+  source: Yup.string().required("is required")
 });
 
 export const uiTexts = {
