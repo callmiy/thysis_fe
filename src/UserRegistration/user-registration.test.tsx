@@ -17,7 +17,7 @@ import {
   makeFieldErrorTestId,
   makeFormFieldErrorTestId
 } from "./user-registration";
-import { UserReg } from "./user-registration-x";
+import { UserRegistration } from "./user-registration-x";
 import {
   renderWithApollo,
   renderWithRouter,
@@ -35,7 +35,9 @@ import { UserLocalMutationArgs } from "../state/user.local.mutation";
 import { ApolloError } from "apollo-client";
 import { GraphQLError } from "graphql";
 
-const UserRegistrationP = UserReg as React.ComponentClass<Partial<Props>>;
+const UserRegistrationP = UserRegistration as React.FunctionComponent<
+  Partial<Props>
+>;
 
 it("submits form successfully", async () => {
   const { userRegistrationData, mockRegUser, data } = makeValidRegData();

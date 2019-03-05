@@ -1,19 +1,19 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Card, Input, Message, Icon, Form } from "semantic-ui-react";
 import { NavLink } from "react-router-dom";
-import { FormikProps, Formik, Field, FieldProps } from "formik";
+import { FormikProps, Formik, Field, FieldProps, FormikErrors } from "formik";
 import isEmpty from "lodash/isEmpty";
+import { ApolloError } from "apollo-client";
 
 import "./user-registration.scss";
 import {
   Props,
   FORM_RENDER_PROPS,
-  State,
-  initialState,
   ValidationSchema,
   uiTexts,
   makeFieldErrorTestId,
-  makeFormFieldErrorTestId
+  makeFormFieldErrorTestId,
+  initialFormValues
 } from "./user-registration";
 import { setTitle, PROJECTS_URL, LOGIN_URL } from "../routes/util";
 import RootHeader from "../components/Header";
@@ -21,39 +21,70 @@ import { Registration } from "../graphql/apollo-types/globalTypes";
 import defaultSocket from "../socket";
 import { Container } from "./user-registration-styles";
 
-export class UserReg extends React.Component<Props, State> {
-  state = initialState;
+export function UserRegistration(props: Props) {
+  const { regUser, socket = defaultSocket, updateLocalUser, history } = props;
 
-  componentDidMount() {
+  const [gqlError, setGqlError] = useState<undefined | ApolloError>(undefined);
+
+  const [formErrors, setFormErrors] = useState<
+    undefined | FormikErrors<Registration>
+  >(undefined);
+
+  useEffect(() => {
     setTitle("Sign Up");
+    return setTitle;
+  }, []);
+
+  function handleFormErrorDismissed() {
+    setGqlError(undefined);
+    setFormErrors(undefined);
   }
 
-  componentWillUnmount() {
-    setTitle();
+  function onSubmit({
+    values,
+    setSubmitting,
+    validateForm
+  }: FormikProps<Registration>) {
+    return async function onSubmitInner() {
+      setSubmitting(true);
+      handleFormErrorDismissed();
+
+      const fieldErrors = await validateForm(values);
+
+      if (!isEmpty(fieldErrors)) {
+        setFormErrors(fieldErrors);
+        setSubmitting(false);
+        return;
+      }
+
+      try {
+        const result = await regUser({
+          variables: {
+            registration: values
+          }
+        });
+
+        const user = result && result.data && result.data.registration;
+
+        if (user) {
+          if (user) {
+            socket.connect(user.jwt);
+          }
+
+          await updateLocalUser({
+            variables: { user }
+          });
+
+          history.replace(PROJECTS_URL);
+        }
+      } catch (gqlError) {
+        setSubmitting(false);
+        setGqlError(gqlError);
+      }
+    };
   }
 
-  render() {
-    return (
-      <Container className="user-reg-route">
-        <RootHeader title="Thysis" />
-
-        <div className="main">
-          <Formik
-            initialValues={this.state.initialFormValues}
-            enableReinitialize={true}
-            onSubmit={() => null}
-            render={this.renderForm}
-            validationSchema={ValidationSchema}
-            validateOnBlur={false}
-            validateOnChange={false}
-          />
-        </div>
-      </Container>
-    );
-  }
-
-  private renderFormErrors = () => {
-    const { gqlError, formErrors } = this.state;
+  function renderFormErrors() {
     let content = null;
 
     if (formErrors) {
@@ -101,7 +132,7 @@ export class UserReg extends React.Component<Props, State> {
           <Message
             data-testid="form-errors"
             error={true}
-            onDismiss={this.handleFormErrorDismissed}
+            onDismiss={handleFormErrorDismissed}
           >
             <Message.Content>{content}</Message.Content>
           </Message>
@@ -110,65 +141,45 @@ export class UserReg extends React.Component<Props, State> {
     }
 
     return null;
-  };
+  }
 
-  private onSubmit = ({
-    values,
-    setSubmitting,
-    validateForm
-  }: FormikProps<Registration>) => async () => {
-    setSubmitting(true);
-    this.setState({
-      gqlError: undefined,
-      otherErrors: undefined,
-      formErrors: undefined
-    });
+  function renderInput(label: string, type: string) {
+    return function renderInputInner(formProps: FieldProps<Registration>) {
+      const { field } = formProps;
+      const name = field.name;
+      const error = (formErrors || {})[name];
+      const booleanError = !!error;
+      const isSourceField = name === "source";
 
-    const formErrors = await validateForm(values);
+      return (
+        <div>
+          <Form.Field
+            {...field}
+            className={`form-field ${isSourceField ? "disabled" : ""}`}
+            type={type}
+            control={Input}
+            autoComplete="off"
+            label={label}
+            id={name}
+            error={booleanError}
+            autoFocus={name === "name"}
+            readOnly={isSourceField}
+          />
 
-    if (!isEmpty(formErrors)) {
-      this.setState({ formErrors });
-      setSubmitting(false);
-      return;
-    }
+          {booleanError && (
+            <Message
+              data-testid={makeFieldErrorTestId(name)}
+              error={true}
+              header={error}
+            />
+          )}
+        </div>
+      );
+    };
+  }
 
-    const {
-      regUser,
-      socket = defaultSocket,
-      updateLocalUser,
-      history
-    } = this.props;
-
-    try {
-      const result = await regUser({
-        variables: {
-          registration: values
-        }
-      });
-
-      const user = result && result.data && result.data.registration;
-
-      if (user) {
-        if (user) {
-          socket.connect(user.jwt);
-        }
-
-        await updateLocalUser({
-          variables: { user }
-        });
-
-        history.replace(PROJECTS_URL);
-      }
-    } catch (gqlError) {
-      setSubmitting(false);
-      this.setState({ gqlError });
-    }
-  };
-
-  private renderForm = (formikProps: FormikProps<Registration>) => {
+  function renderForm(formikProps: FormikProps<Registration>) {
     const { dirty, isSubmitting, errors } = formikProps;
-
-    const { gqlError } = this.state;
     const dirtyOrSubmitting = !dirty || isSubmitting;
     const disableSubmit = dirtyOrSubmitting || !isEmpty(errors) || !!gqlError;
 
@@ -178,17 +189,17 @@ export class UserReg extends React.Component<Props, State> {
           Sign up for Thysis
         </Card.Content>
 
-        {this.renderFormErrors()}
+        {renderFormErrors()}
 
         <Card.Content>
-          <Form onSubmit={this.onSubmit(formikProps)}>
+          <Form onSubmit={onSubmit(formikProps)}>
             {Object.entries(FORM_RENDER_PROPS).map(
               ([name, { label, type = "text" }]) => {
                 return (
                   <Field
                     key={name}
                     name={name}
-                    render={this.renderInput(label, type)}
+                    render={renderInput(label, type)}
                   />
                 );
               }
@@ -219,47 +230,25 @@ export class UserReg extends React.Component<Props, State> {
         </Card.Content>
       </Card>
     );
-  };
+  }
 
-  private renderInput = (label: string, type: string) => (
-    formProps: FieldProps<Registration>
-  ) => {
-    const { field } = formProps;
-    const { formErrors = {} } = this.state;
-    const name = field.name;
-    const error = formErrors[name];
-    const booleanError = !!error;
-    const isSourceField = name === "source";
+  return (
+    <Container className="user-reg-route">
+      <RootHeader title="Thysis" />
 
-    return (
-      <div>
-        <Form.Field
-          {...field}
-          className={`form-field ${isSourceField ? "disabled" : ""}`}
-          type={type}
-          control={Input}
-          autoComplete="off"
-          label={label}
-          id={name}
-          error={booleanError}
-          autoFocus={name === "name"}
-          readOnly={isSourceField}
+      <div className="main">
+        <Formik
+          initialValues={initialFormValues}
+          enableReinitialize={true}
+          onSubmit={() => null}
+          render={renderForm}
+          validationSchema={ValidationSchema}
+          validateOnBlur={false}
+          validateOnChange={false}
         />
-
-        {booleanError && (
-          <Message
-            data-testid={makeFieldErrorTestId(name)}
-            error={true}
-            header={error}
-          />
-        )}
       </div>
-    );
-  };
-
-  private handleFormErrorDismissed = () => {
-    this.setState({ gqlError: undefined, formErrors: undefined });
-  };
+    </Container>
+  );
 }
 
-export default UserReg;
+export default UserRegistration;

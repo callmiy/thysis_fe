@@ -9,7 +9,7 @@ import {
   UserRegistrationMutationProps
 } from "../graphql/user-reg.mutation";
 import { userLocalMutationGql } from "./../state/user.local.mutation";
-import { UserReg } from "./user-registration-x";
+import { UserRegistration } from "./user-registration-x";
 
 const regUserGql = graphql<
   {},
@@ -23,4 +23,4 @@ const regUserGql = graphql<
 export default compose(
   userLocalMutationGql,
   regUserGql
-)(UserReg);
+)(UserRegistration);

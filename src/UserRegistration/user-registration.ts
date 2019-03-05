@@ -1,7 +1,5 @@
-import { ApolloError } from "apollo-client";
 import { RouteComponentProps } from "react-router-dom";
 import * as Yup from "yup";
-import { FormikErrors } from "formik";
 
 import { UserRegistrationMutationProps } from "../graphql/user-reg.mutation";
 import { UserLocalMutationProps } from "../state/user.local.mutation";
@@ -36,17 +34,6 @@ export const initialFormValues: Registration = {
   password: "",
   passwordConfirmation: "",
   source: "password"
-};
-
-export interface State {
-  initialFormValues: Registration;
-  gqlError?: ApolloError;
-  otherErrors?: string;
-  formErrors?: FormikErrors<Registration>;
-}
-
-export const initialState: State = {
-  initialFormValues
 };
 
 export const formErrorTexts: {
