@@ -5,7 +5,11 @@ import { render, fireEvent, act, wait } from "react-testing-library";
 
 import { Props } from "./user-registration";
 import { UserReg } from "./user-registration-x";
-import { renderWithApollo, renderWithRouter } from "../test-utils";
+import {
+  renderWithApollo,
+  renderWithRouter,
+  HistoryProps
+} from "../test-utils";
 import { Registration } from "../graphql/apollo-types/globalTypes";
 import {
   UserRegMutation,
@@ -43,18 +47,17 @@ it("submits form successfully", async () => {
 
   const mockHistoryReplace = jest.fn();
 
-  const { Ui: ui } = renderWithApollo(UserRegistrationP);
-  const { Ui } = renderWithRouter(ui, { replace: mockHistoryReplace });
+  const props = {
+    regUser: mockRegUser,
+    socket: (mockSocket as unknown) as AppSocketType,
+    updateLocalUser: mockUpdateLocalUser
+  };
 
   /**
    * Given that user is on registration page
    */
   const { getByLabelText } = render(
-    <Ui
-      regUser={mockRegUser}
-      socket={(mockSocket as unknown) as AppSocketType}
-      updateLocalUser={mockUpdateLocalUser}
-    />
+    makeUi(props, { replace: mockHistoryReplace }).ui
   );
 
   /**
@@ -125,3 +128,10 @@ it("submits form successfully", async () => {
 ////////////////////////// HELPER FUNCTIONS ///////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
+
+function makeUi(props: Partial<Props> = {}, historyProps: HistoryProps = {}) {
+  const { Ui: ui, ...apolloRest } = renderWithApollo(UserRegistrationP);
+  const { Ui, ...historyRest } = renderWithRouter(ui, historyProps);
+
+  return { ui: <Ui {...props} />, ...apolloRest, ...historyRest };
+}
