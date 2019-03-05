@@ -7,7 +7,7 @@ import { TOKEN_KEY } from "../constants";
 import { CURRENT_PROJECT_KEY } from "../constants";
 import { State as SearchComponentState } from "../components/SearchComponent/search-component";
 import USER_QUERY, { UserLocalGqlData } from "./auth-user.local.query";
-import { Variable as UserMutationVar } from "./user.local.mutation";
+import { UserLocalMutationVariable } from "./user.local.mutation";
 
 type ClientStateFn<TVariables> = (
   fieldName: string,
@@ -28,7 +28,7 @@ const updateNetworkStatus: ClientStateFn<{
   return null;
 };
 
-const userMutation: ClientStateFn<UserMutationVar> = async (
+const userMutation: ClientStateFn<UserLocalMutationVariable> = async (
   _,
   { user },
   { cache }

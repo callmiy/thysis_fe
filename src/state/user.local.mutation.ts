@@ -2,7 +2,7 @@ import gql from "graphql-tag";
 import { graphql, MutationOptions } from "react-apollo";
 import { MutationFn } from "react-apollo";
 
-import { UserFragment } from "./../graphql/gen.types";
+import { UserRegMutation_registration } from "../graphql/apollo-types/UserRegMutation";
 import { userFragment } from "../graphql/user.fragment";
 
 export const userLocalMutation = gql`
@@ -17,11 +17,11 @@ export const userLocalMutation = gql`
 
 export default userLocalMutation;
 
-export interface Variable {
-  user: UserFragment | null;
+export interface UserLocalMutationVariable {
+  user: UserRegMutation_registration | null;
 }
 
-type Fn = MutationFn<Variable, Variable>;
+type Fn = MutationFn<UserLocalMutationVariable, UserLocalMutationVariable>;
 
 export interface UserLocalMutationProps {
   updateLocalUser: Fn;
@@ -29,8 +29,8 @@ export interface UserLocalMutationProps {
 
 export const userLocalMutationGql = graphql<
   {},
-  Variable,
-  Variable,
+  UserLocalMutationVariable,
+  UserLocalMutationVariable,
   UserLocalMutationProps
 >(userLocalMutation, {
   props: props => {
@@ -42,4 +42,7 @@ export const userLocalMutationGql = graphql<
   }
 });
 
-export type UserLocalMutationArgs = MutationOptions<Variable, Variable>;
+export type UserLocalMutationArgs = MutationOptions<
+  UserLocalMutationVariable,
+  UserLocalMutationVariable
+>;

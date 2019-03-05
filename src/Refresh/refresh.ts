@@ -1,12 +1,11 @@
 import * as React from "react";
-import { DataValue, WithApolloClient } from "react-apollo";
+import { WithApolloClient } from "react-apollo";
 import { RouteProps } from "react-router-dom";
 
 import { UserLocalMutationProps } from "../state/user.local.mutation";
 import { CurrentProjectLocalData } from "../state/project.local.query";
-import { RefreshUserQuery } from "../graphql/gen.types";
-import { ProjectFragment } from "../graphql/gen.types";
-import { RefreshUserQueryVariables } from "../graphql/gen.types";
+import { RefreshUserQuery_refresh_projects } from "../graphql/apollo-types/RefreshUserQuery";
+import { RefreshUserQueryMerkmale } from "../graphql/refresh-user.query";
 
 export interface OwnProps
   extends UserLocalMutationProps,
@@ -16,8 +15,7 @@ export interface OwnProps
   componentProps: RouteProps & {
     component: React.ComponentClass | React.StatelessComponent;
   };
-  project?: ProjectFragment | null;
+  project?: RefreshUserQuery_refresh_projects | null;
 }
 
-export type Props = OwnProps &
-  DataValue<RefreshUserQuery, RefreshUserQueryVariables>;
+export interface Props extends OwnProps, RefreshUserQueryMerkmale {}

@@ -1,9 +1,14 @@
 import gql from "graphql-tag";
+import { DataValue } from "react-apollo";
 
 import { userFragment } from "./user.fragment";
 import { projectFragment } from "./project.fragment";
+import {
+  RefreshUserQuery,
+  RefreshUserQueryVariables
+} from "./apollo-types/RefreshUserQuery";
 
-export const refreshUserQuery = gql`
+export const REFRESH_USER_QUERY = gql`
   query RefreshUserQuery($refresh: RefreshInput!) {
     refresh(refresh: $refresh) {
       ...UserFragment
@@ -16,4 +21,9 @@ export const refreshUserQuery = gql`
   ${userFragment}
 `;
 
-export default refreshUserQuery;
+export default REFRESH_USER_QUERY;
+
+export type RefreshUserQueryMerkmale = DataValue<
+  RefreshUserQuery,
+  RefreshUserQueryVariables
+>;

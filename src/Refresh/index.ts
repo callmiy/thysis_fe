@@ -1,20 +1,21 @@
-import { graphql, compose, withApollo, DataValue } from "react-apollo";
+import { graphql, compose, withApollo } from "react-apollo";
 
-import REFRESH_USER_QUERY from "../graphql/refresh-user.query";
+import { REFRESH_USER_QUERY } from "../graphql/refresh-user.query";
 import {
   RefreshUserQuery,
   RefreshUserQueryVariables
-} from "../graphql/gen.types";
+} from "../graphql/apollo-types/RefreshUserQuery";
 import { userLocalMutationGql } from "../state/user.local.mutation";
 import { OwnProps } from "./refresh";
 import { Refresh } from "./component";
 import connectAndLoad from "../state/initial-data";
+import { RefreshUserQueryMerkmale } from "../graphql/refresh-user.query";
 
 const refreshUserGql = graphql<
   OwnProps,
   RefreshUserQuery,
   RefreshUserQueryVariables,
-  DataValue<RefreshUserQuery, RefreshUserQueryVariables> | undefined
+  RefreshUserQueryMerkmale | undefined
 >(REFRESH_USER_QUERY, {
   props: ({ data, ownProps }) => {
     if (!data) {

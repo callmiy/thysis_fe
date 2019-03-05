@@ -194,10 +194,10 @@ export class Login extends React.Component<Props, State> {
   ) => {
     formikBag.setSubmitting(true);
 
-    const { login, client, updateLocalUser } = this.props;
+    const { benutzerEinLogin, client, updateLocalUser } = this.props;
 
     try {
-      const result = await login({
+      const result = await benutzerEinLogin({
         variables: {
           login: this.state.formValues
         }
