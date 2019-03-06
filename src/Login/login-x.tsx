@@ -25,9 +25,9 @@ import {
   PROJECTS_URL,
   USER_REG_URL,
   PWD_RECOVERY_REQUEST_ROUTE
-} from "../../routes/util";
-import RootHeader from "../../components/Header";
-import connectAndLoad from "../../state/initial-data";
+} from "../routes/util";
+import RootHeader from "../components/Header";
+import connectAndLoad from "../state/initial-data";
 
 export class Login extends React.Component<Props, State> {
   static getDerivedStateFromProps(nextProps: Props, currentState: State) {

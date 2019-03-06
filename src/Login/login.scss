@@ -1,5 +1,5 @@
-@import "../../styles/extensions";
-@import "../../styles/variables";
+@import "../styles/extensions";
+@import "../styles/variables";
 
 .login-route {
   @extend %route;

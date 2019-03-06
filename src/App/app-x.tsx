@@ -36,7 +36,7 @@ const Source = lazy(() => import("./../routes/Source"));
 const NewQuote = lazy(() => import("./../routes/NewQuote"));
 const Quote = lazy(() => import("./../routes/Quote"));
 const AuthorRoute = lazy(() => import("./../routes/Author"));
-const LoginRoute = lazy(() => import("./../routes/Login"));
+const LoginRoute = lazy(() => import("./../Login"));
 const ProjectsRoute = lazy(() => import("./../routes/Projects"));
 const PwdRecoveryRequest = lazy(() => import("../PwdRecoveryTokenRequest"));
 const SearchQuotes = lazy(() => import("./../routes/SearchQuotes"));
