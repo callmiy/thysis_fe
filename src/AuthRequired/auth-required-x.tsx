@@ -1,7 +1,5 @@
 import * as React from "react";
-import { Redirect } from "react-router-dom";
-import { RouteProps } from "react-router-dom";
-import { Route } from "react-router-dom";
+import { Redirect, RouteProps, Route } from "react-router-dom";
 
 import Refresh from "../Refresh";
 import { Props } from "./auth-required";
