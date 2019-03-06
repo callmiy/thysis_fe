@@ -9,7 +9,7 @@ import { CurrentProjectLocalData } from "../state/project.local.query";
 import { LocalUserGqlProps } from "./auth-required";
 import { OwnProps } from "./auth-required";
 import { CurrentProjectLocalGqlProps } from "./auth-required";
-import { AuthRequired } from "./component";
+import { AuthRequired } from "./auth-required-x";
 
 const authUserLocalGraphQl = graphql<
   OwnProps,

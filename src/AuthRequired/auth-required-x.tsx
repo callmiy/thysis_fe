@@ -3,9 +3,9 @@ import { Redirect } from "react-router-dom";
 import { RouteProps } from "react-router-dom";
 import { Route } from "react-router-dom";
 
-import Refresh from "./../Refresh";
+import Refresh from "../Refresh";
 import { Props } from "./auth-required";
-import { LOGIN_URL, PROJECTS_URL } from "./../routes/util";
+import { LOGIN_URL, PROJECTS_URL } from "../routes/util";
 
 export const AuthRequired = ({
   component,
