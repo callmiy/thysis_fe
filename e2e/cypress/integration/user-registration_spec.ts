@@ -9,27 +9,26 @@ import {
   UserRegMutationVariables
 } from "../../../src/graphql/apollo-types/UserRegMutation";
 import { USER_REG_MUTATION } from "../../../src/graphql/user-reg.mutation";
+import {
+  benutzerEntferne,
+  testUserData as userData,
+  benutzerErstellen
+} from "../support/benutzer";
 
 describe("Create user", function() {
-  const userData: Registration = {
-    email: "oluapena1@gmail.com",
-    name: "Olu Johnson",
-    password: "123456",
-    passwordConfirmation: "123456",
-    source: "password"
-  };
-
   beforeEach(() => {
-    cy.checkoutSession();
-
-    cy.visit(USER_REG_URL);
+    // cy.checkoutSession();
+    cy.visit("/");
+    cy.getByText(/don't have an account/i).click();
   });
 
   afterEach(() => {
-    cy.dropSession();
+    // cy.dropSession();
   });
 
   it(".should() - prompt user to create project after registration", function() {
+    // cy.checkoutSession();
+
     Object.entries(FORM_RENDER_PROPS).forEach(([key, { label }]) => {
       if (key === "source") {
         return;
@@ -45,18 +44,18 @@ describe("Create user", function() {
     cy.getByText(
       /You currently have no project. You may create one now/i
     ).should("exist");
+
+    /**
+     * !Clean up
+     */
+    benutzerEntferne(userData.email);
   });
 
   it(".should() - return email must be unique error", function() {
     /**
      * Given a user already exists in the system
      */
-    cy.mutate<UserRegMutation, UserRegMutationVariables>({
-      mutation: USER_REG_MUTATION,
-      variables: {
-        registration: userData
-      }
-    });
+    benutzerErstellen(userData);
 
     /**
      * When a user completes registration form using email that already exists in the system
@@ -80,5 +79,10 @@ describe("Create user", function() {
      * Then user should see error showing that email already exists in the system
      */
     cy.getByText(/has already been taken/i).should("exist");
+
+    /**
+     * !Clean up
+     */
+    benutzerEntferne(userData.email);
   });
 });

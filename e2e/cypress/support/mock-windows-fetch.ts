@@ -27,13 +27,6 @@ export function mockWindowsFetch(fetch: Fetch) {
         return Promise.resolve(result);
       })
       .catch(error => {
-        // tslint:disable-next-line:no-console
-        console.log(
-          "\n\t\tLogging start\n\n\n\n  fetch error\n",
-          error,
-          "\n\n\n\n\t\tLogging ends\n"
-        );
-
         return Promise.reject(error);
       });
   };

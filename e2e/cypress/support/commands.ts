@@ -5,6 +5,11 @@ import { FetchResult } from "react-apollo";
 import { mockWindowsFetch } from "./mock-windows-fetch";
 import buildClientCache from "../../../src/apollo-setup";
 import { getBackendUrls } from "../../../src/get-backend-urls";
+import {
+  USER_SESSION_ENV_KEY,
+  USER_SERVER_SESSION_ID_KEY,
+  USER_TOKEN_ENV_KEY
+} from "./constants";
 
 declare global {
   namespace Cypress {
@@ -47,14 +52,14 @@ Cypress.Commands.add("checkoutSession", async () => {
 
   if (response.ok) {
     const sessionId = await response.text();
-    return Cypress.env("sessionId", sessionId);
+    return Cypress.env(USER_SESSION_ENV_KEY, sessionId);
   }
 
-  return Cypress.env("sessionId", null);
+  return Cypress.env(USER_SESSION_ENV_KEY, null);
 });
 
 Cypress.Commands.add("dropSession", () => {
-  const sessionId = Cypress.env("sessionId");
+  const sessionId = Cypress.env(USER_SESSION_ENV_KEY);
 
   if (!sessionId) {
     return;
@@ -62,9 +67,9 @@ Cypress.Commands.add("dropSession", () => {
 
   fetch(serverUrl.root + "/sandbox", {
     method: "DELETE",
-    headers: { "x-session-id": sessionId }
+    headers: { [USER_SERVER_SESSION_ID_KEY]: sessionId }
   }).catch(() => {
-    Cypress.env("sessionId", null);
+    Cypress.env(USER_SESSION_ENV_KEY, null);
   });
 });
 
@@ -78,7 +83,8 @@ Cypress.Commands.add(
     const { client } = buildClientCache({
       uri: serverUrl.apiUrl,
       headers: {
-        "x-session-id": Cypress.env("sessionId")
+        [USER_SERVER_SESSION_ID_KEY]: Cypress.env(USER_SESSION_ENV_KEY),
+        jwt: Cypress.env(USER_TOKEN_ENV_KEY)
       }
     });
 
