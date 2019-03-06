@@ -10,7 +10,6 @@
       "group": "build",
       "problemMatcher": []
     },
-
     {
       "label": "build front end dev",
       "type": "shell",
@@ -23,7 +22,6 @@
       "group": "build",
       "problemMatcher": []
     },
-
     {
       "label": "build front end prod",
       "type": "shell",
@@ -38,9 +36,8 @@
     },
 
     {
-      "label": "Apollo code gen",
-      "type": "shell",
-      "command": "apollo-codegen introspect-schema http://localhost:4016/api --output src/graphql/schema.json && apollo-codegen generate src/graphql/*.ts --schema src/graphql/schema.json --target typescript --output src/graphql/gen.types.ts",
+      "type": "npm",
+      "script": "gen-apollo-types",
       "problemMatcher": []
     }
   ]
