@@ -1,8 +1,9 @@
 import { routeTitle } from "../../../src/PwdRecoveryTokenRequest/pwd-recovery-token-request";
 import {
-  benutzerEntferne,
+  // benutzerEntferne,
   testUserData,
-  benutzerErstellen
+  benutzerErstellen,
+  alleBenutzerEntferne
 } from "../support/benutzer";
 
 describe("Password Recovery Token Request", function() {
@@ -16,6 +17,7 @@ describe("Password Recovery Token Request", function() {
 
   afterEach(() => {
     // cy.dropSession();
+    alleBenutzerEntferne();
   });
 
   it(".should() - be a successful request", function() {
@@ -25,10 +27,5 @@ describe("Password Recovery Token Request", function() {
     cy.getByLabelText(/Enter your email address/i).type(email);
     cy.getByText(/Request password reset/i).click();
     cy.getByText(/Please check you inbox/i).should("exist");
-
-    /**
-     * !Clean up
-     */
-    benutzerEntferne(testUserData.email);
   });
 });

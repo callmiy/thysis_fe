@@ -5,14 +5,9 @@ import {
   uiTexts
 } from "../../../src/UserRegistration/user-registration";
 import {
-  UserRegMutation,
-  UserRegMutationVariables
-} from "../../../src/graphql/apollo-types/UserRegMutation";
-import { USER_REG_MUTATION } from "../../../src/graphql/user-reg.mutation";
-import {
-  benutzerEntferne,
   testUserData as userData,
-  benutzerErstellen
+  benutzerErstellen,
+  alleBenutzerEntferne
 } from "../support/benutzer";
 
 describe("Create user", function() {
@@ -24,6 +19,7 @@ describe("Create user", function() {
 
   afterEach(() => {
     // cy.dropSession();
+    alleBenutzerEntferne();
   });
 
   it(".should() - prompt user to create project after registration", function() {
@@ -48,7 +44,7 @@ describe("Create user", function() {
     /**
      * !Clean up
      */
-    benutzerEntferne(userData.email);
+    // benutzerEntferne(userData.email);
   });
 
   it(".should() - return email must be unique error", function() {
@@ -83,6 +79,6 @@ describe("Create user", function() {
     /**
      * !Clean up
      */
-    benutzerEntferne(userData.email);
+    // benutzerEntferne(userData.email);
   });
 });

@@ -15,6 +15,8 @@ import {
   UserRegMutationVariables
 } from "../../../src/graphql/apollo-types/UserRegMutation";
 import { USER_TOKEN_ENV_KEY } from "./constants";
+import { ALLE_BENUTZER_ENTFERNE_VERANDERUNG } from "../../../src/graphql/alle-benutzer-entferne.veranderung";
+import { AlleBenutzerEntferneVeranderung } from "../../../src/graphql/apollo-types/AlleBenutzerEntferneVeranderung";
 
 export const testUserData: Registration = {
   email: "oluapena1@gmail.com",
@@ -74,6 +76,21 @@ export function benutzerErstellen(
 
       if (config.store) {
         benutzerBehalten(result);
+      }
+    });
+}
+
+export function alleBenutzerEntferne() {
+  return cy
+    .mutate<AlleBenutzerEntferneVeranderung, {}>({
+      mutation: ALLE_BENUTZER_ENTFERNE_VERANDERUNG
+    })
+    .then(resolved => {
+      const result =
+        resolved && resolved.data && resolved.data.alleBenutzerEntferne;
+
+      if (!result) {
+        throw new Error("Unable to delete all users");
       }
     });
 }

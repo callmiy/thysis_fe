@@ -1,13 +1,17 @@
 import { uiTexts } from "../../../src/Login/login";
 import {
-  benutzerEntferne,
   testUserData,
-  benutzerErstellen
+  benutzerErstellen,
+  alleBenutzerEntferne
 } from "../support/benutzer";
 
 describe("Password Recovery Token Request", function() {
   beforeEach(() => {
     cy.visit("/");
+  });
+
+  afterEach(() => {
+    // cy.dropSession();
   });
 
   it("should render error that username/password incorrect", function() {
@@ -45,6 +49,6 @@ describe("Password Recovery Token Request", function() {
     /**
      * Clean up
      */
-    benutzerEntferne(testUserData.email);
+    alleBenutzerEntferne();
   });
 });
