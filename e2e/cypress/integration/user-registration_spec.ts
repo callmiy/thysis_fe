@@ -1,4 +1,3 @@
-import { USER_REG_URL } from "../../../src/routes/util";
 import { Registration } from "../../../src/graphql/apollo-types/globalTypes";
 import {
   FORM_RENDER_PROPS,
@@ -9,12 +8,12 @@ import {
   benutzerErstellen,
   alleBenutzerEntferne
 } from "../support/benutzer";
+import { USER_REG_URL } from "../../../src/routes/util";
 
 describe("Create user", function() {
   beforeEach(() => {
     // cy.checkoutSession();
-    cy.visit("/");
-    cy.getByText(/don't have an account/i).click();
+    cy.visit(USER_REG_URL);
   });
 
   afterEach(() => {
@@ -23,8 +22,6 @@ describe("Create user", function() {
   });
 
   it(".should() - prompt user to create project after registration", function() {
-    // cy.checkoutSession();
-
     Object.entries(FORM_RENDER_PROPS).forEach(([key, { label }]) => {
       if (key === "source") {
         return;
@@ -40,11 +37,6 @@ describe("Create user", function() {
     cy.getByText(
       /You currently have no project. You may create one now/i
     ).should("exist");
-
-    /**
-     * !Clean up
-     */
-    // benutzerEntferne(userData.email);
   });
 
   it(".should() - return email must be unique error", function() {
@@ -75,10 +67,5 @@ describe("Create user", function() {
      * Then user should see error showing that email already exists in the system
      */
     cy.getByText(/has already been taken/i).should("exist");
-
-    /**
-     * !Clean up
-     */
-    // benutzerEntferne(userData.email);
   });
 });

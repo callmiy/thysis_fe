@@ -27,23 +27,21 @@ export const testUserData: Registration = {
 };
 
 export function benutzerEntferne(email: string) {
-  return cy
-    .mutate<BenutzerEntferne, BenutzerEntferneVariables>({
-      mutation: BENUTZER_ENTFERNE_VERANDERUNG,
-      variables: { email }
-    })
-    .then(result => {
-      Cypress.env(USER_TOKEN_ENV_KEY, null);
-      const deleted = result && result.data && result.data.benutzerEntferne;
+  cy.mutate<BenutzerEntferne, BenutzerEntferneVariables>({
+    mutation: BENUTZER_ENTFERNE_VERANDERUNG,
+    variables: { email }
+  }).then(result => {
+    Cypress.env(USER_TOKEN_ENV_KEY, null);
+    const deleted = result && result.data && result.data.benutzerEntferne;
 
-      if (!deleted) {
-        throw new Error(`Unable to delete user with email: ${email}`);
-      }
-    });
+    if (!deleted) {
+      throw new Error(`Unable to delete user with email: ${email}`);
+    }
+  });
 }
 
 export function benutzerBehalten(user: UserRegMutation_registration) {
-  return cy.mutate<UserLocalMutationVariable, UserLocalMutationVariable>({
+  cy.mutate<UserLocalMutationVariable, UserLocalMutationVariable>({
     mutation: USER_LOCAL_MUTATION,
     variables: {
       user
@@ -55,42 +53,38 @@ export function benutzerErstellen(
   userData: Registration,
   config: { store?: boolean } = {}
 ) {
-  return cy
-    .mutate<UserRegMutation, UserRegMutationVariables>({
-      mutation: USER_REG_MUTATION,
-      variables: {
-        registration: userData
-      }
-    })
-    .then(resolvedData => {
-      const result =
-        resolvedData.data &&
-        resolvedData.data.registration &&
-        resolvedData.data.registration;
+  cy.mutate<UserRegMutation, UserRegMutationVariables>({
+    mutation: USER_REG_MUTATION,
+    variables: {
+      registration: userData
+    }
+  }).then(resolvedData => {
+    const result =
+      resolvedData.data &&
+      resolvedData.data.registration &&
+      resolvedData.data.registration;
 
-      if (!result) {
-        throw new Error("Unable to create user");
-      }
+    if (!result) {
+      throw new Error("Unable to create user");
+    }
 
-      Cypress.env(USER_TOKEN_ENV_KEY, result.jwt);
+    Cypress.env(USER_TOKEN_ENV_KEY, result.jwt);
 
-      if (config.store) {
-        benutzerBehalten(result);
-      }
-    });
+    if (config.store) {
+      benutzerBehalten(result);
+    }
+  });
 }
 
 export function alleBenutzerEntferne() {
-  return cy
-    .mutate<AlleBenutzerEntferneVeranderung, {}>({
-      mutation: ALLE_BENUTZER_ENTFERNE_VERANDERUNG
-    })
-    .then(resolved => {
-      const result =
-        resolved && resolved.data && resolved.data.alleBenutzerEntferne;
+  cy.mutate<AlleBenutzerEntferneVeranderung, {}>({
+    mutation: ALLE_BENUTZER_ENTFERNE_VERANDERUNG
+  }).then(resolved => {
+    const result =
+      resolved && resolved.data && resolved.data.alleBenutzerEntferne;
 
-      if (!result) {
-        throw new Error("Unable to delete all users");
-      }
-    });
+    if (!result) {
+      throw new Error("Unable to delete all users");
+    }
+  });
 }
