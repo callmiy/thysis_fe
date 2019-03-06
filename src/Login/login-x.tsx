@@ -18,7 +18,8 @@ import {
   Props,
   State,
   FORM_VALUES_KEY,
-  FormValues
+  FormValues,
+  uiTexts
 } from "./login";
 import {
   setTitle,
@@ -28,6 +29,7 @@ import {
 } from "../routes/util";
 import RootHeader from "../components/Header";
 import connectAndLoad from "../state/initial-data";
+import { Container } from "./login-styles";
 
 export class Login extends React.Component<Props, State> {
   static getDerivedStateFromProps(nextProps: Props, currentState: State) {
@@ -90,7 +92,7 @@ export class Login extends React.Component<Props, State> {
 
   render() {
     return (
-      <div className="login-route">
+      <Container className="login-route">
         <RootHeader title="Thysis" />
 
         <div className="main">
@@ -102,7 +104,7 @@ export class Login extends React.Component<Props, State> {
             validate={this.validate}
           />
         </div>
-      </div>
+      </Container>
     );
   }
 
@@ -172,14 +174,16 @@ export class Login extends React.Component<Props, State> {
     return "";
   };
 
-  renderError = () => {
-    const { graphQlError } = this.state;
+  renderFormError = () => {
+    const { gqlError } = this.state;
 
-    if (graphQlError) {
+    if (gqlError) {
+      const content = JSON.parse(gqlError.graphQLErrors[0].message).error;
+
       return (
         <Card.Content extra={true}>
           <Message error={true} onDismiss={this.handleErrorMsgDismiss}>
-            <Message.Content>{graphQlError.message}</Message.Content>
+            <Message.Content>{content}</Message.Content>
           </Message>
         </Card.Content>
       );
@@ -217,9 +221,9 @@ export class Login extends React.Component<Props, State> {
           this.props.history.replace(PROJECTS_URL);
         }
       }
-    } catch (error) {
+    } catch (gqlError) {
       formikBag.setSubmitting(false);
-      this.setState({ graphQlError: error });
+      this.setState({ gqlError });
     }
   };
 
@@ -229,10 +233,9 @@ export class Login extends React.Component<Props, State> {
     errors,
     handleSubmit
   }: FormikProps<FormValues>) => {
-    const { graphQlError } = this.state;
+    const { gqlError } = this.state;
     const dirtyOrSubmitting = !dirty || isSubmitting;
-    const disableSubmit =
-      dirtyOrSubmitting || !isEmpty(errors) || !!graphQlError;
+    const disableSubmit = dirtyOrSubmitting || !isEmpty(errors) || !!gqlError;
 
     return (
       <Card>
@@ -240,7 +243,7 @@ export class Login extends React.Component<Props, State> {
           Login to Thysis
         </Card.Content>
 
-        {this.renderError()}
+        {this.renderFormError()}
 
         <Card.Content>
           <Form onSubmit={handleSubmit}>
@@ -258,8 +261,12 @@ export class Login extends React.Component<Props, State> {
               );
             })}
 
+            <label htmlFor="user-login-submit-btn" className="submit-btn-label">
+              {uiTexts.submitBtnLabel}
+            </label>
+
             <Button
-              id="author-modal-submit"
+              id="user-login-submit-btn"
               color="green"
               inverted={true}
               disabled={disableSubmit}
@@ -347,11 +354,10 @@ export class Login extends React.Component<Props, State> {
   };
 
   private handleFocus = () => {
-    this.setState({ graphQlError: undefined });
+    this.setState({ gqlError: undefined });
   };
 
-  private handleErrorMsgDismiss = () =>
-    this.setState({ graphQlError: undefined });
+  private handleErrorMsgDismiss = () => this.setState({ gqlError: undefined });
 
   private formValuesEmpty = (values: FormValues) => {
     let result = true;

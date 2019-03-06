@@ -32,10 +32,14 @@ export const initialFormValues = {
 export interface State {
   initialFormValues: FormValues;
   formValues: FormValues;
-  graphQlError?: ApolloError;
+  gqlError?: ApolloError;
 }
 
 export const initialState: State = {
   formValues: initialFormValues,
   initialFormValues
+};
+
+export const uiTexts = {
+  submitBtnLabel: "User login submit"
 };
