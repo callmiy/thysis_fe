@@ -3,7 +3,6 @@ import { BrowserRouter } from "react-router-dom";
 import { Switch } from "react-router-dom";
 import { Route } from "react-router-dom";
 import { ApolloProvider } from "react-apollo";
-import update from "immutability-helper";
 import { InMemoryCache } from "apollo-cache-inmemory";
 import { ApolloClient } from "apollo-client";
 
@@ -22,13 +21,7 @@ import {
 } from "./../routes/util";
 import Loading from "./../components/Loading";
 import AuthRequired from "../AuthRequired";
-import {
-  AppSidebarContext,
-  State,
-  initialState,
-  mediaQueries,
-  MediaQueryKey
-} from "./app";
+import { AppSidebarContext, State, initialState, MediaQueryKey } from "./app";
 import { logger } from "../utils";
 
 const TagDetail = lazy(() => import("./../routes/TagDetail"));
@@ -59,11 +52,6 @@ export class App extends React.Component<Props, State> {
     }
 
     this.setState({ cacheLoaded: true });
-    this.setUpMediaListeners();
-  }
-
-  componentWillUnmount() {
-    this.tearDownMediaListeners();
   }
 
   render() {
@@ -159,46 +147,6 @@ export class App extends React.Component<Props, State> {
   };
 
   private handleSidebarHide = () => this.setState({ showSidebar: false });
-
-  private tearDownMediaListeners = () => this.mediaListeners.forEach(m => m());
-
-  private setUpMediaListeners = () => {
-    const queries = Object.values(mediaQueries);
-    // tslint:disable-next-line:no-any
-    const handleMediaQueryChange = this.handleMediaQueryChange as any;
-
-    for (let index = 0; index < queries.length; index++) {
-      const m = window.matchMedia(queries[index]) as MediaQueryList;
-      m.addListener(handleMediaQueryChange);
-      handleMediaQueryChange(m);
-      this.mediaListeners[index] = () =>
-        m.removeListener(handleMediaQueryChange);
-    }
-  };
-
-  private handleMediaQueryChange = (
-    mql: MediaQueryListEvent | MediaQueryList
-  ) => {
-    const { matches, media } = mql;
-    const acc1 = {} as { [k in MediaQueryKey]: { $set: boolean } };
-
-    const updates = Object.entries(mediaQueries).reduce((acc2, [k, v]) => {
-      const isMatchedMedia = v === media;
-
-      if (isMatchedMedia && k === MediaQueryKey.SCREEN_MIN_WIDTH_600) {
-        this.setState({ showSidebar: matches });
-      }
-
-      acc2[k] = { $set: isMatchedMedia ? matches : false };
-      return acc2;
-    }, acc1);
-
-    this.setState(s =>
-      update(s, {
-        mediaQueries: updates
-      })
-    );
-  };
 }
 
 export default App;
