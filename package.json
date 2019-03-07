@@ -64,7 +64,7 @@
     "jest-styled-components": "^6.3.1",
     "node-sass": "^4.11.0",
     "react-testing-library": "^6.0.0",
-    "serve": "^10.1.2",
+    "serve": "10.1.1",
     "tslint": "^5.13.0",
     "tslint-config-prettier": "^1.18.0",
     "tslint-react": "^3.6.0",
