@@ -3,8 +3,8 @@ import { MutationOptions } from "apollo-client/core/watchQueryOptions";
 import { FetchResult } from "react-apollo";
 
 import { mockWindowsFetch } from "./mock-windows-fetch";
-import buildClientCache from "../../../src/apollo-setup";
-import { getBackendUrls } from "../../../src/get-backend-urls";
+import buildClientCache from "../../src/apollo-setup";
+import { getBackendUrls } from "../../src/get-backend-urls";
 import {
   USER_SESSION_ENV_KEY,
   USER_SERVER_SESSION_ID_KEY,

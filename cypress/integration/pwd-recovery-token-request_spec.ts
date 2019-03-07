@@ -1,6 +1,6 @@
-import { routeTitle } from "../../../src/PwdRecoveryTokenRequest/pwd-recovery-token-request";
+import { routeTitle } from "../../src/PwdRecoveryTokenRequest/pwd-recovery-token-request";
 import { testUserData, benutzerErstellen } from "../support/benutzer";
-import { PWD_RECOVERY_REQUEST_ROUTE } from "../../../src/routes/util";
+import { PWD_RECOVERY_REQUEST_ROUTE } from "../../src/routes/util";
 
 describe("Password Recovery Token Request", function() {
   const { email } = testUserData;

@@ -1,14 +1,14 @@
-import { Registration } from "../../../src/graphql/apollo-types/globalTypes";
+import { Registration } from "../../src/graphql/apollo-types/globalTypes";
 import {
   FORM_RENDER_PROPS,
   uiTexts
-} from "../../../src/UserRegistration/user-registration";
+} from "../../src/UserRegistration/user-registration";
 import {
   testUserData as userData,
   benutzerErstellen,
   alleBenutzerEntferne
 } from "../support/benutzer";
-import { USER_REG_URL } from "../../../src/routes/util";
+import { USER_REG_URL } from "../../src/routes/util";
 
 describe("Create user", function() {
   beforeEach(() => {

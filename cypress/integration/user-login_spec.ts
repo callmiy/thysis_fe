@@ -1,4 +1,4 @@
-import { uiTexts } from "../../../src/Login/login";
+import { uiTexts } from "../../src/Login/login";
 import {
   testUserData,
   benutzerErstellen,

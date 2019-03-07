@@ -1,22 +1,22 @@
-import { BENUTZER_ENTFERNE_VERANDERUNG } from "../../../src/graphql/benutzer-entferne.veranderung";
+import { BENUTZER_ENTFERNE_VERANDERUNG } from "../../src/graphql/benutzer-entferne.veranderung";
 import {
   BenutzerEntferne,
   BenutzerEntferneVariables
-} from "../../../src/graphql/apollo-types/BenutzerEntferne";
+} from "../../src/graphql/apollo-types/BenutzerEntferne";
 import {
   USER_LOCAL_MUTATION,
   UserLocalMutationVariable
-} from "../../../src/state/user.local.mutation";
-import { UserRegMutation_registration } from "../../../src/graphql/apollo-types/UserRegMutation";
-import { Registration } from "../../../src/graphql/apollo-types/globalTypes";
-import { USER_REG_MUTATION } from "../../../src/graphql/user-reg.mutation";
+} from "../../src/state/user.local.mutation";
+import { UserRegMutation_registration } from "../../src/graphql/apollo-types/UserRegMutation";
+import { Registration } from "../../src/graphql/apollo-types/globalTypes";
+import { USER_REG_MUTATION } from "../../src/graphql/user-reg.mutation";
 import {
   UserRegMutation,
   UserRegMutationVariables
-} from "../../../src/graphql/apollo-types/UserRegMutation";
+} from "../../src/graphql/apollo-types/UserRegMutation";
 import { USER_TOKEN_ENV_KEY } from "./constants";
-import { ALLE_BENUTZER_ENTFERNE_VERANDERUNG } from "../../../src/graphql/alle-benutzer-entferne.veranderung";
-import { AlleBenutzerEntferneVeranderung } from "../../../src/graphql/apollo-types/AlleBenutzerEntferneVeranderung";
+import { ALLE_BENUTZER_ENTFERNE_VERANDERUNG } from "../../src/graphql/alle-benutzer-entferne.veranderung";
+import { AlleBenutzerEntferneVeranderung } from "../../src/graphql/apollo-types/AlleBenutzerEntferneVeranderung";
 
 export const testUserData: Registration = {
   email: "oluapena1@gmail.com",
