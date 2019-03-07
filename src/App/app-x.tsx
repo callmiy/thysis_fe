@@ -1,7 +1,5 @@
 import React, { lazy, Suspense } from "react";
-import { BrowserRouter } from "react-router-dom";
-import { Switch } from "react-router-dom";
-import { Route } from "react-router-dom";
+import { BrowserRouter, Route, Switch } from "react-router-dom";
 import { ApolloProvider } from "react-apollo";
 import { InMemoryCache } from "apollo-cache-inmemory";
 import { ApolloClient } from "apollo-client";
@@ -21,7 +19,7 @@ import {
 } from "./../routes/util";
 import Loading from "./../components/Loading";
 import AuthRequired from "../AuthRequired";
-import { AppSidebarContext, State, initialState, MediaQueryKey } from "./app";
+import { AppSidebarContext, State, initialState } from "./app";
 import { logger } from "../utils";
 
 const TagDetail = lazy(() => import("./../routes/TagDetail"));
@@ -42,7 +40,6 @@ export interface Props {
 
 export class App extends React.Component<Props, State> {
   state: State = initialState;
-  mediaListeners: Array<() => void> = [];
 
   async componentDidMount() {
     try {
@@ -61,7 +58,7 @@ export class App extends React.Component<Props, State> {
       return <Loading />;
     }
 
-    const { showSidebar, mediaQueries: mQueries } = this.state;
+    const { showSidebar } = this.state;
 
     return (
       <Suspense fallback={<Loading />}>
@@ -70,8 +67,7 @@ export class App extends React.Component<Props, State> {
             value={{
               showSidebar,
               onShowClicked: this.toggleSidebar,
-              onHide: this.handleSidebarHide,
-              minWidth600: mQueries[MediaQueryKey.SCREEN_MIN_WIDTH_600]
+              onHide: this.handleSidebarHide
             }}
           >
             <BrowserRouter>
