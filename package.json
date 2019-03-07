@@ -33,8 +33,8 @@
   },
   "scripts": {
     "start": "cross-env PORT=3016 BROWSER=none REACT_APP_API_URL=http://localhost:4016/api yarn react-scripts start",
-    "start-e2e-test-dev": "cross-env PORT=3016 BROWSER=none REACT_APP_API_URL=http://localhost:4017/api yarn react-scripts start",
-    "start-e2e-test-prod": "yarn build-local-prod && yarn start-prod",
+    "start-e2e-dev": "cross-env PORT=3016 BROWSER=none REACT_APP_API_URL=http://localhost:4017/api yarn react-scripts start",
+    "start-build-prod": "yarn build-local-prod && yarn start-prod",
     "start-prod": "serve --no-clipboard --single --listen 3017 build",
     "build": "react-scripts build",
     "build-local-prod": "cross-env REACT_APP_API_URL=http://localhost:4017/api  react-scripts build",
@@ -45,7 +45,9 @@
     "cy-open-dev": "cypress open --config baseUrl=http://localhost:3016/",
     "cy-open-prod": "cypress open --config baseUrl=http://localhost:3017/",
     "cy-run-prod": "cypress run --config baseUrl=http://localhost:3017/",
-    "cy-run-dev": "cypress run --config baseUrl=http://localhost:3016/"
+    "cy-run-dev": "cypress run --config baseUrl=http://localhost:3016/",
+    "test-e2e-run-prod": "start-server-and-test start-build-prod :3017 cy-run-prod",
+    "test-e2e-open-prod": "start-server-and-test start-build-prod :3017 cy-open-prod"
   },
   "devDependencies": {
     "@cypress/webpack-preprocessor": "^4.0.3",
@@ -72,6 +74,7 @@
     "node-sass": "^4.11.0",
     "react-testing-library": "^6.0.0",
     "serve": "10.1.1",
+    "start-server-and-test": "^1.7.11",
     "ts-loader": "^5.3.3",
     "tslint": "^5.13.0",
     "tslint-config-prettier": "^1.18.0",
